@@ -1,0 +1,7 @@
+{
+  "name": "Era Nuclear",
+  "description": "Plataforma educativa sobre física nuclear, história da era nuclear, energia e impactos ambientais e geopolíticos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
