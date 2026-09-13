@@ -176,6 +176,8 @@ export const OperationCastlePage: React.FC<OperationCastlePageProps> = ({ onNavi
                 <img
                   src={selectedTest.imageUrl}
                   alt={selectedTest.name}
+                  referrerPolicy="no-referrer"
+                  loading="lazy"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
@@ -245,7 +247,7 @@ export const OperationCastlePage: React.FC<OperationCastlePageProps> = ({ onNavi
             >
               <X className="w-5 h-5" />
             </button>
-            <img src={lightboxImg.url} alt={lightboxImg.title} className="w-full max-h-[80vh] object-contain bg-black" />
+            <img src={lightboxImg.url} alt={lightboxImg.title} referrerPolicy="no-referrer" className="w-full max-h-[80vh] object-contain bg-black" />
             <div className="p-4 text-xs font-bold text-white font-display">
               {lightboxImg.title} — Operação Castle (1954)
             </div>

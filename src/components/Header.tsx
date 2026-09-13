@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PageId } from '../types';
-import { Menu, X, ChevronDown, Atom, Sparkles, BookOpen, ShieldAlert, Zap, Flame, Camera } from 'lucide-react';
+import { Menu, X, ChevronDown, Atom, Sparkles, BookOpen, ShieldAlert, Zap, Flame, Camera, Target } from 'lucide-react';
 
 interface HeaderProps {
   currentPage: PageId;
@@ -34,6 +34,7 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
     { id: 'tsar-bomba', label: 'Tsar Bomba (1961)', icon: <Zap className="w-4 h-4 text-[#8F83FF]" /> },
     { id: 'ivy-king', label: 'Ivy King (1952)', icon: <Flame className="w-4 h-4 text-[#73CAE5]" /> },
     { id: 'b41', label: 'Bomba B41 (SAC)', icon: <ShieldAlert className="w-4 h-4 text-[#8F83FF]" /> },
+    { id: 'nuclear-ranking', label: 'Simulador & Ranking (Mapa)', icon: <Target className="w-4 h-4 text-rose-400" /> },
     { id: 'chernobyl', label: 'Chernobyl (1986)', icon: <ShieldAlert className="w-4 h-4 text-rose-400" /> },
     { id: 'fission-fusion', label: 'Fissão × Fusão', icon: <Atom className="w-4 h-4 text-[#73CAE5]" /> },
     { id: 'impacts', label: 'Impactos & Clima', icon: <ShieldAlert className="w-4 h-4 text-[#8F83FF]" /> },

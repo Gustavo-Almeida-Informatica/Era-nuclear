@@ -1,4 +1,10 @@
 import { CastleTest } from '../types';
+import castleBravoImg from '../assets/images/castle_bravo_005.jpg';
+import castleRomeoImg from '../assets/images/castle_romeo.jpg';
+import castleKoonImg from '../assets/images/castle_koon_blast_1787677556674.jpg';
+import castleUnionImg from '../assets/images/castle_union_blast_1787677543358.jpg';
+import castleYankeeImg from '../assets/images/castle_yankee_blast_1787677525079.jpg';
+import castleNectarImg from '../assets/images/castle_nectar_blast_1787677582310.jpg';
 
 export const castleTests: CastleTest[] = [
   {
@@ -12,7 +18,7 @@ export const castleTests: CastleTest[] = [
     historicalObjective: 'Validar o primeiro teste de arma termonuclear prática utilizando deutereto de lítio seco em vez de deutério líquido criogênico.',
     resultAndImpact: 'A reação não calculada do isótopo Lítio-7 com nêutrons rápidos produziu o dobro do trítio esperado, gerando uma explosão de 15 Mt (2,5 vezes acima da previsão). A cratera submarina aberta na lagoa de Bikini teve 2 km de diâmetro e 76 metros de profundidade. A nuvem de poeira e cinzas radioativas espalhou-se por mais de 18.000 km², contaminando gravemente os habitantes dos atóis de Rongelap, Ailinginae e Utirik, além dos 23 tripulantes do pesqueiro japonês Daigo Fukuryū Maru (Lucky Dragon No. 5).',
     historicalImportance: 'O maior teste nuclear da história dos Estados Unidos. Despertou o clamor mundial contra testes atmosféricos, catalisando o surgimento da comunidade científica pela paz e desarmamento (Manifesto Russell-Einstein e Conferências Pugwash).',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Castle_Bravo_Blast.jpg/1024px-Castle_Bravo_Blast.jpg',
+    imageUrl: castleBravoImg,
     imageCaption: 'Bola de fogo monumental de 7 km de diâmetro gerada pelo teste Castle Bravo.',
     source: 'U.S. Department of Energy / Defense Nuclear Agency Report DNA 6035F',
     license: 'Domínio Público (Governo Federal dos EUA)'
@@ -28,8 +34,8 @@ export const castleTests: CastleTest[] = [
     historicalObjective: 'Testar um projeto alternativo de deutereto de lítio natural econômico (sem enriquecimento de Li-6).',
     resultAndImpact: 'Assim como em Bravo, a participação do Lítio-7 aumentou drasticamente o rendimento, atingindo 11 Mt (quase o triplo do previsto). Foi o primeiro teste nuclear da história a ser disparado sobre uma barcaça marítima ancorada, técnica adotada para evitar a destruição de mais ilhas do atol.',
     historicalImportance: 'Provou que o lítio natural não enriquecido podia ser usado como combustível termonuclear em larga escala com custo muito menor.',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Castle_Romeo.jpg/1024px-Castle_Romeo.jpg',
-    imageCaption: 'A icônica nuvem em cogumelo do teste termonuclear Romeo.',
+    imageUrl: castleRomeoImg,
+    imageCaption: 'A icônica nuvem em cogumelo do teste termonuclear Romeo disparado em barcaça.',
     source: 'U.S. Department of Energy / Joint Task Force Seven',
     license: 'Domínio Público (Governo Federal dos EUA)'
   },
@@ -44,8 +50,8 @@ export const castleTests: CastleTest[] = [
     historicalObjective: 'Testar um conceito inovador de termonuclear desenvolvido pelo recém-criado Laboratório de Radiação da Universidade da Califórnia (atual Lawrence Livermore).',
     resultAndImpact: 'O teste sofreu um desmonte térmico prematuro da primária antes que a implosão por radiação pudesse comprimir e inflamar adequadamente o secundário termonuclear. O teste rendeu apenas 110 kt (um fracasso parcial relativo à previsão).',
     historicalImportance: 'Forneceu dados físicos cruciais sobre a simetria de implosão e a geometria de radiação para o laboratório Livermore aperfeiçoar seus futuros projetos de ogivas.',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Castle_Koon.jpg/1024px-Castle_Koon.jpg',
-    imageCaption: 'Detonação do dispositivo experimental Koon em Bikini.',
+    imageUrl: castleKoonImg,
+    imageCaption: 'Detonação do dispositivo experimental Koon na ilha de Eninman em Bikini.',
     source: 'Lawrence Livermore National Laboratory / U.S. Department of Energy',
     license: 'Domínio Público (Governo Federal dos EUA)'
   },
@@ -60,8 +66,8 @@ export const castleTests: CastleTest[] = [
     historicalObjective: 'Validar o comportamento de deutereto de lítio enriquecido com alto teor de Lítio-6 sob configuração compacta.',
     resultAndImpact: 'Rendimento excelente de 6,9 Mt disparado com sucesso a partir de barcaça.',
     historicalImportance: 'Validou a família de ogivas termonucleares Mark 14, uma das primeiras bombas termonucleares a entrar em prontidão estratégica no Comando Aéreo Estratégico (SAC).',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Castle_Union.jpg/1024px-Castle_Union.jpg',
-    imageCaption: 'Disparo termonuclear de Castle Union sobre barcaça.',
+    imageUrl: castleUnionImg,
+    imageCaption: 'Disparo termonuclear de Castle Union sobre barcaça no canal de Enyu.',
     source: 'U.S. Department of Energy / Los Alamos National Laboratory',
     license: 'Domínio Público (Governo Federal dos EUA)'
   },
@@ -76,8 +82,8 @@ export const castleTests: CastleTest[] = [
     historicalObjective: 'Testar um protótipo de alta potência usando deutereto de lítio enriquecido a 40% em Li-6.',
     resultAndImpact: 'Segunda maior detonação nuclear da história dos Estados Unidos (13,5 Megatons). O topo da nuvem alcançou mais de 40 km de altitude em menos de 10 minutos.',
     historicalImportance: 'Consolidou o design da bomba termonuclear pesada Mark 24, colocada em serviço ativo em 1954 como resposta rápida de dissuasão estratégica.',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Castle_Yankee.jpg/1024px-Castle_Yankee.jpg',
-    imageCaption: 'Nuvem convectiva de 13,5 Megatons do teste Yankee.',
+    imageUrl: castleYankeeImg,
+    imageCaption: 'Nuvem convectiva estratosférica de 13,5 Megatons do teste Yankee.',
     source: 'U.S. Department of Energy / National Nuclear Security Administration',
     license: 'Domínio Público (Governo Federal dos EUA)'
   },
@@ -92,8 +98,8 @@ export const castleTests: CastleTest[] = [
     historicalObjective: 'Testar uma ogiva termonuclear miniaturizada e leve para ser transportada por bombardeiros menores e mísseis balísticos intercontinentais iniciais.',
     resultAndImpact: 'Encerrou a Operação Castle com sucesso total de 1,69 Mt. Atingiu perfeitamente a faixa de rendimento projetada com peso e dimensões reduzidas.',
     historicalImportance: 'Deu origem à ogiva termonuclear leve W-15 e à bomba B-15, viabilizando a integração de armas termonucleares em mísseis balísticos.',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Castle_Nectar.jpg/1024px-Castle_Nectar.jpg',
-    imageCaption: 'Detonação final da Operação Castle no Atol de Enewetak.',
+    imageUrl: castleNectarImg,
+    imageCaption: 'Detonação final da Operação Castle na lagoa do Atol de Enewetak.',
     source: 'U.S. Department of Energy / Defense Threat Reduction Agency',
     license: 'Domínio Público (Governo Federal dos EUA)'
   }

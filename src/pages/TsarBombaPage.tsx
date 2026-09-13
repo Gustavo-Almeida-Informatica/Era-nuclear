@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { PageId } from '../types';
+import tsarBombaImg from '../assets/images/tsar_bomba_documentary_real.jpg';
 import {
   Globe,
   Calendar,
@@ -98,25 +99,26 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
         {/* Right column with Image */}
         <div className="lg:col-span-5 space-y-4">
           <div
-            onClick={() => setLightboxImg('https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Tsar_Bomba_Mushroom_Cloud.png/1024px-Tsar_Bomba_Mushroom_Cloud.png')}
+            onClick={() => setLightboxImg(tsarBombaImg)}
             className="relative rounded-2xl overflow-hidden bg-black border border-white/10 group cursor-pointer aspect-4/3 shadow-xl"
           >
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Tsar_Bomba_Mushroom_Cloud.png/1024px-Tsar_Bomba_Mushroom_Cloud.png"
-              alt="Tsar Bomba Mushroom Cloud"
+              src={tsarBombaImg}
+              alt="Teste da Tsar Bomba (RDS-220), União Soviética, 1961"
+              referrerPolicy="no-referrer"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
             <div className="absolute bottom-3 left-3 right-3 text-xs text-white/90">
-              <p className="font-medium truncate">A gigantesca coluna de condensação e cogumelo da Tsar Bomba (1961)</p>
+              <p className="font-medium truncate">Teste da Tsar Bomba (RDS-220), União Soviética, 1961</p>
             </div>
             <div className="absolute top-3 right-3 p-2 rounded-full bg-black/60 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
               <Maximize2 className="w-4 h-4" />
             </div>
           </div>
           <div className="text-[11px] text-[#B7B7B7]/70 space-y-0.5 px-1">
-            <p><strong>Fonte:</strong> Rosatom / Arquivo Central da Federação Russa</p>
-            <p><strong>Licença:</strong> Domínio Público (Arquivo Histórico Estatal da URSS)</p>
+            <p><strong>Fonte:</strong> Fonte não informada</p>
+            <p><strong>Licença:</strong> Registro Histórico Governamental</p>
           </div>
 
           <div className="p-4 rounded-xl bg-white/[0.03] border border-white/5 space-y-2 text-xs">
@@ -276,9 +278,9 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
             >
               <X className="w-5 h-5" />
             </button>
-            <img src={lightboxImg} alt="Tsar Bomba" className="w-full max-h-[80vh] object-contain bg-black" />
+            <img src={lightboxImg} alt="Teste da Tsar Bomba (RDS-220), União Soviética, 1961" referrerPolicy="no-referrer" className="w-full max-h-[80vh] object-contain bg-black" />
             <div className="p-4 text-xs font-bold text-white font-display">
-              Registro histórico da detonação da Tsar Bomba (1961) — Rosatom / Arquivo da Federação Russa
+              Teste da Tsar Bomba (RDS-220), União Soviética, 1961 (Fonte não informada)
             </div>
           </div>
         </div>

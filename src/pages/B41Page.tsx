@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { PageId } from '../types';
+import b41Img from '../assets/images/b41_real_usaf_museum.jpg';
+import b41MuseumDocImg from '../assets/images/b41_real_usaf_museum.jpg';
 import {
   Flame,
   Calendar,
@@ -10,7 +12,10 @@ import {
   Clock,
   Award,
   Info,
-  Archive
+  Archive,
+  Camera,
+  Layers,
+  Sparkles
 } from 'lucide-react';
 
 interface B41PageProps {
@@ -18,7 +23,8 @@ interface B41PageProps {
 }
 
 export const B41Page: React.FC<B41PageProps> = ({ onNavigate }) => {
-  const [lightboxImg, setLightboxImg] = useState<string | null>(null);
+  const [lightboxImg, setLightboxImg] = useState<{ src: string; caption: string } | null>(null);
+  const [selectedPhotoView, setSelectedPhotoView] = useState<'museum_exhibit' | 'historical_archive'>('museum_exhibit');
 
   return (
     <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
@@ -89,29 +95,99 @@ export const B41Page: React.FC<B41PageProps> = ({ onNavigate }) => {
           </div>
         </div>
 
-        {/* Right Photo */}
+        {/* Right Photo & Exhibit Gallery */}
         <div className="lg:col-span-5 space-y-4">
+          {/* Photo View Selector Tabs */}
+          <div className="flex items-center space-x-1.5 p-1 rounded-xl bg-white/[0.04] border border-white/10 text-xs">
+            <button
+              onClick={() => setSelectedPhotoView('museum_exhibit')}
+              className={`flex-1 py-1.5 px-2.5 rounded-lg font-medium transition-all flex items-center justify-center space-x-1.5 ${
+                selectedPhotoView === 'museum_exhibit'
+                  ? 'bg-[#8F83FF] text-white font-bold shadow-md'
+                  : 'text-[#B7B7B7] hover:text-white'
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Exposição Museológica</span>
+            </button>
+            <button
+              onClick={() => setSelectedPhotoView('historical_archive')}
+              className={`flex-1 py-1.5 px-2.5 rounded-lg font-medium transition-all flex items-center justify-center space-x-1.5 ${
+                selectedPhotoView === 'historical_archive'
+                  ? 'bg-[#8F83FF] text-white font-bold shadow-md'
+                  : 'text-[#B7B7B7] hover:text-white'
+              }`}
+            >
+              <Camera className="w-3.5 h-3.5" />
+              <span>Acervo Histórico Real</span>
+            </button>
+          </div>
+
           <div
-            onClick={() => setLightboxImg('https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/B-41_nuclear_bomb_at_National_Museum_of_Nuclear_Science_%26_History.jpg/1024px-B-41_nuclear_bomb_at_National_Museum_of_Nuclear_Science_%26_History.jpg')}
-            className="relative rounded-2xl overflow-hidden bg-black border border-white/10 group cursor-pointer aspect-4/3 shadow-xl"
+            onClick={() =>
+              setLightboxImg({
+                src: selectedPhotoView === 'museum_exhibit' ? b41MuseumDocImg : b41Img,
+                caption:
+                  selectedPhotoView === 'museum_exhibit'
+                    ? 'B41 (Mark 41) sobre dolly de manuseio com trilhos amarelos e placa interpretativa: "A MAIOR BOMBA TERMONUCLEAR DO ARSENAL DOS EUA"'
+                    : 'Carcaça desativada da B41 em exibição permanente no Museu Nacional Nuclear (Albuquerque, NM)'
+              })
+            }
+            className="relative rounded-2xl overflow-hidden bg-black border border-white/10 group cursor-pointer aspect-4/3 shadow-2xl"
           >
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/B-41_nuclear_bomb_at_National_Museum_of_Nuclear_Science_%26_History.jpg/1024px-B-41_nuclear_bomb_at_National_Museum_of_Nuclear_Science_%26_History.jpg"
-              alt="B41 bomb at museum"
+              src={selectedPhotoView === 'museum_exhibit' ? b41MuseumDocImg : b41Img}
+              alt={
+                selectedPhotoView === 'museum_exhibit'
+                  ? 'Fotografia documental da bomba termonuclear B41 em museu com placa iluminada e suporte com trilhos amarelos'
+                  : 'Carcaça da bomba termonuclear B41 em exibição museológica'
+              }
+              referrerPolicy="no-referrer"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-            <div className="absolute bottom-3 left-3 right-3 text-xs text-white/90">
-              <p className="font-medium truncate">Carcaça desativada da B41 em exibição permanente no Museu Nacional Nuclear (Albuquerque, NM)</p>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+            <div className="absolute bottom-3 left-3 right-3 text-xs text-white/95 space-y-1">
+              <p className="font-bold font-display text-[13px] text-white">
+                {selectedPhotoView === 'museum_exhibit'
+                  ? 'Exposição Noturna com Placa Interpretativa'
+                  : 'Exemplar Preservado em Albuquerque (NM)'}
+              </p>
+              <p className="text-[11px] text-[#B7B7B7] line-clamp-2">
+                {selectedPhotoView === 'museum_exhibit'
+                  ? 'Carcaça verde-oliva com estêncil amarelo ("TYPE 3 / B 41") sobre suporte móvel com trilhos amarelos e placa descritiva frontal iluminada.'
+                  : 'Carcaça desativada da B41 em exibição permanente no Museu Nacional de Ciência & História Nuclear.'}
+              </p>
             </div>
             <div className="absolute top-3 right-3 p-2 rounded-full bg-black/60 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
               <Maximize2 className="w-4 h-4" />
             </div>
           </div>
+
           <div className="text-[11px] text-[#B7B7B7]/70 space-y-0.5 px-1">
-            <p><strong>Fonte:</strong> National Museum of Nuclear Science & History / U.S. Air Force</p>
-            <p><strong>Licença:</strong> Domínio Público (Museus Federais dos EUA)</p>
+            <p>
+              <strong>Registro:</strong>{' '}
+              {selectedPhotoView === 'museum_exhibit'
+                ? 'Exposição Fotográfica Documental / Galeria Museológica'
+                : 'National Museum of Nuclear Science & History / U.S. Air Force'}
+            </p>
+            <p><strong>Classificação:</strong> Peça Histórica Desarmada (Sem Carga Físsil)</p>
           </div>
+
+          {/* Museum Plaque Highlights Callout */}
+          {selectedPhotoView === 'museum_exhibit' && (
+            <div className="p-4 rounded-xl bg-[#8F83FF]/10 border border-[#8F83FF]/25 space-y-2 text-xs">
+              <div className="flex items-center space-x-1.5 text-[#8F83FF] font-bold">
+                <Info className="w-3.5 h-3.5" />
+                <span className="uppercase tracking-wider font-mono text-[10px]">Placa Interpretativa em Metal Escovado</span>
+              </div>
+              <p className="text-white font-semibold font-display">
+                "B41 (Mark 41) — A MAIOR BOMBA TERMONUCLEAR DO ARSENAL DOS EUA"
+              </p>
+              <p className="text-[#B7B7B7] text-[11px] leading-relaxed">
+                Especificações registradas: 11.000 lbs (~4.850 kg), produção no início da década de 1960 e rendimento termonuclear recorde de 25 Megatons.
+              </p>
+            </div>
+          )}
 
           <div className="p-4 rounded-xl bg-white/[0.03] border border-white/5 space-y-1 text-xs">
             <div className="flex items-center space-x-1.5 text-[#8F83FF] font-bold">
@@ -157,9 +233,9 @@ export const B41Page: React.FC<B41PageProps> = ({ onNavigate }) => {
             >
               <X className="w-5 h-5" />
             </button>
-            <img src={lightboxImg} alt="B41 Bomb" className="w-full max-h-[80vh] object-contain bg-black" />
+            <img src={lightboxImg.src} alt={lightboxImg.caption} referrerPolicy="no-referrer" className="w-full max-h-[80vh] object-contain bg-black" />
             <div className="p-4 text-xs font-bold text-white font-display">
-              Bomba B41 — Museu Nacional de Ciência & História Nuclear (EUA)
+              {lightboxImg.caption}
             </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { PageId } from '../types';
+import chernobylImg from '../assets/images/chernobyl_ruins_1787676689764.jpg';
 import {
   AlertTriangle,
   Calendar,
@@ -109,12 +110,13 @@ export const ChernobylPage: React.FC<ChernobylPageProps> = ({ onNavigate }) => {
         {/* Right Photo */}
         <div className="lg:col-span-5 space-y-4">
           <div
-            onClick={() => setLightboxImg('https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Chernobyl_Reactor_4_after_disaster.jpg/1024px-Chernobyl_Reactor_4_after_disaster.jpg')}
+            onClick={() => setLightboxImg(chernobylImg)}
             className="relative rounded-2xl overflow-hidden bg-black border border-white/10 group cursor-pointer aspect-4/3 shadow-xl"
           >
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Chernobyl_Reactor_4_after_disaster.jpg/1024px-Chernobyl_Reactor_4_after_disaster.jpg"
+              src={chernobylImg}
               alt="Reator 4 de Chernobyl destruído"
+              referrerPolicy="no-referrer"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
@@ -190,7 +192,7 @@ export const ChernobylPage: React.FC<ChernobylPageProps> = ({ onNavigate }) => {
             >
               <X className="w-5 h-5" />
             </button>
-            <img src={lightboxImg} alt="Chernobyl Reactor 4" className="w-full max-h-[80vh] object-contain bg-black" />
+            <img src={lightboxImg} alt="Chernobyl Reactor 4" referrerPolicy="no-referrer" className="w-full max-h-[80vh] object-contain bg-black" />
             <div className="p-4 text-xs font-bold text-white font-display">
               Reator 4 destruído da Central Nuclear de Chernobyl (1986) — AIEA / Igor Kostin
             </div>

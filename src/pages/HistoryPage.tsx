@@ -226,8 +226,64 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
                     )}
                   </div>
 
-                  {/* Row 3: IMAGEM (se disponível) */}
-                  {evt.imageUrl && (
+                  {/* Row 3: IMAGENS (se disponíveis) */}
+                  {evt.imageUrl && evt.secondaryImageUrl ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-black/40 p-4 rounded-2xl border border-white/5">
+                      {/* Imagem 1: Explosão Atômica */}
+                      <div className="space-y-2">
+                        <div
+                          onClick={() => setLightboxImg({ url: evt.imageUrl!, title: `${evt.title} — Detonação Atômica` })}
+                          className="relative rounded-xl overflow-hidden cursor-pointer group/img aspect-16/10 bg-black border border-white/5"
+                        >
+                          <img
+                            src={evt.imageUrl}
+                            alt={`${evt.title} - Detonação`}
+                            loading="lazy"
+                            referrerPolicy="no-referrer"
+                            className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-500"
+                          />
+                          <div className="absolute inset-0 bg-black/30 group-hover/img:bg-transparent transition-colors" />
+                          <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-black/75 border border-white/10 text-[10px] font-mono font-semibold text-[#73CAE5]">
+                            Detonação / Nuvem de Cogumelo
+                          </span>
+                          <div className="absolute top-2 right-2 p-1.5 rounded-full bg-black/60 text-white opacity-0 group-hover/img:opacity-100 transition-opacity">
+                            <Maximize2 className="w-3.5 h-3.5" />
+                          </div>
+                        </div>
+                        <p className="text-xs font-semibold text-white/90 leading-tight">
+                          {evt.imageCaption || evt.title}
+                        </p>
+                        <p className="text-[10px] text-[#73CAE5]">Clique para ampliar em alta resolução.</p>
+                      </div>
+
+                      {/* Imagem 2: Memorial Histórico Preservado */}
+                      <div className="space-y-2">
+                        <div
+                          onClick={() => setLightboxImg({ url: evt.secondaryImageUrl!, title: `${evt.title} — Memorial Preservado` })}
+                          className="relative rounded-xl overflow-hidden cursor-pointer group/img aspect-16/10 bg-black border border-white/5"
+                        >
+                          <img
+                            src={evt.secondaryImageUrl}
+                            alt={`${evt.title} - Memorial`}
+                            loading="lazy"
+                            referrerPolicy="no-referrer"
+                            className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-500"
+                          />
+                          <div className="absolute inset-0 bg-black/30 group-hover/img:bg-transparent transition-colors" />
+                          <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-black/75 border border-white/10 text-[10px] font-mono font-semibold text-[#8F83FF]">
+                            Memorial Histórico
+                          </span>
+                          <div className="absolute top-2 right-2 p-1.5 rounded-full bg-black/60 text-white opacity-0 group-hover/img:opacity-100 transition-opacity">
+                            <Maximize2 className="w-3.5 h-3.5" />
+                          </div>
+                        </div>
+                        <p className="text-xs font-semibold text-white/90 leading-tight">
+                          {evt.secondaryImageCaption || 'Memorial Histórico'}
+                        </p>
+                        <p className="text-[10px] text-[#8F83FF]">Clique para ampliar em alta resolução.</p>
+                      </div>
+                    </div>
+                  ) : evt.imageUrl ? (
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center bg-black/40 p-4 rounded-2xl border border-white/5">
                       <div
                         onClick={() => setLightboxImg({ url: evt.imageUrl!, title: evt.title })}
@@ -236,6 +292,8 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
                         <img
                           src={evt.imageUrl}
                           alt={evt.title}
+                          loading="lazy"
+                          referrerPolicy="no-referrer"
                           className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-500"
                         />
                         <div className="absolute inset-0 bg-black/30 group-hover/img:bg-transparent transition-colors" />
@@ -248,7 +306,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
                         <p className="text-[11px] text-[#73CAE5]">Clique na imagem para ampliar no visualizador de alta resolução.</p>
                       </div>
                     </div>
-                  )}
+                  ) : null}
 
                   {/* Row 4: DESCRIÇÃO */}
                   <div className="space-y-2 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
@@ -299,7 +357,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
             >
               <X className="w-5 h-5" />
             </button>
-            <img src={lightboxImg.url} alt={lightboxImg.title} className="w-full max-h-[80vh] object-contain bg-black" />
+            <img src={lightboxImg.url} alt={lightboxImg.title} referrerPolicy="no-referrer" className="w-full max-h-[80vh] object-contain bg-black" />
             <div className="p-4 text-xs font-bold text-white font-display">
               {lightboxImg.title} — Arquivo Histórico Oficial
             </div>

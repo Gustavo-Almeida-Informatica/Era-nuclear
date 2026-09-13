@@ -1,4 +1,22 @@
 import { TimelineEvent } from '../types';
+import tsarBombaImg from '../assets/images/tsar_bomba_documentary_real.jpg';
+import castleBravoImg from '../assets/images/castle_bravo_005.jpg';
+import castleRomeoImg from '../assets/images/castle_romeo.jpg';
+import trinityImg from '../assets/images/trinity_test_blast_1787676677780.jpg';
+import chernobylImg from '../assets/images/chernobyl_ruins_1787676689764.jpg';
+import ivyKingImg from '../assets/images/ivy_king_001.jpg';
+import ivyMikeImg from '../assets/images/ivy_mike_blast_1787763915443.jpg';
+import hiroshimaDomeImg from '../assets/images/hiroshima_genbaku_dome_1787677431649.jpg';
+import hiroshimaExplosionImg from '../assets/images/hiroshima_explosion.jpg';
+import nagasakiMemorialImg from '../assets/images/nagasaki_peace_memorial_1787677448589.jpg';
+import nagasakiExplosionImg from '../assets/images/nagasaki_explosion.jpg';
+import rds1Img from '../assets/images/rds_1_soviet_test.jpg';
+import rds6sImg from '../assets/images/rds_6s_soviet_test.jpg';
+import rds37Img from '../assets/images/rds_37_thermonuclear.jpg';
+import b41Img from '../assets/images/b41_real_usaf_museum.jpg';
+import b41MuseumDocImg from '../assets/images/b41_real_usaf_museum.jpg';
+import chicagoPile1Img from '../assets/images/chicago_pile_one_1787677642726.jpg';
+import iterTokamakImg from '../assets/images/iter_tokamak_fusion_1787677659756.jpg';
 
 export const timelineEvents: TimelineEvent[] = [
   {
@@ -104,6 +122,8 @@ export const timelineEvents: TimelineEvent[] = [
     historicalImpact: 'Provou experimentalmente que uma reação em cadeia controlada era viável, abrindo a era dos reatores nucleares civis e da produção de plutônio.',
     keyFigures: ['Enrico Fermi', 'Leó Szilárd', 'Arthur Compton'],
     location: 'Chicago, Illinois (EUA)',
+    imageUrl: chicagoPile1Img,
+    imageCaption: 'Reconstituição documental da montagem do reator Chicago Pile-1 em 1942.',
     source: 'Argonne National Laboratory / U.S. Department of Energy'
   },
   {
@@ -119,8 +139,8 @@ export const timelineEvents: TimelineEvent[] = [
     historicalImpact: 'Inaugurou formalmente a Era Nuclear e comprovou a tecnologia de implosão antes do emprego bélico na Segunda Guerra Mundial.',
     keyFigures: ['J. Robert Oppenheimer', 'Leslie Groves', 'Kenneth Bainbridge', 'George Kistiakowsky'],
     location: 'White Sands / Jornada del Muerto, Novo México (EUA)',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Trinity_shot_color.jpg/1024px-Trinity_shot_color.jpg',
-    imageCaption: 'Bola de fogo do teste Trinity 0,016s após a detonação.',
+    imageUrl: trinityImg,
+    imageCaption: 'Fotografia histórica da bola de fogo do teste Trinity (0,016s após a detonação).',
     source: 'Los Alamos National Laboratory / U.S. Department of Energy'
   },
   {
@@ -133,12 +153,14 @@ export const timelineEvents: TimelineEvent[] = [
     categoryLabel: 'Uso Bélico',
     summary: 'A bomba de urânio "Little Boy" é detonada a 600 metros acima da cidade japonesa de Hiroshima durante a Segunda Guerra Mundial.',
     fullDescription: 'Lançada pelo bombardeiro B-29 "Enola Gay", a bomba de fissão por método canhão de urânio-235 liberou 15 quilotons de energia. A detonação gerou temperaturas de 4.000 °C no solo e uma onda de choque que destruiu instantaneamente milhares de edifícios, provocando entre 70.000 e 140.000 mortes imediatas e a longo prazo.',
-    historicalImpact: 'Primeiro uso de uma arma nuclear em conflito militar na história, marcando o cenário geopolítico global.',
+    historicalImpact: 'Primeiro uso de uma arma nuclear em conflito militar na história, marcando o cenário geopolítico global e dando origem aos memoriais pela paz mundial.',
     keyFigures: ['Paul Tibbets', 'Harry S. Truman'],
     location: 'Hiroshima, Japão',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Atomic_bombing_of_Japan.jpg/1024px-Atomic_bombing_of_Japan.jpg',
-    imageCaption: 'Coluna convectiva de fumaça e produtos radioativos sobre Hiroshima.',
-    source: 'U.S. National Archives (NARA) / Hiroshima Peace Memorial Museum'
+    imageUrl: hiroshimaExplosionImg,
+    imageCaption: 'A nuvem de cogumelo atômico elevando-se sobre Hiroshima em 6 de agosto de 1945 (USAAF / NARA 542192).',
+    secondaryImageUrl: hiroshimaDomeImg,
+    secondaryImageCaption: 'Genbaku Dome preservado no Memorial da Paz de Hiroshima (Patrimônio Mundial da UNESCO).',
+    source: 'Hiroshima Peace Memorial Museum / U.S. National Archives / UNESCO'
   },
   {
     id: '1945-nagasaki',
@@ -153,9 +175,11 @@ export const timelineEvents: TimelineEvent[] = [
     historicalImpact: 'Segundo e último bombardeio nuclear em combate na história; levou ao anúncio de rendição incondicional do Japão e encerrou a Segunda Guerra Mundial.',
     keyFigures: ['Charles Sweeney', 'Kermit Beahan'],
     location: 'Nagasaki, Japão',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Nagasaki_1945_-_Photograph_-_Flight_Sergeant_Charles_Levy.jpg/1024px-Nagasaki_1945_-_Photograph_-_Flight_Sergeant_Charles_Levy.jpg',
-    imageCaption: 'Cogumelo atômico de 18 km de altura sobre Nagasaki.',
-    source: 'U.S. National Archives / Charles Levy'
+    imageUrl: nagasakiExplosionImg,
+    imageCaption: 'A nuvem de cogumelo atômico de 18 km elevando-se sobre Nagasaki em 9 de agosto de 1945 (Charles Levy / USAAF / NARA).',
+    secondaryImageUrl: nagasakiMemorialImg,
+    secondaryImageCaption: 'Monumento do Hipocentro e Parque da Paz erguidos em memória das vítimas em Nagasaki.',
+    source: 'Nagasaki Atomic Bomb Museum / U.S. National Archives / Prefeitura de Nagasaki'
   },
   {
     id: '1949-rds-1',
@@ -170,8 +194,8 @@ export const timelineEvents: TimelineEvent[] = [
     historicalImpact: 'Encerrou o monopólio nuclear dos Estados Unidos anos antes do previsto e deu início oficial à corrida armamentista nuclear da Guerra Fria.',
     keyFigures: ['Igor Kurchatov', 'Yulii Khariton', 'Lavrentiy Beria'],
     location: 'Semipalatinsk, Cazaquistão (URSS)',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Joe-1_%28RDS-1%29.jpg/1024px-Joe-1_%28RDS-1%29.jpg',
-    imageCaption: 'Aparelho e torre do teste RDS-1 no Cazaquistão.',
+    imageUrl: rds1Img,
+    imageCaption: 'Torre de teste e primeira detonação do artefato RDS-1 no polígono de Semipalatinsk.',
     source: 'Arquivo Central da Federação Russa / Rosatom'
   },
   {
@@ -187,8 +211,8 @@ export const timelineEvents: TimelineEvent[] = [
     historicalImpact: 'Inaugurou a era das armas termonucleares (Bombas de Hidrogênio), aumentando em centenas de vezes o poder destrutivo disponível.',
     keyFigures: ['Edward Teller', 'Stanislaw Ulam', 'Richard Garwin'],
     location: 'Atol de Enewetak, Ilhas Marshall',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Ivy_Mike_-_mushroom_cloud.jpg/1024px-Ivy_Mike_-_mushroom_cloud.jpg',
-    imageCaption: 'Cogumelo termonuclear de 41 km de altitude da detonação Ivy Mike.',
+    imageUrl: ivyMikeImg,
+    imageCaption: 'Teste Ivy Mike, primeiro dispositivo termonuclear experimental, 1952',
     source: 'U.S. Department of Energy / National Nuclear Security Administration'
   },
   {
@@ -204,7 +228,7 @@ export const timelineEvents: TimelineEvent[] = [
     historicalImpact: 'Representa o limite histórico prático da potência obtida apenas com fissão pura sem fusão.',
     keyFigures: ['Ted Taylor', 'Alvin Graves'],
     location: 'Atol de Enewetak, Ilhas Marshall',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Ivy_King_-_mushroom_cloud.jpg/1024px-Ivy_King_-_mushroom_cloud.jpg',
+    imageUrl: ivyKingImg,
     imageCaption: 'Detonação aérea da bomba MK-18 no teste Ivy King.',
     source: 'U.S. Defense Threat Reduction Agency / U.S. Air Force'
   },
@@ -221,8 +245,8 @@ export const timelineEvents: TimelineEvent[] = [
     historicalImpact: 'Consolidou o papel de Andrei Sakharov como líder da física teórica soviética e acelerou a corrida termonuclear.',
     keyFigures: ['Andrei Sakharov', 'Vitaly Ginzburg', 'Igor Tamm'],
     location: 'Semipalatinsk, Cazaquistão (URSS)',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/RDS-6s.jpg/1024px-RDS-6s.jpg',
-    imageCaption: 'Bola de fogo do teste termonuclear RDS-6s.',
+    imageUrl: rds6sImg,
+    imageCaption: 'Clarão e bola de fogo do teste termonuclear RDS-6s (Sloika).',
     source: 'Rosatom / VNIIEF Sarov'
   },
   {
@@ -238,7 +262,7 @@ export const timelineEvents: TimelineEvent[] = [
     historicalImpact: 'Mobilizou cientistas e a opinião pública internacional contra os testes atmosféricos, gerando o movimento pelo desarmamento.',
     keyFigures: ['Edward Teller', 'Alvin Graves'],
     location: 'Atol de Bikini, Ilhas Marshall',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Castle_Bravo_Blast.jpg/1024px-Castle_Bravo_Blast.jpg',
+    imageUrl: castleBravoImg,
     imageCaption: 'Explosão de 15 Megatons do teste Castle Bravo no Atol de Bikini.',
     source: 'U.S. Department of Energy / Nevada National Security Site'
   },
@@ -255,7 +279,7 @@ export const timelineEvents: TimelineEvent[] = [
     historicalImpact: 'Forneceu a base técnica para todas as ogivas termonucleares estocadas em série pelos Estados Unidos nas décadas seguintes.',
     keyFigures: ['P. W. Clarkson', 'Alvin Graves'],
     location: 'Atóis de Bikini e Enewetak, Ilhas Marshall',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Castle_Romeo.jpg/1024px-Castle_Romeo.jpg',
+    imageUrl: castleRomeoImg,
     imageCaption: 'Nuvem em cogumelo do teste Romeo disparado sobre barcaça na Operação Castle.',
     source: 'U.S. Department of Energy / Defense Atomic Support Agency'
   },
@@ -287,8 +311,8 @@ export const timelineEvents: TimelineEvent[] = [
     historicalImpact: 'Consagrou a paridade estratégica termonuclear entre as superpotências durante a Guerra Fria.',
     keyFigures: ['Andrei Sakharov', 'Yakov Zeldovich', 'Yulii Khariton'],
     location: 'Semipalatinsk, Cazaquistão (URSS)',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/RDS-37_1955.jpg/1024px-RDS-37_1955.jpg',
-    imageCaption: 'Detonação aérea do artefato termonuclear RDS-37.',
+    imageUrl: rds37Img,
+    imageCaption: 'Detonação aérea do artefato termonuclear de dois estágios RDS-37.',
     source: 'Rosatom / Arquivo Estatal de História da Federação Russa'
   },
   {
@@ -319,8 +343,8 @@ export const timelineEvents: TimelineEvent[] = [
     historicalImpact: 'Marcou o zênite da megatonelagem aerotransportada norte-americana antes da transição para mísseis balísticos de precisão guiada nos anos 1970.',
     keyFigures: ['Edward Teller', 'Curtis LeMay'],
     location: 'EUA / Bases do Comando Aéreo Estratégico (SAC)',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/B-41_nuclear_bomb_at_National_Museum_of_Nuclear_Science_%26_History.jpg/1024px-B-41_nuclear_bomb_at_National_Museum_of_Nuclear_Science_%26_History.jpg',
-    imageCaption: 'Carcaça histórica da bomba B41 preservada em museu.',
+    imageUrl: b41MuseumDocImg,
+    imageCaption: 'Carcaça histórica da bomba termonuclear B41 com placa descritiva em exposição museológica noturna.',
     source: 'National Museum of Nuclear Science & History / U.S. Air Force'
   },
   {
@@ -336,9 +360,9 @@ export const timelineEvents: TimelineEvent[] = [
     historicalImpact: 'Demonstrou o limite técnico e prático da potência destrutiva nuclear, servindo de catalisador definitivo para os primeiros tratados bilaterais de restrição de testes.',
     keyFigures: ['Nikita Khrushchev', 'Andrei Sakharov', 'Viktor Adamsky'],
     location: 'Nova Zembla, Ártico Russo (URSS)',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Tsar_Bomba_Mushroom_Cloud.png/1024px-Tsar_Bomba_Mushroom_Cloud.png',
-    imageCaption: 'Coluna de condensação da Tsar Bomba atingindo 67 km de altitude.',
-    source: 'Rosatom / Arquivo Central da Federação Russa'
+    imageUrl: tsarBombaImg,
+    imageCaption: 'Teste da Tsar Bomba (RDS-220), União Soviética, 1961',
+    source: 'Fonte não informada'
   },
   {
     id: '1962-cuba',
@@ -413,7 +437,7 @@ export const timelineEvents: TimelineEvent[] = [
     historicalImpact: 'O mais grave acidente nuclear civil da história (Nível 7 INES), resultando na criação da Associação Mundial de Operadores Nucleares (WANO) e na reformulação global dos conceitos de cultura de segurança.',
     keyFigures: ['Valery Legasov', 'Anatoly Dyatlov', 'Equipes de Liquidadores'],
     location: 'Pripyat / Chernobyl, Ucrânia (URSS)',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Chernobyl_Reactor_4_after_disaster.jpg/1024px-Chernobyl_Reactor_4_after_disaster.jpg',
+    imageUrl: chernobylImg,
     imageCaption: 'Reator 4 de Chernobyl destruído após a explosão de vapor e o incêndio.',
     source: 'Agência Internacional de Energia Atômica (AIEA) / UNSCEAR'
   },
@@ -505,6 +529,8 @@ export const timelineEvents: TimelineEvent[] = [
     historicalImpact: 'Abre caminho para a futura comercialização de usinas de fusão nuclear: geração de eletricidade sem emissão de gases de efeito estufa, sem combustíveis fósseis e sem resíduos de longa vida.',
     keyFigures: ['Lawrence Livermore National Laboratory', 'Consórcio EUROfusion', 'ITER'],
     location: 'Califórnia (EUA), Culham (Reino Unido) e Cadarache (França)',
+    imageUrl: iterTokamakImg,
+    imageCaption: 'Interior da câmara de vácuo do Tokamak para pesquisas de fusão nuclear magnética.',
     source: 'U.S. Department of Energy / EUROfusion / ITER Organization'
   }
 ];

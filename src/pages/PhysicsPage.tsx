@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PageId } from '../types';
 import { AtomSimulator } from '../components/AtomSimulator';
 import { RadiationShieldingSimulator } from '../components/RadiationShieldingSimulator';
 import { physicsTopics, radiationTypes } from '../data/physicsData';
+import atomStructureImg from '../assets/images/atom_structure_diagram_1787677733510.jpg';
 import {
   Atom,
   Shield,
@@ -12,7 +13,8 @@ import {
   ArrowRight,
   Radio,
   Activity,
-  Maximize2
+  Maximize2,
+  X
 } from 'lucide-react';
 
 interface PhysicsPageProps {
@@ -20,6 +22,8 @@ interface PhysicsPageProps {
 }
 
 export const PhysicsPage: React.FC<PhysicsPageProps> = ({ onNavigate }) => {
+  const [lightboxImg, setLightboxImg] = useState<{ url: string; title: string; desc: string } | null>(null);
+
   return (
     <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
       {/* Header */}
@@ -36,13 +40,62 @@ export const PhysicsPage: React.FC<PhysicsPageProps> = ({ onNavigate }) => {
         </p>
       </div>
 
-      {/* Interactive Atom Simulator Section */}
+      {/* Interactive Atom Simulator Section + Visual Structure */}
       <section className="space-y-6">
         <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-[#73CAE5] font-mono">
           <Sparkles className="w-4 h-4" />
-          <span>Módulo 01 • Estrutura Atômica Interativa</span>
+          <span>Módulo 01 • Estrutura Atômica Interativa & Esquema Físico</span>
         </div>
         <AtomSimulator />
+
+        {/* Diagram Card */}
+        <div className="bg-[#111111] border border-white/10 rounded-2xl p-6 sm:p-8 shadow-xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div
+            onClick={() => setLightboxImg({
+              url: atomStructureImg,
+              title: 'Estrutura Atômica: Núcleo Denso & Eletrosfera Quântica',
+              desc: 'O núcleo contém prótons (carga +) e nêutrons (neutros) aglutinados pela Força Nuclear Forte, enquanto elétrons orbitam na eletrosfera quântica.'
+            })}
+            className="lg:col-span-5 relative aspect-4/3 rounded-xl overflow-hidden bg-black border border-white/10 group cursor-pointer shadow-lg"
+          >
+            <img
+              src={atomStructureImg}
+              alt="Diagrama científico da estrutura atômica com prótons, nêutrons no núcleo e elétrons orbitais"
+              referrerPolicy="no-referrer"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+            <div className="absolute top-3 right-3 p-2 rounded-full bg-black/60 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
+              <Maximize2 className="w-4 h-4" />
+            </div>
+            <div className="absolute bottom-3 left-3 right-3 text-xs text-white/90">
+              <p className="font-bold">Diagrama Subatômico Fundamental</p>
+            </div>
+          </div>
+
+          <div className="lg:col-span-7 space-y-3 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
+            <h3 className="text-xl font-bold text-white font-display">
+              A Anatomia do Átomo e as Forças Fundamentais
+            </h3>
+            <p>
+              O núcleo atômico concentra mais de <strong>99,9% da massa</strong> de qualquer átomo em um volume cerca de 100.000 vezes menor que a nuvem eletrônica ao redor.
+            </p>
+            <p>
+              A estabilidade do núcleo depende do equilíbrio dinâmico entre duas forças opostas: a <strong>Repulsão Eletrostática</strong> (que tenta separar os prótons de carga positiva) e a <strong>Força Nuclear Forte</strong> (que atrai prótons e nêutrons em distâncias inferiores a 1 femtômetro).
+            </p>
+            <div className="pt-2 flex flex-wrap gap-2">
+              <span className="text-[11px] font-mono px-2.5 py-1 rounded bg-[#73CAE5]/15 text-[#73CAE5] border border-[#73CAE5]/30">
+                Prótons (p⁺)
+              </span>
+              <span className="text-[11px] font-mono px-2.5 py-1 rounded bg-[#8F83FF]/15 text-[#8F83FF] border border-[#8F83FF]/30">
+                Nêutrons (n⁰)
+              </span>
+              <span className="text-[11px] font-mono px-2.5 py-1 rounded bg-white/10 text-white border border-white/20">
+                Elétrons (e⁻)
+              </span>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Structured Physics Topic Cards */}
@@ -120,28 +173,31 @@ export const PhysicsPage: React.FC<PhysicsPageProps> = ({ onNavigate }) => {
         <RadiationShieldingSimulator />
       </section>
 
-      {/* Banner to Fission vs Fusion Page */}
-      <section className="p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-[#111111] via-[#161616] to-[#1a1528] border border-white/10 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="space-y-2 max-w-xl">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#8F83FF] font-mono">
-            Próximo Nível de Aprofundamento
-          </span>
-          <h3 className="text-2xl sm:text-3xl font-extrabold text-white font-display">
-            Quer comparar a Fissão e a Fusão Lado a Lado?
-          </h3>
-          <p className="text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
-            Acesse nosso simulador avançado com matriz comparativa detalhada de combustíveis, rendimentos energéticos, desafios tecnológicos do Tokamak e cálculo de equivalência energética.
-          </p>
-        </div>
-
-        <button
-          onClick={() => onNavigate('fission-fusion')}
-          className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#73CAE5] to-[#8F83FF] text-[#0D0D0D] font-extrabold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity flex items-center space-x-2 shadow-lg shadow-[#73CAE5]/20 shrink-0"
+      {/* Lightbox Modal */}
+      {lightboxImg && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-150"
+          onClick={() => setLightboxImg(null)}
         >
-          <span>ABRIR COMPARADOR FISSÃO × FUSÃO</span>
-          <ArrowRight className="w-4 h-4" />
-        </button>
-      </section>
+          <div className="max-w-4xl w-full bg-[#141414] border border-white/15 rounded-2xl overflow-hidden shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={() => setLightboxImg(null)}
+              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/70 text-white hover:bg-black"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <img src={lightboxImg.url} alt={lightboxImg.title} referrerPolicy="no-referrer" className="w-full max-h-[80vh] object-contain bg-black" />
+            <div className="p-4 space-y-1">
+              <h4 className="text-sm font-bold text-white font-display">
+                {lightboxImg.title}
+              </h4>
+              <p className="text-xs text-[#B7B7B7]">
+                {lightboxImg.desc}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { PageId } from '../types';
 import { FissionFusionSimulator } from '../components/FissionFusionSimulator';
 import { fissionFusionComparison } from '../data/physicsData';
+import fissionDiagramImg from '../assets/images/fission_diagram_sci_1787677675023.jpg';
+import fusionDiagramImg from '../assets/images/fusion_diagram_sci_1787677708566.jpg';
 import {
   Flame,
   Zap,
@@ -11,7 +13,9 @@ import {
   Sparkles,
   Calculator,
   Compass,
-  Cpu
+  Cpu,
+  Maximize2,
+  X
 } from 'lucide-react';
 
 interface FissionFusionPageProps {
@@ -20,6 +24,7 @@ interface FissionFusionPageProps {
 
 export const FissionFusionPage: React.FC<FissionFusionPageProps> = ({ onNavigate }) => {
   const [fuelGrams, setFuelGrams] = useState<number>(1);
+  const [lightboxImg, setLightboxImg] = useState<{ url: string; title: string; desc: string } | null>(null);
 
   // Energy output calculations
   // Coal: ~30 MJ/kg = 30 kJ/g
@@ -29,7 +34,6 @@ export const FissionFusionPage: React.FC<FissionFusionPageProps> = ({ onNavigate
   const fissionMJ = fuelGrams * 82000;
   const fusionMJ = fuelGrams * 340000;
 
-  const coalBarrels = (fissionMJ / 6100).toFixed(1); // 1 barrel of oil approx 6.1 GJ
   const coalTons = (fuelGrams * 2.8).toFixed(1);
 
   return (
@@ -47,6 +51,94 @@ export const FissionFusionPage: React.FC<FissionFusionPageProps> = ({ onNavigate
           Enquanto a <strong>fissão</strong> quebra núcleos atômicos pesados para liberar energia e já opera em centenas de usinas civis, a <strong>fusão</strong> combina núcleos ultraleves como o Sol e representa a maior fronteira tecnológica para a energia limpa e inesgotável do futuro.
         </p>
       </div>
+
+      {/* Visual Scientific Diagrams Section */}
+      <section className="space-y-6">
+        <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-[#73CAE5] font-mono">
+          <Layers className="w-4 h-4" />
+          <span>Esquemas Físicos Fundamentais</span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Fission Diagram Card */}
+          <div className="bg-[#111111] border border-white/10 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between group">
+            <div
+              onClick={() => setLightboxImg({
+                url: fissionDiagramImg,
+                title: 'Diagrama Científico: Fissão Nuclear do Urânio-235',
+                desc: 'Um nêutron incide sobre o núcleo pesado de U-235, provocando sua fragmentação em núcleos médios (Bário e Criptônio), 3 nêutrons secundários e cerca de 200 MeV de energia.'
+              })}
+              className="relative aspect-4/3 bg-black cursor-pointer overflow-hidden"
+            >
+              <img
+                src={fissionDiagramImg}
+                alt="Diagrama científico de fissão nuclear: divisão de núcleo pesado de Urânio-235 por nêutron"
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+              <div className="absolute top-3 right-3 p-2 rounded-full bg-black/60 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
+                <Maximize2 className="w-4 h-4" />
+              </div>
+              <div className="absolute bottom-3 left-4 right-4">
+                <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-[#73CAE5]/20 text-[#73CAE5] border border-[#73CAE5]/30">
+                  Fissão Nuclear (Divisão)
+                </span>
+                <p className="text-sm font-bold text-white font-display mt-1">
+                  Núcleo Pesado → Cisão em Fragmentos + Nêutrons + Energia
+                </p>
+              </div>
+            </div>
+            <div className="p-5 space-y-2 text-xs text-[#B7B7B7] leading-relaxed">
+              <p>
+                <strong>Mecanismo:</strong> O nêutron térmico desestabiliza o núcleo pesado (U-235 ou Pu-239), vencendo a força nuclear forte e gerando fragmentos com altíssima energia cinética convertida em calor.
+              </p>
+              <p className="text-[11px] text-[#B7B7B7]/70">
+                <strong>Fonte:</strong> Divisão de Educação em Física Nuclear / IAEA Nuclear Data
+              </p>
+            </div>
+          </div>
+
+          {/* Fusion Diagram Card */}
+          <div className="bg-[#111111] border border-white/10 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between group">
+            <div
+              onClick={() => setLightboxImg({
+                url: fusionDiagramImg,
+                title: 'Diagrama Científico: Fusão Termonuclear Deutério-Trítio (D-T)',
+                desc: 'Dois núcleos leves de hidrogênio (Deutério e Trítio) fundem-se sob temperaturas de milhões de graus, formando Hélio-4, um nêutron de alta energia e liberando 17,6 MeV.'
+              })}
+              className="relative aspect-4/3 bg-black cursor-pointer overflow-hidden"
+            >
+              <img
+                src={fusionDiagramImg}
+                alt="Diagrama científico de fusão nuclear: união de núcleos leves de Deutério e Trítio formando Hélio-4 e nêutron"
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+              <div className="absolute top-3 right-3 p-2 rounded-full bg-black/60 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
+                <Maximize2 className="w-4 h-4" />
+              </div>
+              <div className="absolute bottom-3 left-4 right-4">
+                <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-[#8F83FF]/20 text-[#8F83FF] border border-[#8F83FF]/30">
+                  Fusão Nuclear (União)
+                </span>
+                <p className="text-sm font-bold text-white font-display mt-1">
+                  Núcleos Leves (D + T) → Hélio-4 + Nêutron + 17,6 MeV
+                </p>
+              </div>
+            </div>
+            <div className="p-5 space-y-2 text-xs text-[#B7B7B7] leading-relaxed">
+              <p>
+                <strong>Mecanismo:</strong> A repulsão eletrostática de Coulomb entre os prótons positivos é superada por energia térmica extrema (150 milhões °C), permitindo que a força nuclear forte una os núcleos.
+              </p>
+              <p className="text-[11px] text-[#B7B7B7]/70">
+                <strong>Fonte:</strong> Laboratório de Física de Plasmas / EUROfusion
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Simulator Embed */}
       <section className="space-y-6">
@@ -220,6 +312,32 @@ export const FissionFusionPage: React.FC<FissionFusionPageProps> = ({ onNavigate
           </div>
         </div>
       </section>
+
+      {/* Lightbox */}
+      {lightboxImg && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-150"
+          onClick={() => setLightboxImg(null)}
+        >
+          <div className="max-w-4xl w-full bg-[#141414] border border-white/15 rounded-2xl overflow-hidden shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={() => setLightboxImg(null)}
+              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/70 text-white hover:bg-black"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <img src={lightboxImg.url} alt={lightboxImg.title} referrerPolicy="no-referrer" className="w-full max-h-[80vh] object-contain bg-black" />
+            <div className="p-4 space-y-1">
+              <h4 className="text-sm font-bold text-white font-display">
+                {lightboxImg.title}
+              </h4>
+              <p className="text-xs text-[#B7B7B7]">
+                {lightboxImg.desc}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

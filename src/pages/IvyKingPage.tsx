@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { PageId } from '../types';
+import ivyKingImg from '../assets/images/ivy_king_001.jpg';
 import {
   Flame,
   Calendar,
@@ -91,12 +92,13 @@ export const IvyKingPage: React.FC<IvyKingPageProps> = ({ onNavigate }) => {
         {/* Right Photo */}
         <div className="lg:col-span-5 space-y-4">
           <div
-            onClick={() => setLightboxImg('https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Ivy_King_-_mushroom_cloud.jpg/1024px-Ivy_King_-_mushroom_cloud.jpg')}
+            onClick={() => setLightboxImg(ivyKingImg)}
             className="relative rounded-2xl overflow-hidden bg-black border border-white/10 group cursor-pointer aspect-4/3 shadow-xl"
           >
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Ivy_King_-_mushroom_cloud.jpg/1024px-Ivy_King_-_mushroom_cloud.jpg"
+              src={ivyKingImg}
               alt="Ivy King mushroom cloud"
+              referrerPolicy="no-referrer"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
@@ -156,7 +158,7 @@ export const IvyKingPage: React.FC<IvyKingPageProps> = ({ onNavigate }) => {
             >
               <X className="w-5 h-5" />
             </button>
-            <img src={lightboxImg} alt="Ivy King" className="w-full max-h-[80vh] object-contain bg-black" />
+            <img src={lightboxImg} alt="Ivy King" referrerPolicy="no-referrer" className="w-full max-h-[80vh] object-contain bg-black" />
             <div className="p-4 text-xs font-bold text-white font-display">
               Teste Ivy King (1952) — U.S. Air Force / Defense Threat Reduction Agency
             </div>

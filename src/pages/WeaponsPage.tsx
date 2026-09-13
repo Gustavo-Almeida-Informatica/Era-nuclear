@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { PageId } from '../types';
 import { weaponCategories, nuclearTreaties } from '../data/weaponsData';
+import gunTypeDiagramImg from '../assets/images/gun_type_fission_diagram_new.gif';
+import implosionTypeDiagramImg from '../assets/images/implosion_type_fission_diagram_1787680148801.jpg';
+import tellerUlamDiagramImg from '../assets/images/BombH_explosion.svg';
+import { NuclearRankingMapTab } from '../components/NuclearRankingMapTab';
 import {
   ShieldAlert,
   Layers,
@@ -15,7 +19,9 @@ import {
   Globe,
   Radio,
   Flame,
-  ArrowRight
+  ArrowRight,
+  Maximize2,
+  X
 } from 'lucide-react';
 
 interface WeaponsPageProps {
@@ -25,6 +31,8 @@ interface WeaponsPageProps {
 export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
   const [selectedWeaponCat, setSelectedWeaponCat] = useState<string>(weaponCategories[0].id);
   const [activePrinciple, setActivePrinciple] = useState<'fissao' | 'fusao'>('fissao');
+  const [selectedArch, setSelectedArch] = useState<'all' | 'gun-type' | 'implosion' | 'teller-ulam'>('all');
+  const [diagramLightbox, setDiagramLightbox] = useState<{ src: string; title: string; caption: string } | null>(null);
 
   const activeCategory = weaponCategories.find((w) => w.id === selectedWeaponCat) || weaponCategories[0];
 
@@ -131,6 +139,11 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
+      {/* Interactive Module: Nuclear Ranking & Blast Radius Simulator */}
+      <section id="simulador-ranking" className="space-y-4">
+        <NuclearRankingMapTab />
+      </section>
+
       {/* SECTION 9: Como Funcionam as Armas Nucleares (Princípios Gerais e Diagramas Conceituais) */}
       <section className="bg-[#111111] border border-white/10 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-8">
         <div className="space-y-2">
@@ -235,136 +248,405 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
               </div>
             </div>
 
-            {/* Conceptual Animation Block: Núcleos Leves -> Fusão -> Núcleo Mais Pesado + Energia */}
+            {/* Conceptual Animation Block: Núcleos Leves -> Fusão -> Nêutrons 14.1 MeV -> Fissão U-238 */}
             <div className="lg:col-span-6 flex flex-col items-center justify-center p-6 rounded-xl bg-[#090909] border border-[#8F83FF]/20 space-y-4">
               <span className="text-[11px] font-mono text-[#8F83FF] uppercase font-bold tracking-wider">
-                Fluxo Conceitual da Fusão
+                Fluxo Conceitual: Fissão → Fusão → Fissão de U-238
               </span>
-              <div className="flex items-center space-x-3 text-xs font-mono text-center">
-                <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-white">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono text-center w-full">
+                <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-white flex flex-col items-center justify-center">
                   <div className="flex space-x-1 justify-center mb-1">
-                    <div className="w-4 h-4 rounded-full bg-[#73CAE5]" />
-                    <div className="w-4 h-4 rounded-full bg-[#8F83FF]" />
+                    <div className="w-3.5 h-3.5 rounded-full bg-[#73CAE5]" />
+                    <div className="w-3.5 h-3.5 rounded-full bg-[#8F83FF]" />
                   </div>
-                  <span>Núcleos Leves (D+T)</span>
+                  <span className="text-[11px]">1. D + T</span>
                 </div>
-                <ArrowRight className="w-4 h-4 text-[#8F83FF] shrink-0 animate-pulse" />
-                <div className="p-3 rounded-xl bg-[#8F83FF]/10 border border-[#8F83FF]/30 text-[#8F83FF]">
-                  <div className="w-6 h-6 rounded-full bg-[#8F83FF] mx-auto mb-1 flex items-center justify-center">🔥</div>
-                  <span>Fusão em Plasma</span>
+                <div className="p-2.5 rounded-xl bg-[#8F83FF]/10 border border-[#8F83FF]/30 text-[#8F83FF] flex flex-col items-center justify-center">
+                  <div className="w-5 h-5 rounded-full bg-[#8F83FF] mx-auto mb-1 flex items-center justify-center text-xs">🔥</div>
+                  <span className="text-[11px]">2. Fusão</span>
                 </div>
-                <ArrowRight className="w-4 h-4 text-[#8F83FF] shrink-0 animate-pulse" />
-                <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300">
-                  <div className="w-6 h-6 rounded-full bg-emerald-400 mx-auto mb-1 flex items-center justify-center text-black font-bold text-[10px]">⁴He</div>
-                  <span>Núcleo + Energia</span>
+                <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 flex flex-col items-center justify-center">
+                  <div className="w-5 h-5 rounded-full bg-emerald-400 mx-auto mb-1 flex items-center justify-center text-black font-bold text-[9px]">¹n</div>
+                  <span className="text-[11px]">3. 14.1 MeV</span>
                 </div>
+                <div className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 flex flex-col items-center justify-center">
+                  <div className="w-5 h-5 rounded-full bg-red-500 mx-auto mb-1 flex items-center justify-center text-white font-bold text-[9px]">²³⁸U</div>
+                  <span className="text-[11px]">4. Fissão U-238</span>
+                </div>
+              </div>
+              <div className="w-full text-[11px] text-[#B7B7B7] bg-white/[0.02] p-2.5 rounded-lg border border-white/5 leading-relaxed">
+                <strong className="text-amber-300">O 6º Elemento (Fissão Terciária):</strong> Em armas termonucleares reais, os nêutrons de 14,1 MeV da fusão causam a fissão rápida do invólucro de Urânio-238 (inerte para fissão comum), gerando mais da metade do rendimento total e quase todo o fallout.
               </div>
             </div>
           </div>
         )}
       </section>
 
-      {/* SECTION 10: Arquiteturas Históricas de Armas Nucleares (Conceituais e Não Construtivos) */}
-      <section className="space-y-6">
-        <div className="space-y-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#8F83FF] font-mono">
-            Evolução Conceitual Abstrata
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-display">
-            Arquiteturas Históricas de Armas Nucleares
-          </h2>
-          <p className="text-xs sm:text-sm text-[#B7B7B7]">
-            Modelos didáticos e conceituais dos três métodos históricos clássicos desenvolvidos durante o século XX.
-          </p>
+      {/* SECTION 10: Arquiteturas Históricas de Armas Nucleares (Esquemas Técnicos Didáticos) */}
+      <section className="space-y-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div className="space-y-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#8F83FF] font-mono">
+              Física e Mecânica Clássica dos Artefatos
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-display">
+              Arquiteturas Históricas de Armas Nucleares
+            </h2>
+            <p className="text-xs sm:text-sm text-[#B7B7B7] max-w-3xl">
+              Esquemas conceituais didáticos e sequência física detalhada dos três métodos históricos clássicos desenvolvidos no século XX.
+            </p>
+          </div>
+
+          {/* Selector buttons */}
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setSelectedArch('all')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all border ${
+                selectedArch === 'all'
+                  ? 'bg-white text-black border-white'
+                  : 'bg-white/5 border-white/10 text-[#B7B7B7] hover:text-white'
+              }`}
+            >
+              Todos os Modelos
+            </button>
+            <button
+              onClick={() => setSelectedArch('gun-type')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all border ${
+                selectedArch === 'gun-type'
+                  ? 'bg-[#73CAE5] text-black border-[#73CAE5]'
+                  : 'bg-white/5 border-white/10 text-[#B7B7B7] hover:text-white'
+              }`}
+            >
+              1. Canhão (Gun-Type)
+            </button>
+            <button
+              onClick={() => setSelectedArch('implosion')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all border ${
+                selectedArch === 'implosion'
+                  ? 'bg-[#8F83FF] text-white border-[#8F83FF]'
+                  : 'bg-white/5 border-white/10 text-[#B7B7B7] hover:text-white'
+              }`}
+            >
+              2. Implosão (Plutônio)
+            </button>
+            <button
+              onClick={() => setSelectedArch('teller-ulam')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all border ${
+                selectedArch === 'teller-ulam'
+                  ? 'bg-amber-400 text-black border-amber-400'
+                  : 'bg-white/5 border-white/10 text-[#B7B7B7] hover:text-white'
+              }`}
+            >
+              3. Teller-Ulam (Termonuclear)
+            </button>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Card 1: Gun Type */}
-          <div className="p-6 sm:p-8 rounded-2xl bg-[#111111] border border-white/10 hover:border-[#73CAE5]/40 transition-all space-y-4 shadow-xl flex flex-col justify-between">
-            <div className="space-y-3">
-              <span className="text-[11px] font-mono font-bold text-[#73CAE5] uppercase tracking-wider">
-                Conceito 01 • Fissão por Junção
-              </span>
-              <h3 className="text-xl font-bold text-white font-display">
-                Fissão Tipo Canhão (Gun-Type)
-              </h3>
-              <p className="text-xs text-[#B7B7B7] leading-relaxed">
-                <strong>Conceito Teórico:</strong> O método mais elementar historicamente. Consiste em acelerar uma massa subcrítica de material físsil (Urânio-235) em direção a outra massa subcrítica através de um tubo, unindo-as rapidamente para formar uma massa supercrítica.
-              </p>
-              
-              {/* Abstract Non-constructive Diagram */}
-              <div className="p-4 rounded-xl bg-black/60 border border-white/5 text-center space-y-2">
-                <div className="text-[10px] font-mono text-[#B7B7B7]">Diagrama Conceitual Abstrato:</div>
-                <div className="flex items-center justify-center space-x-2 text-xs font-mono">
-                  <span className="px-2 py-1 rounded bg-[#73CAE5]/20 text-[#73CAE5] border border-[#73CAE5]/30">Subcrítico A</span>
-                  <span className="text-white">➔</span>
-                  <span className="px-2 py-1 rounded bg-[#73CAE5]/20 text-[#73CAE5] border border-[#73CAE5]/30">Subcrítico B</span>
+        <div className="space-y-8">
+          {/* Card 1: Gun-Type (Little Boy) */}
+          {(selectedArch === 'all' || selectedArch === 'gun-type') && (
+            <div className="p-6 sm:p-8 rounded-2xl bg-[#111111] border border-[#73CAE5]/30 hover:border-[#73CAE5] transition-all space-y-6 shadow-2xl">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
+                <div className="space-y-1">
+                  <div className="inline-flex items-center space-x-2 px-2.5 py-0.5 rounded bg-[#73CAE5]/10 text-[#73CAE5] text-[11px] font-mono font-bold">
+                    <span>MÉTODO 01</span>
+                    <span>•</span>
+                    <span>DISPARO BALÍSTICO (URÂNIO-235)</span>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-white font-display">
+                    Fissão Tipo Canhão (Gun-Type Nuclear Fission Bomb)
+                  </h3>
+                </div>
+                <div className="text-xs text-[#B7B7B7] bg-white/5 px-3 py-1.5 rounded-xl border border-white/5">
+                  <strong className="text-white">Exemplo Histórico:</strong> Little Boy (Hiroshima, 6 de agosto de 1945, ~15 kt)
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                {/* Visual Technical Diagram */}
+                <div className="lg:col-span-6 space-y-3">
+                  <div
+                    onClick={() =>
+                      setDiagramLightbox({
+                        src: gunTypeDiagramImg,
+                        title: 'Diagrama Técnico: Bomba de Fissão Tipo Canhão (Gun-Type / Little Boy)',
+                        caption:
+                          'Representação didática dos dois estágios internos: propulsão do projétil de Urânio-235 pelo cano até a inserção completa no anel/esfera alvo, gerando massa supercrítica e fissão nuclear instantânea.'
+                      })
+                    }
+                    className="relative group rounded-xl overflow-hidden border border-white/10 bg-white/5 cursor-pointer shadow-lg aspect-[4/3]"
+                  >
+                    <img
+                      src={gunTypeDiagramImg}
+                      alt="Diagrama Didático de Bomba Tipo Canhão (Gun-Type)"
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-contain bg-white p-2 transition-transform duration-500 group-hover:scale-102"
+                    />
+                    <div className="absolute top-3 right-3 p-2 rounded-full bg-black/70 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Maximize2 className="w-4 h-4" />
+                    </div>
+                    <div className="absolute bottom-2 left-2 right-2 bg-black/80 px-2.5 py-1 rounded text-[11px] text-white/90 flex justify-between items-center backdrop-blur-sm">
+                      <span>Diagrama didático de corte transversal</span>
+                      <span className="text-[#73CAE5] font-mono">Clique p/ expandir</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Step-by-Step Explanation in Portuguese */}
+                <div className="lg:col-span-6 space-y-4 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
+                  <h4 className="text-sm font-bold text-white uppercase font-mono tracking-wider text-[#73CAE5]">
+                    Mecanismo Físico e Sequência Operacional
+                  </h4>
+
+                  <div className="space-y-3">
+                    <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 space-y-1">
+                      <div className="text-white font-bold flex items-center space-x-2">
+                        <span className="w-5 h-5 rounded-full bg-[#73CAE5]/20 text-[#73CAE5] font-mono text-xs flex items-center justify-center font-bold">1</span>
+                        <span>Carga Propulsora e Disparo Balístico</span>
+                      </div>
+                      <p className="text-xs pl-7">
+                        Uma carga de propelente convencional (como cordite) é detonada na culatra na parte traseira da carcaça. A pressão dos gases em expansão acelera um projétil tubular subcrítico de <strong>Urânio-235 (~38,5 kg)</strong> a aproximadamente 300 m/s ao longo de um cano de aço liso.
+                      </p>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 space-y-1">
+                      <div className="text-white font-bold flex items-center space-x-2">
+                        <span className="w-5 h-5 rounded-full bg-[#73CAE5]/20 text-[#73CAE5] font-mono text-xs flex items-center justify-center font-bold">2</span>
+                        <span>Junção da Massa Supercrítica e Detonação</span>
+                      </div>
+                      <p className="text-xs pl-7">
+                        O projétil atinge o anel/esfera alvo subcrítico de <strong>Urânio-235 (~25,5 kg)</strong> na ponta da bomba. A união das duas peças ultrapassa instantaneamente a massa crítica (fator de multiplicação k &gt; 1). Iniciadores de nêutrons de polônio-berílio injetam nêutrons no instante exato da máxima penetração, deflagrando a reação em cadeia descontrolada de fissão.
+                      </p>
+                    </div>
+
+                    <div className="p-3 rounded-xl bg-[#73CAE5]/5 border border-[#73CAE5]/20 text-xs space-y-1">
+                      <strong className="text-white flex items-center space-x-1">
+                        <Info className="w-3.5 h-3.5 text-[#73CAE5]" />
+                        <span>Por que o método Gun-Type tornou-se obsoleto?</span>
+                      </strong>
+                      <ul className="list-disc list-inside space-y-0.5 text-[#B7B7B7] pl-1">
+                        <li><strong>Incompatível com Plutônio:</strong> O Pu-240 presente no plutônio tem alta taxa de fissão espontânea e provocaria "fizzle" (pré-detonação prematura) antes da bala se unir ao alvo.</li>
+                        <li><strong>Baixíssima Eficiência:</strong> Apenas ~1,4% do urânio de Little Boy fisionou antes de a energia dissipar o artefato; o restante (~98,6%) foi disperso.</li>
+                        <li><strong>Peso e Segurança:</strong> Pesava mais de 4.400 kg e possuía alto risco de disparo acidental por impacto mecânico ou quedas.</li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+          )}
 
-            <div className="pt-3 border-t border-white/5 text-[11px] text-[#B7B7B7]">
-              <strong className="text-white">Exemplo Histórico:</strong> Little Boy (Hiroshima, 1945). Obsoleto devido à baixa eficiência física e peso excessivo.
-            </div>
-          </div>
+          {/* Card 2: Implosion-Type (Plutonium / Fat Man) */}
+          {(selectedArch === 'all' || selectedArch === 'implosion') && (
+            <div className="p-6 sm:p-8 rounded-2xl bg-[#111111] border border-[#8F83FF]/30 hover:border-[#8F83FF] transition-all space-y-6 shadow-2xl">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
+                <div className="space-y-1">
+                  <div className="inline-flex items-center space-x-2 px-2.5 py-0.5 rounded bg-[#8F83FF]/10 text-[#8F83FF] text-[11px] font-mono font-bold">
+                    <span>MÉTODO 02</span>
+                    <span>•</span>
+                    <span>COMPRESSÃO ESFÉRICA HIDRODINÂMICA (PLUTÔNIO-239)</span>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-white font-display">
+                    Fissão por Implosão (Plutonium Implosion-Type Bomb)
+                  </h3>
+                </div>
+                <div className="text-xs text-[#B7B7B7] bg-white/5 px-3 py-1.5 rounded-xl border border-white/5">
+                  <strong className="text-white">Exemplos Históricos:</strong> Trinity (1945), Fat Man (Nagasaki, 1945, ~21 kt), RDS-1 (1949)
+                </div>
+              </div>
 
-          {/* Card 2: Implosion Type */}
-          <div className="p-6 sm:p-8 rounded-2xl bg-[#111111] border border-white/10 hover:border-[#8F83FF]/40 transition-all space-y-4 shadow-xl flex flex-col justify-between">
-            <div className="space-y-3">
-              <span className="text-[11px] font-mono font-bold text-[#8F83FF] uppercase tracking-wider">
-                Conceito 02 • Compressão Esférica
-              </span>
-              <h3 className="text-xl font-bold text-white font-display">
-                Fissão por Implosão (Implosion-Type)
-              </h3>
-              <p className="text-xs text-[#B7B7B7] leading-relaxed">
-                <strong>Conceito Teórico:</strong> Uma esfera oca ou sólida de material físsil (Plutônio-239) é cercada por uma camada esférica simétrica. A pressão convergente comprime o núcleo em milionésimos de segundo, aumentando sua densidade para atingir a super-criticalidade.
-              </p>
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                {/* Visual Technical Diagram */}
+                <div className="lg:col-span-6 space-y-3">
+                  <div
+                    onClick={() =>
+                      setDiagramLightbox({
+                        src: implosionTypeDiagramImg,
+                        title: 'Diagrama Técnico: Bomba de Fissão por Implosão de Plutônio (Fat Man / Trinity)',
+                        caption:
+                          'Cortes em três etapas: 1. Invólucro externo esférico; 2. Lentes de alto explosivo gerando onda de choque convergente para comprimir o núcleo de Plutônio-239; 3. Compressão supercrítica extrema gerando a detonação nuclear.'
+                      })
+                    }
+                    className="relative group rounded-xl overflow-hidden border border-white/10 bg-white/5 cursor-pointer shadow-lg aspect-[4/3]"
+                  >
+                    <img
+                      src={implosionTypeDiagramImg}
+                      alt="Diagrama Didático de Fissão por Implosão de Plutônio"
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-contain bg-white p-2 transition-transform duration-500 group-hover:scale-102"
+                    />
+                    <div className="absolute top-3 right-3 p-2 rounded-full bg-black/70 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Maximize2 className="w-4 h-4" />
+                    </div>
+                    <div className="absolute bottom-2 left-2 right-2 bg-black/80 px-2.5 py-1 rounded text-[11px] text-white/90 flex justify-between items-center backdrop-blur-sm">
+                      <span>Diagrama didático de corte em 3 etapas</span>
+                      <span className="text-[#8F83FF] font-mono">Clique p/ expandir</span>
+                    </div>
+                  </div>
+                </div>
 
-              {/* Abstract Non-constructive Diagram */}
-              <div className="p-4 rounded-xl bg-black/60 border border-white/5 text-center space-y-2">
-                <div className="text-[10px] font-mono text-[#B7B7B7]">Diagrama Conceitual Abstrato:</div>
-                <div className="flex items-center justify-center space-x-1 text-xs font-mono">
-                  <span className="text-[#8F83FF]">⬇</span>
-                  <span className="w-8 h-8 rounded-full bg-[#8F83FF]/20 border border-[#8F83FF] flex items-center justify-center text-white text-[10px]">Núcleo</span>
-                  <span className="text-[#8F83FF]">⬆</span>
+                {/* Step-by-Step Explanation in Portuguese */}
+                <div className="lg:col-span-6 space-y-4 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
+                  <h4 className="text-sm font-bold text-white uppercase font-mono tracking-wider text-[#8F83FF]">
+                    Mecanismo Físico e Sequência Operacional
+                  </h4>
+
+                  <div className="space-y-3">
+                    <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 space-y-1">
+                      <div className="text-white font-bold flex items-center space-x-2">
+                        <span className="w-5 h-5 rounded-full bg-[#8F83FF]/20 text-[#8F83FF] font-mono text-xs flex items-center justify-center font-bold">1</span>
+                        <span>Disparo Simultâneo das Lentes Explosivas</span>
+                      </div>
+                      <p className="text-xs pl-7">
+                        Dezenas de detonadores elétricos de fio explosivo (EBW) disparam em sincronia perfeita (com tolerância inferior a 10 nanossegundos). Uma camada externa de 32 lentes explosivas moldadas combina explosivos rápidos (Composition B) e lentos (Baratol) para converter frentes de onda divergentes em uma <strong>onda de choque esférica convergente</strong> perfeita.
+                      </p>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 space-y-1">
+                      <div className="text-white font-bold flex items-center space-x-2">
+                        <span className="w-5 h-5 rounded-full bg-[#8F83FF]/20 text-[#8F83FF] font-mono text-xs flex items-center justify-center font-bold">2</span>
+                        <span>Compressão Hidrodinâmica e Super-Criticalidade</span>
+                      </div>
+                      <p className="text-xs pl-7">
+                        A onda de choque atinge uma blindagem inercial de urânio natural (tamper) e comprime a esfera central de <strong>Plutônio-239 (fase delta, ~6,2 kg)</strong>, reduzindo seu volume em mais de 50% e duplicando instantaneamente sua densidade. Essa súbita compressão transforma a massa subcrítica em um estado profundamente supercrítico.
+                      </p>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 space-y-1">
+                      <div className="text-white font-bold flex items-center space-x-2">
+                        <span className="w-5 h-5 rounded-full bg-[#8F83FF]/20 text-[#8F83FF] font-mono text-xs flex items-center justify-center font-bold">3</span>
+                        <span>Injeção de Nêutrons e Explosão Nuclear</span>
+                      </div>
+                      <p className="text-xs pl-7">
+                        No núcleo exato da esfera comprimida, o iniciador de nêutrons (codinome <em>Urchin</em>, feito de polônio-210 e berílio) é esmagado, liberando uma rajada de nêutrons que inicia as gerações exponenciais da fissão antes que o núcleo possa se desintegrar hidrodinamicamente.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+          )}
 
-            <div className="pt-3 border-t border-white/5 text-[11px] text-[#B7B7B7]">
-              <strong className="text-white">Exemplos Históricos:</strong> Trinity, Fat Man (Nagasaki, 1945), RDS-1 (1949). Padrão para gatilhos de ogivas modernas.
-            </div>
-          </div>
+          {/* Card 3: Staged Thermonuclear (Teller-Ulam) */}
+          {(selectedArch === 'all' || selectedArch === 'teller-ulam') && (
+            <div className="p-6 sm:p-8 rounded-2xl bg-[#111111] border border-amber-500/30 hover:border-amber-400 transition-all space-y-6 shadow-2xl">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
+                <div className="space-y-1">
+                  <div className="inline-flex items-center space-x-2 px-2.5 py-0.5 rounded bg-amber-400/10 text-amber-400 text-[11px] font-mono font-bold">
+                    <span>MÉTODO 03</span>
+                    <span>•</span>
+                    <span>IMPLOSÃO POR RADIAÇÃO EM ESTÁGIOS (TELLER-ULAM)</span>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-white font-display">
+                    Arma Termonuclear em Estágios (Teller-Ulam Design)
+                  </h3>
+                </div>
+                <div className="text-xs text-[#B7B7B7] bg-white/5 px-3 py-1.5 rounded-xl border border-white/5">
+                  <strong className="text-white">Exemplos Históricos:</strong> Ivy Mike (1952, 10,4 Mt), Castle Bravo (1954, 15 Mt), Tsar Bomba (1961, 50 Mt)
+                </div>
+              </div>
 
-          {/* Card 3: Teller-Ulam */}
-          <div className="p-6 sm:p-8 rounded-2xl bg-[#111111] border border-white/10 hover:border-amber-500/40 transition-all space-y-4 shadow-xl flex flex-col justify-between">
-            <div className="space-y-3">
-              <span className="text-[11px] font-mono font-bold text-amber-400 uppercase tracking-wider">
-                Conceito 03 • Dois Estágios
-              </span>
-              <h3 className="text-xl font-bold text-white font-display">
-                Termonuclear (Teller-Ulam)
-              </h3>
-              <p className="text-xs text-[#B7B7B7] leading-relaxed">
-                <strong>Conceito Teórico:</strong> Uma primária de fissão por implosão libera um banho intenso de raios-X térmicos. Essa radiação canalizada comprime e aquece um estágio secundário contendo combustível de fusão de deutereto de lítio.
-              </p>
+              <div className="space-y-6">
+                {/* Visual Technical Diagram (16:9 widescreen) */}
+                <div className="space-y-3">
+                  <div
+                    onClick={() =>
+                      setDiagramLightbox({
+                        src: tellerUlamDiagramImg,
+                        title: 'Diagrama Técnico: Arma Termonuclear em Estágios (Configuração Teller-Ulam)',
+                        caption:
+                          'Sequência cronológica dos 6 estágios: 1. Ogiva antes do disparo; 2. Fissão da primária; 3. Canalização e reflexão dos raios-X térmicos; 4. Plasma de poliestireno e implosão por radiação do secundário + vela de plutônio; 5. Ignição da fusão termonuclear no deutereto de lítio-6; 6. Fissão rápida terciária do invólucro de Urânio-238.'
+                      })
+                    }
+                    className="relative group rounded-xl overflow-hidden border border-white/10 bg-white/5 cursor-pointer shadow-lg aspect-[16/9] max-h-[420px]"
+                  >
+                    <img
+                      src={tellerUlamDiagramImg}
+                      alt="Diagrama Didático da Configuração Teller-Ulam"
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-contain bg-white p-2 transition-transform duration-500 group-hover:scale-102"
+                    />
+                    <div className="absolute top-3 right-3 p-2 rounded-full bg-black/70 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Maximize2 className="w-4 h-4" />
+                    </div>
+                    <div className="absolute bottom-2 left-2 right-2 bg-black/80 px-2.5 py-1 rounded text-[11px] text-white/90 flex justify-between items-center backdrop-blur-sm">
+                      <span>Diagrama didático com os 6 passos sequenciais da detonação termonuclear (Ciclo Fissão-Fusão-Fissão)</span>
+                      <span className="text-amber-400 font-mono">Clique p/ expandir</span>
+                    </div>
+                  </div>
+                </div>
 
-              {/* Abstract Non-constructive Diagram */}
-              <div className="p-4 rounded-xl bg-black/60 border border-white/5 text-center space-y-2">
-                <div className="text-[10px] font-mono text-[#B7B7B7]">Diagrama Conceitual Abstrato:</div>
-                <div className="flex items-center justify-center space-x-2 text-xs font-mono">
-                  <span className="px-2 py-1 rounded bg-[#8F83FF]/20 text-[#8F83FF]">Primário</span>
-                  <span className="text-amber-400">⚡ (Raios-X)</span>
-                  <span className="px-2 py-1 rounded bg-[#73CAE5]/20 text-[#73CAE5]">Secundário</span>
+                {/* 6-Step Detailed Sequential Physical Explanation */}
+                <div className="space-y-4">
+                  <h4 className="text-sm font-bold text-white uppercase font-mono tracking-wider text-amber-400">
+                    Os 6 Passos Sequenciais da Detonação Termonuclear (Física em Milionésimos de Segundo)
+                  </h4>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3.5 text-xs text-[#B7B7B7]">
+                    <div className="p-4 rounded-xl bg-white/[0.03] border border-white/5 space-y-2">
+                      <div className="flex items-center space-x-2 text-white font-bold">
+                        <span className="w-6 h-6 rounded-full bg-amber-400/20 text-amber-400 font-mono flex items-center justify-center text-[11px]">1</span>
+                        <span>Ogiva em Repouso</span>
+                      </div>
+                      <p className="leading-relaxed text-[11px]">
+                        No topo, a <strong>primária de fissão</strong> (implosão). Abaixo, o <strong>secundário</strong> com deutereto de lítio-6, a "vela" central de plutônio e o <strong>invólucro denso de Urânio-238</strong>, suspensos em matriz de espuma de poliestireno.
+                      </p>
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-white/[0.03] border border-white/5 space-y-2">
+                      <div className="flex items-center space-x-2 text-white font-bold">
+                        <span className="w-6 h-6 rounded-full bg-amber-400/20 text-amber-400 font-mono flex items-center justify-center text-[11px]">2</span>
+                        <span>Fissão da Primária</span>
+                      </div>
+                      <p className="leading-relaxed text-[11px]">
+                        Explosivos convencionais comprimem o caroço de plutônio. Ocorre a fissão primária, atingindo dezenas de milhões de °C e inundando a cavidade com <strong>raios-X térmicos</strong> de altíssima energia.
+                      </p>
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-white/[0.03] border border-white/5 space-y-2">
+                      <div className="flex items-center space-x-2 text-white font-bold">
+                        <span className="w-6 h-6 rounded-full bg-amber-400/20 text-amber-400 font-mono flex items-center justify-center text-[11px]">3</span>
+                        <span>Canal de Raios-X</span>
+                      </div>
+                      <p className="leading-relaxed text-[11px]">
+                        Os raios-X propagam-se na velocidade da luz pelo canal de radiação, refletindo nas paredes internas de alta densidade da carcaça antes que qualquer onda de choque mecânica destrua a estrutura.
+                      </p>
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-white/[0.03] border border-white/5 space-y-2">
+                      <div className="flex items-center space-x-2 text-white font-bold">
+                        <span className="w-6 h-6 rounded-full bg-amber-400/20 text-amber-400 font-mono flex items-center justify-center text-[11px]">4</span>
+                        <span>Implosão por Radiação</span>
+                      </div>
+                      <p className="leading-relaxed text-[11px]">
+                        A espuma vira plasma hiperbárico. A camada externa do secundário sofre ablação explosiva, gerando pressão de milhões de atmosferas que comprime o combustível de lítio e inicia a fissão da vela central de plutônio.
+                      </p>
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-white/[0.03] border border-white/5 space-y-2">
+                      <div className="flex items-center space-x-2 text-white font-bold">
+                        <span className="w-6 h-6 rounded-full bg-amber-400/20 text-amber-400 font-mono flex items-center justify-center text-[11px]">5</span>
+                        <span>Ignição da Fusão</span>
+                      </div>
+                      <p className="leading-relaxed text-[11px]">
+                        O Lítio-6 captura nêutrons e gera Trítio (&sup6;Li + n &rarr; &sup4;He + &sup3;H). O trítio funde-se instantaneamente com o deutério sob calor estelar, liberando energia massiva e um fluxo descomunal de <strong>nêutrons ultrarrápidos de 14,1 MeV</strong>.
+                      </p>
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 space-y-2 shadow-lg shadow-red-500/5">
+                      <div className="flex items-center space-x-2 text-white font-bold">
+                        <span className="w-6 h-6 rounded-full bg-red-500/30 text-red-400 font-mono flex items-center justify-center text-[11px]">6</span>
+                        <span className="text-red-300">Fissão do U-238</span>
+                      </div>
+                      <p className="leading-relaxed text-[11px] text-[#D0D0D0]">
+                        O fluxo de nêutrons de 14,1 MeV bombardeia o <strong>invólucro/tamper de Urânio-238</strong>. Incapaz de fisionar com nêutrons lentos, o U-238 sofre <em>fissão rápida</em>, dobrando o rendimento em megatons (50%–80% da energia) e gerando o fallout.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-
-            <div className="pt-3 border-t border-white/5 text-[11px] text-[#B7B7B7]">
-              <strong className="text-white">Exemplos Históricos:</strong> Ivy Mike (1952), Castle Bravo (1954), RDS-37 (1955), Tsar Bomba (1961), B41.
-            </div>
-          </div>
+          )}
         </div>
       </section>
 
@@ -468,6 +750,46 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
           ))}
         </div>
       </section>
+
+      {/* Lightbox Modal for Architecture Diagrams */}
+      {diagramLightbox && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-fadeIn"
+          onClick={() => setDiagramLightbox(null)}
+        >
+          <div
+            className="relative max-w-4xl w-full bg-[#111111] border border-white/20 rounded-2xl overflow-hidden shadow-2xl space-y-4 p-4 sm:p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <h4 className="text-base sm:text-lg font-bold text-white font-display">
+                {diagramLightbox.title}
+              </h4>
+              <button
+                onClick={() => setDiagramLightbox(null)}
+                className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
+                title="Fechar"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="max-h-[65vh] overflow-auto flex items-center justify-center bg-white rounded-xl p-3">
+              <img
+                src={diagramLightbox.src}
+                alt={diagramLightbox.title}
+                referrerPolicy="no-referrer"
+                className="max-h-[60vh] w-auto object-contain mx-auto"
+              />
+            </div>
+
+            <div className="text-xs text-[#B7B7B7] leading-relaxed bg-white/5 p-3.5 rounded-xl border border-white/5">
+              <strong className="text-white font-mono text-[11px] uppercase tracking-wider block mb-1">Explicação Técnica Didática:</strong>
+              {diagramLightbox.caption}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -10,6 +10,7 @@ export type PageId =
   | 'b41'
   | 'chernobyl'
   | 'impacts'
+  | 'nuclear-ranking'
   | 'energy'
   | 'cases'
   | 'gallery'
@@ -32,6 +33,8 @@ export interface TimelineEvent {
   keyFigures?: string[];
   imageUrl?: string;
   imageCaption?: string;
+  secondaryImageUrl?: string;
+  secondaryImageCaption?: string;
   location?: string;
   source?: string;
 }

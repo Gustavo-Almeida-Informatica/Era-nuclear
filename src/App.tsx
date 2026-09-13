@@ -22,6 +22,7 @@ import { GlossaryPage } from './pages/GlossaryPage';
 import { AboutPage } from './pages/AboutPage';
 import { SourcesPage } from './pages/SourcesPage';
 import { ContactPage } from './pages/ContactPage';
+import { NuclearRankingMapTab } from './components/NuclearRankingMapTab';
 
 // Special Monographic Pages
 import { OperationCastlePage } from './pages/OperationCastlePage';
@@ -49,6 +50,7 @@ export default function App() {
         'b41',
         'chernobyl',
         'impacts',
+        'nuclear-ranking',
         'energy',
         'cases',
         'gallery',
@@ -100,6 +102,12 @@ export default function App() {
         return <ChernobylPage onNavigate={handleNavigate} />;
       case 'impacts':
         return <ImpactsPage onNavigate={handleNavigate} />;
+      case 'nuclear-ranking':
+        return (
+          <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+            <NuclearRankingMapTab />
+          </div>
+        );
       case 'energy':
         return <EnergyPage onNavigate={handleNavigate} />;
       case 'cases':

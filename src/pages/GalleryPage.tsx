@@ -87,6 +87,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ onNavigate }) => {
                 src={item.imageUrl}
                 alt={item.title}
                 loading="lazy"
+                referrerPolicy="no-referrer"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#111111] via-transparent to-transparent opacity-80" />
@@ -156,6 +157,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ onNavigate }) => {
               <img
                 src={activeLightboxItem.imageUrl}
                 alt={activeLightboxItem.title}
+                referrerPolicy="no-referrer"
                 className="w-full h-full object-contain bg-black"
               />
             </div>
