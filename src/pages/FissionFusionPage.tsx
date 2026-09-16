@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { PageId } from '../types';
 import { FissionFusionSimulator } from '../components/FissionFusionSimulator';
+import { FissionFusionAtomsComparison } from '../components/FissionFusionAtomsComparison';
 import { fissionFusionComparison } from '../data/physicsData';
 import fissionDiagramImg from '../assets/images/fission_diagram_sci_1787677675023.jpg';
 import fusionDiagramImg from '../assets/images/fusion_diagram_sci_1787677708566.jpg';
@@ -138,6 +139,11 @@ export const FissionFusionPage: React.FC<FissionFusionPageProps> = ({ onNavigate
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Atomic Models Comparison: U-235, Pu-239, Deuterium, Tritium */}
+      <section className="space-y-6">
+        <FissionFusionAtomsComparison />
       </section>
 
       {/* Simulator Embed */}

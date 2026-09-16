@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { PageId } from '../types';
 import { energyApplications, risksAndBenefitsMatrix } from '../data/energyData';
+import { FusionReactorsSection } from '../components/FusionReactorsSection';
 import {
   Zap,
   HeartPulse,
@@ -27,15 +28,24 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
     <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
       {/* Header */}
       <div className="max-w-3xl space-y-4">
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-xs font-semibold text-emerald-400">
-          <Zap className="w-3.5 h-3.5" />
-          <span>Aplicações Pacíficas & Transição Energética</span>
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-xs font-semibold text-emerald-400">
+            <Zap className="w-3.5 h-3.5" />
+            <span>Aplicações Pacíficas & Transição Energética</span>
+          </div>
+          <a
+            href="#fusion-reactors"
+            className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-[#8F83FF]/15 border border-[#8F83FF]/30 text-xs font-semibold text-[#8F83FF] hover:bg-[#8F83FF]/25 transition-colors"
+          >
+            <span>Ver Reatores de Fusão (ITER, SPARC, W7-X)</span>
+            <ChevronRight className="w-3.5 h-3.5" />
+          </a>
         </div>
         <h1 className="text-4xl sm:text-5xl font-extrabold text-white font-display tracking-tight">
           Energia Nuclear Civil
         </h1>
         <p className="text-base text-[#B7B7B7] leading-relaxed">
-          Muito além dos arsenais bélicos, a física do átomo impulsiona a medicina oncológica moderna, a segurança alimentar contra pragas, a exploração do espaço profundo e fornece cerca de 10% de toda a eletricidade global com emissões quase nulas de carbono.
+          Muito além dos arsenais bélicos, a física do átomo impulsiona a medicina oncológica moderna, a segurança alimentar contra pragas, a exploração do espaço profundo, centenas de usinas de fissão comercial e a promissora fronteira dos <strong>reatores de fusão termonuclear</strong>.
         </p>
       </div>
 
@@ -125,6 +135,9 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
           </div>
         </div>
       </section>
+
+      {/* Fusion Reactors Section */}
+      <FusionReactorsSection />
 
       {/* Balanced Section: Nuclear Risk vs Benefit */}
       <section className="space-y-8">

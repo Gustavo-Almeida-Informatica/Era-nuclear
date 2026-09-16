@@ -19,9 +19,11 @@ import chicagoPile1Img from '../assets/images/chicago_pile_one_1787677642726.jpg
 import iterTokamakImg from '../assets/images/iter_tokamak_fusion_1787677659756.jpg';
 import fissionDiagramImg from '../assets/images/fission_diagram_sci_1787677675023.jpg';
 import fusionDiagramImg from '../assets/images/fusion_diagram_sci_1787677708566.jpg';
-import gunTypeDiagramImg from '../assets/images/gun_type_fission_diagram_new.gif';
+import gunTypeDiagramImg from '../assets/images/little_boy_gun_type_diagram.svg';
 import implosionTypeDiagramImg from '../assets/images/implosion_type_fission_diagram_1787680148801.jpg';
 import tellerUlamDiagramImg from '../assets/images/BombH_explosion.svg';
+import fukushimaDamageImg from '../assets/images/fukushima_daiichi_damage_2011.jpg';
+import goianiaSourceImg from '../assets/images/goiania_cesio_137_source.jpg';
 
 export const galleryItems: GalleryItem[] = [
   {
@@ -248,6 +250,36 @@ export const galleryItems: GalleryItem[] = [
     license: 'Arquivo Histórico AIEA / Domínio Público Documental',
     imageUrl: chernobylImg,
     tag: 'Acidente Civil'
+  },
+  {
+    id: 'goiania-cesio-137-foto',
+    title: 'Acidente Radiológico de Goiânia — Fonte e Cápsula de Césio-137',
+    date: '13 de setembro de 1987',
+    year: '1987',
+    location: 'Goiânia, Goiás, Brasil',
+    category: 'acontecimentos',
+    categoryLabel: 'Acidente Radiológico',
+    description: 'Documento fotográfico pericial registrando os fragmentos da cápsula de teleterapia de chumbo e aço e os recipientes de contenção da fonte de cloreto de césio-137 após a intervenção emergencial da CNEN e da AIEA.',
+    historicalContext: 'O maior acidente radiológico em área urbana do mundo, originado pelo abandono de um aparelho de radioterapia no antigo Instituto Goiano de Radioterapia (IGR). Transformou a legislação internacional de controle, custódia e monitoramento de fontes radiológicas órfãs.',
+    source: 'Comissão Nacional de Energia Nuclear (CNEN) / Arquivo Documental AIEA',
+    license: 'Domínio Público Institucional / Arquivo Oficial',
+    imageUrl: goianiaSourceImg,
+    tag: 'Césio-137'
+  },
+  {
+    id: 'fukushima-daiichi-destruicao-2011',
+    title: 'Danos Estruturais na Central Nuclear de Fukushima Daiichi (Unidade 3)',
+    date: '15 de março de 2011',
+    year: '2011',
+    location: 'Okuma / Futaba, Fukushima, Japão',
+    category: 'acontecimentos',
+    categoryLabel: 'Acidente Civil',
+    description: 'Registro fotográfico das ruínas do Edifício do Reator 3 de Fukushima Daiichi após a explosão de hidrogênio causada pelo superaquecimento e perda total de energia decorrentes do tsunami de março de 2011.',
+    historicalContext: 'Desastre nuclear de nível 7 na escala INES. Diferente de Chernobyl, as contenções primárias de aço resistiram em grande parte, mas o acúmulo de hidrogênio resultante da reação zircônio-vapor causou explosões destrutivas nos edifícios secundários, acelerando a implementação de sistemas de segurança passiva no mundo todo.',
+    source: 'Tokyo Electric Power Company (TEPCO) / Wikimedia Commons / Arquivo AIEA',
+    license: 'Arquivo Documental / Domínio Público / Wikimedia Commons',
+    imageUrl: fukushimaDamageImg,
+    tag: 'Fukushima 2011'
   },
   {
     id: 'chicago-pile-1',

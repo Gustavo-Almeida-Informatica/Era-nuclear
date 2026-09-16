@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { PageId } from '../types';
 import { AtomSimulator } from '../components/AtomSimulator';
 import { FissionFusionSimulator } from '../components/FissionFusionSimulator';
+import { FissionFusionAtomsComparison } from '../components/FissionFusionAtomsComparison';
 import { QuizModule } from '../components/QuizModule';
 import {
   Atom,
@@ -365,6 +366,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             <ChevronRight className="w-3.5 h-3.5 text-[#8F83FF]" />
           </button>
         </div>
+
+        {/* Modelos Atômicos Dinâmicos: U-235, Pu-239, Deutério e Trítio */}
+        <FissionFusionAtomsComparison />
 
         <FissionFusionSimulator />
       </section>

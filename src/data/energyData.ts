@@ -11,12 +11,21 @@ export interface EnergyApplication {
 export const energyApplications: EnergyApplication[] = [
   {
     id: 'geracao-eletricidade',
-    title: 'Geração de Eletricidade em Larga Escala',
+    title: 'Geração de Eletricidade por Fissão (PWR / BWR / SMR)',
     category: 'Energia & Clima',
     summary: 'A fissão nuclear controlada em reatores comerciais aquece água para produzir vapor em alta pressão e girar turbogeradores elétricos.',
     howItWorks: 'Em um reator de água pressurizada (PWR), a fissão do U-235 aquece o circuito primário a ~320 °C sob 155 bar (evitando ebulição). Esse calor é transferido pelo gerador de vapor ao circuito secundário, cujo vapor aciona a turbina elétrica e depois é condensado e reciclado em circuito fechado.',
     societalBenefit: 'Fornece eletricidade contínua de base (fator de capacidade > 90%) com pegada de carbono quase nula durante a operação, crucial para descarbonizar redes elétricas globais.',
     keyRadioisotopes: ['Urânio-235', 'Urânio-238', 'Plutônio-239 (combustível MOX)']
+  },
+  {
+    id: 'reatores-fusao',
+    title: 'Reatores de Fusão Nuclear (A Energia das Estrelas)',
+    category: 'Energia do Futuro',
+    summary: 'A reprodução confinada das reações termonucleares solares em reatores Tokamak e Stellarator para fornecer eletricidade limpa, ilimitada e segura.',
+    howItWorks: 'Campos magnéticos colossais gerados por ímãs supercondutores (até 20 Tesla) confinam plasma de Deutério e Trítio a 150 milhões de °C no formato de toro (donut). A fusão dos núcleos gera Hélio-4 e nêutrons de 14,1 MeV absorvidos por mantos térmicos de lítio que acionam turbinas a vapor e sintetizam novo trítio em ciclo fechado autossustentável.',
+    societalBenefit: 'Combustível obtido da água do mar com reserva para milhões de anos, zero emissão de gases estufa, ausência total de lixo radioativo de longa vida e impossibilidade física de derretimento do núcleo (meltdown).',
+    keyRadioisotopes: ['Deutério (²H)', 'Trítio (³H)', 'Lítio-6 (⁶Li)', 'Hélio-4 (⁴He)']
   },
   {
     id: 'medicina-nuclear',
@@ -124,3 +133,237 @@ export const risksAndBenefitsMatrix: RiskBenefitItem[] = [
     ]
   }
 ];
+
+export interface FusionReactorProject {
+  id: string;
+  name: string;
+  type: 'Tokamak Magnético' | 'Stellarator' | 'Confinamento Inercial a Laser' | 'Magneto-Inercial / FRC';
+  country: string;
+  location: string;
+  operator: string;
+  status: 'Em Construção' | 'Operacional / Experimental' | 'Protótipo Comercial';
+  ignitionGoal: string;
+  plasmaTemp: string;
+  magneticField: string;
+  powerOrYield: string;
+  description: string;
+  keyInnovations: string[];
+  schematicDetails: {
+    confinementMethod: string;
+    fuelCycle: string;
+    coolingBlanket: string;
+    safetyMechanisms: string;
+  };
+}
+
+export const FUSION_REACTORS: FusionReactorProject[] = [
+  {
+    id: 'iter',
+    name: 'ITER (International Thermonuclear Experimental Reactor)',
+    type: 'Tokamak Magnético',
+    country: 'França (Consórcio Global de 35 Nações)',
+    location: 'Saint-Paul-lès-Durance / Cadarache, França',
+    operator: 'Consórcio Internacional (UE, EUA, China, Japão, Rússia, Coreia do Sul, Índia)',
+    status: 'Em Construção',
+    ignitionGoal: 'Fator de Ganho Q = 10 (Consome 50 MW térmicos e gera 500 MW de potência de fusão contínua)',
+    plasmaTemp: '150.000.000 °C (10 vezes a temperatura do núcleo do Sol)',
+    magneticField: '11,8 Tesla com ímãs gigantescos de Nióbio-Estanho resfriados a -269 °C (Hélio Líquido)',
+    powerOrYield: '500 MW térmicos com pulsos de plasma de 400 a 3.000 segundos',
+    description: 'O maior experimento científico cooperativo do planeta. Um tokamak gigantesco de 840 m³ de volume de plasma projetado para demonstrar de forma inequívoca a viabilidade técnica e energética da fusão nuclear em escala de usina civil.',
+    keyInnovations: [
+      'Câmara de vácuo toroidal de aço inoxidável com tolerâncias milimétricas de 29 metros de altura',
+      'Solenóide central com campo magnético de 13 Tesla, força magnética suficiente para erguer um porta-aviões de 100.000 toneladas',
+      'Módulos de teste de manto reproductor (Test Blanket Modules) para gerar novo trítio a partir de lítio durante a operação',
+      'Desviador (Divertor) magnético com blindagem de tungstênio resistente a fluxos térmicos comparáveis à reentrada de naves espaciais (20 MW/m²)'
+    ],
+    schematicDetails: {
+      confinementMethod: 'Gaiola magnética toroidal helicoidal combinando campo toroidal de bobinas externas e campo poloidal induzido por corrente no próprio plasma',
+      fuelCycle: 'Mistura 50/50 de Deutério (extraído da água do mar) e Trítio (gerado e reciclado no reator)',
+      coolingBlanket: 'Manto de aço de baixa ativação EUROFER refrigerado por água pressurizada ou hélio supercrítico',
+      safetyMechanisms: 'Reação se extingue passivamente em menos de 1 segundo se houver perda de controle ou entrada de ar; apenas 3 a 4 gramas de combustível na câmara'
+    }
+  },
+  {
+    id: 'sparc',
+    name: 'SPARC (Commonwealth Fusion Systems / MIT)',
+    type: 'Tokamak Magnético',
+    country: 'Estados Unidos',
+    location: 'Devens, Massachusetts, EUA',
+    operator: 'Commonwealth Fusion Systems (spin-off do MIT PSFC)',
+    status: 'Em Construção',
+    ignitionGoal: 'Fator de Ganho Q > 11 (Gera ~140 MW de potência de fusão com apenas ~11 MW de aquecimento auxiliar)',
+    plasmaTemp: '> 100.000.000 °C',
+    magneticField: '20,1 Tesla (Recorde mundial alcançado com supercondutores de alta temperatura REBCO)',
+    powerOrYield: '140 MWth em reator compacto do tamanho de uma sala residencial (1/50 do volume do ITER)',
+    description: 'A vanguarda da fusão nuclear privada e compacta. Utiliza ímãs revolucionários de supercondutores de alta temperatura (HTS) que geram campos magnéticos quase duas vezes mais intensos que o ITER, reduzindo drasticamente as dimensões e o custo do reator.',
+    keyInnovations: [
+      'Fita supercondutora de Óxido de Bário, Cobre e Terras Raras (REBCO) operando a 20 Kelvin',
+      'Densidade de potência magnética proporcional a B⁴ (campo magnético elevado à quarta potência: 20T permite reatores 40 vezes mais compactos)',
+      'Abertura direta do caminho para a usina comercial ARC (Affordable, Robust, Compact) conectada à rede na década de 2030',
+      'Construção financiada por mais de 2 bilhões de dólares de capital de inovação e pesquisa acadêmica do MIT'
+    ],
+    schematicDetails: {
+      confinementMethod: 'Tokamak de campo magnético ultradenso de 20 Tesla contendo plasma de alta pressão com estabilidade aprimorada',
+      fuelCycle: 'Deutério-Trítio (D-T)',
+      coolingBlanket: 'Manto líquido FLiBe (Fluoreto de Lítio e Berílio líquido) para resfriamento e reprodução de trítio sem trocadores complexos',
+      safetyMechanisms: 'Desligamento térmico imediato por radiação impura intencional ou corte da corrente magnética'
+    }
+  },
+  {
+    id: 'w7x',
+    name: 'Wendelstein 7-X (W7-X)',
+    type: 'Stellarator',
+    country: 'Alemanha',
+    location: 'Greifswald, Mecklemburgo-Pomerânia Ocidental, Alemanha',
+    operator: 'Instituto Max Planck de Física do Plasma (IPP)',
+    status: 'Operacional / Experimental',
+    ignitionGoal: 'Demonstrar operação contínua estável em estado estacionário (steady-state) por até 30 minutos ininterruptos',
+    plasmaTemp: '60.000.000 °C a 100.000.000 °C',
+    magneticField: '3,0 Tesla estático permanente gerado por 70 bobinas helicoidais não coplanares',
+    powerOrYield: 'Até 1,3 gigajoules de energia acumulada por pulso experimental contínuo de 480 segundos',
+    description: 'O maior e mais avançado stellarator do mundo. Diferente dos tokamaks, o stellarator não induz corrente elétrica no plasma, eliminando completamente o risco de disrupções magnéticas súbitas que podem danificar as paredes da câmara.',
+    keyInnovations: [
+      '70 bobinas magnéticas supercondutoras com formatos tridimensionais complexos calculados por supercomputadores em anos de otimização de campo',
+      'Operação inerentemente contínua (24 horas por dia) sem necessidade de pulsos de transformador solenóide como nos tokamaks',
+      'Sistema de desviador (divertor) refrigerado a água capaz de remover continuamente até 10 MW/m² de calor de escape',
+      'Comprovou experimentalmente a redução drástica das perdas térmicas neoclássicas que historicamente prejudicavam os stellarators antigos'
+    ],
+    schematicDetails: {
+      confinementMethod: 'Campos magnéticos tridimensionais torcidos exclusivamente por bobinas externas em geometria Möbius de simetria pentagonal',
+      fuelCycle: 'Hidrogênio e Deutério puro para validação de confinamento contínuo sem ativação por nêutrons de trítio',
+      coolingBlanket: 'Painéis térmicos refrigerados a água desmineralizada de alta pureza',
+      safetyMechanisms: 'Total ausência de corrente plasmática, tornando impossível qualquer evento de disrupção destrutiva'
+    }
+  },
+  {
+    id: 'nif',
+    name: 'NIF (National Ignition Facility)',
+    type: 'Confinamento Inercial a Laser',
+    country: 'Estados Unidos',
+    location: 'Lawrence Livermore National Laboratory (LLNL), Califórnia, EUA',
+    operator: 'Departamento de Energia dos EUA (DOE) / NNSA',
+    status: 'Operacional / Experimental',
+    ignitionGoal: 'Histórico: Primeiro reator da humanidade a atingir a Ignição Nuclear com ganho líquido de energia (Q > 1)',
+    plasmaTemp: '> 100.000.000 °C e pressões estelares de centenas de bilhões de atmosferas',
+    magneticField: 'Sem confinamento magnético (compressão inercial por pulso ultrarrápido de raios-X)',
+    powerOrYield: 'Injetou 2,05 Megajoules de luz laser ultravioleta e liberou 3,15 Megajoules de energia de fusão (ganho de ~1,54x)',
+    description: 'O maior e mais potente sistema de laser do planeta, do tamanho de três campos de futebol. Em 5 de dezembro de 2022, o NIF atingiu a meta perseguida por cientistas nucleares há mais de 70 anos: produzir mais energia a partir da fusão termonuclear do que a energia laser fornecida ao alvo.',
+    keyInnovations: [
+      '192 feixes de laser gigantescos amplificados e convertidos para o espectro ultravioleta (351 nm)',
+      'Cavidade cilíndrica de ouro (hohlraum) que converte a luz laser em um banho simétrico e implosivo de raios-X térmicos',
+      'Microesfera de diamante de apenas 2 mm de diâmetro preenchida com gelo criogênico de Deutério e Trítio a -255 °C',
+      'Velocidade de implosão da cápsula superior a 400 km por segundo em menos de 10 bilionésimos de segundo'
+    ],
+    schematicDetails: {
+      confinementMethod: 'Ablação da superfície externa da cápsula de diamante, cuja expansão explosiva empurra o combustível interno em compressão esférica perfeita até a densidade de chumbo',
+      fuelCycle: 'Deutério-Trítio criogênico (D-T)',
+      coolingBlanket: 'Câmara esférica de vácuo de alumínio de 10 metros de diâmetro equipada com dezenas de sensores nucleares ultravelozes',
+      safetyMechanisms: 'Reação ocorre em nanosegundos com microgramas de combustível; sem risco de reação em cadeia'
+    }
+  },
+  {
+    id: 'east',
+    name: 'EAST ("Sol Artificial" da China)',
+    type: 'Tokamak Magnético',
+    country: 'China',
+    location: 'Hefei, Anhui, China',
+    operator: 'Instituto de Física do Plasma da Academia Chinesa de Ciências (ASIPP)',
+    status: 'Operacional / Experimental',
+    ignitionGoal: 'Desenvolver a física de plasma de confinamento estendido (modo H) para o futuro reator CFETR',
+    plasmaTemp: 'Recorde de 70.000.000 °C mantidos por 1.056 segundos e 120.000.000 °C por 101 segundos',
+    magneticField: '3,5 Tesla',
+    powerOrYield: 'Operação sustentada de alta temperatura sem disrupção por mais de 17 minutos contínuos',
+    description: 'O Tokamak Supercondutor Avançado Experimental (EAST) detém os recordes mundiais de confinamento de plasma de longa duração em modo de alto confinamento (H-mode), testando componentes de primeira parede para a geração comercial chinesa.',
+    keyInnovations: [
+      'Primeiro tokamak totalmente supercondutor do mundo a utilizar tanto bobinas toroidais quanto poloidais de NbTi',
+      'Paredes ativas revestidas com telhas de tungstênio e injeção contínua de vapor de lítio para aprisionamento de impurezas',
+      'Sistemas integrados de aquecimento híbrido combinando micro-ondas de frequência ciclotrônica e injeção de feixes neutros (NBI)',
+      'Base de dados experimental essencial para o projeto CFETR (China Fusion Engineering Test Reactor) de 1 GW'
+    ],
+    schematicDetails: {
+      confinementMethod: 'Confinamento magnético D-shaped com controle ativo de instabilidades magnetohidrodinâmicas (ELMs)',
+      fuelCycle: 'Hidrogênio e Deutério com reciclagem avançada de gás de escape',
+      coolingBlanket: 'Circuitos de hélio supercrítico a 4,5 Kelvin para os ímãs e trocadores de água de alta vazão no divertor',
+      safetyMechanisms: 'Injeção de pellets criogênicos de gás nobre para mitigação e extinção suave do plasma em caso de perda de controle'
+    }
+  },
+  {
+    id: 'helion',
+    name: 'Helion Energy (Polaris / Trenta)',
+    type: 'Magneto-Inercial / FRC',
+    country: 'Estados Unidos',
+    location: 'Everett, Washington, EUA',
+    operator: 'Helion Energy (com investimentos de Sam Altman e contrato com a Microsoft)',
+    status: 'Protótipo Comercial',
+    ignitionGoal: 'Primeira usina comercial de fusão a fornecer 50 MW elétricos líquidos à rede até 2028',
+    plasmaTemp: '100.000.000 °C com recuperação direta de energia',
+    magneticField: 'Campos magnéticos pulsados de compressão acelerada',
+    powerOrYield: 'Conversão direta em eletricidade com eficiência projetada superior a 80-90% sem turbina a vapor',
+    description: 'Abordagem disruptiva sem caldeiras de vapor ou turbinas. Utiliza dois anéis de plasma com Configuração de Campo Invertido (FRC) disparados um contra o outro a 1 milhão de km/h e comprimidos por ímãs. A expansão do plasma fundido empurra o campo magnético, induzindo eletricidade diretamente nas bobinas externas como um dínamo.',
+    keyInnovations: [
+      'Ciclo de combustível aneutrônico de Deutério e Hélio-3 (D-³He), gerando prótons carregados em vez de nêutrons de alta energia',
+      'Recuperação direta de eletricidade por indução eletromagnética reversa (Lei de Faraday), eliminando perdas térmicas do ciclo Rankine',
+      'Sintetizador próprio de Hélio-3 a partir do decaimento controlado de trítio gerado por reações D-D secundárias',
+      'Contrato histórico de compra de energia assinado em 2023 com a Microsoft para abastecer data centers de inteligência artificial'
+    ],
+    schematicDetails: {
+      confinementMethod: 'Acelerador magnético linear duplo com compressão de plasmoide de campo invertido no ponto central de colisão',
+      fuelCycle: 'Deutério + Hélio-3 (²H + ³He → ⁴He + p⁺ + 18,3 MeV)',
+      coolingBlanket: 'Bobinas de captação eletromagnética resfriadas por líquido sem necessidade de turbinas pesadas',
+      safetyMechanisms: 'Pulsos discretos (1 a 10 Hz) com frações de miligramas de combustível por disparo'
+    }
+  }
+];
+
+export interface FissionVsFusionPoint {
+  parameter: string;
+  fission: string;
+  fusion: string;
+  advantage: 'Fissão' | 'Fusão' | 'Neutro';
+}
+
+export const FISSION_VS_FUSION_COMPARISON: FissionVsFusionPoint[] = [
+  {
+    parameter: 'Princípio Físico',
+    fission: 'Quebra de núcleos atômicos pesados (Urânio-235 ou Plutônio-239) bombardeados por nêutrons térmicos lentos.',
+    fusion: 'Fusão de núcleos ultraleves de hidrogênio (Deutério e Trítio) sob temperaturas de 100 a 150 milhões de °C.',
+    advantage: 'Neutro'
+  },
+  {
+    parameter: 'Disponibilidade de Combustível',
+    fission: 'Minério de urânio na crosta terrestre. Recursos finitos estimados em ~100 a 200 anos de consumo atual (ou milênios com reatores rápidos breeders).',
+    fusion: 'Deutério extraído da água do mar (33 gramas por m³) e Trítio gerado no reator a partir de Lítio. Combustível inesgotável por milhões de anos.',
+    advantage: 'Fusão'
+  },
+  {
+    parameter: 'Densidade de Energia',
+    fission: 'Extrema: 1 grama de U-235 equivale a cerca de 1 a 3 toneladas de carvão mineral.',
+    fusion: 'Colossal: 1 grama de combustível D-T libera 4 vezes mais energia que 1 grama de urânio e equivale a 8 toneladas de petróleo.',
+    advantage: 'Fusão'
+  },
+  {
+    parameter: 'Resíduos Radioativos (Lixo Nuclear)',
+    fission: 'Gera produtos de fissão de meia-vida longa (Césio-137, Estrôncio-90) e actinídeos menores que demandam isolamento geológico de centenas a milhares de anos.',
+    fusion: 'Sem actinídeos ou produtos de fissão tóxicos. O subproduto da queima é gás Hélio-4 inerte. A parede metálica do reator ativada por nêutrons torna-se segura para reciclagem em menos de 100 anos.',
+    advantage: 'Fusão'
+  },
+  {
+    parameter: 'Risco de Acidente Catastrófico / Meltdown',
+    fission: 'Risco baixo em centrais modernas, mas real em caso de perda total de resfriamento (calor residual de decaimento dos produtos de fissão pode fundir o núcleo).',
+    fusion: 'Risco físico ZERO de derretimento do núcleo. Há menos de 4 gramas de combustível na câmara a qualquer instante. Qualquer perturbação no vácuo resfria o plasma e apaga a reação em milissegundos.',
+    advantage: 'Fusão'
+  },
+  {
+    parameter: 'Proliferação e Uso Bélico de Materiais',
+    fission: 'Requer instalações de enriquecimento de urânio e gera plutônio no combustível queimado, exigindo rigorosas salvaguardas internacionais da AIEA.',
+    fusion: 'Os materiais combustíveis (Deutério, Trítio, Lítio) não podem produzir bombas atômicas por si sós. Ausência total de materiais físseis para proliferação.',
+    advantage: 'Fusão'
+  },
+  {
+    parameter: 'Estágio Atual de Maturidade Tecnológica',
+    fission: 'Tecnologia comercial madura há mais de 70 anos. Mais de 440 reatores operacionais fornecendo ~10% da eletricidade mundial de forma contínua.',
+    fusion: 'Em fase de validação experimental e protótipos em escala piloto (ITER, SPARC, NIF, W7-X). Primeiras usinas piloto conectadas à rede esperadas entre 2030 e 2040.',
+    advantage: 'Fissão'
+  }
+];
+

@@ -2,8 +2,8 @@ import { CastleTest } from '../types';
 import castleBravoImg from '../assets/images/castle_bravo_005.jpg';
 import castleRomeoImg from '../assets/images/castle_romeo.jpg';
 import castleKoonImg from '../assets/images/castle_koon_blast_1787677556674.jpg';
-import castleUnionImg from '../assets/images/castle_union_blast_1787677543358.jpg';
-import castleYankeeImg from '../assets/images/castle_yankee_blast_1787677525079.jpg';
+import castleUnionImg from '../assets/images/castle_union_user_1789412099166.jpg';
+import castleYankeeImg from '../assets/images/castle_yankee_user_attached.jpg';
 import castleNectarImg from '../assets/images/castle_nectar_blast_1787677582310.jpg';
 
 export const castleTests: CastleTest[] = [

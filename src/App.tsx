@@ -104,7 +104,7 @@ export default function App() {
         return <ImpactsPage onNavigate={handleNavigate} />;
       case 'nuclear-ranking':
         return (
-          <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+          <div className="pt-20 sm:pt-24 pb-8 w-full px-0 sm:px-2 lg:px-4">
             <NuclearRankingMapTab />
           </div>
         );

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PageId } from '../types';
 import { weaponCategories, nuclearTreaties } from '../data/weaponsData';
-import gunTypeDiagramImg from '../assets/images/gun_type_fission_diagram_new.gif';
+import gunTypeDiagramImg from '../assets/images/little_boy_gun_type_diagram.svg';
 import implosionTypeDiagramImg from '../assets/images/implosion_type_fission_diagram_1787680148801.jpg';
 import tellerUlamDiagramImg from '../assets/images/BombH_explosion.svg';
 import { NuclearRankingMapTab } from '../components/NuclearRankingMapTab';
@@ -140,7 +140,7 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* Interactive Module: Nuclear Ranking & Blast Radius Simulator */}
-      <section id="simulador-ranking" className="space-y-4">
+      <section id="simulador-ranking" className="space-y-4 -mx-4 sm:-mx-6 lg:-mx-8 xl:-mx-12 w-[calc(100%+2rem)] sm:w-[calc(100%+3rem)] lg:w-[calc(100%+4rem)] xl:w-[calc(100%+6rem)]">
         <NuclearRankingMapTab />
       </section>
 
@@ -380,7 +380,7 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
                       src={gunTypeDiagramImg}
                       alt="Diagrama Didático de Bomba Tipo Canhão (Gun-Type)"
                       referrerPolicy="no-referrer"
-                      className="w-full h-full object-contain bg-white p-2 transition-transform duration-500 group-hover:scale-102"
+                      className="w-full h-full object-contain bg-black p-1 transition-transform duration-500 group-hover:scale-102"
                     />
                     <div className="absolute top-3 right-3 p-2 rounded-full bg-black/70 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
                       <Maximize2 className="w-4 h-4" />
@@ -774,7 +774,7 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
               </button>
             </div>
 
-            <div className="max-h-[65vh] overflow-auto flex items-center justify-center bg-white rounded-xl p-3">
+            <div className="max-h-[65vh] overflow-auto flex items-center justify-center bg-black border border-white/10 rounded-xl p-3">
               <img
                 src={diagramLightbox.src}
                 alt={diagramLightbox.title}

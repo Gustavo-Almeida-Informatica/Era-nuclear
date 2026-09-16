@@ -17,6 +17,8 @@ import b41Img from '../assets/images/b41_real_usaf_museum.jpg';
 import b41MuseumDocImg from '../assets/images/b41_real_usaf_museum.jpg';
 import chicagoPile1Img from '../assets/images/chicago_pile_one_1787677642726.jpg';
 import iterTokamakImg from '../assets/images/iter_tokamak_fusion_1787677659756.jpg';
+import fukushimaDamageImg from '../assets/images/fukushima_daiichi_damage_2011.jpg';
+import goianiaSourceImg from '../assets/images/goiania_cesio_137_source.jpg';
 
 export const timelineEvents: TimelineEvent[] = [
   {
@@ -454,6 +456,8 @@ export const timelineEvents: TimelineEvent[] = [
     historicalImpact: 'Transformou globalmente as regras de rastreabilidade, fiscalização e descarte seguro de fontes radioativas na medicina e na indústria.',
     keyFigures: ['Comissão Nacional de Energia Nuclear (CNEN)', 'AIEA'],
     location: 'Goiânia, Goiás, Brasil',
+    imageUrl: goianiaSourceImg,
+    imageCaption: 'Cápsula de teleterapia violada e resíduos da fonte de césio-137 recuperados pela CNEN e AIEA em Goiânia (1987).',
     source: 'Comissão Nacional de Energia Nuclear (CNEN) / Relatório Oficial AIEA (1988)'
   },
   {
@@ -499,6 +503,8 @@ export const timelineEvents: TimelineEvent[] = [
     historicalImpact: 'Impulsionou a revisão de defesas costeiras e sistemas de segurança passiva contra eventos naturais extremos em usinas nucleares em todo o mundo.',
     keyFigures: ['Tokyo Electric Power Company (TEPCO)', 'AIEA', 'Governo do Japão'],
     location: 'Okuma / Futaba, Prefeitura de Fukushima, Japão',
+    imageUrl: fukushimaDamageImg,
+    imageCaption: 'Estrutura destruída do Edifício do Reator 3 da Usina de Fukushima Daiichi após a explosão de hidrogênio (março de 2011).',
     source: 'International Atomic Energy Agency (IAEA) / UNSCEAR'
   },
   {

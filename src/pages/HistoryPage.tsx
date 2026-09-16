@@ -14,7 +14,9 @@ import {
   Sparkles,
   ChevronRight,
   Maximize2,
-  MapPin
+  MapPin,
+  AlertTriangle,
+  ShieldAlert
 } from 'lucide-react';
 
 interface HistoryPageProps {
@@ -135,20 +137,68 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
             Filtro por Categoria Temática:
           </span>
           <div className="flex flex-wrap gap-2">
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
-                  selectedCategory === cat.id
-                    ? 'bg-[#8F83FF]/20 text-white border border-[#8F83FF]'
-                    : 'bg-white/[0.03] text-[#B7B7B7] hover:text-white border border-white/5'
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
+            {categories.map((cat) => {
+              const count = timelineEvents.filter(
+                (e) => (selectedDecade === 'todos' || e.decade === selectedDecade) && (cat.id === 'todos' || e.category === cat.id)
+              ).length;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`px-3 py-1 rounded-lg text-xs font-medium transition-all flex items-center space-x-1.5 ${
+                    selectedCategory === cat.id
+                      ? cat.id === 'acidente'
+                        ? 'bg-rose-500/25 text-rose-300 border border-rose-500 shadow-md shadow-rose-500/20'
+                        : 'bg-[#8F83FF]/20 text-white border border-[#8F83FF]'
+                      : 'bg-white/[0.03] text-[#B7B7B7] hover:text-white border border-white/5'
+                  }`}
+                >
+                  <span>{cat.label}</span>
+                  <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-white/10 text-white/80 font-mono">
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
           </div>
+        </div>
+
+        {/* Quick jump highlights for major historical cases requested by user */}
+        <div className="pt-2 border-t border-white/5 flex flex-wrap items-center gap-2 text-xs">
+          <span className="text-[11px] font-mono text-[#B7B7B7]/70 uppercase font-semibold flex items-center space-x-1">
+            <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
+            <span>Destaques de Acidentes:</span>
+          </span>
+          <button
+            onClick={() => {
+              setSelectedDecade('todos');
+              setSelectedCategory('acidente');
+              setSearchQuery('Goiânia');
+            }}
+            className="px-2.5 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-xs border border-rose-500/30 transition-colors font-mono"
+          >
+            🇧🇷 Césio-137 em Goiânia (1987)
+          </button>
+          <button
+            onClick={() => {
+              setSelectedDecade('todos');
+              setSelectedCategory('acidente');
+              setSearchQuery('Fukushima');
+            }}
+            className="px-2.5 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-xs border border-rose-500/30 transition-colors font-mono"
+          >
+            🇯🇵 Fukushima Daiichi (2011)
+          </button>
+          <button
+            onClick={() => {
+              setSelectedDecade('todos');
+              setSelectedCategory('acidente');
+              setSearchQuery('Chernobyl');
+            }}
+            className="px-2.5 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-xs border border-rose-500/30 transition-colors font-mono"
+          >
+            🇺🇦 Chernobyl (1986)
+          </button>
         </div>
       </div>
 

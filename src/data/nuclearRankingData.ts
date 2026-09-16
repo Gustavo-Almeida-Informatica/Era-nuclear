@@ -30,6 +30,7 @@ export interface NuclearBombRanking {
   description: string;
   fireballRadiusM: number;
   vaporizationRadiusM: number;
+  carbonizationRadiusM: number;
   heavyBlastRadiusM: number;
   thermalRadiusM: number;
   lightBlastRadiusM: number;
@@ -47,6 +48,10 @@ export interface TargetCity {
   lng: number;
   description: string;
   populationEstimate: string;
+  urbanPopulation?: number;
+  metroPopulation?: number;
+  coreDensityPerKm2?: number;
+  metroDensityPerKm2?: number;
   isHighlighted?: boolean;
   highlightTag?: string;
   landmark?: string;
@@ -61,6 +66,10 @@ export const TARGET_CITIES: TargetCity[] = [
     lng: -77.0364,
     description: 'Capital dos EUA, centro de comando político e militar supremo (Pentágono e Casa Branca). Alvo de primária prioridade em doutrinas estratégicas.',
     populationEstimate: '~700 mil (área metropolitana: 6,3 milhões)',
+    urbanPopulation: 700000,
+    metroPopulation: 6300000,
+    coreDensityPerKm2: 4450,
+    metroDensityPerKm2: 650,
     isHighlighted: true,
     highlightTag: 'Capital dos EUA / Pentágono',
     landmark: 'Casa Branca & Pentágono'
@@ -73,6 +82,10 @@ export const TARGET_CITIES: TargetCity[] = [
     lng: 37.6173,
     description: 'Capital da Federação Russa, sede do Kremlin e centro nevrálgico político e militar das Forças de Foguetes Estratégicos.',
     populationEstimate: '~13 milhões',
+    urbanPopulation: 13100000,
+    metroPopulation: 20000000,
+    coreDensityPerKm2: 5100,
+    metroDensityPerKm2: 1200,
     isHighlighted: true,
     highlightTag: 'Capital da Rússia / Kremlin',
     landmark: 'Praça Vermelha & Kremlin'
@@ -85,6 +98,10 @@ export const TARGET_CITIES: TargetCity[] = [
     lng: 132.4553,
     description: 'Primeira cidade na história humana a sofrer um ataque atômico, em 6 de agosto de 1945, pela bomba "Little Boy" de urânio lançada pelo B-29 Enola Gay.',
     populationEstimate: '~1,2 milhão',
+    urbanPopulation: 1200000,
+    metroPopulation: 1450000,
+    coreDensityPerKm2: 2800,
+    metroDensityPerKm2: 950,
     isHighlighted: true,
     highlightTag: 'Alvo Little Boy (06/08/1945)',
     landmark: 'Cúpula Genbaku (Memorial da Paz)'
@@ -97,6 +114,10 @@ export const TARGET_CITIES: TargetCity[] = [
     lng: 129.8777,
     description: 'Segunda cidade alvo de bombardeio atômico em 9 de agosto de 1945, detonada pela arma de implosão de plutônio "Fat Man" lançada pelo B-29 Bockscar.',
     populationEstimate: '~410 mil',
+    urbanPopulation: 410000,
+    metroPopulation: 530000,
+    coreDensityPerKm2: 1800,
+    metroDensityPerKm2: 850,
     isHighlighted: true,
     highlightTag: 'Alvo Fat Man (09/08/1945)',
     landmark: 'Parque Memorial da Paz de Nagasaki'
@@ -109,6 +130,10 @@ export const TARGET_CITIES: TargetCity[] = [
     lng: 116.4074,
     description: 'Capital da República Popular da China, sede do governo central e polo estratégico da potência nuclear asiática.',
     populationEstimate: '~21,5 milhões',
+    urbanPopulation: 21800000,
+    metroPopulation: 25000000,
+    coreDensityPerKm2: 5200,
+    metroDensityPerKm2: 1400,
     isHighlighted: true,
     highlightTag: 'Capital da China / Potência Nuclear',
     landmark: 'Praça da Paz Celestial & Zhongnanhai'
@@ -124,7 +149,11 @@ export const WORLD_PRESET_CITIES: TargetCity[] = [
     lat: -23.5505,
     lng: -46.6333,
     description: 'Maior metrópole da América do Sul e principal centro financeiro e populacional do Brasil.',
-    populationEstimate: '~12,3 milhões (metrópole: 22 milhões)'
+    populationEstimate: '~12,3 milhões (metrópole: 22 milhões)',
+    urbanPopulation: 12300000,
+    metroPopulation: 22000000,
+    coreDensityPerKm2: 8100,
+    metroDensityPerKm2: 2800
   },
   {
     id: 'rio-de-janeiro',
@@ -133,7 +162,11 @@ export const WORLD_PRESET_CITIES: TargetCity[] = [
     lat: -22.9068,
     lng: -43.1729,
     description: 'Grande centro metropolitano costeiro histórico do Brasil, polo cultural e energético.',
-    populationEstimate: '~6,7 milhões'
+    populationEstimate: '~6,7 milhões',
+    urbanPopulation: 6700000,
+    metroPopulation: 13000000,
+    coreDensityPerKm2: 5600,
+    metroDensityPerKm2: 1800
   },
   {
     id: 'brasilia',
@@ -142,7 +175,11 @@ export const WORLD_PRESET_CITIES: TargetCity[] = [
     lat: -15.7975,
     lng: -47.8919,
     description: 'Capital federal do Brasil, sede dos Três Poderes da República.',
-    populationEstimate: '~3,0 milhões'
+    populationEstimate: '~3,0 milhões',
+    urbanPopulation: 3050000,
+    metroPopulation: 4300000,
+    coreDensityPerKm2: 2800,
+    metroDensityPerKm2: 600
   },
   {
     id: 'new-york',
@@ -151,7 +188,11 @@ export const WORLD_PRESET_CITIES: TargetCity[] = [
     lat: 40.7128,
     lng: -74.006,
     description: 'Maior metrópole e centro financeiro dos Estados Unidos e sede das Nações Unidas.',
-    populationEstimate: '~8,3 milhões (área metropolitana: 20 milhões)'
+    populationEstimate: '~8,3 milhões (área metropolitana: 20 milhões)',
+    urbanPopulation: 8400000,
+    metroPopulation: 20100000,
+    coreDensityPerKm2: 11300,
+    metroDensityPerKm2: 2200
   },
   {
     id: 'london',
@@ -160,7 +201,11 @@ export const WORLD_PRESET_CITIES: TargetCity[] = [
     lat: 51.5074,
     lng: -0.1278,
     description: 'Capital do Reino Unido, histórico centro diplomático e potência integrante da OTAN.',
-    populationEstimate: '~8,9 milhões'
+    populationEstimate: '~8,9 milhões',
+    urbanPopulation: 8900000,
+    metroPopulation: 14800000,
+    coreDensityPerKm2: 5700,
+    metroDensityPerKm2: 1600
   },
   {
     id: 'paris',
@@ -169,7 +214,11 @@ export const WORLD_PRESET_CITIES: TargetCity[] = [
     lat: 48.8566,
     lng: 2.3522,
     description: 'Capital da França, potência com força nuclear independente ("Force de frappe").',
-    populationEstimate: '~2,1 milhões (metrópole: 12 milhões)'
+    populationEstimate: '~2,1 milhões (metrópole: 12 milhões)',
+    urbanPopulation: 2160000,
+    metroPopulation: 12400000,
+    coreDensityPerKm2: 20500,
+    metroDensityPerKm2: 3500
   },
   {
     id: 'berlin',
@@ -178,7 +227,11 @@ export const WORLD_PRESET_CITIES: TargetCity[] = [
     lat: 52.52,
     lng: 13.405,
     description: 'Capital da Alemanha, antigo epicentro da divisão da Guerra Fria e do Muro de Berlim.',
-    populationEstimate: '~3,7 milhões'
+    populationEstimate: '~3,7 milhões',
+    urbanPopulation: 3750000,
+    metroPopulation: 6100000,
+    coreDensityPerKm2: 4250,
+    metroDensityPerKm2: 1100
   },
   {
     id: 'tokyo',
@@ -187,7 +240,11 @@ export const WORLD_PRESET_CITIES: TargetCity[] = [
     lat: 35.6762,
     lng: 139.6503,
     description: 'Maior aglomeração urbana do planeta e capital do Japão.',
-    populationEstimate: '~14 milhões (Grande Tóquio: 37 milhões)'
+    populationEstimate: '~14 milhões (Grande Tóquio: 37 milhões)',
+    urbanPopulation: 14100000,
+    metroPopulation: 37400000,
+    coreDensityPerKm2: 6400,
+    metroDensityPerKm2: 4100
   },
   {
     id: 'kyiv',
@@ -196,7 +253,11 @@ export const WORLD_PRESET_CITIES: TargetCity[] = [
     lat: 50.4501,
     lng: 30.5234,
     description: 'Capital da Ucrânia, ponto focal da geopolítica europeia e da segurança nuclear contemporânea.',
-    populationEstimate: '~2,9 milhões'
+    populationEstimate: '~2,9 milhões',
+    urbanPopulation: 2950000,
+    metroPopulation: 4000000,
+    coreDensityPerKm2: 3550,
+    metroDensityPerKm2: 900
   },
   {
     id: 'seoul',
@@ -205,7 +266,11 @@ export const WORLD_PRESET_CITIES: TargetCity[] = [
     lat: 37.5665,
     lng: 126.978,
     description: 'Capital da Coreia do Sul, localizada a poucos quilômetros da zona desmilitarizada com a Coreia do Norte.',
-    populationEstimate: '~9,7 milhões (metrópole: 25 milhões)'
+    populationEstimate: '~9,7 milhões (metrópole: 25 milhões)',
+    urbanPopulation: 9700000,
+    metroPopulation: 26000000,
+    coreDensityPerKm2: 15800,
+    metroDensityPerKm2: 4500
   },
   {
     id: 'cairo',
@@ -214,7 +279,11 @@ export const WORLD_PRESET_CITIES: TargetCity[] = [
     lat: 30.0444,
     lng: 31.2357,
     description: 'Maior metrópole do Oriente Médio e do mundo árabe, situada às margens do Rio Nilo.',
-    populationEstimate: '~10 milhões (metrópole: 21 milhões)'
+    populationEstimate: '~10 milhões (metrópole: 21 milhões)',
+    urbanPopulation: 10100000,
+    metroPopulation: 22000000,
+    coreDensityPerKm2: 19300,
+    metroDensityPerKm2: 4800
   },
   {
     id: 'tel-aviv',
@@ -223,7 +292,11 @@ export const WORLD_PRESET_CITIES: TargetCity[] = [
     lat: 32.0853,
     lng: 34.7818,
     description: 'Principal centro econômico e tecnológico de Israel.',
-    populationEstimate: '~460 mil (área metropolitana: 4 milhões)'
+    populationEstimate: '~460 mil (área metropolitana: 4 milhões)',
+    urbanPopulation: 470000,
+    metroPopulation: 4050000,
+    coreDensityPerKm2: 9100,
+    metroDensityPerKm2: 2700
   },
   {
     id: 'buenos-aires',
@@ -232,7 +305,11 @@ export const WORLD_PRESET_CITIES: TargetCity[] = [
     lat: -34.6037,
     lng: -58.3816,
     description: 'Capital da Argentina e importante metrópole da Bacia do Prata.',
-    populationEstimate: '~3,1 milhões (área metropolitana: 15 milhões)'
+    populationEstimate: '~3,1 milhões (área metropolitana: 15 milhões)',
+    urbanPopulation: 3120000,
+    metroPopulation: 15600000,
+    coreDensityPerKm2: 15100,
+    metroDensityPerKm2: 2900
   },
   {
     id: 'sydney',
@@ -241,7 +318,11 @@ export const WORLD_PRESET_CITIES: TargetCity[] = [
     lat: -33.8688,
     lng: 151.2093,
     description: 'Maior cidade da Austrália e principal centro financeiro da Oceania.',
-    populationEstimate: '~5,3 milhões'
+    populationEstimate: '~5,3 milhões',
+    urbanPopulation: 5300000,
+    metroPopulation: 5800000,
+    coreDensityPerKm2: 1350,
+    metroDensityPerKm2: 850
   }
 ];
 
@@ -261,6 +342,7 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
       'Uma das menores armas nucleares já implantadas. Projetada para ser disparada por soldados de infantaria contra blindados soviéticos na Europa, com raio de radiação letal que podia atingir o próprio operador se o vento mudasse.',
     fireballRadiusM: 15,
     vaporizationRadiusM: 22,
+    carbonizationRadiusM: 95,
     heavyBlastRadiusM: 76,
     thermalRadiusM: 140,
     lightBlastRadiusM: 340,
@@ -296,6 +378,7 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
       'A primeira arma nuclear utilizada em combate sobre Hiroshima. Mecanismo de tiro disparando um projétil subcrítico de Urânio-235 contra anéis alvos de urânio, com eficiência de fissão inferior a 1.4%.',
     fireballRadiusM: 180,
     vaporizationRadiusM: 260,
+    carbonizationRadiusM: 1350,
     heavyBlastRadiusM: 690,
     thermalRadiusM: 1900,
     lightBlastRadiusM: 3100,
@@ -331,6 +414,7 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
       'Lançada sobre Nagasaki. Utilizou lentes explosivas de alta e baixa velocidade para comprimir uniformemente um caroço de Plutônio-239 de 6.2 kg até a supercriticidade instantânea.',
     fireballRadiusM: 220,
     vaporizationRadiusM: 310,
+    carbonizationRadiusM: 1600,
     heavyBlastRadiusM: 770,
     thermalRadiusM: 2300,
     lightBlastRadiusM: 3400,
@@ -366,6 +450,7 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
       'Bomba termonuclear com carcaça de aço endurecido projetada para penetrar dezenas de metros no solo antes de detonar, canalizando a energia sísmica e de choque para destruir bunkers subterrâneos blindados.',
     fireballRadiusM: 780,
     vaporizationRadiusM: 1100,
+    carbonizationRadiusM: 5200,
     heavyBlastRadiusM: 1950,
     thermalRadiusM: 7500,
     lightBlastRadiusM: 8700,
@@ -401,6 +486,7 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
       'Primeiro teste com queima termonuclear da União Soviética, concebido por Andrei Sakharov com a "Primeira Ideia" (camadas concêntricas alternadas de Urânio-238 e deutereto de lítio-6 enriquecido com trítio). Produziu 400 kt e demonstrou a capacidade soviética de empregar fusão nuclear em artefatos transportáveis.',
     fireballRadiusM: 860,
     vaporizationRadiusM: 1200,
+    carbonizationRadiusM: 5500,
     heavyBlastRadiusM: 2100,
     thermalRadiusM: 7900,
     lightBlastRadiusM: 9300,
@@ -436,6 +522,7 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
       'A mais potente arma exclusivamente de fissão já construída e detonada na história. Concebida como salvaguarda caso a fusão termonuclear falhasse, continha ~60 kg de Urânio-235 enriquecido a mais de 93% (mais de 4 massas críticas em casca oca), estabilizada por uma corrente de boro removida no ar antes do lançamento.',
     fireballRadiusM: 960,
     vaporizationRadiusM: 1350,
+    carbonizationRadiusM: 6200,
     heavyBlastRadiusM: 2250,
     thermalRadiusM: 8800,
     lightBlastRadiusM: 10100,
@@ -471,6 +558,7 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
       'A primeira verdadeira bomba de hidrogênio de dois estágios da URSS baseada em implosão por radiação (equivalente soviético ao conceito Teller-Ulam). Lançada por paraquedas a 1.550m sobre Semipalatinsk; para conter a devastação regional, o rendimento foi intencionalmente reduzido de ~3 MT para 1.6 MT.',
     fireballRadiusM: 1520,
     vaporizationRadiusM: 2150,
+    carbonizationRadiusM: 10400,
     heavyBlastRadiusM: 3350,
     thermalRadiusM: 14800,
     lightBlastRadiusM: 15200,
@@ -506,6 +594,7 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
       'O primeiro teste termonuclear em escala real da história. Um laboratório industrial pesando mais de 74 toneladas com deutério líquido mantido a temperatura criogênica próxima ao zero absoluto. A detonação de 10.4 MT vaporizou por completo a ilha de Elugelab, deixando uma cratera submarina de 1.9 km.',
     fireballRadiusM: 3100,
     vaporizationRadiusM: 4350,
+    carbonizationRadiusM: 21500,
     heavyBlastRadiusM: 6100,
     thermalRadiusM: 30200,
     lightBlastRadiusM: 27200,
@@ -541,6 +630,7 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
       'O maior teste nuclear da história americana. Projetada para render ~6 MT, a reação imprevista do isótopo Lítio-7 gerou uma liberação cataclísmica de 15 MT, vaporizando ilhas inteiras e espalhando precipitação radioativa global.',
     fireballRadiusM: 3500,
     vaporizationRadiusM: 4900,
+    carbonizationRadiusM: 25000,
     heavyBlastRadiusM: 6900,
     thermalRadiusM: 35000,
     lightBlastRadiusM: 30800,
@@ -576,6 +666,7 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
       'A arma nuclear mais potente e com a mais alta relação rendimento-peso (5.2 Mt/ton) construída pelos Estados Unidos. Única bomba americana operacional de três estágios produzida em escala serial (~500 unidades).',
     fireballRadiusM: 4300,
     vaporizationRadiusM: 6000,
+    carbonizationRadiusM: 31000,
     heavyBlastRadiusM: 8200,
     thermalRadiusM: 43000,
     lightBlastRadiusM: 36500,
@@ -611,6 +702,7 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
       'O evento explosivo artificial mais potente da história da humanidade. Detonada a 4.000m de altitude em Nova Zembla com rendimento medido de 50 Megatons. O tamper original de urânio foi substituído por chumbo para reduzir em 97% a precipitação radioativa, constituindo um dos testes mais "limpos" por megaton.',
     fireballRadiusM: 5200,
     vaporizationRadiusM: 7300,
+    carbonizationRadiusM: 43000,
     heavyBlastRadiusM: 10300,
     thermalRadiusM: 60000,
     lightBlastRadiusM: 46000,
@@ -646,6 +738,7 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
       'O projeto original e pleno idealizado por Andrei Sakharov e Igor Kurchatov. Equipado com uma camisa externa (tamper) de Urânio-238 no estágio final, a fissão induzida por nêutrons de fusão dobraria a energia para astronômicos 100 Megatons (>6.600 vezes Hiroshima). O teste foi limitado a 50 MT para evitar que a precipitação radioativa letal contaminasse populações na URSS e na Europa.',
     fireballRadiusM: 6700,
     vaporizationRadiusM: 9400,
+    carbonizationRadiusM: 55000,
     heavyBlastRadiusM: 13000,
     thermalRadiusM: 77000,
     lightBlastRadiusM: 58000,
@@ -807,7 +900,7 @@ export function computeFalloutContourCoordinates(
 }
 
 export interface ImpactLayerInfo {
-  id: 'fireball' | 'vaporization' | 'heavy' | 'thermal' | 'light';
+  id: 'fireball' | 'vaporization' | 'carbonization' | 'heavy' | 'thermal' | 'light';
   name: string;
   subtitle: string;
   color: string;
@@ -839,6 +932,17 @@ export const IMPACT_LAYERS: ImpactLayerInfo[] = [
     severity: 'Mortalidade: 100% Instantânea',
     effects:
       'Zona além do plasma da bola de fogo onde o fluxo radiativo direto (> 150 a 300 cal/cm²) vaporiza e desseca instantaneamente corpos biológicos, asfalto e materiais leves antes da chegada mecânica da onda de choque.'
+  },
+  {
+    id: 'carbonization',
+    name: 'Zona de Carbonização (Pessoas Carbonizadas)',
+    subtitle: 'Calcinação Térmica & Combustão Humana Instantânea',
+    color: '#DC2626',
+    fillColor: '#DC2626',
+    strokeColor: '#991B1B',
+    severity: 'Mortalidade: 100% por Carbonização',
+    effects:
+      'Zona onde o fluxo radiativo térmico excede 25–35 cal/cm². Qualquer ser humano exposto ao ar livre é instantaneamente carbonizado e calcinado até os ossos em fração de segundo. Roupas e calçados entram em combustão imediata fundindo-se à pele. Letalidade biológica imediata de 100%.'
   },
   {
     id: 'heavy',
@@ -874,3 +978,125 @@ export const IMPACT_LAYERS: ImpactLayerInfo[] = [
       'Sobrepressão moderada capaz de estilhaçar vidraças a dezenas de quilômetros, projetando fragmentos afiados em velocidade letal. Deslocamento de telhados e portas residenciais.'
   }
 ];
+
+export interface ZoneCasualtyEstimate {
+  id: 'fireball' | 'vaporization' | 'carbonization' | 'heavy' | 'thermal' | 'light';
+  name: string;
+  radiusM: number;
+  innerRadiusM: number;
+  ringAreaKm2: number;
+  cumulativeAreaKm2: number;
+  populationExposed: number;
+  fatalityRate: number;
+  fatalities: number;
+  injuryRate: number;
+  injuries: number;
+  survivors: number;
+  severityLabel: string;
+}
+
+export interface BombCasualtySummary {
+  bombId: string;
+  bombName: string;
+  yieldDisplay: string;
+  cityId: string;
+  cityName: string;
+  totalDeaths: number;
+  totalInjuries: number;
+  totalCasualties: number;
+  totalAffectedPop: number;
+  mortalityPercentage: number;
+  zoneEstimates: Record<'fireball' | 'vaporization' | 'carbonization' | 'heavy' | 'thermal' | 'light', ZoneCasualtyEstimate>;
+  orderedZones: ZoneCasualtyEstimate[];
+}
+
+export function formatCasualtyNumber(num: number): string {
+  return Math.round(num).toLocaleString('pt-BR');
+}
+
+export function calculateBombCityCasualties(bomb: NuclearBombRanking, city: TargetCity): BombCasualtySummary {
+  const zoneConfigs = [
+    { id: 'fireball' as const, name: 'Bola de Fogo (Plasma)', rM: bomb.fireballRadiusM, fatalityRate: 1.0, injuryRate: 0.0, severityLabel: 'Letalidade: 100%' },
+    { id: 'vaporization' as const, name: 'Zona de Vaporização Total', rM: bomb.vaporizationRadiusM, fatalityRate: 0.99, injuryRate: 0.01, severityLabel: 'Mortalidade: 99%' },
+    { id: 'heavy' as const, name: 'Choque Pesado (20 psi)', rM: bomb.heavyBlastRadiusM, fatalityRate: 0.85, injuryRate: 0.12, severityLabel: 'Mortalidade: 85%' },
+    { id: 'carbonization' as const, name: 'Zona de Carbonização Humana', rM: bomb.carbonizationRadiusM, fatalityRate: 0.95, injuryRate: 0.05, severityLabel: 'Mortalidade: 95%' },
+    { id: 'thermal' as const, name: 'Raio Térmico (Queimaduras 3º Grau)', rM: bomb.thermalRadiusM, fatalityRate: 0.50, injuryRate: 0.40, severityLabel: 'Mortalidade: 50%' },
+    { id: 'light' as const, name: 'Choque Leve (1 psi)', rM: bomb.lightBlastRadiusM, fatalityRate: 0.08, injuryRate: 0.35, severityLabel: 'Mortalidade: 8%' },
+  ];
+
+  // Ordenar por raio crescente para calcular anéis concêntricos sem sobreposição de população
+  const sorted = [...zoneConfigs].sort((a, b) => a.rM - b.rM);
+
+  const coreDensity = city.coreDensityPerKm2 || 4000;
+  const metroDensity = city.metroDensityPerKm2 || 1000;
+  const maxMetroPop = city.metroPopulation || (city.urbanPopulation ? city.urbanPopulation * 1.8 : 3000000);
+  const urbanPop = city.urbanPopulation || (maxMetroPop * 0.6);
+
+  const coreRadiusKm = Math.sqrt(urbanPop / (Math.PI * coreDensity));
+
+  let prevRadiusKm = 0;
+  let accumulatedPop = 0;
+  let totalDeaths = 0;
+  let totalInjuries = 0;
+
+  const zoneMap = {} as Record<'fireball' | 'vaporization' | 'carbonization' | 'heavy' | 'thermal' | 'light', ZoneCasualtyEstimate>;
+  const orderedZones: ZoneCasualtyEstimate[] = [];
+
+  for (const z of sorted) {
+    const rKm = z.rM / 1000;
+    const ringAreaKm2 = Math.max(0, Math.PI * (rKm * rKm - prevRadiusKm * prevRadiusKm));
+    const cumulativeAreaKm2 = Math.PI * rKm * rKm;
+    const midRKm = (rKm + prevRadiusKm) / 2;
+
+    // Gradiente exponencial do centro urbano para periferia/subúrbios
+    const densityAtMid = metroDensity + (coreDensity - metroDensity) * Math.exp(-0.5 * Math.pow(midRKm / Math.max(coreRadiusKm, 1.5), 2));
+
+    let rawRingPop = Math.round(ringAreaKm2 * densityAtMid);
+    if (accumulatedPop + rawRingPop > maxMetroPop) {
+      rawRingPop = Math.max(0, Math.round(maxMetroPop - accumulatedPop));
+    }
+    accumulatedPop += rawRingPop;
+
+    const fatalities = Math.round(rawRingPop * z.fatalityRate);
+    const injuries = Math.round(rawRingPop * z.injuryRate);
+    const survivors = Math.max(0, rawRingPop - fatalities - injuries);
+
+    totalDeaths += fatalities;
+    totalInjuries += injuries;
+
+    const estimate: ZoneCasualtyEstimate = {
+      id: z.id,
+      name: z.name,
+      radiusM: z.rM,
+      innerRadiusM: Math.round(prevRadiusKm * 1000),
+      ringAreaKm2,
+      cumulativeAreaKm2,
+      populationExposed: rawRingPop,
+      fatalityRate: z.fatalityRate,
+      fatalities,
+      injuryRate: z.injuryRate,
+      injuries,
+      survivors,
+      severityLabel: z.severityLabel
+    };
+
+    zoneMap[z.id] = estimate;
+    orderedZones.push(estimate);
+    prevRadiusKm = rKm;
+  }
+
+  return {
+    bombId: bomb.id,
+    bombName: bomb.name,
+    yieldDisplay: bomb.yieldDisplay,
+    cityId: city.id,
+    cityName: city.name,
+    totalDeaths,
+    totalInjuries,
+    totalCasualties: totalDeaths + totalInjuries,
+    totalAffectedPop: accumulatedPop,
+    mortalityPercentage: accumulatedPop > 0 ? (totalDeaths / accumulatedPop) * 100 : 0,
+    zoneEstimates: zoneMap,
+    orderedZones
+  };
+}

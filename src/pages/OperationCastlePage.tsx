@@ -13,7 +13,8 @@ import {
   Maximize2,
   X,
   ExternalLink,
-  AlertTriangle
+  AlertTriangle,
+  Zap
 } from 'lucide-react';
 
 interface OperationCastlePageProps {
@@ -232,6 +233,33 @@ export const OperationCastlePage: React.FC<OperationCastlePageProps> = ({ onNavi
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Navigation Banner: Explore Tsar Bomba (50 Mt) right below Operation Castle */}
+      <section className="p-6 sm:p-10 rounded-3xl bg-gradient-to-br from-[#121212] via-[#1b1430] to-[#0D0D0D] border border-[#8F83FF]/40 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 shadow-2xl">
+        <div className="space-y-3 max-w-2xl">
+          <div className="inline-flex items-center space-x-2 text-xs font-bold text-[#8F83FF] uppercase font-mono px-3 py-1 rounded-full bg-[#8F83FF]/15 border border-[#8F83FF]/30">
+            <Zap className="w-3.5 h-3.5 text-[#8F83FF]" />
+            <span>Aprofundamento Histórico Sequencial</span>
+          </div>
+          <h3 className="text-2xl sm:text-3xl font-extrabold text-white font-display">
+            A Resposta Soviética: Tsar Bomba (1961) — 50 Megatons
+          </h3>
+          <p className="text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
+            Sete anos após os 15 Megatons de Castle Bravo, a União Soviética detonou o mais colossal artefato bélico da história humana. Conheça todo o teste, o poder destrutivo da explosão e a galeria vertical detalhada: <strong>a bomba</strong>, <strong>a bola de fogo</strong> e <strong>a nuvem de cogumelo</strong>.
+          </p>
+        </div>
+        <button
+          onClick={() => {
+            onNavigate('tsar-bomba');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          className="inline-flex items-center space-x-2.5 px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#8F83FF] to-purple-600 text-white font-bold text-sm hover:shadow-xl hover:shadow-[#8F83FF]/30 hover:scale-[1.02] active:scale-95 transition-all whitespace-nowrap shrink-0 group"
+        >
+          <Zap className="w-4 h-4 text-white" />
+          <span>Acessar Aba Tsar Bomba</span>
+          <ChevronRight className="w-4 h-4 text-white/80 group-hover:translate-x-1 transition-transform" />
+        </button>
       </section>
 
       {/* Lightbox Modal */}

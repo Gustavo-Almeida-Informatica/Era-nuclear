@@ -150,13 +150,29 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
         </nav>
 
         {/* Zone 3: Primary Action CTA & Mobile Toggle */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2 sm:space-x-3">
           <button
             onClick={() => handleNavClick('operation-castle')}
-            className="hidden sm:inline-flex items-center space-x-2 px-3.5 py-2 rounded-lg bg-gradient-to-r from-[#73CAE5]/20 to-[#8F83FF]/20 border border-[#73CAE5]/40 text-white text-xs font-semibold hover:border-[#73CAE5] hover:shadow-lg hover:shadow-[#73CAE5]/20 transition-all active:scale-95 whitespace-nowrap"
+            className={`hidden sm:inline-flex items-center space-x-2 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg text-xs font-semibold transition-all active:scale-95 whitespace-nowrap ${
+              currentPage === 'operation-castle'
+                ? 'bg-[#73CAE5]/25 border border-[#73CAE5] text-white shadow-lg shadow-[#73CAE5]/20'
+                : 'bg-gradient-to-r from-[#73CAE5]/20 to-[#8F83FF]/20 border border-[#73CAE5]/40 text-white hover:border-[#73CAE5] hover:shadow-lg hover:shadow-[#73CAE5]/20'
+            }`}
           >
             <Flame className="w-3.5 h-3.5 text-[#73CAE5]" />
             <span>Operação Castle</span>
+          </button>
+
+          <button
+            onClick={() => handleNavClick('tsar-bomba')}
+            className={`hidden sm:inline-flex items-center space-x-2 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg text-xs font-semibold transition-all active:scale-95 whitespace-nowrap ${
+              currentPage === 'tsar-bomba'
+                ? 'bg-[#8F83FF]/30 border border-[#8F83FF] text-white shadow-lg shadow-[#8F83FF]/25'
+                : 'bg-gradient-to-r from-[#8F83FF]/20 to-purple-600/20 border border-[#8F83FF]/40 text-white hover:border-[#8F83FF] hover:shadow-lg hover:shadow-[#8F83FF]/20'
+            }`}
+          >
+            <Zap className="w-3.5 h-3.5 text-[#8F83FF]" />
+            <span>Tsar Bomba (50 Mt)</span>
           </button>
 
           {/* Mobile Menu Toggle Button */}
