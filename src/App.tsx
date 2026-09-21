@@ -22,12 +22,14 @@ import { GlossaryPage } from './pages/GlossaryPage';
 import { AboutPage } from './pages/AboutPage';
 import { SourcesPage } from './pages/SourcesPage';
 import { ContactPage } from './pages/ContactPage';
-import { NuclearRankingMapTab } from './components/NuclearRankingMapTab';
+import { MapPage } from './pages/MapPage';
 
 // Special Monographic Pages
 import { OperationCastlePage } from './pages/OperationCastlePage';
 import { TsarBombaPage } from './pages/TsarBombaPage';
 import { IvyKingPage } from './pages/IvyKingPage';
+import { IvyMikePage } from './pages/IvyMikePage';
+import { ManhattanProjectPage } from './pages/ManhattanProjectPage';
 import { B41Page } from './pages/B41Page';
 import { ChernobylPage } from './pages/ChernobylPage';
 
@@ -47,10 +49,13 @@ export default function App() {
         'operation-castle',
         'tsar-bomba',
         'ivy-king',
+        'ivy-mike',
+        'manhattan-project',
         'b41',
         'chernobyl',
         'impacts',
         'nuclear-ranking',
+        'map',
         'energy',
         'cases',
         'gallery',
@@ -96,6 +101,10 @@ export default function App() {
         return <TsarBombaPage onNavigate={handleNavigate} />;
       case 'ivy-king':
         return <IvyKingPage onNavigate={handleNavigate} />;
+      case 'ivy-mike':
+        return <IvyMikePage onNavigate={handleNavigate} />;
+      case 'manhattan-project':
+        return <ManhattanProjectPage onNavigate={handleNavigate} />;
       case 'b41':
         return <B41Page onNavigate={handleNavigate} />;
       case 'chernobyl':
@@ -103,11 +112,8 @@ export default function App() {
       case 'impacts':
         return <ImpactsPage onNavigate={handleNavigate} />;
       case 'nuclear-ranking':
-        return (
-          <div className="pt-20 sm:pt-24 pb-8 w-full px-0 sm:px-2 lg:px-4">
-            <NuclearRankingMapTab />
-          </div>
-        );
+      case 'map':
+        return <MapPage onNavigate={handleNavigate} />;
       case 'energy':
         return <EnergyPage onNavigate={handleNavigate} />;
       case 'cases':

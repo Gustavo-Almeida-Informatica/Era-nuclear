@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { PageId, CastleTest } from '../types';
 import { castleTests } from '../data/castleData';
+import { IvyMikeManhattanSection, LightboxData } from '../components/IvyMikeManhattanSection';
 import {
   Flame,
   Calendar,
@@ -14,7 +15,8 @@ import {
   X,
   ExternalLink,
   AlertTriangle,
-  Zap
+  Zap,
+  Users
 } from 'lucide-react';
 
 interface OperationCastlePageProps {
@@ -23,19 +25,77 @@ interface OperationCastlePageProps {
 
 export const OperationCastlePage: React.FC<OperationCastlePageProps> = ({ onNavigate }) => {
   const [selectedTest, setSelectedTest] = useState<CastleTest>(castleTests[0]);
-  const [lightboxImg, setLightboxImg] = useState<{ url: string; title: string } | null>(null);
+  const [lightboxImg, setLightboxImg] = useState<LightboxData | null>(null);
 
   const totalYield = castleTests.reduce((acc, t) => {
     const num = parseFloat(t.yieldReported.replace(',', '.').replace(' Megatons', '').replace(' quilotons', ''));
     return t.yieldReported.includes('quilotons') ? acc + (num / 1000) : acc + num;
   }, 0);
 
+  const castlePhysicists = [
+    {
+      name: 'Edward Teller',
+      role: 'Cofundador de Lawrence Livermore • Arquiteto Conceitual',
+      contribution: 'Pressionou pela transição do hidrogênio líquido de Ivy Mike para o combustível seco de deutereto de lítio (LiD) e fundou em 1952 o laboratório Lawrence Livermore (UCRL) para competir cientificamente com Los Alamos no desenvolvimento de artefatos termonucleares transportáveis por via aérea.',
+      tag: 'Pioneiro do LiD Sólido',
+      highlight: true
+    },
+    {
+      name: 'J. Carson Mark',
+      role: 'Chefe da Divisão Teórica (T-Division) de Los Alamos',
+      contribution: 'Liderou os físicos teóricos que projetaram o dispositivo "Shrimp" (o teste Castle Bravo). Conduziu os estudos pós-detonação para explicar fisicamente por que a reação alcançou 15 Megatons (o triplo do valor previsto).',
+      tag: 'Designer de Castle Bravo'
+    },
+    {
+      name: 'Stanislaw Ulam',
+      role: 'Matemático e Físico Teórico de Los Alamos',
+      contribution: 'Aperfeiçoou os modelos geométricos de implosão por radiação para configurações cilíndricas com combustível seco sólido, permitindo que as bombas da Operação Castle fossem miniaturizadas em armas de combate para bombardeiros B-36 e B-52.',
+      tag: 'Geometria de Implosão'
+    },
+    {
+      name: 'Marshall Holloway',
+      role: 'Diretor Associado de Armas (W-Division) de Los Alamos',
+      contribution: 'Supervisionou a engenharia das ogivas termonucleares testadas em Castle e coordenou a transição imediata dos protótipos de Bikini para as primeiras bombas termonucleares operacionais do arsenal dos EUA (TX-14, TX-16, TX-17 e TX-21).',
+      tag: 'Engenharia de Ogivas'
+    },
+    {
+      name: 'Norris Bradbury',
+      role: 'Diretor Geral do Laboratório Científico de Los Alamos (LASL)',
+      contribution: 'Liderou Los Alamos durante toda a Operação Castle, defendendo o pioneirismo do laboratório e prestando depoimentos cruciais perante a Comissão de Energia Atômica (AEC) sobre o rendimento imprevisto e as medidas de segurança radiológica.',
+      tag: 'Diretor Geral de Los Alamos'
+    },
+    {
+      name: 'Herbert York',
+      role: 'Primeiro Diretor do Laboratório Lawrence Livermore (UCRL)',
+      contribution: 'Comandou a jovem equipe de físicos de Livermore que projetou o dispositivo "Koon" para a Operação Castle, estabelecendo as bases de engenharia que moldariam a rivalidade e avanços dos dois laboratórios federais.',
+      tag: '1º Diretor de Livermore'
+    },
+    {
+      name: 'Ernest Lawrence',
+      role: 'Cofundador de Livermore • Prêmio Nobel de Física',
+      contribution: 'Articulador político e científico em Washington para a expansão dos testes termonucleares; canalizou recursos dos ciclotrons e laboratórios de Berkeley para análises de espectrometria dos produtos de fissão de Castle.',
+      tag: 'Cofundador de Livermore'
+    },
+    {
+      name: 'Alvin C. Graves',
+      role: 'Diretor Científico da Joint Task Force 7 (JTF-7)',
+      contribution: 'Físico experimental encarregado da autorização técnica e avaliação das condições meteorológicas para as detonações no Atol de Bikini. Foi quem tomou a decisão de prosseguir com o disparo de Bravo em 1º de março apesar de alertas sobre os ventos em altitude.',
+      tag: 'Diretor Científico JTF-7'
+    },
+    {
+      name: 'Equipe Teórica de Cálculos Neutrônicos',
+      role: 'Físicos de Seção de Choque de Los Alamos',
+      contribution: 'Grupo responsável pelo cálculo de queima que presumiu que o isótopo abundante Lítio-7 (60% do LiD) seria inerte. A reação inelástica inesperada ⁷Li + n → α + t + n com nêutrons rápidos de 14 MeV triplicou a quantidade de trítio gerado, multiplicando a potência da explosão de 6 para 15 Mt.',
+      tag: 'O Fenômeno do Lítio-7'
+    }
+  ];
+
   return (
     <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
       {/* Header */}
       <div className="max-w-4xl space-y-4">
         <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#73CAE5]/10 border border-[#73CAE5]/30 text-xs font-semibold text-[#73CAE5]">
-          <Flame className="w-3.5 h-3.5" />
+          <Zap className="w-3.5 h-3.5" />
           <span>Série de Testes no Pacífico (1954)</span>
         </div>
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display tracking-tight uppercase">
@@ -235,11 +295,59 @@ export const OperationCastlePage: React.FC<OperationCastlePageProps> = ({ onNavi
         </div>
       </section>
 
+      {/* Physicists Section: Responsáveis pela Operação Castle */}
+      <section className="space-y-6">
+        <div className="space-y-2">
+          <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-[#73CAE5] font-mono">
+            <Users className="w-4 h-4" />
+            <span>Mentes Científicas & Liderança da Operação Castle</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-display">
+            Edward Teller e os Físicos Responsáveis pela Operação Castle
+          </h2>
+          <p className="text-xs sm:text-sm text-[#B7B7B7] max-w-3xl leading-relaxed">
+            A revolução do combustível sólido (Deutereto de Lítio) e a corrida entre Los Alamos e Lawrence Livermore exigiram a atuação direta dos maiores físicos teóricos e experimentais da Era Termonuclear americana.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {castlePhysicists.map((p, idx) => (
+            <div
+              key={idx}
+              className={`p-5 rounded-2xl bg-[#111111] border transition-all space-y-3 flex flex-col justify-between ${
+                p.highlight
+                  ? 'border-[#73CAE5]/60 bg-gradient-to-br from-[#73CAE5]/10 via-[#111111] to-[#111111] shadow-xl shadow-[#73CAE5]/10'
+                  : 'border-white/10 hover:border-[#73CAE5]/40'
+              }`}
+            >
+              <div className="space-y-2">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <h3 className="font-bold text-white text-base font-display">{p.name}</h3>
+                    <span className="text-xs text-[#73CAE5] block font-medium mt-0.5 leading-tight">{p.role}</span>
+                  </div>
+                  <span className="text-[10px] font-mono font-bold text-[#73CAE5] bg-[#73CAE5]/15 border border-[#73CAE5]/30 px-2 py-0.5 rounded-full shrink-0">
+                    {p.tag}
+                  </span>
+                </div>
+                <p className="text-xs text-[#B7B7B7] leading-relaxed pt-1">{p.contribution}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Section: Ivy Mike (1952) & Manhattan Project (1942-1945) right underneath Operation Castle */}
+      <IvyMikeManhattanSection
+        onOpenLightbox={(data) => setLightboxImg(data)}
+        onNavigate={onNavigate}
+      />
+
       {/* Navigation Banner: Explore Tsar Bomba (50 Mt) right below Operation Castle */}
       <section className="p-6 sm:p-10 rounded-3xl bg-gradient-to-br from-[#121212] via-[#1b1430] to-[#0D0D0D] border border-[#8F83FF]/40 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 shadow-2xl">
         <div className="space-y-3 max-w-2xl">
           <div className="inline-flex items-center space-x-2 text-xs font-bold text-[#8F83FF] uppercase font-mono px-3 py-1 rounded-full bg-[#8F83FF]/15 border border-[#8F83FF]/30">
-            <Zap className="w-3.5 h-3.5 text-[#8F83FF]" />
+            <Flame className="w-3.5 h-3.5 text-rose-400" />
             <span>Aprofundamento Histórico Sequencial</span>
           </div>
           <h3 className="text-2xl sm:text-3xl font-extrabold text-white font-display">
@@ -256,7 +364,7 @@ export const OperationCastlePage: React.FC<OperationCastlePageProps> = ({ onNavi
           }}
           className="inline-flex items-center space-x-2.5 px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#8F83FF] to-purple-600 text-white font-bold text-sm hover:shadow-xl hover:shadow-[#8F83FF]/30 hover:scale-[1.02] active:scale-95 transition-all whitespace-nowrap shrink-0 group"
         >
-          <Zap className="w-4 h-4 text-white" />
+          <Flame className="w-4 h-4 text-white" />
           <span>Acessar Aba Tsar Bomba</span>
           <ChevronRight className="w-4 h-4 text-white/80 group-hover:translate-x-1 transition-transform" />
         </button>
@@ -271,13 +379,27 @@ export const OperationCastlePage: React.FC<OperationCastlePageProps> = ({ onNavi
           <div className="max-w-4xl w-full bg-[#141414] border border-white/15 rounded-2xl overflow-hidden shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => setLightboxImg(null)}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/70 text-white hover:bg-black"
+              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/70 text-white hover:bg-black transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
-            <img src={lightboxImg.url} alt={lightboxImg.title} referrerPolicy="no-referrer" className="w-full max-h-[80vh] object-contain bg-black" />
-            <div className="p-4 text-xs font-bold text-white font-display">
-              {lightboxImg.title} — Operação Castle (1954)
+            <div className="max-h-[65vh] sm:max-h-[72vh] flex items-center justify-center bg-black overflow-hidden">
+              <img src={lightboxImg.url} alt={lightboxImg.title} referrerPolicy="no-referrer" className="max-h-full max-w-full object-contain" />
+            </div>
+            <div className="p-4 sm:p-5 space-y-1.5 bg-[#111111] border-t border-white/10 text-xs">
+              <h4 className="font-bold text-white font-display text-sm sm:text-base">
+                {lightboxImg.title}
+              </h4>
+              {lightboxImg.caption && (
+                <p className="text-[#B7B7B7] text-xs leading-relaxed">
+                  {lightboxImg.caption}
+                </p>
+              )}
+              {lightboxImg.details && (
+                <p className="text-white/80 text-[11px] font-mono leading-relaxed pt-1 border-t border-white/5">
+                  {lightboxImg.details}
+                </p>
+              )}
             </div>
           </div>
         </div>

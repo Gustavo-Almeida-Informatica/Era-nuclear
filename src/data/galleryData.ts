@@ -19,11 +19,12 @@ import chicagoPile1Img from '../assets/images/chicago_pile_one_1787677642726.jpg
 import iterTokamakImg from '../assets/images/iter_tokamak_fusion_1787677659756.jpg';
 import fissionDiagramImg from '../assets/images/fission_diagram_sci_1787677675023.jpg';
 import fusionDiagramImg from '../assets/images/fusion_diagram_sci_1787677708566.jpg';
-import gunTypeDiagramImg from '../assets/images/little_boy_gun_type_diagram.svg';
+import gunTypeDiagramImg from '../assets/images/gun_type_fission_diagram_real.png';
 import implosionTypeDiagramImg from '../assets/images/implosion_type_fission_diagram_1787680148801.jpg';
 import tellerUlamDiagramImg from '../assets/images/BombH_explosion.svg';
 import fukushimaDamageImg from '../assets/images/fukushima_daiichi_damage_2011.jpg';
 import goianiaSourceImg from '../assets/images/goiania_cesio_137_source.jpg';
+import demonCoreImg from '../assets/images/demon_core_experiment_1789920226757.jpg';
 
 export const galleryItems: GalleryItem[] = [
   {
@@ -100,6 +101,21 @@ export const galleryItems: GalleryItem[] = [
     license: 'Acervo Cultural e Histórico Público',
     imageUrl: nagasakiMemorialImg,
     tag: 'Parque da Paz'
+  },
+  {
+    id: 'demon-core-1945-1946',
+    title: 'O "Demon Core" — Experimento de Criticalidade de Plutônio em Los Alamos',
+    date: '1945–1946 (Acidentes de Harry Daghlian e Louis Slotin)',
+    year: '1945',
+    location: 'Laboratório Nacional de Los Alamos (Omega Site), Novo México (EUA)',
+    category: 'laboratorios',
+    categoryLabel: 'Instalações Históricas',
+    description: 'Reconstituição documental oficial do aparato experimental de criticalidade do "Demon Core": a esfera de 6,2 kg de plutônio-239 estabilizada com gálio cercada pelas semiesferas refletoras de nêutrons de berílio.',
+    historicalContext: 'Originalmente reservado para um eventual terceiro bombardeio atômico contra o Japão na Segunda Guerra Mundial, o núcleo esteve no centro de dois trágicos acidentes de radiação em Los Alamos. Em 21 de agosto de 1945, Harry Daghlian sofreu irradiação letal ao deixar cair um tijolo refletor de carbeto de tungstênio sobre a massa. Em 21 de maio de 1946, Louis Slotin conduzia a demonstração de aproximação manual das cúpulas de berílio usando uma chave de fenda ("fazer cócegas na cauda do dragão"); a ferramenta escorregou, fechando o invólucro e gerando um clarão azul de radiação ionizante e nêutrons que lhe custou a vida. O incidente levou ao banimento definitivo de manipulações manuais de massas críticas e à automação remota obrigatória de experimentos nucleares.',
+    source: 'Los Alamos National Laboratory Archives / U.S. Department of Energy (DOE)',
+    license: 'Domínio Público (Governo Federal dos EUA)',
+    imageUrl: demonCoreImg,
+    tag: 'Demon Core'
   },
   {
     id: 'rds-1-1949',
@@ -343,15 +359,15 @@ export const galleryItems: GalleryItem[] = [
   },
   {
     id: 'diagrama-gun-type-little-boy',
-    title: 'Esquema Técnico Didático: Fissão Tipo Canhão (Gun-Type / Little Boy)',
+    title: 'Diagrama Didático em Português: Bomba de Fissão Tipo Canhão (Little Boy)',
     date: 'Física de Armas / Projeto Manhattan (1945)',
     year: '1945',
     location: 'Conceito Balístico — Urânio-235',
     category: 'laboratorios',
     categoryLabel: 'Arquiteturas de Armas',
-    description: 'Diagrama esquemático didático do método de disparo balístico (Gun-type): uma carga propulsora convencional dispara um projétil subcrítico de Urânio-235 através de um tubo de canhão em direção a um anel/esfera alvo subcrítica de U-235. No instante do impacto, as duas massas unem-se formando uma massa supercrítica, desencadeando a reação em cadeia de fissão nuclear.',
-    historicalContext: 'Método empregado na bomba Little Boy lançada sobre Hiroshima. Embora mecanicamente simples e com confiabilidade tão alta que dispensou testes prévios, o design de canhão era extremamente ineficiente (apenas ~1,4% do urânio sofreu fissão real) e pesado demais para ogivas modernas.',
-    source: 'Divisão de Educação Científica / Diagrama Técnico Escolar',
+    description: 'Diagrama técnico esquemático com legendas em português do mecanismo tipo canhão: 1. A carga explosiva de cordite dispara o projétil oco de Urânio-235 pelo cano de artilharia; 2. O impacto frontal com o alvo subcrítico e esfera de U-235 forma a massa supercrítica e inicia a reação em cadeia de fissão nuclear.',
+    historicalContext: 'Método empregado na bomba Little Boy lançada sobre Hiroshima em 6 de agosto de 1945. Embora mecanicamente simples e com confiabilidade tão alta que dispensou testes prévios, o design de canhão era extremamente ineficiente (apenas ~1,4% do urânio sofreu fissão real) e pesado demais para ogivas modernas.',
+    source: 'Diagrama Técnico Educacional / Acervo Histórico Localizado',
     license: 'Recurso Educacional Didático',
     imageUrl: gunTypeDiagramImg,
     tag: 'Fissão Gun-Type'

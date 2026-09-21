@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { PageId } from '../types';
-import tsarBombaCasingImg from '../assets/images/the_tsar_bomba_casing.jpg';
-import tsarFireballImg from '../assets/images/tsar_fireball_real_1789483895592.jpg';
 import tsarMushroomImg from '../assets/images/tsar_bomba_documentary_real.jpg';
 import {
   Globe,
@@ -23,7 +21,8 @@ import {
   Radio,
   Eye,
   Target,
-  FileText
+  FileText,
+  Users
 } from 'lucide-react';
 
 interface TsarBombaPageProps {
@@ -37,20 +36,78 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
     setLightboxImg({ url, title, caption });
   };
 
+  const tsarPhysicists = [
+    {
+      name: 'Andrei Sakharov',
+      role: 'Físico Teórico Líder • "Pai da Bomba H Soviética" • Nobel da Paz 1975',
+      contribution: 'Criador da "Terceira Ideia" soviética (implosão por radiação em estágios) e líder do cálculo físico da RDS-220. Foi o arquiteto decisivo que exigiu a substituição da camisa de urânio-238 por chumbo inerte, cortando 50 Mt de fissão suja e evitando contaminação radioativa cataclísmica no território eurasiático.',
+      tag: 'Arquiteto Principal da RDS-220',
+      highlight: true
+    },
+    {
+      name: 'Yakov Zeldovich',
+      role: 'Físico Teórico Sênior da Academia de Ciências da URSS',
+      contribution: 'Autor fundamental das teorias de combustão, hidrodinâmica de choque e astrofísica nuclear. Formulou com Sakharov a base matemática da transferência radiativa de raios X que tornou viável a ignição dos múltiplos módulos de fusão.',
+      tag: 'Mestre da Hidrodinâmica'
+    },
+    {
+      name: 'Yulii Khariton',
+      role: 'Diretor Científico Chefe de Arzamas-16 (VNIIEF)',
+      contribution: 'Comandou as pesquisas científicas em Sarov durante quase meio século. Coordenou a engenharia nuclear, os ensaios de segurança e a montagem mecânica dos múltiplos estágios secundários na carcaça de 27 toneladas da bomba.',
+      tag: 'Diretor Científico de Sarov'
+    },
+    {
+      name: 'Igor Kurchatov',
+      role: 'Patrono e Líder Fundador do Programa Nuclear Soviético',
+      contribution: 'O grande líder científico que organizou a infraestrutura atômica soviética, fundou os institutos de física e montou o time de físicos teóricos e experimentais que desenvolveu a tecnologia que culminou na Tsar Bomba.',
+      tag: 'Líder Científico da URSS'
+    },
+    {
+      name: 'Viktor Adamsky',
+      role: 'Físico Teórico • Coordenador de Projeto Físico da RDS-220',
+      contribution: 'Liderou no verão de 1961 a equipe de físicos de Sarov encarregada das equações analíticas, do dimensionamento dos secundários termonucleares e da previsão exata de liberação dos 50 Megatons.',
+      tag: 'Co-designer da RDS-220'
+    },
+    {
+      name: 'Yuri Trutnev',
+      role: 'Físico Nuclear Teórico • Acadêmico da Academia Russa',
+      contribution: 'Co-autor da "Terceira Ideia" e formulador de soluções essenciais para a compressão hidrodinâmica simétrica por radiação de módulos secundários de fusão em armas nucleares de alta potência.',
+      tag: 'Física dos Secundários'
+    },
+    {
+      name: 'Yuri Babaev',
+      role: 'Físico Teórico de Arzamas-16 • Acadêmico',
+      contribution: 'Pioneiro na física soviética de canalização e reflexão de raios X moles para implosão isentrópica, estabelecendo os princípios que permitiram aos soviéticos alcançar eficiências termonucleares extremas.',
+      tag: 'Canalização de Radiação'
+    },
+    {
+      name: 'Evsei Rabinovich',
+      role: 'Físico e Matemático Chefe de Cálculos Computacionais',
+      contribution: 'Responsável pela programação e execução das complexas simulações de dinâmica de gases e estabilidade de choques nos primeiros computadores soviéticos para validar o disparo da Tsar Bomba.',
+      tag: 'Simulação Computacional'
+    },
+    {
+      name: 'Yuri Smirnov',
+      role: 'Físico Nuclear e Pesquisador de Arzamas-16',
+      contribution: 'Trabalhou nos cálculos de física neutrônica e nas medições diagnósticas de campo da Tsar Bomba, publicando posteriormente memórias históricas desclassificadas essenciais sobre o projeto.',
+      tag: 'Física Neutrônica & História'
+    }
+  ];
+
   return (
     <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 lg:space-y-24">
       {/* Hero Header */}
       <div className="space-y-6">
         <div className="flex flex-wrap items-center gap-3">
           <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#8F83FF]/15 border border-[#8F83FF]/35 text-xs font-bold text-[#8F83FF] uppercase tracking-wider font-mono">
-            <Zap className="w-3.5 h-3.5" />
+            <Flame className="w-3.5 h-3.5 text-rose-400" />
             <span>O Ápice da Megatonelagem Nuclear • 1961</span>
           </div>
           <button
             onClick={() => onNavigate('operation-castle')}
             className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-[#B7B7B7] hover:text-white hover:border-[#73CAE5]/40 transition-colors"
           >
-            <Flame className="w-3 h-3 text-[#73CAE5]" />
+            <Zap className="w-3 h-3 text-[#73CAE5]" />
             <span>Ver Testes de Bikini (Operação Castle)</span>
           </button>
         </div>
@@ -149,7 +206,7 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
         {/* CONTAINER VERTICAL DE IMAGENS */}
         <div className="space-y-12">
           {/* ================================================================= */}
-          {/* 1. A IMAGEM DA BOMBA (O DISPOSITIVO RDS-220)                      */}
+          {/* 1. O ARTEFATO FÍSICO (O DISPOSITIVO RDS-220)                      */}
           {/* ================================================================= */}
           <div className="rounded-3xl bg-[#111111] border border-white/10 overflow-hidden shadow-2xl transition-all hover:border-[#8F83FF]/40 group">
             <div className="p-6 sm:p-8 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-purple-950/30 via-transparent to-transparent">
@@ -168,67 +225,36 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
-              {/* Image Frame */}
-              <div
-                onClick={() =>
-                  openLightbox(
-                    tsarBombaCasingImg,
-                    'A Bomba RDS-220 (Produto 602 / Tsar Bomba)',
-                    'Carcaça de aço e blindagem da Tsar Bomba sobre carrinho de transporte industrial de alta capacidade. A bomba de 27 toneladas e 8 metros de comprimento exigiu modificação extrema do bombardeiro Tupolev Tu-95V para poder ser acoplada semifechada em sua fuselagem.'
-                  )
-                }
-                className="lg:col-span-7 relative aspect-16/9 sm:aspect-16/10 bg-black overflow-hidden cursor-pointer group/img"
-              >
-                <img
-                  src={tsarBombaCasingImg}
-                  alt="Carcaça da Tsar Bomba RDS-220 em exibição"
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
-                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs text-white/90">
-                  <span className="font-mono bg-black/70 px-2.5 py-1 rounded-md backdrop-blur-md">
-                    Registro de Engenharia • Carcaça & Aletas Aerodinâmicas
-                  </span>
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/80 border border-white/20 text-white backdrop-blur-md">
-                    <Maximize2 className="w-3.5 h-3.5" />
-                    <span>Ampliar</span>
-                  </div>
+            {/* Technical Description Panel */}
+            <div className="p-6 sm:p-8 space-y-6 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed bg-[#131313]">
+              <div className="space-y-3">
+                <div className="flex items-center space-x-2 text-white font-bold text-sm">
+                  <ShieldCheck className="w-4 h-4 text-[#8F83FF]" />
+                  <span>Engenharia Estrutural do Dispositivo</span>
                 </div>
+                <p>
+                  Com <strong>8 metros de comprimento</strong>, <strong>2,1 metros de diâmetro</strong> e peso monumental de <strong>27 toneladas</strong>, a RDS-220 era grande demais para caber inteiramente no compartimento de bombas de qualquer avião do mundo.
+                </p>
+                <p>
+                  O bombardeiro quadrimotor <strong>Tupolev Tu-95V</strong> teve suas portas do compartimento de bombas completamente removidas e reforços estruturais soldados à fuselagem. O artefato ficava parcialmente exposto para fora da barriga do avião durante o voo.
+                </p>
+                <p>
+                  Para retardar a queda da bomba e permitir que o avião chegasse a 45 km de distância antes da detonação, foi projetado um <strong>paraquedas de náilon de 800 m²</strong> pesando quase <strong>800 kg</strong>, acionado imediatamente após a liberação a 10.500 m.
+                </p>
               </div>
 
-              {/* Technical Description Panel */}
-              <div className="lg:col-span-5 p-6 sm:p-8 space-y-4 flex flex-col justify-between text-xs sm:text-sm text-[#B7B7B7] leading-relaxed bg-[#131313]">
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-2 text-white font-bold text-sm">
-                    <ShieldCheck className="w-4 h-4 text-[#8F83FF]" />
-                    <span>Engenharia Estrutural do Dispositivo</span>
-                  </div>
-                  <p>
-                    Com <strong>8 metros de comprimento</strong>, <strong>2,1 metros de diâmetro</strong> e peso monumental de <strong>27 toneladas</strong>, a RDS-220 era grande demais para caber inteiramente no compartimento de bombas de qualquer avião do mundo.
-                  </p>
-                  <p>
-                    O bombardeiro quadrimotor <strong>Tupolev Tu-95V</strong> teve suas portas do compartimento de bombas completamente removidas e reforços estruturais soldados à fuselagem. O artefato ficava parcialmente exposto para fora da barriga do avião durante o voo.
-                  </p>
-                  <p>
-                    Para retardar a queda da bomba e permitir que o avião chegasse a 45 km de distância antes da detonação, foi projetado um <strong>paraquedas de náilon de 800 m²</strong> pesando quase <strong>800 kg</strong>, acionado imediatamente após a liberação a 10.500 m.
-                  </p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/5 font-mono text-xs">
+                <div className="space-y-1">
+                  <span className="text-slate-400 block text-[11px]">Camisa Externa:</span>
+                  <span className="text-[#8F83FF] font-bold block">Chumbo (substituindo U-238)</span>
                 </div>
-
-                <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 space-y-2 font-mono text-xs">
-                  <div className="text-white font-bold flex items-center justify-between">
-                    <span>Camisa Externa:</span>
-                    <span className="text-[#8F83FF]">Chumbo (substituindo U-238)</span>
-                  </div>
-                  <div className="text-white font-bold flex items-center justify-between">
-                    <span>Paraquedas de Retardo:</span>
-                    <span className="text-slate-300">800 m² (800 kg de náilon)</span>
-                  </div>
-                  <div className="text-white font-bold flex items-center justify-between">
-                    <span>Aeronave Portadora:</span>
-                    <span className="text-[#73CAE5]">Tu-95V (Pintura Térmica Branca)</span>
-                  </div>
+                <div className="space-y-1">
+                  <span className="text-slate-400 block text-[11px]">Paraquedas de Retardo:</span>
+                  <span className="text-slate-200 font-bold block">800 m² (800 kg de náilon)</span>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-slate-400 block text-[11px]">Aeronave Portadora:</span>
+                  <span className="text-[#73CAE5] font-bold block">Tu-95V (Pintura Térmica Branca)</span>
                 </div>
               </div>
             </div>
@@ -254,67 +280,36 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
-              {/* Technical Description Panel */}
-              <div className="lg:col-span-5 order-2 lg:order-1 p-6 sm:p-8 space-y-4 flex flex-col justify-between text-xs sm:text-sm text-[#B7B7B7] leading-relaxed bg-[#131313]">
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-2 text-white font-bold text-sm">
-                    <Flame className="w-4 h-4 text-amber-400" />
-                    <span>Física do Plasma & Pulso Térmico</span>
-                  </div>
-                  <p>
-                    Detonada às <strong>11h32 (horário de Moscou)</strong> a 4.000 metros de altitude acima do Campo D-II de Nova Zembla, a ignição termonuclear gerou quase que instantaneamente uma <strong>esfera de plasma superaquecido com 8 quilômetros de diâmetro</strong> (raio de 4.000 metros).
-                  </p>
-                  <p>
-                    A bola de fogo foi tão descomunal que tocou quase o solo simultaneamente e expandiu-se verticalmente até a altitude de onde a bomba havia sido lançada (10.500 m). Ela só não encostou na superfície terrestre porque a <strong>onda de choque refletida pelo solo e pelo oceano congelado</strong> empurrou a bola de fogo para cima.
-                  </p>
-                  <p>
-                    A radiação térmica liberada foi tão intensa que causaria <strong>queimaduras de terceiro grau em qualquer ser humano desprotegido a até 100 km de distância</strong>. A tripulação do Tu-95V, mesmo já a 45 km do ponto zero e dentro de cabine protegida, sentiu uma onda sufocante de calor intenso varrer seus corpos.
-                  </p>
+            {/* Technical Description Panel */}
+            <div className="p-6 sm:p-8 space-y-6 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed bg-[#131313]">
+              <div className="space-y-3">
+                <div className="flex items-center space-x-2 text-white font-bold text-sm">
+                  <Flame className="w-4 h-4 text-amber-400" />
+                  <span>Física do Plasma & Pulso Térmico</span>
                 </div>
-
-                <div className="p-3.5 rounded-xl bg-amber-950/20 border border-amber-500/20 space-y-2 font-mono text-xs">
-                  <div className="text-white font-bold flex items-center justify-between">
-                    <span>Clarão Térmico Visível:</span>
-                    <span className="text-amber-300">&gt; 1.000 km (Noruega, Finlândia)</span>
-                  </div>
-                  <div className="text-white font-bold flex items-center justify-between">
-                    <span>Sensação Térmica Corporal:</span>
-                    <span className="text-slate-300">Sentida a 270 km do hipocentro</span>
-                  </div>
-                  <div className="text-white font-bold flex items-center justify-between">
-                    <span>Taxa de Potência de Pico:</span>
-                    <span className="text-amber-400 font-bold">5,4 × 10²⁴ Watts (~1,4% do Sol)</span>
-                  </div>
-                </div>
+                <p>
+                  Detonada às <strong>11h32 (horário de Moscou)</strong> a 4.000 metros de altitude acima do Campo D-II de Nova Zembla, a ignição termonuclear gerou quase que instantaneamente uma <strong>esfera de plasma superaquecido com 8 quilômetros de diâmetro</strong> (raio de 4.000 metros).
+                </p>
+                <p>
+                  A bola de fogo foi tão descomunal que tocou quase o solo simultaneamente e expandiu-se verticalmente até a altitude de onde a bomba havia sido lançada (10.500 m). Ela só não encostou na superfície terrestre porque a <strong>onda de choque refletida pelo solo e pelo oceano congelado</strong> empurrou a bola de fogo para cima.
+                </p>
+                <p>
+                  A radiação térmica liberada foi tão intensa que causaria <strong>queimaduras de terceiro grau em qualquer ser humano desprotegido a até 100 km de distância</strong>. A tripulação do Tu-95V, mesmo já a 45 km do ponto zero e dentro de cabine protegida, sentiu uma onda sufocante de calor intenso varrer seus corpos.
+                </p>
               </div>
 
-              {/* Image Frame */}
-              <div
-                onClick={() =>
-                  openLightbox(
-                    tsarFireballImg,
-                    'A Bola de Fogo da Tsar Bomba (8.000 metros de diâmetro)',
-                    'Registro documental do momento em que a esfera colossal de plasma termonuclear de 8 km paira sobre a paisagem ártica de Nova Zembla a 4.000 metros de altitude. A onda de choque refletida do solo sustenta a imensa bola incandescente no ar.'
-                  )
-                }
-                className="lg:col-span-7 order-1 lg:order-2 relative aspect-16/9 sm:aspect-16/10 bg-black overflow-hidden cursor-pointer group/img"
-              >
-                <img
-                  src={tsarFireballImg}
-                  alt="Bola de fogo monumental da Tsar Bomba no céu ártico"
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
-                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs text-white/90">
-                  <span className="font-mono bg-black/70 px-2.5 py-1 rounded-md backdrop-blur-md">
-                    Detonação Aérea • 4.000 m de Altitude • Plasma Solar
-                  </span>
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/80 border border-white/20 text-white backdrop-blur-md">
-                    <Maximize2 className="w-3.5 h-3.5" />
-                    <span>Ampliar</span>
-                  </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-xl bg-amber-950/20 border border-amber-500/20 font-mono text-xs">
+                <div className="space-y-1">
+                  <span className="text-slate-400 block text-[11px]">Clarão Térmico Visível:</span>
+                  <span className="text-amber-300 font-bold block">&gt; 1.000 km (Noruega, Finlândia)</span>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-slate-400 block text-[11px]">Sensação Térmica Corporal:</span>
+                  <span className="text-slate-200 font-bold block">Sentida a 270 km do hipocentro</span>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-slate-400 block text-[11px]">Taxa de Potência de Pico:</span>
+                  <span className="text-amber-400 font-bold block">5,4 × 10²⁴ Watts (~1,4% do Sol)</span>
                 </div>
               </div>
             </div>
@@ -626,6 +621,50 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* SEÇÃO: MENTES CIENTÍFICAS E FÍSICOS RESPONSÁVEIS PELA TSAR BOMBA          */}
+      {/* ========================================================================= */}
+      <section className="space-y-6">
+        <div className="space-y-2">
+          <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-[#8F83FF] font-mono">
+            <Users className="w-4 h-4 text-[#8F83FF]" />
+            <span>Mentes Científicas Soviéticas • VNIIEF Arzamas-16</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-display">
+            Andrei Sakharov e os Físicos Responsáveis pela Tsar Bomba
+          </h2>
+          <p className="text-xs sm:text-sm text-[#B7B7B7] max-w-3xl leading-relaxed">
+            O desenvolvimento da RDS-220 no centro secreto de Sarov (Arzamas-16) reuniu a elite da física teórica, matemática computacional e hidrodinâmica da Academia de Ciências da URSS, culminando na façanha de conceber a arma em menos de 15 semanas.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {tsarPhysicists.map((p, idx) => (
+            <div
+              key={idx}
+              className={`p-5 rounded-2xl bg-[#111111] border transition-all space-y-3 flex flex-col justify-between ${
+                p.highlight
+                  ? 'border-[#8F83FF]/60 bg-gradient-to-br from-[#8F83FF]/10 via-[#111111] to-[#111111] shadow-xl shadow-[#8F83FF]/10'
+                  : 'border-white/10 hover:border-[#8F83FF]/40'
+              }`}
+            >
+              <div className="space-y-2">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <h3 className="font-bold text-white text-base font-display">{p.name}</h3>
+                    <span className="text-xs text-[#8F83FF] block font-medium mt-0.5 leading-tight">{p.role}</span>
+                  </div>
+                  <span className="text-[10px] font-mono font-bold text-[#8F83FF] bg-[#8F83FF]/15 border border-[#8F83FF]/30 px-2 py-0.5 rounded-full shrink-0">
+                    {p.tag}
+                  </span>
+                </div>
+                <p className="text-xs text-[#B7B7B7] leading-relaxed pt-1">{p.contribution}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 

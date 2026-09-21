@@ -53,6 +53,15 @@ const ISOTOPES: IsotopeConfig[] = [
     description: 'Núcleo de excepcional estabilidade ("número mágico" duplo), idêntico a uma partícula Alfa emitida em decaimentos radioativos.'
   },
   {
+    name: 'Lítio-6',
+    symbol: '⁶Li',
+    protons: 3,
+    neutrons: 3,
+    electrons: 3,
+    stability: 'Estável',
+    description: 'Isótopo estável do lítio (7,59% de abundância natural) com 3 prótons e 3 nêutrons. É o precursor nuclear essencial do Trítio: ao capturar um nêutron térmico (⁶Li + n → ⁴He + ³H + 4,78 MeV), sintetiza trítio tanto nos mantos férteis (breeding blankets) de reatores de fusão quanto no deutereto de lítio (⁶LiD) de armas termonucleares.'
+  },
+  {
     name: 'Carbono-14',
     symbol: '¹⁴C',
     protons: 6,

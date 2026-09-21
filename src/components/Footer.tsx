@@ -103,6 +103,15 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <ul className="space-y-2 text-xs">
               <li>
                 <button
+                  onClick={() => onNavigate('map')}
+                  className="hover:text-rose-400 transition-colors focus:outline-none text-left flex items-center gap-1.5 font-medium text-rose-300"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                  <span>Mapa Nuclear & Simulador</span>
+                </button>
+              </li>
+              <li>
+                <button
                   onClick={() => onNavigate('operation-castle')}
                   className="hover:text-[#73CAE5] transition-colors focus:outline-none text-left"
                 >
@@ -115,6 +124,22 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   className="hover:text-[#8F83FF] transition-colors focus:outline-none text-left"
                 >
                   Tsar Bomba (50 Mt)
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigate('ivy-mike')}
+                  className="hover:text-[#73CAE5] transition-colors focus:outline-none text-left"
+                >
+                  Ivy Mike (10,4 Mt)
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigate('manhattan-project')}
+                  className="hover:text-[#8F83FF] transition-colors focus:outline-none text-left"
+                >
+                  Projeto Manhattan (1942–1945)
                 </button>
               </li>
               <li>

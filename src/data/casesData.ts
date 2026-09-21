@@ -22,6 +22,26 @@ export const caseStudies: CaseStudy[] = [
     lessonsLearned: 'Demonstrou que armas nucleares são qualitativamente distintas de qualquer outro armamento militar, tendo efeitos indiscriminados sobre civis e meio ambiente.'
   },
   {
+    id: 'demon-core-los-alamos',
+    title: 'O "Demon Core": Acidentes de Criticalidade em Los Alamos (1945–1946)',
+    year: '1945–1946',
+    location: 'Laboratório Nacional de Los Alamos (Omega Site), Novo México, EUA',
+    category: 'acidente',
+    categoryLabel: 'Acidente de Criticalidade',
+    shortSummary: 'Os dois acidentes fatais com o núcleo de plutônio de 6,2 kg apelidado de "Demon Core", que vitimaram os físicos Harry Daghlian e Louis Slotin.',
+    context: 'Após a capitulação do Japão em agosto de 1945, o terceiro núcleo de plutônio produzido pelo Projeto Manhattan (destinado a uma terceira bomba atômica após Trinity e Nagasaki) permaneceu no Laboratório de Los Alamos para experimentos de determinação precisa de massa crítica com refletores de nêutrons.',
+    whatHappened: 'Em 21 de agosto de 1945, o físico Harry Daghlian construía sozinho uma parede de blocos de carbeto de tungstênio ao redor da esfera de plutônio de 6,2 kg. Ao colocar o último bloco, sua mão escorregou e o tijolo de 4,4 kg caiu diretamente sobre o núcleo, refletindo nêutrons e induzindo prompt-criticality imediata. Daghlian rapidamente empurrou o bloco, mas recebeu 510 rem (5,1 Sv) de radiação, falecendo 25 dias depois. Nove meses depois, em 21 de maio de 1946, o físico Louis Slotin realizava o experimento apelidado por Richard Feynman de "fazer cócegas na cauda de um dragão adormecido" (tickling the dragon\'s tail), abaixando uma semiesfera de berílio refletor sobre o núcleo usando apenas a ponta de uma chave de fenda. A chave escorregou, a cúpula fechou-se e uma explosão de nêutrons e raios gama ionizou o ar em um intenso clarão azul; Slotin cobriu a montagem com o próprio corpo para salvar sete outros pesquisadores na sala, recebendo mais de 1.000 rem e vindo a óbito 9 dias depois.',
+    consequences: [
+      'Morte de dois físicos pioneiros do Projeto Manhattan por Síndrome Aguda de Radiação severa (Harry Daghlian aos 24 anos e Louis Slotin aos 35 anos).',
+      'Exposição aguda de outros cientistas e assistentes na sala de testes, que desenvolveram sequelas crônicas.',
+      'Proibição definitiva e imediata pelo governo dos EUA de qualquer manipulação humana manual direta de conjuntos de massa crítica ("hands-on criticality tests").',
+      'Desenvolvimento de maquinários de controle remoto e blindagem espessa de chumbo e concreto (como a máquina "Topsy" e "Lady Godiva") para operar a centenas de metros de distância.',
+      'O núcleo de plutônio foi posteriormente derretido e seu material reutilizado em outros dispositivos nucleares dos arsenais norte-americanos da Operação Crossroads.'
+    ],
+    historicalSignificance: 'Simbolizou tragicamente o perigo letal invisível da física nuclear e fundou as disciplinas modernas de radioproteção, controle remoto de materiais físseis e protocolos de dosimetria de emergência.',
+    lessonsLearned: 'Nenhum protocolo científico de segurança pode depender da destreza física individual ou ferramentas improvisadas (como uma chave de fenda) ao manusear materiais supercríticos.'
+  },
+  {
     id: 'castle-bravo',
     title: 'Teste Termonuclear Castle Bravo (1954)',
     year: '1954',

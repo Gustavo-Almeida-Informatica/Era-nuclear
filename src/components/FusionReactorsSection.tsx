@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   FUSION_REACTORS,
   FISSION_VS_FUSION_COMPARISON,
+  FUSION_RISKS_AND_BENEFITS,
   FusionReactorProject
 } from '../data/energyData';
 import {
@@ -20,12 +21,14 @@ import {
   Sparkles,
   Award,
   ArrowRight,
-  Info
+  Info,
+  Scale,
+  AlertTriangle
 } from 'lucide-react';
 
 export const FusionReactorsSection: React.FC = () => {
   const [selectedReactorId, setSelectedReactorId] = useState<string>(FUSION_REACTORS[0].id);
-  const [activeTab, setActiveTab] = useState<'reactors' | 'how-it-works' | 'comparison'>('reactors');
+  const [activeTab, setActiveTab] = useState<'reactors' | 'how-it-works' | 'comparison' | 'risks-benefits'>('reactors');
 
   const currentReactor =
     FUSION_REACTORS.find((r) => r.id === selectedReactorId) || FUSION_REACTORS[0];
@@ -141,6 +144,17 @@ export const FusionReactorsSection: React.FC = () => {
             >
               <ShieldCheck className="w-3.5 h-3.5" />
               <span>Fissão vs. Fusão</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('risks-benefits')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 ${
+                activeTab === 'risks-benefits'
+                  ? 'bg-gradient-to-r from-[#8F83FF] to-[#73CAE5] text-[#0D0D0D] font-bold shadow-md'
+                  : 'text-[#B7B7B7] hover:text-white'
+              }`}
+            >
+              <Scale className="w-3.5 h-3.5" />
+              <span>Riscos & Benefícios</span>
             </button>
           </div>
         </div>
@@ -472,6 +486,90 @@ export const FusionReactorsSection: React.FC = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 4: RISCOS & BENEFÍCIOS DA FUSÃO */}
+      {activeTab === 'risks-benefits' && (
+        <div className="space-y-6">
+          <div className="bg-[#111111] border border-white/10 rounded-2xl p-6 sm:p-8 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+              <div>
+                <h3 className="text-xl sm:text-2xl font-bold text-white font-display flex items-center space-x-2">
+                  <Scale className="w-5 h-5 text-[#73CAE5]" />
+                  <span>Riscos e Benefícios da Fusão Nuclear: Análise Completa</span>
+                </h3>
+                <p className="text-xs sm:text-sm text-[#B7B7B7] mt-1 max-w-3xl leading-relaxed">
+                  Avaliação técnica e rigorosa dos potenciais transformadores da fusão termonuclear (segurança intrínseca, combustível da água do mar e ausência de resíduos de longa vida) confrontados aos desafios extremos de engenharia física (danos por nêutrons de 14 MeV, confinamento de trítio, disrupções de plasma e custos de capital).
+                </p>
+              </div>
+              <div className="px-3.5 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold shrink-0 self-start sm:self-auto">
+                Meltdown Fisicamente Impossível
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 pt-2">
+              {FUSION_RISKS_AND_BENEFITS.map((item) => (
+                <div
+                  key={item.id}
+                  className="bg-[#0A0A0A] border border-white/10 rounded-xl p-5 sm:p-6 space-y-4 shadow-lg hover:border-white/20 transition-all"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/5 pb-3">
+                    <div>
+                      <h4 className="text-base sm:text-lg font-bold text-white font-display">
+                        {item.domain}
+                      </h4>
+                      <p className="text-xs text-[#B7B7B7] mt-0.5">{item.summary}</p>
+                    </div>
+                    <span className="text-[11px] font-mono px-2.5 py-1 rounded bg-white/5 border border-white/10 text-[#73CAE5] font-semibold whitespace-nowrap self-start sm:self-auto">
+                      {item.keyMetric}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    {/* Benefícios */}
+                    <div className="p-4 rounded-lg bg-emerald-950/20 border border-emerald-500/20 space-y-2.5">
+                      <div className="flex items-center space-x-2 text-emerald-400 font-bold text-xs uppercase tracking-wider">
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span>Vantagens & Benefícios Comprovados</span>
+                      </div>
+                      <ul className="space-y-2 text-xs text-[#B7B7B7]">
+                        {item.benefits.map((benefit, i) => (
+                          <li key={i} className="flex items-start space-x-2 leading-relaxed">
+                            <span className="text-emerald-400 font-bold mt-0.5">•</span>
+                            <span>{benefit}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Riscos e Desafios */}
+                    <div className="p-4 rounded-lg bg-amber-950/20 border border-amber-500/20 space-y-2.5">
+                      <div className="flex items-center space-x-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
+                        <AlertTriangle className="w-4 h-4" />
+                        <span>Riscos Tecnológicos & Desafios Críticos</span>
+                      </div>
+                      <ul className="space-y-2 text-xs text-[#B7B7B7]">
+                        {item.risksAndChallenges.map((risk, i) => (
+                          <li key={i} className="flex items-start space-x-2 leading-relaxed">
+                            <span className="text-amber-400 font-bold mt-0.5">•</span>
+                            <span>{risk}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 flex items-center justify-between text-xs border-t border-white/5">
+                    <span className="text-[#B7B7B7]">Veredito Científico:</span>
+                    <span className="font-semibold text-white font-mono text-[11px] bg-white/5 px-2 py-0.5 rounded border border-white/10">
+                      {item.verdict}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}

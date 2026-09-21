@@ -19,6 +19,7 @@ import chicagoPile1Img from '../assets/images/chicago_pile_one_1787677642726.jpg
 import iterTokamakImg from '../assets/images/iter_tokamak_fusion_1787677659756.jpg';
 import fukushimaDamageImg from '../assets/images/fukushima_daiichi_damage_2011.jpg';
 import goianiaSourceImg from '../assets/images/goiania_cesio_137_source.jpg';
+import demonCoreImg from '../assets/images/demon_core_experiment_1789920226757.jpg';
 
 export const timelineEvents: TimelineEvent[] = [
   {
@@ -182,6 +183,23 @@ export const timelineEvents: TimelineEvent[] = [
     secondaryImageUrl: nagasakiMemorialImg,
     secondaryImageCaption: 'Monumento do Hipocentro e Parque da Paz erguidos em memória das vítimas em Nagasaki.',
     source: 'Nagasaki Atomic Bomb Museum / U.S. National Archives / Prefeitura de Nagasaki'
+  },
+  {
+    id: '1945-demon-core',
+    year: '1945–1946',
+    exactDate: '21 de agosto de 1945 e 21 de maio de 1946',
+    decade: '1940-1950',
+    title: 'O "Demon Core": Acidentes de Criticalidade em Los Alamos',
+    category: 'acidente',
+    categoryLabel: 'Acidente de Criticalidade',
+    summary: 'Uma esfera de plutônio de 6,2 kg destinada a um terceiro bombardeio atômico entra acidentalmente em estado supercrítico em dois experimentos distintos em Los Alamos, matando os físicos Harry Daghlian e Louis Slotin.',
+    fullDescription: 'O núcleo esférico de 6,2 kg de plutônio em fase gálio-estabilizada (delta) estava originalmente reservado para um ataque ao Japão caso a rendição não ocorresse. Em 21 de agosto de 1945, Harry Daghlian empilhava manualmente tijolos de carbeto de tungstênio refletores de nêutrons ao redor do núcleo quando um tijolo escorregou de suas mãos, tornando a massa supercrítica e disparando um clarão azul de radiação Cherenkov e ionização do ar (Daghlian faleceu 25 dias depois). Em 21 de maio de 1946, Louis Slotin realizava o experimento de "fazer cócegas na cauda do dragão" (tickling the dragon\'s tail), sustentando uma semiesfera superior de berílio refletor apenas com a ponta de uma chave de fenda. A lâmina escorregou, a cúpula de berílio fechou-se completamente e o núcleo disparou uma onda letal de nêutrons e raios gama; Slotin usou o próprio corpo como escudo para proteger os colegas e faleceu 9 dias depois.',
+    historicalImpact: 'Encerrou permanentemente a era dos testes manuais de criticalidade em Los Alamos. O governo dos EUA baniu manipulações humanas diretas de massas físseis, estabelecendo o uso estrito de máquinas de controle remoto blindadas (como o dispositivo "Topsy") e novos padrões mundiais de dosimetria e segurança radiológica.',
+    keyFigures: ['Harry Daghlian', 'Louis Slotin', 'Enrico Fermi', 'Richard Feynman'],
+    location: 'Laboratório Nacional de Los Alamos (Omega Site), Novo México (EUA)',
+    imageUrl: demonCoreImg,
+    imageCaption: 'Reconstituição documental do experimento de criticalidade com a esfera de plutônio (Demon Core) e os refletores de nêutrons em Los Alamos.',
+    source: 'Los Alamos National Laboratory Archives / U.S. Department of Energy (DOE)'
   },
   {
     id: '1949-rds-1',

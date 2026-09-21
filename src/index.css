@@ -52,23 +52,117 @@
   background: #383838;
 }
 
-/* Tactical Map Tooltip */
-.tactical-map-tooltip {
-  background-color: rgba(15, 23, 42, 0.95) !important;
-  border: 1px solid rgba(148, 163, 184, 0.3) !important;
+/* Tactical Map Tooltip (Blast Zones & Radioactive Fallout) */
+.tactical-map-tooltip,
+.fallout-clean-text-tooltip,
+.leaflet-tooltip {
+  background-color: #000000 !important;
+  background: #000000 !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
   border-radius: 8px !important;
   color: #f8fafc !important;
   font-family: inherit !important;
   font-size: 11px !important;
-  padding: 6px 10px !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6) !important;
+  padding: 8px 12px !important;
+  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.95) !important;
+  backdrop-filter: blur(8px) !important;
+  pointer-events: none !important;
+  max-width: 280px !important;
+  white-space: normal !important;
 }
-.tactical-map-tooltip::before {
-  border-top-color: rgba(15, 23, 42, 0.95) !important;
+
+.leaflet-popup-content-wrapper {
+  background-color: #000000 !important;
+  background: #000000 !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 10px !important;
+  color: #f8fafc !important;
+  box-shadow: 0 20px 40px -4px rgba(0, 0, 0, 0.95) !important;
+}
+
+.leaflet-popup-tip {
+  background-color: #000000 !important;
+  background: #000000 !important;
+}
+
+.tactical-map-tooltip::before,
+.leaflet-tooltip-top:before {
+  border-top-color: #000000 !important;
+}
+.leaflet-tooltip-bottom:before {
+  border-bottom-color: #000000 !important;
+}
+.leaflet-tooltip-left:before {
+  border-left-color: #000000 !important;
+}
+.leaflet-tooltip-right:before {
+  border-right-color: #000000 !important;
 }
 
 .leaflet-container {
   background-color: #020617 !important;
   font-family: inherit !important;
+}
+
+/* Tactical Dark Mode Map Tiles - No watermarks, no API keys, clean tactical aesthetic */
+.tactical-dark-tiles,
+.tactical-dark-tiles img,
+.tactical-dark-tiles .leaflet-tile {
+  filter: brightness(0.68) invert(1) contrast(1.35) hue-rotate(180deg) saturate(0.35) !important;
+}
+
+.leaflet-tile {
+  border: none !important;
+  outline: none !important;
+}
+
+/* Remove default browser focus bounding box / square when clicking blast circles, polygons, or SVG paths */
+.leaflet-container :focus,
+.leaflet-container :focus-visible,
+.leaflet-container *:focus,
+.leaflet-container *:focus-visible,
+.leaflet-container path:focus,
+.leaflet-container path:focus-visible,
+.leaflet-container svg:focus,
+.leaflet-container svg:focus-visible,
+.leaflet-interactive:focus,
+.leaflet-interactive:focus-visible,
+path.leaflet-interactive:focus,
+path.leaflet-interactive:focus-visible,
+.leaflet-pane path:focus,
+.leaflet-pane svg:focus,
+.leaflet-overlay-pane path:focus,
+.leaflet-overlay-pane svg:focus {
+  outline: none !important;
+  outline-style: none !important;
+  outline-width: 0 !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+path.leaflet-interactive {
+  outline: none !important;
+}
+
+path:focus {
+  outline: none !important;
+}
+
+.historic-test-site-icon {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+}
+
+/* Remove number input spin buttons (up/down arrows) */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield !important;
+  appearance: textfield !important;
 }
 

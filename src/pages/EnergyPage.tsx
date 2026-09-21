@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PageId } from '../types';
-import { energyApplications, risksAndBenefitsMatrix } from '../data/energyData';
+import { energyApplications, risksAndBenefitsMatrix, FUSION_RISKS_AND_BENEFITS } from '../data/energyData';
 import { FusionReactorsSection } from '../components/FusionReactorsSection';
 import {
   Zap,
@@ -12,7 +12,9 @@ import {
   CheckCircle2,
   AlertTriangle,
   Info,
-  ChevronRight
+  ChevronRight,
+  Atom,
+  Flame
 } from 'lucide-react';
 
 interface EnergyPageProps {
@@ -21,6 +23,7 @@ interface EnergyPageProps {
 
 export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
   const [selectedAppId, setSelectedAppId] = useState<string>(energyApplications[0].id);
+  const [riskDomainTab, setRiskDomainTab] = useState<'fission' | 'fusion'>('fission');
 
   const activeApp = energyApplications.find((a) => a.id === selectedAppId) || energyApplications[0];
 
@@ -141,65 +144,161 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
 
       {/* Balanced Section: Nuclear Risk vs Benefit */}
       <section className="space-y-8">
-        <div className="max-w-2xl space-y-2">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-white">
-            <Scale className="w-3.5 h-3.5 text-[#73CAE5]" />
-            <span>Debate Equilibrado & Transparência</span>
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div className="max-w-2xl space-y-2">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-white">
+              <Scale className="w-3.5 h-3.5 text-[#73CAE5]" />
+              <span>Debate Equilibrado & Transparência</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-display">
+              Nuclear: Risco e Benefício
+            </h2>
+            <p className="text-xs sm:text-sm text-[#B7B7B7]">
+              Uma análise técnica e transparente comparando as vantagens energéticas e os desafios operacionais tanto da <strong>fissão comercial contemporânea</strong> quanto da <strong>fusão termonuclear do futuro</strong>.
+            </p>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-display">
-            Nuclear: Risco e Benefício
-          </h2>
-          <p className="text-xs sm:text-sm text-[#B7B7B7]">
-            Uma comparação objetiva e imparcial sobre as vantagens energéticas e os desafios técnicos e socioambientais da indústria nuclear.
-          </p>
+
+          {/* Fission vs Fusion Toggle */}
+          <div className="flex rounded-xl bg-white/5 p-1 border border-white/10 shrink-0 self-start md:self-auto">
+            <button
+              onClick={() => setRiskDomainTab('fission')}
+              className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-2 ${
+                riskDomainTab === 'fission'
+                  ? 'bg-gradient-to-r from-amber-500 to-amber-400 text-black font-bold shadow-md'
+                  : 'text-[#B7B7B7] hover:text-white'
+              }`}
+            >
+              <Atom className="w-3.5 h-3.5" />
+              <span>Fissão Comercial (PWR/BWR)</span>
+            </button>
+            <button
+              onClick={() => setRiskDomainTab('fusion')}
+              className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-2 ${
+                riskDomainTab === 'fusion'
+                  ? 'bg-gradient-to-r from-[#8F83FF] to-[#73CAE5] text-black font-bold shadow-md'
+                  : 'text-[#B7B7B7] hover:text-white'
+              }`}
+            >
+              <Flame className="w-3.5 h-3.5" />
+              <span>Fusão Nuclear (Nova Fronteira)</span>
+            </button>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-6">
-          {risksAndBenefitsMatrix.map((item, idx) => (
-            <div
-              key={idx}
-              className="bg-[#111111] border border-white/10 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6"
-            >
-              <h3 className="text-lg sm:text-xl font-bold text-white font-display border-b border-white/5 pb-3">
-                {item.domain}
-              </h3>
+        {/* Fission Matrix */}
+        {riskDomainTab === 'fission' && (
+          <div className="grid grid-cols-1 gap-6">
+            {risksAndBenefitsMatrix.map((item, idx) => (
+              <div
+                key={idx}
+                className="bg-[#111111] border border-white/10 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6"
+              >
+                <h3 className="text-lg sm:text-xl font-bold text-white font-display border-b border-white/5 pb-3">
+                  {item.domain}
+                </h3>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Benefits column */}
-                <div className="p-5 rounded-xl bg-emerald-950/15 border border-emerald-500/20 space-y-3">
-                  <div className="flex items-center space-x-2 text-emerald-400 font-bold text-xs uppercase tracking-wider">
-                    <CheckCircle2 className="w-4 h-4" />
-                    <span>Vantagens & Benefícios Comprovados</span>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Benefits column */}
+                  <div className="p-5 rounded-xl bg-emerald-950/15 border border-emerald-500/20 space-y-3">
+                    <div className="flex items-center space-x-2 text-emerald-400 font-bold text-xs uppercase tracking-wider">
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>Vantagens & Benefícios Comprovados</span>
+                    </div>
+                    <ul className="space-y-2 text-xs text-[#B7B7B7]">
+                      {item.benefits.map((b, i) => (
+                        <li key={i} className="flex items-start space-x-2">
+                          <span className="text-emerald-400 font-bold">•</span>
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <ul className="space-y-2 text-xs text-[#B7B7B7]">
-                    {item.benefits.map((b, i) => (
-                      <li key={i} className="flex items-start space-x-2">
-                        <span className="text-emerald-400 font-bold">•</span>
-                        <span>{b}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
 
-                {/* Risks column */}
-                <div className="p-5 rounded-xl bg-amber-950/15 border border-amber-500/20 space-y-3">
-                  <div className="flex items-center space-x-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
-                    <AlertTriangle className="w-4 h-4" />
-                    <span>Riscos, Desafios & Limitações</span>
+                  {/* Risks column */}
+                  <div className="p-5 rounded-xl bg-amber-950/15 border border-amber-500/20 space-y-3">
+                    <div className="flex items-center space-x-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
+                      <AlertTriangle className="w-4 h-4" />
+                      <span>Riscos, Desafios & Limitações</span>
+                    </div>
+                    <ul className="space-y-2 text-xs text-[#B7B7B7]">
+                      {item.risksAndChallenges.map((r, i) => (
+                        <li key={i} className="flex items-start space-x-2">
+                          <span className="text-amber-400 font-bold">•</span>
+                          <span>{r}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <ul className="space-y-2 text-xs text-[#B7B7B7]">
-                    {item.risksAndChallenges.map((r, i) => (
-                      <li key={i} className="flex items-start space-x-2">
-                        <span className="text-amber-400 font-bold">•</span>
-                        <span>{r}</span>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
+
+        {/* Fusion Matrix */}
+        {riskDomainTab === 'fusion' && (
+          <div className="grid grid-cols-1 gap-6">
+            {FUSION_RISKS_AND_BENEFITS.map((item) => (
+              <div
+                key={item.id}
+                className="bg-[#111111] border border-white/10 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6 hover:border-white/20 transition-all"
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/5 pb-3">
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-bold text-white font-display">
+                      {item.domain}
+                    </h3>
+                    <p className="text-xs text-[#B7B7B7] mt-0.5">{item.summary}</p>
+                  </div>
+                  <span className="px-3 py-1 rounded bg-white/5 border border-white/10 text-xs font-mono font-semibold text-[#73CAE5] self-start sm:self-auto">
+                    {item.keyMetric}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Benefits column */}
+                  <div className="p-5 rounded-xl bg-emerald-950/15 border border-emerald-500/20 space-y-3">
+                    <div className="flex items-center space-x-2 text-emerald-400 font-bold text-xs uppercase tracking-wider">
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>Vantagens Físicas & Ambientais da Fusão</span>
+                    </div>
+                    <ul className="space-y-2 text-xs text-[#B7B7B7]">
+                      {item.benefits.map((b, i) => (
+                        <li key={i} className="flex items-start space-x-2">
+                          <span className="text-emerald-400 font-bold">•</span>
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Risks column */}
+                  <div className="p-5 rounded-xl bg-amber-950/15 border border-amber-500/20 space-y-3">
+                    <div className="flex items-center space-x-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
+                      <AlertTriangle className="w-4 h-4" />
+                      <span>Desafios de Engenharia & Gargalos Críticos</span>
+                    </div>
+                    <ul className="space-y-2 text-xs text-[#B7B7B7]">
+                      {item.risksAndChallenges.map((r, i) => (
+                        <li key={i} className="flex items-start space-x-2">
+                          <span className="text-amber-400 font-bold">•</span>
+                          <span>{r}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs border-t border-white/5">
+                  <span className="text-[#B7B7B7]">Veredito Científico Internacional:</span>
+                  <span className="font-semibold text-white font-mono text-[11px] bg-white/5 px-2.5 py-1 rounded border border-white/10">
+                    {item.verdict}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

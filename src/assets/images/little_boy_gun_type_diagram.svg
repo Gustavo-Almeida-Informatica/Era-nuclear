@@ -1,265 +1,359 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 500" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" width="100%" height="100%">
   <defs>
-    <!-- Background Radial Glow -->
-    <radialGradient id="bgVignette" cx="50%" cy="50%" r="75%">
-      <stop offset="0%" stop-color="#0b0f17" stop-opacity="0.5"/>
-      <stop offset="100%" stop-color="#000000" stop-opacity="1"/>
+    <!-- Background parchment gradient -->
+    <linearGradient id="parchmentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e3d8c2"/>
+      <stop offset="50%" stop-color="#ded4bd"/>
+      <stop offset="100%" stop-color="#d7cdb4"/>
+    </linearGradient>
+
+    <!-- Bomb Body Dark Grey Metallic Gradients -->
+    <linearGradient id="bombUpper" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#5a626a"/>
+      <stop offset="20%" stop-color="#79838d"/>
+      <stop offset="55%" stop-color="#474e56"/>
+      <stop offset="100%" stop-color="#272c31"/>
+    </linearGradient>
+
+    <linearGradient id="bombLower" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#272b30"/>
+      <stop offset="65%" stop-color="#1c2024"/>
+      <stop offset="100%" stop-color="#131618"/>
+    </linearGradient>
+
+    <linearGradient id="noseCurve" x1="0%" y1="0%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#636b74"/>
+      <stop offset="35%" stop-color="#3e444b"/>
+      <stop offset="75%" stop-color="#262b30"/>
+      <stop offset="100%" stop-color="#181c1f"/>
+    </linearGradient>
+
+    <linearGradient id="steelTip" x1="0%" y1="0%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#4c545c"/>
+      <stop offset="45%" stop-color="#32383f"/>
+      <stop offset="100%" stop-color="#16191c"/>
+    </linearGradient>
+
+    <!-- Tail Fin Box Gradients -->
+    <linearGradient id="tailBoxFace" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#535a62"/>
+      <stop offset="50%" stop-color="#3c4248"/>
+      <stop offset="100%" stop-color="#282c31"/>
+    </linearGradient>
+
+    <linearGradient id="tailFlange" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#6b747d"/>
+      <stop offset="100%" stop-color="#393f45"/>
+    </linearGradient>
+
+    <!-- Gun Barrel Steel Bore -->
+    <linearGradient id="barrelTube" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#24292e"/>
+      <stop offset="25%" stop-color="#3d444c"/>
+      <stop offset="75%" stop-color="#212529"/>
+      <stop offset="100%" stop-color="#15181b"/>
+    </linearGradient>
+
+    <!-- Powder Charge Fire Eruption -->
+    <radialGradient id="fireCore" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="20%" stop-color="#ffea75"/>
+      <stop offset="50%" stop-color="#f97316"/>
+      <stop offset="80%" stop-color="#dc2626"/>
+      <stop offset="100%" stop-color="#991b1b" stop-opacity="0.2"/>
     </radialGradient>
 
-    <!-- Bomb Outer Metallic Gradients -->
-    <linearGradient id="bombOuterBody" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#737c87"/>
-      <stop offset="15%" stop-color="#9aa3af"/>
-      <stop offset="45%" stop-color="#555c66"/>
-      <stop offset="80%" stop-color="#2d333b"/>
-      <stop offset="100%" stop-color="#181c22"/>
+    <!-- Uranium Projectile -->
+    <linearGradient id="uSlugGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#a2aab2"/>
+      <stop offset="35%" stop-color="#717982"/>
+      <stop offset="75%" stop-color="#474e55"/>
+      <stop offset="100%" stop-color="#2d3237"/>
     </linearGradient>
 
-    <linearGradient id="noseConeGrad" x1="20%" y1="0%" x2="90%" y2="100%">
-      <stop offset="0%" stop-color="#646d7a"/>
-      <stop offset="35%" stop-color="#3b424d"/>
-      <stop offset="70%" stop-color="#20252b"/>
-      <stop offset="100%" stop-color="#0d1014"/>
-    </linearGradient>
-
-    <linearGradient id="tailFinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#5a6370"/>
-      <stop offset="50%" stop-color="#3d444f"/>
-      <stop offset="100%" stop-color="#22272e"/>
-    </linearGradient>
-
-    <linearGradient id="tailFinTop" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#76808e"/>
-      <stop offset="100%" stop-color="#474f5c"/>
-    </linearGradient>
-
-    <!-- Cutaway Cavity & Barrel Gradients -->
-    <linearGradient id="cutawayBore" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#14181f"/>
-      <stop offset="50%" stop-color="#252b34"/>
-      <stop offset="100%" stop-color="#0e1116"/>
-    </linearGradient>
-
-    <linearGradient id="barrelWall" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#474f5b"/>
-      <stop offset="50%" stop-color="#636d7a"/>
-      <stop offset="100%" stop-color="#2b313a"/>
-    </linearGradient>
-
-    <!-- Propellant Explosives -->
-    <linearGradient id="propellantGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#f1f5f9"/>
-      <stop offset="30%" stop-color="#cbd5e1"/>
-      <stop offset="70%" stop-color="#94a3b8"/>
-      <stop offset="100%" stop-color="#64748b"/>
-    </linearGradient>
-
-    <!-- Glowing Uranium-235 Components -->
-    <linearGradient id="u235Slug" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#fef08a"/>
-      <stop offset="25%" stop-color="#f59e0b"/>
-      <stop offset="70%" stop-color="#d97706"/>
-      <stop offset="100%" stop-color="#b45309"/>
-    </linearGradient>
-
-    <radialGradient id="u235Radial" cx="45%" cy="35%" r="65%">
-      <stop offset="0%" stop-color="#fffbeb"/>
-      <stop offset="25%" stop-color="#fef08a"/>
-      <stop offset="60%" stop-color="#f59e0b"/>
-      <stop offset="100%" stop-color="#b45309"/>
+    <!-- Target Heat Glow -->
+    <radialGradient id="targetHeat" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#fed7aa"/>
+      <stop offset="30%" stop-color="#f97316"/>
+      <stop offset="65%" stop-color="#b91c1c"/>
+      <stop offset="100%" stop-color="#450a0a" stop-opacity="0.1"/>
     </radialGradient>
 
-    <!-- Red Arrow Gradient -->
-    <linearGradient id="redArrow" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#dc2626"/>
-      <stop offset="50%" stop-color="#ef4444"/>
-      <stop offset="100%" stop-color="#f87171"/>
+    <!-- White Propulsion Arrows -->
+    <linearGradient id="whiteArrowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.75"/>
+      <stop offset="60%" stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.95"/>
     </linearGradient>
-
-    <!-- Soft Ambient Glow -->
-    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="4" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
   </defs>
 
-  <!-- Pitch Black Canvas -->
-  <rect width="840" height="500" fill="#000000"/>
-  <rect width="840" height="500" fill="url(#bgVignette)"/>
+  <!-- Background Base -->
+  <rect width="960" height="620" fill="url(#parchmentGrad)"/>
 
-  <!-- ================= TOP TITLES ================= -->
-  <g text-anchor="middle" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
-    <text x="420" y="46" fill="#ffffff" font-size="32" font-weight="800" letter-spacing="0.5">Little Boy</text>
-    <text x="420" y="75" fill="#ffffff" font-size="16" font-weight="500" letter-spacing="0.3">Bomba con mecanismo de pistola</text>
+  <!-- ========================================================= -->
+  <!-- 1. CALLOUT LABELS & RED LEADER LINES                      -->
+  <!-- ========================================================= -->
+  <g font-family="'Georgia', 'Times New Roman', serif" font-style="italic" font-size="20" fill="#a12b23" text-anchor="middle">
+    
+    <!-- Powder charge -->
+    <text x="212" y="88">Powder charge</text>
+    <line x1="270" y1="98" x2="270" y2="227" stroke="#a12b23" stroke-width="1.8"/>
+    <circle cx="270" cy="228" r="3.5" fill="#a12b23"/>
+
+    <!-- Uranium bullet hole in the centre -->
+    <text x="406" y="46">Uranium bullet hole</text>
+    <text x="406" y="72">in the centre</text>
+    <line x1="406" y1="84" x2="406" y2="227" stroke="#a12b23" stroke-width="1.8"/>
+    <circle cx="406" cy="228" r="3.5" fill="#a12b23"/>
+
+    <!-- 1.8-metre-long gun barrel -->
+    <text x="562" y="58">1.8-metre-</text>
+    <text x="562" y="84">long gun</text>
+    <text x="562" y="110">barrel</text>
+    <line x1="562" y1="120" x2="562" y2="208" stroke="#a12b23" stroke-width="1.8"/>
+    <circle cx="562" cy="210" r="3.5" fill="#a12b23"/>
+
+    <!-- Rod-shaped uranium charge -->
+    <text x="736" y="46">Rod-shaped</text>
+    <text x="736" y="72">uranium charge</text>
+    <line x1="720" y1="84" x2="720" y2="231" stroke="#a12b23" stroke-width="1.8"/>
+    <circle cx="720" cy="232" r="3.5" fill="#a12b23"/>
+
+    <!-- Hard steel tip -->
+    <text x="860" y="116">Hard</text>
+    <text x="860" y="140">steel tip</text>
+    <line x1="844" y1="150" x2="844" y2="197" stroke="#a12b23" stroke-width="1.8"/>
+    <circle cx="844" cy="198" r="3.5" fill="#a12b23"/>
   </g>
 
-  <!-- ================= 3D BOMB ASSEMBLY ================= -->
-  <g id="bombIllustration" transform="translate(10, 15)">
+  <!-- ========================================================= -->
+  <!-- 2. BOMB 3D CUTAWAY ASSEMBLY                               -->
+  <!-- ========================================================= -->
+  <g id="bombGraphic">
+    
+    <!-- TAIL FIN BOX (Box tail aerodynamic assembly) -->
+    <!-- Outer flat surface of the box fin -->
+    <polygon points="32,150 138,150 138,340 32,340" fill="url(#tailBoxFace)" stroke="#1c2024" stroke-width="2"/>
+    <!-- 3D Top bevel edge -->
+    <polygon points="32,150 50,140 156,140 138,150" fill="url(#tailFlange)" stroke="#1c2024" stroke-width="1.2"/>
+    <!-- 3D Right bevel edge -->
+    <polygon points="138,150 156,140 156,330 138,340" fill="#262a2f" stroke="#1c2024" stroke-width="1.2"/>
+    <!-- Box fin internal hollow opening -->
+    <rect x="54" y="182" width="62" height="126" fill="#14171a" stroke="#25292e" stroke-width="1.5"/>
+    <!-- Stabilizing struts inside box fin -->
+    <line x1="54" y1="182" x2="116" y2="308" stroke="#383f47" stroke-width="2"/>
+    <line x1="116" y1="182" x2="54" y2="308" stroke="#383f47" stroke-width="2"/>
+    <!-- Rivet rows on box sheet metal -->
+    <circle cx="42" cy="160" r="1.8" fill="#7a848f"/><circle cx="42" cy="190" r="1.8" fill="#7a848f"/>
+    <circle cx="42" cy="220" r="1.8" fill="#7a848f"/><circle cx="42" cy="250" r="1.8" fill="#7a848f"/>
+    <circle cx="42" cy="280" r="1.8" fill="#7a848f"/><circle cx="42" cy="310" r="1.8" fill="#7a848f"/>
+    <circle cx="42" cy="330" r="1.8" fill="#7a848f"/>
+    
+    <circle cx="128" cy="160" r="1.8" fill="#7a848f"/><circle cx="128" cy="190" r="1.8" fill="#7a848f"/>
+    <circle cx="128" cy="220" r="1.8" fill="#7a848f"/><circle cx="128" cy="250" r="1.8" fill="#7a848f"/>
+    <circle cx="128" cy="280" r="1.8" fill="#7a848f"/><circle cx="128" cy="310" r="1.8" fill="#7a848f"/>
+    <circle cx="128" cy="330" r="1.8" fill="#7a848f"/>
 
-    <!-- TAIL FIN BOX (Box tail aerodynamic structure) -->
-    <!-- Rear square opening (depth perspective) -->
-    <polygon points="120,195 190,195 190,305 120,305" fill="#323842" stroke="#525b68" stroke-width="2"/>
-    <polygon points="120,195 152,168 222,168 190,195" fill="url(#tailFinTop)" stroke="#677282" stroke-width="1.5"/>
-    <polygon points="190,195 222,168 222,278 190,305" fill="#20242b" stroke="#3d444f" stroke-width="1.5"/>
+    <!-- TAIL CONE TRANSITION TO BOMB CYLINDER -->
+    <polygon points="138,206 252,224 252,274 138,294" fill="#30353b" stroke="#191d21" stroke-width="1.5"/>
+    <polygon points="138,175 285,198 285,304 138,325" fill="#22262a" opacity="0.45"/>
 
-    <!-- Hollow box interior -->
-    <polygon points="132,204 178,204 178,296 132,296" fill="#111418" stroke="#252a32" stroke-width="1.5"/>
-    <!-- Diagonal stabilizing cruciform struts inside box fin -->
-    <line x1="132" y1="204" x2="178" y2="296" stroke="#3b434e" stroke-width="2.5"/>
-    <line x1="178" y1="204" x2="132" y2="296" stroke="#3b434e" stroke-width="2.5"/>
+    <!-- MAIN BOMB CASING (Grey steel body) -->
+    <!-- Upper curved casing -->
+    <path d="M 252,216 
+             C 320,185 450,170 650,175 
+             C 730,177 800,192 840,210 
+             L 840,224
+             C 800,208 720,192 650,190
+             C 450,185 320,200 252,227 Z" 
+          fill="url(#bombUpper)"/>
+    
+    <!-- Curvature specular highlight reflection -->
+    <path d="M 262,218 C 360,192 500,180 660,184 C 740,186 805,198 835,214" 
+          fill="none" stroke="#8e97a2" stroke-width="2.5" opacity="0.75"/>
 
-    <!-- TAIL SHROUD / CONE CONNECTION -->
-    <polygon points="190,225 250,230 250,270 190,275" fill="url(#tailFinGrad)" stroke="#454c57" stroke-width="1.5"/>
-    <polygon points="250,230 295,215 295,285 250,270" fill="url(#tailFinGrad)" stroke="#525b68" stroke-width="1.5"/>
-
-    <!-- MAIN CYLINDRICAL BOMB CASING -->
-    <!-- Upper Hull Edge (Shaded 3D cylinder curve) -->
-    <path d="M 295,215 
-             C 350,202 480,196 645,220 
-             L 645,232 
-             C 480,210 350,216 295,228 Z" 
-          fill="url(#bombOuterBody)"/>
-    <line x1="295" y1="216" x2="645" y2="221" stroke="#a6b0be" stroke-width="1.8" opacity="0.8"/>
-
-    <!-- Lower Hull Edge (Underside shadow) -->
-    <path d="M 295,285 
-             C 360,305 500,314 655,296 
-             L 655,308 
-             C 500,326 360,317 295,296 Z" 
-          fill="#171b20"/>
-
-    <!-- CUTAWAY RECESS (Exposing internal artillery mechanism) -->
-    <path d="M 295,228 
-             C 350,215 480,212 645,226 
-             C 665,236 672,256 672,272 
-             C 672,290 660,304 645,307 
-             C 480,322 350,314 295,296 Z" 
-          fill="url(#cutawayBore)" stroke="#3f4752" stroke-width="2"/>
-
-    <!-- Metal casing wall thickness / beveled cut rim -->
-    <path d="M 295,228 C 350,215 480,212 645,226" fill="none" stroke="#9da7b5" stroke-width="2.5"/>
-    <path d="M 295,296 C 350,314 480,322 645,307" fill="none" stroke="#252a32" stroke-width="2"/>
-
-    <!-- ARTILLERY CANNON BORE (Smooth bore barrel) -->
-    <rect x="330" y="244" width="300" height="46" rx="4" fill="#0f1318" stroke="url(#barrelWall)" stroke-width="2"/>
-    <line x1="335" y1="247" x2="625" y2="247" stroke="#2a313b" stroke-width="1"/>
-    <line x1="335" y1="287" x2="625" y2="287" stroke="#1d2228" stroke-width="1"/>
-
-    <!-- 1. EXPLOSIVOS CONVENCIONALES (Rear Propellant Charge) -->
-    <g id="explosivosConvencionales">
-      <rect x="338" y="250" width="40" height="34" rx="4" fill="url(#propellantGrad)" stroke="#cbd5e1" stroke-width="1.8"/>
-      <!-- Breech block & detonator connection -->
-      <rect x="330" y="255" width="8" height="24" rx="2" fill="#64748b" stroke="#475569" stroke-width="1.2"/>
-      <line x1="338" y1="258" x2="333" y2="258" stroke="#94a3b8" stroke-width="2"/>
-      <line x1="338" y1="274" x2="333" y2="274" stroke="#94a3b8" stroke-width="2"/>
+    <!-- Hoisting lugs on top (x ≈ 700 to 740) -->
+    <g id="lugs" stroke="#20242a" stroke-width="1.8" fill="none">
+      <path d="M 698,176 L 698,154 C 698,150 706,150 706,154 L 706,176" stroke="#454c54" stroke-width="3" fill="none"/>
+      <path d="M 726,178 L 726,154 C 726,150 734,150 734,154 L 734,178" stroke="#454c54" stroke-width="3" fill="none"/>
+      <rect x="692" y="173" width="48" height="6" rx="2" fill="#33383e" stroke="#1c2024" stroke-width="1"/>
     </g>
 
-    <!-- 2. CILINDRO DE URANIO 235 (Moving Hollow Projectile) -->
-    <g id="cilindroUranio235">
-      <!-- Outer halo / energetic glow -->
-      <rect x="398" y="249" width="62" height="36" rx="9" fill="#f59e0b" opacity="0.3" filter="url(#softGlow)"/>
-      <!-- Main golden slug -->
-      <rect x="400" y="251" width="58" height="32" rx="8" fill="url(#u235Radial)" stroke="#fef08a" stroke-width="2"/>
-      <!-- Specular reflection highlight on curvature -->
-      <line x1="408" y1="256" x2="450" y2="256" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
-      <!-- Hollow cavity indicator (inner cylinder) -->
-      <rect x="410" y="260" width="38" height="14" rx="3" fill="#92400e" opacity="0.35"/>
-    </g>
+    <!-- Lower casing (shaded bottom contour) -->
+    <path d="M 252,274 
+             C 330,295 480,310 680,305 
+             C 760,303 810,290 840,270 
+             L 840,285
+             C 810,305 750,320 670,322
+             C 470,325 320,310 252,287 Z" 
+          fill="url(#bombLower)"/>
 
-    <!-- RED PROPULSION ARROW (Direction of Movement) -->
-    <g id="vectorDireccion" transform="translate(475, 267)">
-      <!-- Arrow shaft -->
-      <line x1="0" y1="0" x2="72" y2="0" stroke="url(#redArrow)" stroke-width="6.5" stroke-linecap="round"/>
-      <!-- Arrow head with 3D polygon -->
-      <polygon points="68,-8 86,0 68,8" fill="#ef4444" stroke="#b91c1c" stroke-width="1"/>
-    </g>
+    <!-- Rounded Aerodynamic Nose Dome -->
+    <path d="M 838,208 
+             C 860,216 876,234 876,252 
+             C 876,270 858,284 838,290 
+             L 838,272
+             C 852,266 860,258 860,252
+             C 860,244 852,234 838,226 Z" 
+          fill="url(#noseCurve)" stroke="#1b1f23" stroke-width="1.5"/>
 
-    <!-- 3. OBJETIVO DE URANIO 235 (Target Insert in Nose) -->
-    <g id="objetivoUranio235">
-      <!-- Glow -->
-      <rect x="588" y="248" width="50" height="38" rx="8" fill="#f59e0b" opacity="0.35" filter="url(#softGlow)"/>
-      <!-- Target slug -->
-      <rect x="590" y="250" width="46" height="34" rx="7" fill="url(#u235Radial)" stroke="#fef08a" stroke-width="2"/>
-      <line x1="597" y1="255" x2="628" y2="255" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
-      <!-- Tungsten carbide tamper envelope / neutron reflector -->
-      <path d="M 584,242 L 642,242 L 642,292 L 584,292" fill="none" stroke="#717a87" stroke-width="2" stroke-dasharray="3,3"/>
-    </g>
-
-    <!-- NOSE CAP (Rounded Front Nose) -->
-    <path d="M 645,226 
-             C 680,234 715,250 715,269 
-             C 715,288 680,301 645,307 
+    <!-- Hard Steel Tip (front rounded point) -->
+    <path d="M 854,232 
+             C 866,238 874,245 874,252 
+             C 874,259 866,266 854,272 
              Z" 
-          fill="url(#noseConeGrad)" stroke="#39424e" stroke-width="2.2"/>
-    <!-- Specular highlight arc on nose cap -->
-    <path d="M 650,237 C 678,245 700,256 706,266" fill="none" stroke="#8793a3" stroke-width="2.5" opacity="0.65" stroke-linecap="round"/>
+          fill="url(#steelTip)" stroke="#14171a" stroke-width="1.8"/>
 
+    <!-- CUTAWAY INTERIOR CAVITY (Jagged Opening) -->
+    <!-- Dark interior recessed cavity -->
+    <path d="M 252,225 
+             C 270,220 280,210 300,218 
+             C 320,225 345,215 370,220 
+             C 410,215 480,210 560,212 
+             C 640,210 710,218 760,222 
+             C 790,224 815,230 835,234 
+             L 835,274 
+             C 810,278 780,282 740,282 
+             C 680,285 580,288 500,286 
+             C 420,288 360,280 320,284 
+             C 290,285 270,275 252,275 Z" 
+          fill="#14171a" stroke="#25292e" stroke-width="2"/>
+
+    <!-- Jagged metal rim cut lines -->
+    <path d="M 252,225 C 270,212 285,240 300,218 C 315,210 340,228 360,216 C 390,208 450,214 520,210 C 600,208 670,216 730,214 C 770,216 810,226 835,234" 
+          fill="none" stroke="#1c2024" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 252,275 C 270,285 285,268 300,282 C 320,290 350,280 380,286 C 440,292 530,288 620,290 C 700,288 770,284 835,274" 
+          fill="none" stroke="#1c2024" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- ========================================================= -->
+    <!-- CANNON BARREL & INTERNAL COMPONENTS                       -->
+    <!-- ========================================================= -->
+    <!-- Smooth-bore artillery gun barrel (1.8m long) -->
+    <rect x="330" y="226" width="460" height="52" rx="2" fill="url(#barrelTube)" stroke="#3b434c" stroke-width="2.5"/>
+    <line x1="330" y1="232" x2="788" y2="232" stroke="#56606c" stroke-width="1.2" opacity="0.8"/>
+    <line x1="330" y1="272" x2="788" y2="272" stroke="#1d2125" stroke-width="1.5"/>
+
+    <!-- STATION 1: POWDER CHARGE EXPLOSION (Rear) -->
+    <g id="station1">
+      <!-- Breech chamber -->
+      <rect x="255" y="228" width="76" height="48" fill="#2b3137" stroke="#1a1d21" stroke-width="1.5"/>
+      <!-- Flame eruption -->
+      <ellipse cx="285" cy="252" rx="35" ry="22" fill="url(#fireCore)"/>
+      <path d="M 260,235 Q 295,245 320,252 Q 295,258 260,268 Z" fill="#ffffff" opacity="0.95"/>
+      <path d="M 265,230 Q 305,248 335,252 Q 305,256 265,272 Q 285,252 265,230 Z" fill="#f97316" opacity="0.85"/>
+      <!-- Expanding flame and gas pressure tongue -->
+      <polygon points="320,235 348,245 348,258 320,268" fill="#ea580c" opacity="0.6"/>
+      <polygon points="320,242 355,250 355,254 320,262" fill="#fef08a" opacity="0.8"/>
+    </g>
+
+    <!-- White Arrow 1: Propellant force toward projectile -->
+    <g id="whiteArrow1">
+      <line x1="335" y1="252" x2="378" y2="252" stroke="#ffffff" stroke-width="4" stroke-linecap="square"/>
+      <polygon points="372,246 388,252 372,258" fill="#ffffff"/>
+    </g>
+
+    <!-- STATION 2: URANIUM PROJECTILE (Hollow cylinder) -->
+    <g id="station2">
+      <rect x="390" y="230" width="44" height="44" rx="3" fill="url(#uSlugGrad)" stroke="#1c2025" stroke-width="2"/>
+      <!-- Hollow central core (bullet hole) -->
+      <rect x="398" y="238" width="28" height="28" rx="2" fill="#1c2024" stroke="#4b535d" stroke-width="1.5"/>
+      <circle cx="412" cy="252" r="8" fill="#111417" stroke="#69737f" stroke-width="1.5"/>
+    </g>
+
+    <!-- LONG WHITE PROPULSION ARROW THROUGH THE BARREL -->
+    <g id="longArrow">
+      <line x1="442" y1="252" x2="675" y2="252" stroke="url(#whiteArrowGrad)" stroke-width="5.5" stroke-linecap="square"/>
+      <polygon points="668,244 690,252 668,260" fill="#ffffff"/>
+    </g>
+
+    <!-- STATION 3: ROD-SHAPED URANIUM CHARGE (In bomb nose) -->
+    <g id="station3">
+      <!-- Tamper casing surround -->
+      <rect x="696" y="230" width="92" height="44" rx="3" fill="#22272c" stroke="#384048" stroke-width="2"/>
+      <!-- Radiation/reaction glow halo -->
+      <ellipse cx="742" cy="252" rx="40" ry="19" fill="url(#targetHeat)" opacity="0.75"/>
+      <!-- Target uranium rod -->
+      <rect x="718" y="236" width="46" height="32" rx="4" fill="#7a1d13" stroke="#f97316" stroke-width="2"/>
+      <rect x="724" y="240" width="34" height="24" rx="2" fill="#3f130f" stroke="#ea580c" stroke-width="1.2"/>
+      <!-- Backing plug / tamper core -->
+      <rect x="766" y="246" width="20" height="12" fill="#47505a" stroke="#1c2024" stroke-width="1.5"/>
+    </g>
+
+    <!-- ========================================================= -->
+    <!-- NUMBERED BADGES [1], [2], [3] (WHITE SQUARES W/ BOLD NUM) -->
+    <!-- ========================================================= -->
+    <!-- Badge [1] -->
+    <g id="numBadge1" transform="translate(278, 280)">
+      <rect x="0" y="0" width="30" height="30" rx="2" fill="#ffffff" stroke="#1c2024" stroke-width="2.5"/>
+      <text x="15" y="23" font-family="'Arial Black', 'Helvetica Black', sans-serif" font-weight="900" font-size="22" fill="#1c2024" text-anchor="middle">1</text>
+    </g>
+
+    <!-- Badge [2] -->
+    <g id="numBadge2" transform="translate(402, 280)">
+      <rect x="0" y="0" width="30" height="30" rx="2" fill="#ffffff" stroke="#1c2024" stroke-width="2.5"/>
+      <text x="15" y="23" font-family="'Arial Black', 'Helvetica Black', sans-serif" font-weight="900" font-size="22" fill="#1c2024" text-anchor="middle">2</text>
+    </g>
+
+    <!-- Badge [3] -->
+    <g id="numBadge3" transform="translate(648, 280)">
+      <rect x="0" y="0" width="30" height="30" rx="2" fill="#ffffff" stroke="#1c2024" stroke-width="2.5"/>
+      <text x="15" y="23" font-family="'Arial Black', 'Helvetica Black', sans-serif" font-weight="900" font-size="22" fill="#1c2024" text-anchor="middle">3</text>
+    </g>
   </g>
 
-  <!-- ================= ANNOTATION CALLOUTS ================= -->
-  <!-- Callout Lines (White lines with anchor dots) -->
-  <g stroke="#ffffff" stroke-width="1.4" fill="none">
-    <!-- Callout 1: Explosivos convencionales -->
-    <line x1="368" y1="265" x2="368" y2="175"/>
-    
-    <!-- Callout 2: Cilindro de uranio 235 -->
-    <line x1="439" y1="265" x2="439" y2="160"/>
-    
-    <!-- Callout 3: Objetivo de uranio 235 -->
-    <line x1="623" y1="265" x2="623" y2="190"/>
+  <!-- ========================================================= -->
+  <!-- 3. BOTTOM INFOGRAPHIC SECTION (DROP-CAP ALIGNED)          -->
+  <!-- ========================================================= -->
+  <!-- Headline -->
+  <text x="34" y="392" 
+        font-family="'Arial Black', 'Impact', -apple-system, BlinkMacSystemFont, sans-serif" 
+        font-weight="900" 
+        font-size="36" 
+        fill="#362e26" 
+        letter-spacing="-0.5">Explosions split atoms</text>
+
+  <!-- Column 1: At the back was a 38.5 kg projectile... -->
+  <g id="col1" transform="translate(34, 412)">
+    <text x="0" y="58" font-family="'Arial Black', 'Helvetica Black', sans-serif" font-weight="900" font-size="62" fill="#362e26">1</text>
+    <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" 
+       font-weight="700" 
+       font-size="18" 
+       fill="#332d26">
+      <text x="48" y="20">At the back was a 38.5</text>
+      <text x="48" y="43">kg projectile filled with</text>
+      <text x="0" y="72">uranium. As the powder</text>
+      <text x="0" y="97">charge is activated it</text>
+      <text x="0" y="122">shoots through the bomb.</text>
+    </g>
   </g>
 
-  <!-- Anchor Dots -->
-  <g fill="#ffffff">
-    <circle cx="368" cy="265" r="3.5"/>
-    <circle cx="439" cy="265" r="3.5"/>
-    <circle cx="623" cy="265" r="3.5"/>
+  <!-- Column 2: The uranium projectile flies... -->
+  <g id="col2" transform="translate(355, 412)">
+    <text x="0" y="58" font-family="'Arial Black', 'Helvetica Black', sans-serif" font-weight="900" font-size="62" fill="#362e26">2</text>
+    <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" 
+       font-weight="700" 
+       font-size="18" 
+       fill="#332d26">
+      <text x="52" y="20">The uranium</text>
+      <text x="52" y="43">projectile flies</text>
+      <text x="0" y="72">through the strong</text>
+      <text x="0" y="97">10 cm diameter</text>
+      <text x="0" y="122">gun barrel.</text>
+    </g>
   </g>
 
-  <!-- Callout Text Labels -->
-  <g fill="#ffffff" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
-    <!-- 1. Explosivos convencionales -->
-    <text x="368" y="148" text-anchor="middle" font-size="14" font-weight="700">Explosivos</text>
-    <text x="368" y="166" text-anchor="middle" font-size="14" font-weight="700">convencionales</text>
-
-    <!-- 2. Cilindro de uranio 235 choca contra el objetivo y desatan la fisión -->
-    <text x="442" y="112" text-anchor="start" font-size="15" font-weight="700">Cilindro de uranio 235</text>
-    <text x="442" y="131" text-anchor="start" font-size="13.5" font-weight="400" fill="#f1f5f9">choca contra el objetivo y</text>
-    <text x="442" y="149" text-anchor="start" font-size="13.5" font-weight="400" fill="#f1f5f9">desatan la fisión</text>
-
-    <!-- 3. Objetivo de uranio 235 -->
-    <text x="623" y="170" text-anchor="middle" font-size="14.5" font-weight="700">Objetivo de</text>
-    <text x="623" y="188" text-anchor="middle" font-size="14.5" font-weight="700">uranio 235</text>
+  <!-- Column 3: In the bomb tip is a further 25.5 kg... -->
+  <g id="col3" transform="translate(592, 412)">
+    <text x="0" y="58" font-family="'Arial Black', 'Helvetica Black', sans-serif" font-weight="900" font-size="62" fill="#362e26">3</text>
+    <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" 
+       font-weight="700" 
+       font-size="18" 
+       fill="#332d26">
+      <text x="50" y="20">In the bomb tip is a further</text>
+      <text x="50" y="43">25.5 kg of uranium. The</text>
+      <text x="0" y="72">clash with the projectile</text>
+      <text x="0" y="97">unleashes enough energy for</text>
+      <text x="0" y="122">the nuclear reaction to began.</text>
+    </g>
   </g>
-
-  <!-- ================= TECHNICAL DIMENSIONS ================= -->
-  <!-- 70 cm Bracket (Diameter of Tail Box) -->
-  <g stroke="#ffffff" stroke-width="1.6" fill="none">
-    <line x1="110" y1="210" x2="120" y2="210"/>
-    <line x1="110" y1="210" x2="110" y2="320"/>
-    <line x1="110" y1="320" x2="120" y2="320"/>
-  </g>
-  <text x="96" y="270" fill="#ffffff" font-family="'Inter', sans-serif" font-size="15" font-weight="700" text-anchor="end">70 cm</text>
-
-  <!-- 3 metros Bracket (Overall Length: 3m) -->
-  <g stroke="#ffffff" stroke-width="1.6" fill="none">
-    <!-- Left end cap -->
-    <line x1="130" y1="358" x2="130" y2="368"/>
-    <!-- Left line -->
-    <line x1="130" y1="363" x2="360" y2="363"/>
-    <!-- Right line -->
-    <line x1="450" y1="363" x2="725" y2="363"/>
-    <!-- Right end cap -->
-    <line x1="725" y1="358" x2="725" y2="368"/>
-  </g>
-  <text x="405" y="368" fill="#ffffff" font-family="'Inter', sans-serif" font-size="16" font-weight="700" text-anchor="middle">3 metros</text>
-
-  <!-- Peso: 4.400 kg -->
-  <text x="130" y="415" fill="#ffffff" font-family="'Inter', sans-serif" font-size="16" font-weight="700" text-anchor="start">Peso: 4.400 kg</text>
-
-  <!-- Bottom Left Footnote -->
-  <text x="50" y="468" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="13" font-style="italic" text-anchor="start">Modelo simplificado, no a escala</text>
 </svg>

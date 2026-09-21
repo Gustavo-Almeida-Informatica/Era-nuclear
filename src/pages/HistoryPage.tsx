@@ -171,6 +171,16 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
           </span>
           <button
             onClick={() => {
+              setSelectedDecade('1940-1950');
+              setSelectedCategory('acidente');
+              setSearchQuery('Demon Core');
+            }}
+            className="px-2.5 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs border border-amber-500/30 transition-colors font-mono font-bold"
+          >
+            ☢️ Demon Core (1945–1946)
+          </button>
+          <button
+            onClick={() => {
               setSelectedDecade('todos');
               setSelectedCategory('acidente');
               setSearchQuery('Goiânia');

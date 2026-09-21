@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { PageId } from '../types';
 import { weaponCategories, nuclearTreaties } from '../data/weaponsData';
-import gunTypeDiagramImg from '../assets/images/little_boy_gun_type_diagram.svg';
+import gunTypeDiagramImg from '../assets/images/gun_type_fission_diagram_real.png';
 import implosionTypeDiagramImg from '../assets/images/implosion_type_fission_diagram_1787680148801.jpg';
 import tellerUlamDiagramImg from '../assets/images/BombH_explosion.svg';
-import { NuclearRankingMapTab } from '../components/NuclearRankingMapTab';
 import {
   ShieldAlert,
   Layers,
@@ -21,7 +20,8 @@ import {
   Flame,
   ArrowRight,
   Maximize2,
-  X
+  X,
+  Atom
 } from 'lucide-react';
 
 interface WeaponsPageProps {
@@ -72,76 +72,149 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
           <span className="text-xs text-[#B7B7B7]">Páginas Monográficas Dedicadas</span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div
-            onClick={() => onNavigate('operation-castle')}
-            className="p-5 rounded-2xl bg-[#111111] border border-white/10 hover:border-[#73CAE5]/50 transition-all cursor-pointer group space-y-2 shadow-lg"
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-mono text-[#73CAE5] font-bold">1954 • 6 TESTES</span>
-              <ChevronRight className="w-4 h-4 text-[#B7B7B7] group-hover:text-[#73CAE5] group-hover:translate-x-1 transition-all" />
+        {/* Grid dos 4 Grandes Marcos Históricos em Destaque */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Coluna 1: Operação Castle (topo) & Projeto Manhattan (em baixo) */}
+          <div className="flex flex-col gap-4">
+            <div
+              onClick={() => onNavigate('operation-castle')}
+              className="p-5 rounded-2xl bg-[#111111] border border-[#73CAE5]/30 hover:border-[#73CAE5] transition-all cursor-pointer group space-y-2 shadow-lg hover:-translate-y-0.5"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Zap className="w-3.5 h-3.5 text-[#73CAE5]" />
+                  <span className="text-[10px] font-mono text-[#73CAE5] font-bold">1954 • 6 TESTES TERMONUCLEARES</span>
+                </div>
+                <ChevronRight className="w-4 h-4 text-[#B7B7B7] group-hover:text-[#73CAE5] group-hover:translate-x-1 transition-all" />
+              </div>
+              <h4 className="text-lg font-bold text-white font-display group-hover:text-[#73CAE5] transition-colors">
+                Operação Castle
+              </h4>
+              <p className="text-xs text-[#B7B7B7] line-clamp-2">
+                A série de testes de combustível sólido no Atol de Bikini que gerou 48 Mt acumulados e o fallout de Castle Bravo.
+              </p>
             </div>
-            <h4 className="text-base font-bold text-white font-display group-hover:text-[#73CAE5] transition-colors">
-              Operação Castle
-            </h4>
-            <p className="text-xs text-[#B7B7B7] line-clamp-2">
-              A série de testes de combustível sólido no Atol de Bikini que gerou 48 Mt e o fallout de Bravo.
-            </p>
+
+            <div
+              onClick={() => onNavigate('manhattan-project')}
+              className="p-5 rounded-2xl bg-[#111111] border border-[#73CAE5]/30 hover:border-[#73CAE5] transition-all cursor-pointer group space-y-2 shadow-lg hover:-translate-y-0.5"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Atom className="w-3.5 h-3.5 text-[#73CAE5]" />
+                  <span className="text-[10px] font-mono text-[#73CAE5] font-bold">1942–1945 • O BERÇO DO ÁTOMO</span>
+                </div>
+                <ChevronRight className="w-4 h-4 text-[#B7B7B7] group-hover:text-[#73CAE5] group-hover:translate-x-1 transition-all" />
+              </div>
+              <h4 className="text-lg font-bold text-white font-display group-hover:text-[#73CAE5] transition-colors">
+                Projeto Manhattan
+              </h4>
+              <p className="text-xs text-[#B7B7B7] line-clamp-2">
+                A mobilização de Los Alamos liderada por Oppenheimer e Fermi, o Teste Trinity e os bombardeios de Hiroshima e Nagasaki.
+              </p>
+            </div>
           </div>
 
-          <div
-            onClick={() => onNavigate('tsar-bomba')}
-            className="p-5 rounded-2xl bg-[#111111] border border-white/10 hover:border-[#8F83FF]/50 transition-all cursor-pointer group space-y-2 shadow-lg"
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-mono text-[#8F83FF] font-bold">1961 • 50 MT</span>
-              <ChevronRight className="w-4 h-4 text-[#B7B7B7] group-hover:text-[#8F83FF] group-hover:translate-x-1 transition-all" />
+          {/* Coluna 2: Tsar Bomba (topo) & Ivy Mike (em baixo) */}
+          <div className="flex flex-col gap-4">
+            <div
+              onClick={() => onNavigate('tsar-bomba')}
+              className="p-5 rounded-2xl bg-[#111111] border border-[#8F83FF]/30 hover:border-[#8F83FF] transition-all cursor-pointer group space-y-2 shadow-lg hover:-translate-y-0.5"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Flame className="w-3.5 h-3.5 text-[#8F83FF]" />
+                  <span className="text-[10px] font-mono text-[#8F83FF] font-bold">1961 • 50 MEGATONS</span>
+                </div>
+                <ChevronRight className="w-4 h-4 text-[#B7B7B7] group-hover:text-[#8F83FF] group-hover:translate-x-1 transition-all" />
+              </div>
+              <h4 className="text-lg font-bold text-white font-display group-hover:text-[#8F83FF] transition-colors">
+                Tsar Bomba
+              </h4>
+              <p className="text-xs text-[#B7B7B7] line-clamp-2">
+                A maior detonação da história humana (50 Megatons) em Novaya Zemlya e seus impactos diretos no Tratado PTBT.
+              </p>
             </div>
-            <h4 className="text-base font-bold text-white font-display group-hover:text-[#8F83FF] transition-colors">
-              Tsar Bomba
-            </h4>
-            <p className="text-xs text-[#B7B7B7] line-clamp-2">
-              A maior detonação da história humana (50 Megatons) e seus impactos no Tratado PTBT.
-            </p>
-          </div>
 
+            <div
+              onClick={() => onNavigate('ivy-mike')}
+              className="p-5 rounded-2xl bg-[#111111] border border-[#8F83FF]/30 hover:border-[#8F83FF] transition-all cursor-pointer group space-y-2 shadow-lg hover:-translate-y-0.5"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Zap className="w-3.5 h-3.5 text-[#8F83FF]" />
+                  <span className="text-[10px] font-mono text-[#8F83FF] font-bold">1952 • 10,4 MEGATONS</span>
+                </div>
+                <ChevronRight className="w-4 h-4 text-[#B7B7B7] group-hover:text-[#8F83FF] group-hover:translate-x-1 transition-all" />
+              </div>
+              <h4 className="text-lg font-bold text-white font-display group-hover:text-[#8F83FF] transition-colors">
+                Ivy Mike
+              </h4>
+              <p className="text-xs text-[#B7B7B7] line-clamp-2">
+                O primeiro teste termonuclear da história humana (The Sausage), que vaporizou Elugelab e confirmou o modelo Teller-Ulam.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Outras monografias complementares */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
           <div
             onClick={() => onNavigate('ivy-king')}
-            className="p-5 rounded-2xl bg-[#111111] border border-white/10 hover:border-[#73CAE5]/50 transition-all cursor-pointer group space-y-2 shadow-lg"
+            className="p-4 rounded-xl bg-[#111111] border border-white/10 hover:border-white/20 transition-all cursor-pointer group space-y-1.5"
           >
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-mono text-[#73CAE5] font-bold">1952 • 500 KT</span>
-              <ChevronRight className="w-4 h-4 text-[#B7B7B7] group-hover:text-[#73CAE5] group-hover:translate-x-1 transition-all" />
+              <span className="text-[10px] font-mono text-neutral-400 font-bold">1952 • 500 KT</span>
+              <ChevronRight className="w-4 h-4 text-[#B7B7B7] group-hover:text-white group-hover:translate-x-1 transition-all" />
             </div>
-            <h4 className="text-base font-bold text-white font-display group-hover:text-[#73CAE5] transition-colors">
-              Ivy King
-            </h4>
-            <p className="text-xs text-[#B7B7B7] line-clamp-2">
+            <h5 className="text-sm font-bold text-white font-display">Ivy King</h5>
+            <p className="text-xs text-[#B7B7B7] line-clamp-1">
               A maior arma de fissão pura já testada pelos Estados Unidos (MK-18).
             </p>
           </div>
 
           <div
             onClick={() => onNavigate('b41')}
-            className="p-5 rounded-2xl bg-[#111111] border border-white/10 hover:border-[#8F83FF]/50 transition-all cursor-pointer group space-y-2 shadow-lg"
+            className="p-4 rounded-xl bg-[#111111] border border-white/10 hover:border-white/20 transition-all cursor-pointer group space-y-1.5"
           >
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-mono text-[#8F83FF] font-bold">1960–1976 • 25 MT</span>
-              <ChevronRight className="w-4 h-4 text-[#B7B7B7] group-hover:text-[#8F83FF] group-hover:translate-x-1 transition-all" />
+              <span className="text-[10px] font-mono text-neutral-400 font-bold">1960–1976 • 25 MT</span>
+              <ChevronRight className="w-4 h-4 text-[#B7B7B7] group-hover:text-white group-hover:translate-x-1 transition-all" />
             </div>
-            <h4 className="text-base font-bold text-white font-display group-hover:text-[#8F83FF] transition-colors">
-              Bomba B41
-            </h4>
-            <p className="text-xs text-[#B7B7B7] line-clamp-2">
+            <h5 className="text-sm font-bold text-white font-display">Bomba B41</h5>
+            <p className="text-xs text-[#B7B7B7] line-clamp-1">
               A maior arma termonuclear estocada em série pelos EUA e a transição para ogivas guiadas.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Interactive Module: Nuclear Ranking & Blast Radius Simulator */}
-      <section id="simulador-ranking" className="space-y-4 -mx-4 sm:-mx-6 lg:-mx-8 xl:-mx-12 w-[calc(100%+2rem)] sm:w-[calc(100%+3rem)] lg:w-[calc(100%+4rem)] xl:w-[calc(100%+6rem)]">
-        <NuclearRankingMapTab />
+      {/* Banner de Acesso à Nova Aba Dedicada do Mapa Nuclear */}
+      <section className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-rose-950/40 via-[#141414] to-[#111111] border border-rose-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-2xl">
+        <div className="flex items-start space-x-4">
+          <div className="w-12 h-12 rounded-2xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center shrink-0">
+            <Target className="w-6 h-6 text-rose-400" />
+          </div>
+          <div className="space-y-1">
+            <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-rose-500/10 text-[10px] font-mono font-bold text-rose-400 uppercase">
+              <span>Nova Aba Exclusiva</span>
+            </div>
+            <h3 className="text-xl font-bold text-white font-display">
+              Mapa Nuclear & Simulador de Detonação
+            </h3>
+            <p className="text-xs sm:text-sm text-neutral-300 max-w-2xl leading-relaxed">
+              O mapa tático global com simulação de detonação em tempo real, cálculo de raios de destruição (0.02 kt a 100 Mt), estimativa populacional e ranking completo de ogivas agora está em uma aba própria e dedicada no menu superior.
+            </p>
+          </div>
+        </div>
+        <button
+          onClick={() => onNavigate('map')}
+          className="px-5 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 active:bg-rose-700 text-white text-xs sm:text-sm font-bold transition-all flex items-center space-x-2 shrink-0 shadow-lg shadow-rose-900/30 cursor-pointer"
+        >
+          <Globe className="w-4 h-4" />
+          <span>Acessar Aba do Mapa</span>
+          <ArrowRight className="w-4 h-4" />
+        </button>
       </section>
 
       {/* SECTION 9: Como Funcionam as Armas Nucleares (Princípios Gerais e Diagramas Conceituais) */}
@@ -369,24 +442,24 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
                     onClick={() =>
                       setDiagramLightbox({
                         src: gunTypeDiagramImg,
-                        title: 'Diagrama Técnico: Bomba de Fissão Tipo Canhão (Gun-Type / Little Boy)',
+                        title: 'Diagrama Técnico: Bomba de Fissão Tipo Canhão (Little Boy)',
                         caption:
-                          'Representação didática dos dois estágios internos: propulsão do projétil de Urânio-235 pelo cano até a inserção completa no anel/esfera alvo, gerando massa supercrítica e fissão nuclear instantânea.'
+                          'Diagrama didático em português do mecanismo da Little Boy: 1. A carga explosiva (propelente convencional de cordite) dispara o projétil cilíndrico oco de Urânio-235 pelo cano de artilharia em direção ao alvo; 2. O impacto une as massas subcríticas, formando uma massa supercrítica e deflagrando a reação em cadeia de fissão nuclear instantânea (~15 kt).'
                       })
                     }
-                    className="relative group rounded-xl overflow-hidden border border-white/10 bg-white/5 cursor-pointer shadow-lg aspect-[4/3]"
+                    className="relative group rounded-xl overflow-hidden border border-white/10 bg-white cursor-pointer shadow-lg aspect-[4/3] flex items-center justify-center p-2.5"
                   >
                     <img
                       src={gunTypeDiagramImg}
-                      alt="Diagrama Didático de Bomba Tipo Canhão (Gun-Type)"
+                      alt="Diagrama Didático em Português: Bomba de Fissão Tipo Canhão (Little Boy)"
                       referrerPolicy="no-referrer"
-                      className="w-full h-full object-contain bg-black p-1 transition-transform duration-500 group-hover:scale-102"
+                      className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-102"
                     />
                     <div className="absolute top-3 right-3 p-2 rounded-full bg-black/70 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
                       <Maximize2 className="w-4 h-4" />
                     </div>
                     <div className="absolute bottom-2 left-2 right-2 bg-black/80 px-2.5 py-1 rounded text-[11px] text-white/90 flex justify-between items-center backdrop-blur-sm">
-                      <span>Diagrama didático de corte transversal</span>
+                      <span>Diagrama esquemático em português (Tipo Canhão)</span>
                       <span className="text-[#73CAE5] font-mono">Clique p/ expandir</span>
                     </div>
                   </div>
@@ -779,7 +852,9 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
                 src={diagramLightbox.src}
                 alt={diagramLightbox.title}
                 referrerPolicy="no-referrer"
-                className="max-h-[60vh] w-auto object-contain mx-auto"
+                className={`max-h-[60vh] w-auto object-contain mx-auto rounded-lg ${
+                  diagramLightbox.src === gunTypeDiagramImg ? 'bg-white p-3' : ''
+                }`}
               />
             </div>
 

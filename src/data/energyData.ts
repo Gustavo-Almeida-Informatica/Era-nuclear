@@ -134,6 +134,106 @@ export const risksAndBenefitsMatrix: RiskBenefitItem[] = [
   }
 ];
 
+export interface FusionRiskBenefitDomain {
+  id: string;
+  domain: string;
+  summary: string;
+  benefits: string[];
+  risksAndChallenges: string[];
+  keyMetric: string;
+  verdict: string;
+}
+
+export const FUSION_RISKS_AND_BENEFITS: FusionRiskBenefitDomain[] = [
+  {
+    id: 'seguranca-meltdown',
+    domain: 'Segurança Operacional & Risco de Meltdown',
+    summary: 'A física fundamental da fusão impede desastres do tipo Chernobyl ou Fukushima: a reação não é em cadeia e se autoextingue em caso de anomalia.',
+    benefits: [
+      'Impossibilidade física de derretimento do núcleo (Meltdown): a câmara a vácuo contém apenas 1 a 5 gramas de combustível plasmático a qualquer momento.',
+      'Extinção passiva imediata: qualquer alteração de pressão, desequilíbrio térmico ou perda de confinamento magnético resfria o plasma e apaga a reação em frações de milissegundo.',
+      'Sem reação em cadeia exponencial: o processo necessita de fornecimento ativo e contínuo de aquecimento externo (micro-ondas e feixes neutros) para persistir.',
+      'Calor residual de decaimento insignificante: na ausência de produtos de fissão pesados, não existe risco de fusão dos materiais por falta de energia de resfriamento pós-parada.'
+    ],
+    risksAndChallenges: [
+      'Disrupções de Plasma (Plasma Disruptions): instabilidades magnetohidrodinâmicas ultrarrápidas podem colapsar o campo e direcionar megajoules de calor contra o divertor da câmara.',
+      'Energia Eletromagnética Armazenada Colossal: bobinas supercondutoras concentram dezenas de gigajoules de energia; eventos imprevistos de transição resistiva (quench) exigem rápida drenagem de corrente.',
+      'Vácuo extremo e gradiente térmico severo: criogenia a -269 °C coexistindo a poucos centímetros de um gás a 150.000.000 °C gera dilatações e tensões mecânicas extremas.'
+    ],
+    keyMetric: 'Risco de Meltdown: 0% (Fisicamente impossível)',
+    verdict: 'Vantagem revolucionária em segurança intrínseca passiva sobre a fissão.'
+  },
+  {
+    id: 'residuos-lixo-nuclear',
+    domain: 'Resíduos Radioativos & Materiais Estruturais',
+    summary: 'Subproduto direto inerte (Hélio-4) e ausência de actinídeos pesados eliminam a necessidade de repositórios geológicos de dezenas de milhares de anos.',
+    benefits: [
+      'Subproduto de queima 100% inerte e atóxico: a reação D-T gera exclusivamente gás Hélio-4 (usado na indústria médica, criogenia e até balões de festa).',
+      'Zero actinídeos de vida longa: ausência total de plutônio, netúnio, califórnio e amerício, além de não produzir césio-137 ou estrôncio-90 solúveis em água.',
+      'Materiais de baixa ativação recicláveis em menos de 100 anos: ligas especiais (como aços ferríticos reduzidos tipo EUROFER e ligas de vanádio) decaem para níveis seguros em décadas, sem demandar depósitos de 100.000 anos.'
+    ],
+    risksAndChallenges: [
+      'Dano por Nêutrons Rápidos de 14,1 MeV: nêutrons energéticos bombardeiam as paredes internas da câmara, provocando deslocamentos atômicos (dpa), fragilização e microbolhas de hélio no metal.',
+      'Ativação neutrônica dos componentes estruturais: o manto (blanket) e o divertor tornam-se radioativos com o tempo, necessitando de substituição periódica (a cada 5 a 10 anos) e robôs de manutenção remota.',
+      'Permeabilidade e contenção de Trítio (³H): como isótopo do hidrogênio com meia-vida de 12,3 anos, o trítio atravessa metais aquecidos, exigindo barreiras de filme fino e monitoramento estanque contínuo.'
+    ],
+    keyMetric: 'Decaimento dos Rejeitos: < 100 anos (vs. > 100.000 anos na fissão)',
+    verdict: 'Resíduos de classe média e baixa vida curta, solucionando o dilema do lixo nuclear perpétuo.'
+  },
+  {
+    id: 'combustivel-proliferacao',
+    domain: 'Combustível, Recursos & Não Proliferação',
+    summary: 'Combustível obtido da água do mar e de depósitos de lítio, sem necessidade de enriquecimento de urânio e sem materiais físseis para armas atômicas.',
+    benefits: [
+      'Recursos oceânicos e minerais praticamente inesgotáveis: o deutério está presente na água do mar (33 g/m³), durando centenas de milhões de anos; o lítio terrestre supre o trítio por milênios.',
+      'Imunidade contra proliferação nuclear de armas de fissão: a fusão não utiliza urânio enriquecido (²³⁵U) nem sintetiza plutônio físsil (²³⁹Pu); reatores não podem ser convertidos em fábricas de bombas atômicas.',
+      'Soberania e equidade geopolítica: a matéria-prima elementar está acessível globalmente, eliminando a dependência de cartéis de petróleo e minas monopolizadas de urânio.'
+    ],
+    risksAndChallenges: [
+      'Escassez transitória de Trítio e desafio dos Manto de Reprodução (Breeding Blankets): a reserva civil global atual é de apenas ~25 kg; usinas comerciais precisarão produzir seu próprio trítio com razão TBR > 1,05 ininterrupta.',
+      'Contabilidade e Salvaguardas Internacionais de Trítio: embora não gere bombas atômicas primárias, o trítio é utilizado militarmente para reforço termonuclear (boosting) de ogivas, demandando inspeções contínuas da AIEA.',
+      'Dependência de Metais Críticos e Terras Raras: ímãs supercondutores HTS de alto campo (como YBCO/REBCO) demandam óxido de ítrio, bário, cobre, berílio e ligas de tungstênio sujeitas a cadeias de suprimento globais.'
+    ],
+    keyMetric: '1 m³ de água do mar = energia equivalente a 260 toneladas de carvão',
+    verdict: 'Independência geopolítica de longo prazo sem riscos de proliferação físsil.'
+  },
+  {
+    id: 'clima-pegada-espacial',
+    domain: 'Impacto Climático & Densidade Espacial',
+    summary: 'Geração contínua de carga de base livre de gases de efeito estufa e com área de instalação centenas de vezes menor que parques solares equivalentes.',
+    benefits: [
+      'Emissões diretas de CO₂ rigorosamente ZERO durante todo o funcionamento operacional contínuo da usina.',
+      'Intensidade de carbono de ciclo de vida insignificante (< 10 g CO₂/kWh), superando ou igualando turbinas eólicas e painéis solares fotovoltaicos.',
+      'Altíssima densidade territorial: uma central termonuclear de 1.000 MW ocupa menos de 0,5 km², gerando energia firme sem desmatar ou comprometer ecossistemas terrestres.',
+      'Descarbonização industrial profunda além da rede elétrica: o calor de alta temperatura (>600 °C) viabiliza eletrólise de alta eficiência para hidrogênio verde, siderurgia limpa e dessalinização de água doce em larga escala.'
+    ],
+    risksAndChallenges: [
+      'Pegada de carbono inicial de manufatura e obras civis: construção de criostatos de aço austenítico pesado, blindagens de concreto denso e componentes eletromagnéticos avançados.',
+      'Demanda por sistemas de troca térmica: dependência de água de circulação ou torres de resfriamento para o circuito termodinâmico de geração de vapor.'
+    ],
+    keyMetric: 'Ciclo de vida: ~8 g CO₂/kWh • Área: 0,5 km² por Gigawatt',
+    verdict: 'O ápice da densidade energética limpa para metas de emissão líquida zero (Net Zero).'
+  },
+  {
+    id: 'economia-engenharia',
+    domain: 'Viabilidade Econômica, Engenharia & Prazos',
+    summary: 'Combustível virtualmente gratuito compensado por custos de capital e desafios de engenharia de vanguarda que ainda retardam a comercialização em massa.',
+    benefits: [
+      'Custo operacional de combustível irrelevante: frações de centavos por megawatt-hora, tornando a geração imune a choques de preço de petróleo, carvão ou gás natural.',
+      'Carga de base ininterrupta (Baseload) 24/7: dispensa baterias químicas gigantescas de armazenamento ou redes de transmissão continentais para cobrir dias sem vento ou sol.',
+      'Impulso à inovação científica global: gera patentes em robótica autônoma, ímãs de alta temperatura, ciência de materiais e controle por inteligência artificial em tempo real.'
+    ],
+    risksAndChallenges: [
+      'Custo de Capital Inicial (CAPEX) Elevado: protótipos e primeiros reatores comerciais exigem investimentos de bilhões de dólares antes de alcançar economia de escala.',
+      'Horizonte Temporal até a Rede Elétrica: a entrada comercial em escala de gigawatts está prevista para a década de 2035–2045, competindo com renováveis baratas já maduras.',
+      'Complexidade da Razão de Ganho de Engenharia (Q_eng): alcançar Q_plasma > 10 é necessário para compensar o consumo de sistemas criogênicos, bombas de vácuo e fontes de radiofrequência.',
+      'Manutenção remota robotizada complexa: paradas para manutenção no interior da câmara ativada exigem telemanipuladores robóticos avançados que afetam a disponibilidade da usina.'
+    ],
+    keyMetric: 'Investimento privado em fusão: > US$ 7,5 bilhões em 45+ empresas',
+    verdict: 'Desafio temporal e de engenharia extrema que será superado na transição 2030-2040.'
+  }
+];
+
 export interface FusionReactorProject {
   id: string;
   name: string;
