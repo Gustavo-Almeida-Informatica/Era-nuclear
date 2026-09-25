@@ -5,6 +5,8 @@ import { FissionFusionAtomsComparison } from '../components/FissionFusionAtomsCo
 import { fissionFusionComparison } from '../data/physicsData';
 import fissionDiagramImg from '../assets/images/fission_diagram_sci_1787677675023.jpg';
 import fusionDiagramImg from '../assets/images/fusion_diagram_sci_1787677708566.jpg';
+import fissionReactorModelImg from '../assets/images/fission_reactor_pwr_model_authentic.jpg';
+import iterTokamakImg from '../assets/images/iter_tokamak_fusion_1787677659756.jpg';
 import {
   Flame,
   Zap,
@@ -136,6 +138,100 @@ export const FissionFusionPage: React.FC<FissionFusionPageProps> = ({ onNavigate
               <p className="text-[11px] text-[#B7B7B7]/70">
                 <strong>Fonte:</strong> Laboratório de Física de Plasmas / EUROfusion
               </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Real Machines & Scale Models Showcase */}
+      <section className="space-y-6">
+        <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-[#8F83FF] font-mono">
+          <Cpu className="w-4 h-4 text-[#73CAE5]" />
+          <span>Máquinas e Instalações Reais: Engenharia de Fissão × Fusão</span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Fission Scale Model Card */}
+          <div className="bg-[#111111] border border-amber-500/30 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between group">
+            <div
+              onClick={() =>
+                setLightboxImg({
+                  url: fissionReactorModelImg,
+                  title: 'Foto Real da Maquete em Corte: Reator de Fissão Nuclear PWR',
+                  desc: 'Fotografia documental autêntica da maquete física em corte de um vaso de pressão de reator PWR (Pressurized Water Reactor), expondo o conjunto superior de mecanismos de acionamento de barras de controle (CRDM), flanges forjados de retenção e núcleo interno de elementos combustíveis.'
+                })
+              }
+              className="relative aspect-4/3 bg-black/90 cursor-pointer overflow-hidden flex items-center justify-center p-2"
+            >
+              <img
+                src={fissionReactorModelImg}
+                alt="Foto real da maquete de um reator de fissão nuclear PWR"
+                referrerPolicy="no-referrer"
+                className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-40 group-hover:opacity-20 transition-opacity" />
+              <div className="absolute top-3 right-3 p-2 rounded-full bg-black/70 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
+                <Maximize2 className="w-4 h-4" />
+              </div>
+              <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between">
+                <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                  Fissão • Maquete Real em Corte
+                </span>
+                <span className="text-amber-400 font-semibold text-xs">Ampliar</span>
+              </div>
+            </div>
+            <div className="p-5 space-y-2 text-xs text-[#B7B7B7] leading-relaxed">
+              <h4 className="font-bold text-white text-sm">Vaso de Pressão do Reator PWR (Corte Técnico)</h4>
+              <p>
+                Visualização física dos componentes estruturais de um reator de água pressurizada: cabeçote com mecanismos eletromecânicos de barras de controle para modulação da reação em cadeia e vaso forjado sob 155 bar de pressão de operação.
+              </p>
+              <div className="flex flex-wrap gap-2 text-[11px] text-[#B7B7B7]/70 pt-1">
+                <span><strong>Foto:</strong> Guilherme Wiltgen / Defesa Aérea & Naval</span>
+                <span>•</span>
+                <span><strong>Referência:</strong> Marinha do Brasil / Sinaval</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Fusion Tokamak ITER Card */}
+          <div className="bg-[#111111] border border-[#8F83FF]/30 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between group">
+            <div
+              onClick={() =>
+                setLightboxImg({
+                  url: iterTokamakImg,
+                  title: 'Câmara de Vácuo do Reator de Fusão Tokamak (Projeto ITER)',
+                  desc: 'Fotografia documental oficial do vaso de vácuo toroidal e ímãs supercondutores do projeto internacional ITER (Cadarache, França), projetado para 500 MW de potência de fusão.'
+                })
+              }
+              className="relative aspect-4/3 bg-black cursor-pointer overflow-hidden"
+            >
+              <img
+                src={iterTokamakImg}
+                alt="Câmara de Vácuo do Reator de Fusão Tokamak ITER (Imagem da Galeria)"
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-40 group-hover:opacity-20 transition-opacity" />
+              <div className="absolute top-3 right-3 p-2 rounded-full bg-black/70 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
+                <Maximize2 className="w-4 h-4" />
+              </div>
+              <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between">
+                <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-[#8F83FF]/20 text-[#8F83FF] border border-[#8F83FF]/30">
+                  Fusão • Tokamak ITER (Galeria)
+                </span>
+                <span className="text-[#8F83FF] font-semibold text-xs">Ampliar</span>
+              </div>
+            </div>
+            <div className="p-5 space-y-2 text-xs text-[#B7B7B7] leading-relaxed">
+              <h4 className="font-bold text-white text-sm">Câmara Toroidal de Confinamento Magnético</h4>
+              <p>
+                A maior máquina de fusão do planeta: gaiola magnética toroidal com ímãs supercondutores criogênicos resfriados a -269 °C para confinar plasma solar a mais de 150 milhões de °C.
+              </p>
+              <div className="flex flex-wrap gap-2 text-[11px] text-[#B7B7B7]/70 pt-1">
+                <span><strong>Fonte:</strong> Organização ITER / Acervo da Galeria</span>
+                <span>•</span>
+                <span><strong>Local:</strong> Cadarache, França</span>
+              </div>
             </div>
           </div>
         </div>

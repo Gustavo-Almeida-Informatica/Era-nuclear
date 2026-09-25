@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { PageId } from '../types';
 import tsarMushroomImg from '../assets/images/tsar_bomba_documentary_real.jpg';
+import tsarCasingRealImg from '../assets/images/tsar_bomba_casing_real.jpg';
+import tsarFireballRealImg from '../assets/images/tsar_fireball_attached_real.jpg';
 import {
   Globe,
   Calendar,
@@ -225,36 +227,67 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
               </div>
             </div>
 
-            {/* Technical Description Panel */}
-            <div className="p-6 sm:p-8 space-y-6 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed bg-[#131313]">
-              <div className="space-y-3">
-                <div className="flex items-center space-x-2 text-white font-bold text-sm">
-                  <ShieldCheck className="w-4 h-4 text-[#8F83FF]" />
-                  <span>Engenharia Estrutural do Dispositivo</span>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
+              {/* Image Frame */}
+              <div
+                onClick={() =>
+                  openLightbox(
+                    tsarCasingRealImg,
+                    'A Bomba RDS-220 (Produto 602 / "Kuzkina Mat") — Carcaça Real da Bomba',
+                    'Fotografia documental real e histórica do artefato e carcaça termonuclear soviética RDS-220 (AN602 / Produto 602) suspensa por cabos de guindaste e manuseada por equipe técnica de operadores. O monumental dispositivo media 8,0 metros de comprimento por 2,1 metros de diâmetro e pesava 27 toneladas métricas.'
+                  )
+                }
+                className="lg:col-span-7 relative aspect-16/9 sm:aspect-16/10 bg-black overflow-hidden cursor-pointer group/img"
+              >
+                <img
+                  src={tsarCasingRealImg}
+                  alt="Fotografia documental real da carcaça e artefato físico da Tsar Bomba RDS-220"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover object-center group-hover/img:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
+                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs text-white/90">
+                  <span className="font-mono bg-black/70 px-2.5 py-1 rounded-md backdrop-blur-md">
+                    Fotografia Real • Dispositivo RDS-220 (AN602)
+                  </span>
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/80 border border-white/20 text-white backdrop-blur-md">
+                    <Maximize2 className="w-3.5 h-3.5" />
+                    <span>Ampliar</span>
+                  </div>
                 </div>
-                <p>
-                  Com <strong>8 metros de comprimento</strong>, <strong>2,1 metros de diâmetro</strong> e peso monumental de <strong>27 toneladas</strong>, a RDS-220 era grande demais para caber inteiramente no compartimento de bombas de qualquer avião do mundo.
-                </p>
-                <p>
-                  O bombardeiro quadrimotor <strong>Tupolev Tu-95V</strong> teve suas portas do compartimento de bombas completamente removidas e reforços estruturais soldados à fuselagem. O artefato ficava parcialmente exposto para fora da barriga do avião durante o voo.
-                </p>
-                <p>
-                  Para retardar a queda da bomba e permitir que o avião chegasse a 45 km de distância antes da detonação, foi projetado um <strong>paraquedas de náilon de 800 m²</strong> pesando quase <strong>800 kg</strong>, acionado imediatamente após a liberação a 10.500 m.
-                </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/5 font-mono text-xs">
-                <div className="space-y-1">
-                  <span className="text-slate-400 block text-[11px]">Camisa Externa:</span>
-                  <span className="text-[#8F83FF] font-bold block">Chumbo (substituindo U-238)</span>
+              {/* Technical Description Panel */}
+              <div className="lg:col-span-5 p-6 sm:p-8 space-y-4 flex flex-col justify-between text-xs sm:text-sm text-[#B7B7B7] leading-relaxed bg-[#131313]">
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2 text-white font-bold text-sm">
+                    <ShieldCheck className="w-4 h-4 text-[#8F83FF]" />
+                    <span>Engenharia Estrutural do Dispositivo</span>
+                  </div>
+                  <p>
+                    Com <strong>8 metros de comprimento</strong>, <strong>2,1 metros de diâmetro</strong> e peso monumental de <strong>27 toneladas</strong>, a RDS-220 era grande demais para caber inteiramente no compartimento de bombas de qualquer avião do mundo.
+                  </p>
+                  <p>
+                    O bombardeiro quadrimotor <strong>Tupolev Tu-95V</strong> teve suas portas do compartimento de bombas completamente removidas e reforços estruturais soldados à fuselagem. O artefato ficava parcialmente exposto para fora da barriga do avião durante o voo.
+                  </p>
+                  <p>
+                    Para retardar a queda da bomba e permitir que o avião chegasse a 45 km de distância antes da detonação, foi projetado um <strong>paraquedas de náilon de 800 m²</strong> pesando quase <strong>800 kg</strong>, acionado imediatamente após a liberação a 10.500 m.
+                  </p>
                 </div>
-                <div className="space-y-1">
-                  <span className="text-slate-400 block text-[11px]">Paraquedas de Retardo:</span>
-                  <span className="text-slate-200 font-bold block">800 m² (800 kg de náilon)</span>
-                </div>
-                <div className="space-y-1">
-                  <span className="text-slate-400 block text-[11px]">Aeronave Portadora:</span>
-                  <span className="text-[#73CAE5] font-bold block">Tu-95V (Pintura Térmica Branca)</span>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 p-3 rounded-xl bg-white/[0.03] border border-white/5 font-mono text-xs">
+                  <div className="space-y-0.5">
+                    <span className="text-slate-400 block text-[10px]">Camisa Externa:</span>
+                    <span className="text-[#8F83FF] font-bold block text-[11px]">Chumbo (s/ U-238)</span>
+                  </div>
+                  <div className="space-y-0.5">
+                    <span className="text-slate-400 block text-[10px]">Paraquedas:</span>
+                    <span className="text-slate-200 font-bold block text-[11px]">800 m² (800 kg)</span>
+                  </div>
+                  <div className="space-y-0.5">
+                    <span className="text-slate-400 block text-[10px]">Aeronave:</span>
+                    <span className="text-[#73CAE5] font-bold block text-[11px]">Tu-95V (Reforçado)</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -280,36 +313,67 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
               </div>
             </div>
 
-            {/* Technical Description Panel */}
-            <div className="p-6 sm:p-8 space-y-6 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed bg-[#131313]">
-              <div className="space-y-3">
-                <div className="flex items-center space-x-2 text-white font-bold text-sm">
-                  <Flame className="w-4 h-4 text-amber-400" />
-                  <span>Física do Plasma & Pulso Térmico</span>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
+              {/* Image Frame */}
+              <div
+                onClick={() =>
+                  openLightbox(
+                    tsarFireballRealImg,
+                    'A Bola de Fogo Termonuclear da Tsar Bomba (8 km de Diâmetro)',
+                    'Registro fotográfico documental real da gigantesca esfera de plasma incandescente da RDS-220 no instante da detonação a 4.000 metros de altitude sobre o Campo D-II de Nova Zembla, em 30 de outubro de 1961. A bola de fogo atingiu 8 km de diâmetro, brilhando com potência de pico comparável a ~1,4% da luminosidade total do Sol.'
+                  )
+                }
+                className="lg:col-span-7 relative aspect-16/9 sm:aspect-16/10 bg-black overflow-hidden cursor-pointer group/img"
+              >
+                <img
+                  src={tsarFireballRealImg}
+                  alt="Fotografia documental real da bola de fogo termonuclear da Tsar Bomba"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover object-center group-hover/img:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
+                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs text-white/90">
+                  <span className="font-mono bg-black/70 px-2.5 py-1 rounded-md backdrop-blur-md">
+                    Fotografia Real • Esfera de Plasma (8 km Ø)
+                  </span>
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/80 border border-white/20 text-white backdrop-blur-md">
+                    <Maximize2 className="w-3.5 h-3.5" />
+                    <span>Ampliar</span>
+                  </div>
                 </div>
-                <p>
-                  Detonada às <strong>11h32 (horário de Moscou)</strong> a 4.000 metros de altitude acima do Campo D-II de Nova Zembla, a ignição termonuclear gerou quase que instantaneamente uma <strong>esfera de plasma superaquecido com 8 quilômetros de diâmetro</strong> (raio de 4.000 metros).
-                </p>
-                <p>
-                  A bola de fogo foi tão descomunal que tocou quase o solo simultaneamente e expandiu-se verticalmente até a altitude de onde a bomba havia sido lançada (10.500 m). Ela só não encostou na superfície terrestre porque a <strong>onda de choque refletida pelo solo e pelo oceano congelado</strong> empurrou a bola de fogo para cima.
-                </p>
-                <p>
-                  A radiação térmica liberada foi tão intensa que causaria <strong>queimaduras de terceiro grau em qualquer ser humano desprotegido a até 100 km de distância</strong>. A tripulação do Tu-95V, mesmo já a 45 km do ponto zero e dentro de cabine protegida, sentiu uma onda sufocante de calor intenso varrer seus corpos.
-                </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-xl bg-amber-950/20 border border-amber-500/20 font-mono text-xs">
-                <div className="space-y-1">
-                  <span className="text-slate-400 block text-[11px]">Clarão Térmico Visível:</span>
-                  <span className="text-amber-300 font-bold block">&gt; 1.000 km (Noruega, Finlândia)</span>
+              {/* Technical Description Panel */}
+              <div className="lg:col-span-5 p-6 sm:p-8 space-y-4 flex flex-col justify-between text-xs sm:text-sm text-[#B7B7B7] leading-relaxed bg-[#131313]">
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2 text-white font-bold text-sm">
+                    <Flame className="w-4 h-4 text-amber-400" />
+                    <span>Física do Plasma & Pulso Térmico</span>
+                  </div>
+                  <p>
+                    Detonada às <strong>11h32 (horário de Moscou)</strong> a 4.000 metros de altitude acima do Campo D-II de Nova Zembla, a ignição termonuclear gerou quase que instantaneamente uma <strong>esfera de plasma superaquecido com 8 quilômetros de diâmetro</strong> (raio de 4.000 metros).
+                  </p>
+                  <p>
+                    A bola de fogo foi tão descomunal que tocou quase o solo simultaneamente e expandiu-se verticalmente até a altitude de onde a bomba havia sido lançada (10.500 m). Ela só não encostou na superfície terrestre porque a <strong>onda de choque refletida pelo solo e pelo oceano congelado</strong> empurrou a bola de fogo para cima.
+                  </p>
+                  <p>
+                    A radiação térmica liberada causaria <strong>queimaduras de terceiro grau a até 100 km de distância</strong>. A tripulação do Tu-95V a 45 km sentiu uma onda de calor intenso varrer seus corpos.
+                  </p>
                 </div>
-                <div className="space-y-1">
-                  <span className="text-slate-400 block text-[11px]">Sensação Térmica Corporal:</span>
-                  <span className="text-slate-200 font-bold block">Sentida a 270 km do hipocentro</span>
-                </div>
-                <div className="space-y-1">
-                  <span className="text-slate-400 block text-[11px]">Taxa de Potência de Pico:</span>
-                  <span className="text-amber-400 font-bold block">5,4 × 10²⁴ Watts (~1,4% do Sol)</span>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 p-3 rounded-xl bg-amber-950/20 border border-amber-500/20 font-mono text-xs">
+                  <div className="space-y-0.5">
+                    <span className="text-slate-400 block text-[10px]">Clarão Visível:</span>
+                    <span className="text-amber-300 font-bold block text-[11px]">&gt; 1.000 km</span>
+                  </div>
+                  <div className="space-y-0.5">
+                    <span className="text-slate-400 block text-[10px]">Sensação Térmica:</span>
+                    <span className="text-slate-200 font-bold block text-[11px]">270 km raio</span>
+                  </div>
+                  <div className="space-y-0.5">
+                    <span className="text-slate-400 block text-[10px]">Potência Pico:</span>
+                    <span className="text-amber-400 font-bold block text-[11px]">5,4×10²⁴ W</span>
+                  </div>
                 </div>
               </div>
             </div>

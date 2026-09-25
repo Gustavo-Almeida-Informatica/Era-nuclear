@@ -6,7 +6,7 @@ import trinityImg from '../assets/images/trinity_test_blast_1787676677780.jpg';
 import chernobylImg from '../assets/images/chernobyl_ruins_1787676689764.jpg';
 import ivyKingImg from '../assets/images/ivy_king_001.jpg';
 import ivyMikeImg from '../assets/images/ivy_mike_blast_1787763915443.jpg';
-import hiroshimaDomeImg from '../assets/images/hiroshima_genbaku_dome_1787677431649.jpg';
+import hiroshimaDomeImg from '../assets/images/genbaku_dome_real.jpg';
 import hiroshimaExplosionImg from '../assets/images/hiroshima_explosion.jpg';
 import nagasakiMemorialImg from '../assets/images/nagasaki_peace_memorial_1787677448589.jpg';
 import nagasakiExplosionImg from '../assets/images/nagasaki_explosion.jpg';
@@ -19,7 +19,7 @@ import chicagoPile1Img from '../assets/images/chicago_pile_one_1787677642726.jpg
 import iterTokamakImg from '../assets/images/iter_tokamak_fusion_1787677659756.jpg';
 import fukushimaDamageImg from '../assets/images/fukushima_daiichi_damage_2011.jpg';
 import goianiaSourceImg from '../assets/images/goiania_cesio_137_source.jpg';
-import demonCoreImg from '../assets/images/demon_core_experiment_1789920226757.jpg';
+import demonCoreImg from '../assets/images/demon-core.jpeg';
 
 export const timelineEvents: TimelineEvent[] = [
   {
@@ -522,7 +522,7 @@ export const timelineEvents: TimelineEvent[] = [
     keyFigures: ['Tokyo Electric Power Company (TEPCO)', 'AIEA', 'Governo do Japão'],
     location: 'Okuma / Futaba, Prefeitura de Fukushima, Japão',
     imageUrl: fukushimaDamageImg,
-    imageCaption: 'Estrutura destruída do Edifício do Reator 3 da Usina de Fukushima Daiichi após a explosão de hidrogênio (março de 2011).',
+    imageCaption: 'Registro da explosão de hidrogênio no Edifício do Reator 3 da Usina de Fukushima Daiichi capturado pelas câmeras de monitoramento (14 de março de 2011).',
     source: 'International Atomic Energy Agency (IAEA) / UNSCEAR'
   },
   {

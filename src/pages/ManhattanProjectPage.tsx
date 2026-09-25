@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { PageId } from '../types';
 import trinityImg from '../assets/images/trinity_test_blast_1787676677780.jpg';
 import hiroshimaExplosionImg from '../assets/images/hiroshima_explosion.jpg';
-import hiroshimaDomeImg from '../assets/images/hiroshima_genbaku_dome_1787677431649.jpg';
+import hiroshimaDomeImg from '../assets/images/genbaku_dome_real.jpg';
 import nagasakiExplosionImg from '../assets/images/nagasaki_explosion.jpg';
 import nagasakiMemorialImg from '../assets/images/nagasaki_peace_memorial_1787677448589.jpg';
 import chicagoPile1Img from '../assets/images/chicago_pile_one_1787677642726.jpg';
-import demonCoreImg from '../assets/images/demon_core_experiment_1789920226757.jpg';
+import demonCoreImg from '../assets/images/demon-core.jpeg';
 import {
   Atom,
   Users,

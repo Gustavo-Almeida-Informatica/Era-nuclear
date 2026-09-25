@@ -6,7 +6,7 @@ import trinityImg from '../assets/images/trinity_test_blast_1787676677780.jpg';
 import chernobylImg from '../assets/images/chernobyl_ruins_1787676689764.jpg';
 import ivyKingImg from '../assets/images/ivy_king_001.jpg';
 import ivyMikeImg from '../assets/images/ivy_mike_blast_1787763915443.jpg';
-import hiroshimaDomeImg from '../assets/images/hiroshima_genbaku_dome_1787677431649.jpg';
+import hiroshimaDomeImg from '../assets/images/genbaku_dome_real.jpg';
 import hiroshimaExplosionImg from '../assets/images/hiroshima_explosion.jpg';
 import nagasakiMemorialImg from '../assets/images/nagasaki_peace_memorial_1787677448589.jpg';
 import nagasakiExplosionImg from '../assets/images/nagasaki_explosion.jpg';
@@ -17,14 +17,15 @@ import b41Img from '../assets/images/b41_real_usaf_museum.jpg';
 import b41MuseumDocImg from '../assets/images/b41_real_usaf_museum.jpg';
 import chicagoPile1Img from '../assets/images/chicago_pile_one_1787677642726.jpg';
 import iterTokamakImg from '../assets/images/iter_tokamak_fusion_1787677659756.jpg';
+import fissionReactorModelImg from '../assets/images/fission_reactor_pwr_model_authentic.jpg';
 import fissionDiagramImg from '../assets/images/fission_diagram_sci_1787677675023.jpg';
 import fusionDiagramImg from '../assets/images/fusion_diagram_sci_1787677708566.jpg';
 import gunTypeDiagramImg from '../assets/images/gun_type_fission_diagram_real.png';
-import implosionTypeDiagramImg from '../assets/images/implosion_type_fission_diagram_1787680148801.jpg';
+import implosionTypeDiagramImg from '../assets/images/fatman_implosion_diagram_authentic.jpg';
 import tellerUlamDiagramImg from '../assets/images/BombH_explosion.svg';
 import fukushimaDamageImg from '../assets/images/fukushima_daiichi_damage_2011.jpg';
 import goianiaSourceImg from '../assets/images/goiania_cesio_137_source.jpg';
-import demonCoreImg from '../assets/images/demon_core_experiment_1789920226757.jpg';
+import demonCoreImg from '../assets/images/demon-core.jpeg';
 
 export const galleryItems: GalleryItem[] = [
   {
@@ -285,15 +286,15 @@ export const galleryItems: GalleryItem[] = [
   {
     id: 'fukushima-daiichi-destruicao-2011',
     title: 'Danos Estruturais na Central Nuclear de Fukushima Daiichi (Unidade 3)',
-    date: '15 de março de 2011',
+    date: '14 de março de 2011',
     year: '2011',
     location: 'Okuma / Futaba, Fukushima, Japão',
     category: 'acontecimentos',
     categoryLabel: 'Acidente Civil',
-    description: 'Registro fotográfico das ruínas do Edifício do Reator 3 de Fukushima Daiichi após a explosão de hidrogênio causada pelo superaquecimento e perda total de energia decorrentes do tsunami de março de 2011.',
+    description: 'Registro documental em tempo real da explosão de hidrogênio no Edifício do Reator 3 da Central de Fukushima Daiichi, capturado pelas câmeras de monitoramento costeiro após a perda total de energia e arrefecimento.',
     historicalContext: 'Desastre nuclear de nível 7 na escala INES. Diferente de Chernobyl, as contenções primárias de aço resistiram em grande parte, mas o acúmulo de hidrogênio resultante da reação zircônio-vapor causou explosões destrutivas nos edifícios secundários, acelerando a implementação de sistemas de segurança passiva no mundo todo.',
-    source: 'Tokyo Electric Power Company (TEPCO) / Wikimedia Commons / Arquivo AIEA',
-    license: 'Arquivo Documental / Domínio Público / Wikimedia Commons',
+    source: 'Registro Documental / Monitoramento Costeiro Fukushima / TEPCO',
+    license: 'Arquivo Documental Histórico / Registro Público',
     imageUrl: fukushimaDamageImg,
     tag: 'Fukushima 2011'
   },
@@ -341,6 +342,21 @@ export const galleryItems: GalleryItem[] = [
     license: 'Recurso Educacional Aberto',
     imageUrl: fusionDiagramImg,
     tag: 'Fusão Termonuclear'
+  },
+  {
+    id: 'maquete-reator-fissao-pwr',
+    title: 'Maquete em Corte: Vaso de Pressão de Reator de Fissão Nuclear (PWR)',
+    date: 'Foto Documental de Exposição',
+    year: 'Acervo Real',
+    location: 'Centro Experimental Aramar / CINA — Iperó, SP (Brasil)',
+    category: 'laboratorios',
+    categoryLabel: 'Reatores Nucleares',
+    description: 'Fotografia documental autêntica da maquete técnica em corte de um vaso de pressão de reator nuclear de fissão do tipo PWR (Pressurized Water Reactor). A maquete física revela com precisão mecânica os mecanismos de acionamento de barras de controle (CRDM) no cabeçote superior, o flange metálico aparafusado de contenção para 155 bar, os bocais tubulares de circulação do circuito primário e a cavidade do núcleo com os elementos combustíveis de urânio.',
+    historicalContext: 'Os reatores de água pressurizada (PWR) compõem a imensa maioria dos reatores nucleares de potência do mundo e o projeto nacional do LABGENE desenvolvido pelo CTMSP/Marinha do Brasil para propulsão naval no programa PROSUB.',
+    source: 'Acervo Documental de Engenharia / Sinaval / Foto: Guilherme Wiltgen / Marinha do Brasil',
+    license: 'Divulgação Científica e Educacional',
+    imageUrl: fissionReactorModelImg,
+    tag: 'Reator de Fissão (Foto Real)'
   },
   {
     id: 'tokamak-iter-pesquisa',

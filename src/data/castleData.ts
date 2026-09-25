@@ -1,10 +1,10 @@
 import { CastleTest } from '../types';
 import castleBravoImg from '../assets/images/castle_bravo_005.jpg';
 import castleRomeoImg from '../assets/images/castle_romeo.jpg';
-import castleKoonImg from '../assets/images/castle_koon_blast_1787677556674.jpg';
-import castleUnionImg from '../assets/images/castle_union_user_1789412099166.jpg';
-import castleYankeeImg from '../assets/images/castle_yankee_user_attached.jpg';
-import castleNectarImg from '../assets/images/castle_nectar_blast_1787677582310.jpg';
+import castleKoonImg from '../assets/images/castle-koon.webp';
+import castleUnionImg from '../assets/images/p27-castle-union.webp';
+import castleYankeeImg from '../assets/images/operation-castle-8f128ae2-d2e7-4391-9cc1-fac165d2d23-resize-750.webp';
+import castleNectarImg from '../assets/images/castle_nectar_real.jpg';
 
 export const castleTests: CastleTest[] = [
   {
@@ -83,8 +83,8 @@ export const castleTests: CastleTest[] = [
     resultAndImpact: 'Segunda maior detonação nuclear da história dos Estados Unidos (13,5 Megatons). O topo da nuvem alcançou mais de 40 km de altitude em menos de 10 minutos.',
     historicalImportance: 'Consolidou o design da bomba termonuclear pesada Mark 24, colocada em serviço ativo em 1954 como resposta rápida de dissuasão estratégica.',
     imageUrl: castleYankeeImg,
-    imageCaption: 'Nuvem convectiva estratosférica de 13,5 Megatons do teste Yankee.',
-    source: 'U.S. Department of Energy / National Nuclear Security Administration',
+    imageCaption: 'Detonação do teste Yankee (13,5 Megatons) na Operação Castle, evidenciando anéis de condensação de Wilson e a colossal bola de fogo termonuclear.',
+    source: 'U.S. Department of Energy / Lookout Mountain Laboratory (Fotografia Histórica Oficial)',
     license: 'Domínio Público (Governo Federal dos EUA)'
   },
   {

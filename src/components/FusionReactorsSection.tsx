@@ -23,12 +23,17 @@ import {
   ArrowRight,
   Info,
   Scale,
-  AlertTriangle
+  AlertTriangle,
+  Maximize2,
+  X
 } from 'lucide-react';
+import iterTokamakImg from '../assets/images/iter_tokamak_fusion_1787677659756.jpg';
+import fissionReactorModelImg from '../assets/images/fission_reactor_pwr_model_authentic.jpg';
 
 export const FusionReactorsSection: React.FC = () => {
   const [selectedReactorId, setSelectedReactorId] = useState<string>(FUSION_REACTORS[0].id);
   const [activeTab, setActiveTab] = useState<'reactors' | 'how-it-works' | 'comparison' | 'risks-benefits'>('reactors');
+  const [lightboxImg, setLightboxImg] = useState<{ src: string; title: string; caption: string } | null>(null);
 
   const currentReactor =
     FUSION_REACTORS.find((r) => r.id === selectedReactorId) || FUSION_REACTORS[0];
@@ -280,6 +285,55 @@ export const FusionReactorsSection: React.FC = () => {
               </div>
             </div>
 
+            {/* Visual Photographic Banner for Tokamak Fusion Reactor */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center p-5 rounded-2xl bg-white/[0.02] border border-white/10">
+              <div className="lg:col-span-7 space-y-2">
+                <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded bg-[#8F83FF]/15 text-[#8F83FF] text-[11px] font-mono font-bold">
+                  <span>REGISTRO FOTOGRÁFICO DA GALERIA</span>
+                  <span>•</span>
+                  <span>PROJETO ITER</span>
+                </div>
+                <h4 className="text-lg font-bold text-white font-display">
+                  Câmara Toroidal de Vácuo do Reator de Fusão Tokamak
+                </h4>
+                <p className="text-xs text-[#B7B7B7] leading-relaxed">
+                  Fotografia oficial da câmara toroidal e estrutura dos ímãs supercondutores do complexo de pesquisa internacional ITER em Cadarache, França. Projetado para suportar plasmas a 150 milhões de °C sob confinamento magnético extremo.
+                </p>
+                <div className="text-[11px] text-[#B7B7B7]/70 flex items-center space-x-2 pt-1">
+                  <span><strong>Fonte:</strong> ITER Organization / EFDA-JET</span>
+                  <span>•</span>
+                  <span className="text-[#73CAE5]">Imagem integrada da Galeria</span>
+                </div>
+              </div>
+              <div className="lg:col-span-5">
+                <div
+                  onClick={() =>
+                    setLightboxImg({
+                      src: iterTokamakImg,
+                      title: 'Câmara de Vácuo do Reator de Fusão Tokamak (Projeto ITER)',
+                      caption: 'Fotografia documental do vaso de vácuo toroidal e ímãs supercondutores do projeto internacional ITER (Cadarache, França), a maior máquina de fusão nuclear da história humana.'
+                    })
+                  }
+                  className="relative group rounded-xl overflow-hidden border border-white/10 bg-black cursor-pointer aspect-16/10 shadow-lg"
+                >
+                  <img
+                    src={iterTokamakImg}
+                    alt="Câmara de Vácuo do Reator de Fusão Tokamak ITER"
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+                  <div className="absolute top-2.5 right-2.5 p-1.5 rounded-full bg-black/70 text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Maximize2 className="w-3.5 h-3.5" />
+                  </div>
+                  <div className="absolute bottom-2 left-2.5 right-2.5 flex justify-between items-center text-[10px] text-white/90">
+                    <span className="font-mono truncate">ITER Tokamak • Cadarache</span>
+                    <span className="text-[#8F83FF] font-semibold shrink-0 ml-2">Ampliar</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Description & Innovations */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-2">
               <div className="lg:col-span-6 space-y-4">
@@ -447,6 +501,89 @@ export const FusionReactorsSection: React.FC = () => {
             </p>
           </div>
 
+          {/* Visual Showcase: Fission vs. Fusion Machines Side by Side */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Card Fissão */}
+            <div className="rounded-2xl bg-black/40 border border-amber-500/30 overflow-hidden shadow-xl flex flex-col justify-between">
+              <div
+                onClick={() =>
+                  setLightboxImg({
+                    src: fissionReactorModelImg,
+                    title: 'Maquete Técnica em Corte: Vaso de Pressão de Reator de Fissão (PWR)',
+                    caption: 'Maquete de engenharia naval e civil exibindo o cabeçote superior com barras de controle (CRDM), flanges de alta pressão e núcleo com elementos combustíveis de urânio enriquecido (Defesa Aérea & Naval / Guilherme Wiltgen / PROSUB).'
+                  })
+                }
+                className="relative group aspect-4/3 bg-black/80 cursor-pointer overflow-hidden"
+              >
+                <img
+                  src={fissionReactorModelImg}
+                  alt="Maquete em corte de reator de fissão nuclear PWR"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+                <div className="absolute top-2.5 right-2.5 p-1.5 rounded-full bg-black/70 text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Maximize2 className="w-3.5 h-3.5" />
+                </div>
+                <div className="absolute bottom-2.5 left-3 right-3 flex justify-between items-center text-xs">
+                  <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[10px] font-bold border border-amber-500/30">
+                    FISSÃO NUCLEAR (MAQUETE REAL PWR)
+                  </span>
+                  <span className="text-amber-400 font-semibold text-[11px]">Ampliar</span>
+                </div>
+              </div>
+              <div className="p-4 space-y-1.5 text-xs text-[#B7B7B7] bg-white/[0.01]">
+                <h4 className="font-bold text-white text-sm">Vaso de Pressão & Núcleo Crítico</h4>
+                <p>
+                  Vaso de contenção forjado para suportar 155 bar de pressão de água líquida a 320 °C, barras de controle superiores de boro/cádmio e varetas de Urânio-235.
+                </p>
+                <p className="text-[11px] text-[#B7B7B7]/70 pt-1">
+                  <strong>Foto:</strong> Guilherme Wiltgen / Defesa Aérea & Naval
+                </p>
+              </div>
+            </div>
+
+            {/* Card Fusão */}
+            <div className="rounded-2xl bg-black/40 border border-[#8F83FF]/30 overflow-hidden shadow-xl flex flex-col justify-between">
+              <div
+                onClick={() =>
+                  setLightboxImg({
+                    src: iterTokamakImg,
+                    title: 'Câmara de Vácuo do Reator de Fusão Tokamak (Projeto ITER)',
+                    caption: 'Vaso de vácuo toroidal e ímãs supercondutores do projeto internacional ITER (Cadarache, França), projetado para 500 MW de potência térmica de fusão.'
+                  })
+                }
+                className="relative group aspect-4/3 bg-black/80 cursor-pointer overflow-hidden"
+              >
+                <img
+                  src={iterTokamakImg}
+                  alt="Câmara de Vácuo do Reator de Fusão Tokamak ITER"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+                <div className="absolute top-2.5 right-2.5 p-1.5 rounded-full bg-black/70 text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Maximize2 className="w-3.5 h-3.5" />
+                </div>
+                <div className="absolute bottom-2.5 left-3 right-3 flex justify-between items-center text-xs">
+                  <span className="px-2 py-0.5 rounded bg-[#8F83FF]/20 text-[#8F83FF] font-mono text-[10px] font-bold border border-[#8F83FF]/30">
+                    FUSÃO NUCLEAR (TOKAMAK)
+                  </span>
+                  <span className="text-[#8F83FF] font-semibold text-[11px]">Ampliar</span>
+                </div>
+              </div>
+              <div className="p-4 space-y-1.5 text-xs text-[#B7B7B7] bg-white/[0.01]">
+                <h4 className="font-bold text-white text-sm">Câmara Toroidal & Gaiola Magnética</h4>
+                <p>
+                  Toro de vácuo suspenso por campos magnéticos de até 20 Tesla, onde Deutério e Trítio fundem-se a 150 milhões de °C sem contato com as paredes materiais.
+                </p>
+                <p className="text-[11px] text-[#B7B7B7]/70 pt-1">
+                  <strong>Fonte:</strong> ITER Organization / Galeria do App
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[650px]">
               <thead>
@@ -569,6 +706,37 @@ export const FusionReactorsSection: React.FC = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Lightbox Modal */}
+      {lightboxImg && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-200"
+          onClick={() => setLightboxImg(null)}
+        >
+          <div
+            className="max-w-4xl w-full bg-[#141414] border border-white/15 rounded-2xl overflow-hidden shadow-2xl relative space-y-4 p-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setLightboxImg(null)}
+              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/70 text-white hover:bg-black transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <div className="max-h-[72vh] overflow-hidden flex items-center justify-center bg-black/50 rounded-xl p-2">
+              <img
+                src={lightboxImg.src}
+                alt={lightboxImg.title}
+                referrerPolicy="no-referrer"
+                className="max-h-[70vh] w-auto max-w-full object-contain"
+              />
+            </div>
+            <div className="space-y-1 text-xs text-[#B7B7B7]">
+              <h4 className="text-base font-bold text-white font-display">{lightboxImg.title}</h4>
+              <p className="leading-relaxed">{lightboxImg.caption}</p>
             </div>
           </div>
         </div>

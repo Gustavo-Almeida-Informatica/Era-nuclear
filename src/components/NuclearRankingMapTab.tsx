@@ -88,6 +88,7 @@ export const NuclearRankingMapTab: React.FC = () => {
   const casualties = calculateBombCityCasualties(selectedBomb, selectedCity, burstType);
 
   const handleDetonate = () => {
+    shouldFitBoundsOnDetonateRef.current = true;
     setDetonationFlash(true);
     setTimeout(() => {
       setDetonationFlash(false);
@@ -98,6 +99,17 @@ export const NuclearRankingMapTab: React.FC = () => {
   const handleResetDetonation = () => {
     setIsDetonated(false);
   };
+
+  // Ao detonar uma bomba e escolher outra (ou alterar a potência), ela se desarma automaticamente
+  const prevSelectedBombRef = useRef<string>(selectedBomb.id);
+  const prevYieldKtRef = useRef<number>(selectedBomb.yieldKt);
+  useEffect(() => {
+    if (prevSelectedBombRef.current !== selectedBomb.id || prevYieldKtRef.current !== selectedBomb.yieldKt) {
+      prevSelectedBombRef.current = selectedBomb.id;
+      prevYieldKtRef.current = selectedBomb.yieldKt;
+      setIsDetonated(false);
+    }
+  }, [selectedBomb.id, selectedBomb.yieldKt]);
 
   const [activeTabMobile, setActiveTabMobile] = useState<'map' | 'options'>('map');
   const [visibleLayers, setVisibleLayers] = useState<Record<string, boolean>>({
@@ -194,6 +206,7 @@ export const NuclearRankingMapTab: React.FC = () => {
   // Escolhe uma bomba pré-calibrada: a potência vai instantaneamente para o campo de pesquisa
   const handleSelectBomb = (b: NuclearBombRanking) => {
     setSelectedBomb(b);
+    setIsDetonated(false); // Desarma automaticamente ao escolher outra bomba
     setCustomYieldKt(b.yieldKt);
     if (b.yieldKt >= 1000) {
       setYieldUnit('Mt');
@@ -221,6 +234,7 @@ export const NuclearRankingMapTab: React.FC = () => {
       } else {
         setSelectedBomb(createCustomNuclearBomb(clampedKt));
       }
+      setIsDetonated(false); // Desarma automaticamente ao alterar potência
     }
   };
 
@@ -303,6 +317,8 @@ export const NuclearRankingMapTab: React.FC = () => {
   const circlesLayerGroupRef = useRef<L.LayerGroup | null>(null);
   const testSitesLayerGroupRef = useRef<L.LayerGroup | null>(null);
   const tileLayerRef = useRef<L.TileLayer | null>(null);
+  const isDraggingTargetRef = useRef<boolean>(false);
+  const shouldFitBoundsOnDetonateRef = useRef<boolean>(false);
 
   // Toggle for rendering Historic Nuclear Test Sites on the map (Bikini, Novaya Zemlya, Nevada, Semipalatinsk)
   const [showTestSites, setShowTestSites] = useState<boolean>(true);
@@ -492,6 +508,7 @@ export const NuclearRankingMapTab: React.FC = () => {
 
   // Handle click or drag on the map to set Ground Zero anywhere in the world
   const handleMapClick = (lat: number, lng: number) => {
+    isDraggingTargetRef.current = true;
     const latStr = lat >= 0 ? `${lat.toFixed(4)}°N` : `${Math.abs(lat).toFixed(4)}°S`;
     const lngStr = lng >= 0 ? `${lng.toFixed(4)}°E` : `${Math.abs(lng).toFixed(4)}°W`;
     const customCity: TargetCity = {
@@ -680,9 +697,9 @@ export const NuclearRankingMapTab: React.FC = () => {
         center: [selectedCity.lat, selectedCity.lng],
         zoom: 12,
         minZoom: 1, // Permite ver todo o mapa mundi e continentes
-        maxZoom: 18, // Limite real para evitar azulejos vazios/pretos
+        maxZoom: 19, // Suporte a zoom detalhado
         zoomDelta: 1,
-        zoomSnap: 0.5,
+        zoomSnap: 1, // CRÍTICO: remove zoom fracionário que causava embaçamento/blur nos blocos do mapa
         worldCopyJump: true,
         zoomControl: false,
         attributionControl: false
@@ -710,27 +727,24 @@ export const NuclearRankingMapTab: React.FC = () => {
       // A bomba só pode ser movida arrastando o alvo tático no centro (Ground Zero marker)
       // O listener de clique no mapa foi removido conforme solicitado pelo usuário.
 
-      const tileUrl =
-        mapTheme === 'dark'
-          ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-          : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+      const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
       const tileLayer = L.tileLayer(tileUrl, {
         minZoom: 1,
-        maxZoom: 18,
-        maxNativeZoom: 18,
-        subdomains: mapTheme === 'dark' ? 'abcd' : 'abc',
+        maxZoom: 19,
+        maxNativeZoom: 19,
+        detectRetina: true, // Renderização em altíssima definição (Retina/@2x) sem embaçamento
+        subdomains: ['a', 'b', 'c'],
+        className: mapTheme === 'dark' ? 'tactical-dark-tiles' : '',
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a>',
         noWrap: false
       }).addTo(map);
 
       // Fallback em caso de erro no carregamento de azulejo
       tileLayer.on('tileerror', (e) => {
-        if (e.tile && (e.tile as HTMLImageElement).src && (e.tile as HTMLImageElement).src.includes('cartocdn')) {
-          // Tenta carregar OSM alternativo se Carto falhar
-          const coords = (e as unknown as { coords?: { z: number; x: number; y: number } }).coords;
-          if (coords) {
-            (e.tile as HTMLImageElement).src = `https://a.tile.openstreetmap.org/${coords.z}/${coords.x}/${coords.y}.png`;
-          }
+        const coords = (e as unknown as { coords?: { z: number; x: number; y: number } }).coords;
+        if (coords && e.tile) {
+          (e.tile as HTMLImageElement).src = `https://maps.wikimedia.org/osm-intl/${coords.z}/${coords.x}/${coords.y}.png`;
         }
       });
 
@@ -768,25 +782,23 @@ export const NuclearRankingMapTab: React.FC = () => {
     if (!mapInstanceRef.current || !tileLayerRef.current) return;
 
     mapInstanceRef.current.removeLayer(tileLayerRef.current);
-    const tileUrl =
-      mapTheme === 'dark'
-        ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-        : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
     const newTileLayer = L.tileLayer(tileUrl, {
       minZoom: 1,
-      maxZoom: 18,
-      maxNativeZoom: 18,
-      subdomains: mapTheme === 'dark' ? 'abcd' : 'abc',
+      maxZoom: 19,
+      maxNativeZoom: 19,
+      detectRetina: true, // Renderização nítida em telas Retina
+      subdomains: ['a', 'b', 'c'],
+      className: mapTheme === 'dark' ? 'tactical-dark-tiles' : '',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a>',
       noWrap: false
     }).addTo(mapInstanceRef.current);
 
     newTileLayer.on('tileerror', (e) => {
-      if (e.tile && (e.tile as HTMLImageElement).src && (e.tile as HTMLImageElement).src.includes('cartocdn')) {
-        const coords = (e as unknown as { coords?: { z: number; x: number; y: number } }).coords;
-        if (coords) {
-          (e.tile as HTMLImageElement).src = `https://a.tile.openstreetmap.org/${coords.z}/${coords.x}/${coords.y}.png`;
-        }
+      const coords = (e as unknown as { coords?: { z: number; x: number; y: number } }).coords;
+      if (coords && e.tile) {
+        (e.tile as HTMLImageElement).src = `https://maps.wikimedia.org/osm-intl/${coords.z}/${coords.x}/${coords.y}.png`;
       }
     });
 
@@ -924,7 +936,14 @@ export const NuclearRankingMapTab: React.FC = () => {
       });
 
       const marker = L.marker(center, { icon: targetingReticleIcon, draggable: true });
+      marker.on('dragstart', () => {
+        isDraggingTargetRef.current = true;
+      });
+      marker.on('drag', () => {
+        isDraggingTargetRef.current = true;
+      });
       marker.on('dragend', (e) => {
+        isDraggingTargetRef.current = true;
         const newPos = (e.target as L.Marker).getLatLng();
         onMapClickRef.current(newPos.lat, newPos.lng);
       });
@@ -950,9 +969,16 @@ export const NuclearRankingMapTab: React.FC = () => {
       `);
       group.addLayer(marker);
 
+      if (isDraggingTargetRef.current) {
+        // Ao mover o alvo, NÃO amplia a imagem automaticamente nem altera o zoom
+        isDraggingTargetRef.current = false;
+        return;
+      }
+
       if (!isWorldViewRef.current) {
-        const safeZoom = Math.min(Math.max(map.getZoom() || 12, 11), 14);
-        map.setView(center, safeZoom, { animate: true });
+        // Mantém o zoom atual sem forçar ampliação automática
+        const currentZ = map.getZoom();
+        map.setView(center, currentZ, { animate: false });
       }
       return;
     }
@@ -1271,7 +1297,14 @@ export const NuclearRankingMapTab: React.FC = () => {
     });
 
     const marker = L.marker(center, { icon: groundZeroIcon, draggable: true });
+    marker.on('dragstart', () => {
+      isDraggingTargetRef.current = true;
+    });
+    marker.on('drag', () => {
+      isDraggingTargetRef.current = true;
+    });
     marker.on('dragend', (e) => {
+      isDraggingTargetRef.current = true;
       const newPos = (e.target as L.Marker).getLatLng();
       onMapClickRef.current(newPos.lat, newPos.lng);
     });
@@ -1312,8 +1345,11 @@ export const NuclearRankingMapTab: React.FC = () => {
       effectiveBomb.lightBlastRadiusM
     );
 
-    // Auto-fit bounds unless the user is in whole World Map view
-    if (!isWorldViewRef.current) {
+    // Auto-fit bounds somente no disparo da detonação, NUNCA ao arrastar/mover o alvo
+    if (isDraggingTargetRef.current) {
+      isDraggingTargetRef.current = false;
+    } else if (shouldFitBoundsOnDetonateRef.current && !isWorldViewRef.current) {
+      shouldFitBoundsOnDetonateRef.current = false;
       try {
         const safeBounds = getCombinedBounds(
           selectedCity.lat,
@@ -1349,28 +1385,11 @@ export const NuclearRankingMapTab: React.FC = () => {
       const timer = setTimeout(() => {
         if (mapInstanceRef.current) {
           mapInstanceRef.current.invalidateSize();
-          const maxRadius = Math.max(
-            selectedBomb.fireballRadiusM,
-            selectedBomb.vaporizationRadiusM,
-            selectedBomb.carbonizationRadiusM,
-            selectedBomb.heavyBlastRadiusM,
-            selectedBomb.thermalRadiusM,
-            selectedBomb.lightBlastRadiusM
-          );
-          try {
-            const safeBounds = getBoundsForRadius(selectedCity.lat, selectedCity.lng, maxRadius * 1.15);
-            mapInstanceRef.current.fitBounds(safeBounds, {
-              padding: [30, 30],
-              animate: false
-            });
-          } catch (e) {
-            // Ignore error
-          }
         }
       }, 150);
       return () => clearTimeout(timer);
     }
-  }, [activeTabMobile, selectedBomb, selectedCity]);
+  }, [activeTabMobile]);
 
   // Invalidate Leaflet map size whenever layout, height or panel state changes or window resizes
   useEffect(() => {
@@ -2320,28 +2339,14 @@ export const NuclearRankingMapTab: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Bloco de Camadas de Impacto Físico (com ativação em lote) */}
+                {/* Bloco de Detonação e Balanço de Vítimas */}
                 <div className="bg-[#181818]/90 p-3 rounded-xl border border-white/10 space-y-2.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-1.5">
-                      <Layers className="w-3.5 h-3.5 text-rose-400" />
+                      <Flame className="w-3.5 h-3.5 text-rose-400" />
                       <span className="text-xs font-bold text-white uppercase tracking-wider">
-                        Camadas de Impacto
+                        Controle de Detonação & Vítimas
                       </span>
-                    </div>
-                    <div className="flex items-center space-x-1.5 text-[10px]">
-                      <button
-                        onClick={() => setAllLayers(true)}
-                        className="px-2 py-0.5 rounded bg-[#222222] hover:bg-[#282828] text-neutral-300 hover:text-white border border-white/15 transition-all font-semibold"
-                      >
-                        Ativar Todas
-                      </button>
-                      <button
-                        onClick={() => setAllLayers(false)}
-                        className="px-2 py-0.5 rounded bg-[#222222] hover:bg-[#282828] text-neutral-300 hover:text-white border border-white/15 transition-all font-semibold"
-                      >
-                        Ocultar Todas
-                      </button>
                     </div>
                   </div>
 
@@ -3462,7 +3467,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                       return (
                         <button
                           key={b.id}
-                          onClick={() => setSelectedBomb(b)}
+                          onClick={() => handleSelectBomb(b)}
                           className={`w-full p-2 rounded-lg border text-left transition-all flex items-center justify-between ${
                             isCurrent
                               ? 'bg-rose-500/20 border-rose-500/60 text-white shadow-sm ring-1 ring-rose-400/40'
@@ -3662,7 +3667,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                             <td className="p-3 text-center">
                               <button
                                 onClick={() => {
-                                  setSelectedBomb(b);
+                                  handleSelectBomb(b);
                                   setShowBenchmarkModal(false);
                                 }}
                                 className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${

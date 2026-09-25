@@ -102,18 +102,24 @@
 .leaflet-container {
   background-color: #020617 !important;
   font-family: inherit !important;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 /* Tactical Dark Mode Map Tiles - No watermarks, no API keys, clean tactical aesthetic */
-.tactical-dark-tiles,
+.tactical-dark-tiles {
+  filter: brightness(0.72) invert(1) contrast(1.25) hue-rotate(180deg) saturate(0.4) !important;
+}
 .tactical-dark-tiles img,
 .tactical-dark-tiles .leaflet-tile {
-  filter: brightness(0.68) invert(1) contrast(1.35) hue-rotate(180deg) saturate(0.35) !important;
+  filter: none !important;
 }
 
 .leaflet-tile {
   border: none !important;
   outline: none !important;
+  image-rendering: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 /* Remove default browser focus bounding box / square when clicking blast circles, polygons, or SVG paths */
