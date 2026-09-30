@@ -6,7 +6,7 @@ import { fissionFusionComparison } from '../data/physicsData';
 import fissionDiagramImg from '../assets/images/fission_diagram_sci_1787677675023.jpg';
 import fusionDiagramImg from '../assets/images/fusion_diagram_sci_1787677708566.jpg';
 import fissionReactorModelImg from '../assets/images/fission_reactor_pwr_model_authentic.jpg';
-import iterTokamakImg from '../assets/images/iter_tokamak_fusion_1787677659756.jpg';
+import iterTokamakImg from '../assets/images/tokamak_fusion_reactor_real.jpg';
 import {
   Flame,
   Zap,

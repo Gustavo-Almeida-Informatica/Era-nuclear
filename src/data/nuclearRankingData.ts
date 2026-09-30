@@ -1125,7 +1125,7 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
     lightBlastRadiusM: 89190,
     mushroomCloudHeightKm: 48.0,
     mushroomCloudCapDiameterKm: 72.0,
-    badgeColor: 'border-rose-500/40 text-rose-400 bg-rose-500/10',
+    badgeColor: 'border-red-500/40 text-red-400 bg-red-500/10',
     fallout: {
       fissionPercentage: 75,
       cloudTopKm: 48.0,
@@ -1390,9 +1390,9 @@ export const IMPACT_LAYERS: ImpactLayerInfo[] = [
     id: 'carbonization',
     name: 'Zona de Carbonização (Pessoas Carbonizadas)',
     subtitle: 'Calcinação Térmica & Combustão Humana Instantânea',
-    color: '#DC2626',
-    fillColor: '#DC2626',
-    strokeColor: '#991B1B',
+    color: '#F43F5E',
+    fillColor: '#FB7185',
+    strokeColor: '#E11D48',
     severity: 'Letalidade: 100%',
     effects:
       'Fluxo térmico direto (>25-35 cal/cm²).\nQualquer ser humano ao ar livre é instantaneamente carbonizado\ne calcinado até os ossos antes da onda mecânica.\nRoupas entram em combustão imediata. Letalidade 100%'
@@ -1401,9 +1401,9 @@ export const IMPACT_LAYERS: ImpactLayerInfo[] = [
     id: 'heavy',
     name: 'Onda de Choque Pesada (20 psi)',
     subtitle: 'Colapso Estrutural Severo',
-    color: '#EF4444',
-    fillColor: '#EF4444',
-    strokeColor: '#DC2626',
+    color: '#EC4899',
+    fillColor: '#F472B6',
+    strokeColor: '#DB2777',
     severity: 'Sobrevivência: < 1%',
     effects:
       'Sobrepressão extrema de 20 psi.\nDestruição de edifícios de concreto armado, pontes e fábricas.\nVentos de choque superiores a 800 km/h rasgam estruturas.'
@@ -1993,7 +1993,7 @@ export function createCustomNuclearBomb(yieldKt: number): NuclearBombRanking {
     lightBlastRadiusM: radii.lightBlastRadiusM,
     mushroomCloudHeightKm,
     mushroomCloudCapDiameterKm,
-    badgeColor: 'border-rose-500/40 text-rose-400 bg-rose-500/10',
+    badgeColor: 'border-red-500/40 text-red-400 bg-red-500/10',
     fallout: {
       fissionPercentage: clampedKt > 1000 ? 50 : 80,
       cloudTopKm: mushroomCloudHeightKm,

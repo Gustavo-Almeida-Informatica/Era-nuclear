@@ -100,18 +100,23 @@
 }
 
 .leaflet-container {
-  background-color: #020617 !important;
+  background-color: #000000 !important;
   font-family: inherit !important;
   image-rendering: -webkit-optimize-contrast;
 }
 
-/* Tactical Dark Mode Map Tiles - No watermarks, no API keys, clean tactical aesthetic */
-.tactical-dark-tiles {
-  filter: brightness(0.72) invert(1) contrast(1.25) hue-rotate(180deg) saturate(0.4) !important;
+/* Tactical Dark Mode Map Tiles - Authentic CartoDB Dark Matter Dark Basemap */
+.tactical-dark-tiles,
+.tactical-black-tiles {
+  background-color: #0b0f19 !important;
 }
+
+.tactical-dark-tiles .leaflet-tile,
 .tactical-dark-tiles img,
-.tactical-dark-tiles .leaflet-tile {
-  filter: none !important;
+.tactical-black-tiles .leaflet-tile,
+.tactical-black-tiles img {
+  filter: brightness(0.96) contrast(1.06) !important;
+  -webkit-filter: brightness(0.96) contrast(1.06) !important;
 }
 
 .leaflet-tile {

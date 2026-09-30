@@ -27,7 +27,7 @@ import {
   Maximize2,
   X
 } from 'lucide-react';
-import iterTokamakImg from '../assets/images/iter_tokamak_fusion_1787677659756.jpg';
+import iterTokamakImg from '../assets/images/tokamak_fusion_reactor_real.jpg';
 import fissionReactorModelImg from '../assets/images/fission_reactor_pwr_model_authentic.jpg';
 
 export const FusionReactorsSection: React.FC = () => {

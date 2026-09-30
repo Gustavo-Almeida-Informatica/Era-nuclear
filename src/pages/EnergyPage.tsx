@@ -19,7 +19,7 @@ import {
   X
 } from 'lucide-react';
 import fissionReactorModelImg from '../assets/images/fission_reactor_pwr_model_authentic.jpg';
-import iterTokamakImg from '../assets/images/iter_tokamak_fusion_1787677659756.jpg';
+import iterTokamakImg from '../assets/images/tokamak_fusion_reactor_real.jpg';
 
 interface EnergyPageProps {
   onNavigate: (page: PageId) => void;

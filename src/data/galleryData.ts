@@ -8,7 +8,7 @@ import ivyKingImg from '../assets/images/ivy_king_001.jpg';
 import ivyMikeImg from '../assets/images/ivy_mike_blast_1787763915443.jpg';
 import hiroshimaDomeImg from '../assets/images/genbaku_dome_real.jpg';
 import hiroshimaExplosionImg from '../assets/images/hiroshima_explosion.jpg';
-import nagasakiMemorialImg from '../assets/images/nagasaki_peace_memorial_1787677448589.jpg';
+import nagasakiMemorialImg from '../assets/images/nagasaki_peace_memorial_real.jpg';
 import nagasakiExplosionImg from '../assets/images/nagasaki_explosion.jpg';
 import rds1Img from '../assets/images/rds_1_soviet_test.jpg';
 import rds6sImg from '../assets/images/rds_6s_soviet_test.jpg';
@@ -16,7 +16,7 @@ import rds37Img from '../assets/images/rds_37_thermonuclear.jpg';
 import b41Img from '../assets/images/b41_real_usaf_museum.jpg';
 import b41MuseumDocImg from '../assets/images/b41_real_usaf_museum.jpg';
 import chicagoPile1Img from '../assets/images/chicago_pile_one_1787677642726.jpg';
-import iterTokamakImg from '../assets/images/iter_tokamak_fusion_1787677659756.jpg';
+import iterTokamakImg from '../assets/images/tokamak_fusion_reactor_real.jpg';
 import fissionReactorModelImg from '../assets/images/fission_reactor_pwr_model_authentic.jpg';
 import fissionDiagramImg from '../assets/images/fission_diagram_sci_1787677675023.jpg';
 import fusionDiagramImg from '../assets/images/fusion_diagram_sci_1787677708566.jpg';
@@ -366,10 +366,10 @@ export const galleryItems: GalleryItem[] = [
     location: 'Cadarache, Saint-Paul-lès-Durance, França',
     category: 'laboratorios',
     categoryLabel: 'Física Avançada',
-    description: 'Vaso de vácuo toroidal e ímãs supercondutores do complexo de pesquisa internacional ITER para demonstração de 500 MW de potência de fusão magnética sustentada.',
+    description: 'Fotografia real autêntica do vaso de vácuo toroidal e revestimento de berílio/tungstênio do Tokamak com manipulador robótico remoto (JET / matriz tecnológica do ITER).',
     historicalContext: 'Representa a cooperação científica internacional pacífica reunindo 35 países (União Europeia, EUA, Japão, China, Coreia do Sul, Índia e Rússia) para viabilizar a fusão nuclear como fonte limpa e segura de energia para a humanidade.',
-    source: 'ITER Organization / EFDA-JET',
-    license: 'ITER Press Archive / Uso Educativo Autorizado',
+    source: 'EFDA-JET / ITER Organization',
+    license: 'Fotografia Documental Real / EFDA-JET / ITER Archive',
     imageUrl: iterTokamakImg,
     tag: 'Fronteira da Fusão'
   },
