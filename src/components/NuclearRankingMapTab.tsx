@@ -89,17 +89,6 @@ export const NuclearRankingMapTab: React.FC = () => {
   // Modelo analítico de estimativa de mortes e vítimas reais em tempo real
   const casualties = calculateBombCityCasualties(selectedBomb, selectedCity, burstType);
 
-  // Cálculo exato de mortos e feridos para cada local do mundo catalogado
-  const worldCalculatedCasualties = useMemo(() => {
-    return WORLD_PRESET_CITIES.map((city) => {
-      const summary = calculateBombCityCasualties(selectedBomb, city, burstType);
-      return {
-        city,
-        summary
-      };
-    });
-  }, [selectedBomb, burstType]);
-
   const handleDetonate = () => {
     shouldFitBoundsOnDetonateRef.current = true;
     setDetonationFlash(true);
@@ -363,19 +352,12 @@ export const NuclearRankingMapTab: React.FC = () => {
   const mapInstanceRef = useRef<L.Map | null>(null);
   const circlesLayerGroupRef = useRef<L.LayerGroup | null>(null);
   const testSitesLayerGroupRef = useRef<L.LayerGroup | null>(null);
-  const worldCasualtiesLayerGroupRef = useRef<L.LayerGroup | null>(null);
   const tileLayerRef = useRef<L.TileLayer | null>(null);
   const isDraggingTargetRef = useRef<boolean>(false);
   const shouldFitBoundsOnDetonateRef = useRef<boolean>(false);
 
   // Toggle for rendering Historic Nuclear Test Sites on the map (Bikini, Novaya Zemlya, Nevada, Semipalatinsk)
   const [showTestSites, setShowTestSites] = useState<boolean>(true);
-
-  // Toggle e modal de Baixas Calculadas para cada local do mundo no mapa (Mortos e Feridos)
-  const [showWorldCasualties, setShowWorldCasualties] = useState<boolean>(true);
-  const [showWorldCasualtiesModal, setShowWorldCasualtiesModal] = useState<boolean>(false);
-  const [worldCasualtiesSearch, setWorldCasualtiesSearch] = useState<string>('');
-  const [worldCasualtiesSort, setWorldCasualtiesSort] = useState<'deaths' | 'injuries' | 'lethality' | 'population'>('deaths');
 
   // Compass directions for quick wind presets
   const WIND_COMPASS_PRESETS = [
@@ -847,10 +829,6 @@ export const NuclearRankingMapTab: React.FC = () => {
       const testSitesGroup = L.layerGroup().addTo(map);
       testSitesLayerGroupRef.current = testSitesGroup;
 
-      // Group for World Locations Calculated Casualties (Mortos e Feridos em cada local do mundo)
-      const worldCasualtiesGroup = L.layerGroup().addTo(map);
-      worldCasualtiesLayerGroupRef.current = worldCasualtiesGroup;
-
       mapInstanceRef.current = map;
 
       // Invalidação imediata para carregar todos os blocos do mapa sem tela preta
@@ -1019,129 +997,6 @@ export const NuclearRankingMapTab: React.FC = () => {
     });
   }, [showTestSites, selectedCity]);
 
-  // Renderizar o cálculo exato de mortos e feridos em cada local do mundo no mapa
-  useEffect(() => {
-    const map = mapInstanceRef.current;
-    const group = worldCasualtiesLayerGroupRef.current;
-    if (!map || !group) return;
-
-    group.clearLayers();
-
-    if (!showWorldCasualties) return;
-
-    worldCalculatedCasualties.forEach(({ city, summary }) => {
-      // Quando for a cidade alvo atual, o marcador do Marco Zero já exibe as baixas diretamente
-      const isCurrentTarget =
-        selectedCity.id === city.id ||
-        (Math.abs(selectedCity.lat - city.lat) < 0.005 && Math.abs(selectedCity.lng - city.lng) < 0.005);
-
-      if (isCurrentTarget) return;
-
-      const deathsFmt = formatCasualtyNumber(summary.totalDeaths);
-      const injuriesFmt = formatCasualtyNumber(summary.totalInjuries);
-
-      const worldPinIcon = L.divIcon({
-        className: 'world-casualty-marker',
-        html: `
-          <div class="relative flex flex-col items-center group cursor-pointer select-none">
-            <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-[#141414]/95 border border-white/20 shadow-xl backdrop-blur-md hover:border-red-400 hover:scale-105 transition-all text-white">
-              <span class="text-[10px] font-bold text-neutral-200">${city.name}</span>
-              <span class="w-px h-3 bg-white/20"></span>
-              <span class="text-[10px] font-black text-red-400 flex items-center gap-0.5" title="Mortes calculadas">
-                <span class="text-[9px]">💀</span>
-                <span>${deathsFmt}</span>
-              </span>
-              <span class="text-[10px] font-black text-amber-300 flex items-center gap-0.5" title="Feridos calculados">
-                <span class="text-[9px]">🩹</span>
-                <span>${injuriesFmt}</span>
-              </span>
-            </div>
-            <div class="w-1.5 h-1.5 bg-[#141414] border-r border-b border-white/20 rotate-45 -mt-0.5"></div>
-          </div>
-        `,
-        iconSize: [140, 26],
-        iconAnchor: [70, 26]
-      });
-
-      const marker = L.marker([city.lat, city.lng], { icon: worldPinIcon, zIndexOffset: 250 });
-
-      marker.bindTooltip(
-        `<div style="font-family: ui-sans-serif, system-ui, sans-serif; font-size: 11px; line-height: 1.4; color: #f8fafc; min-width: 230px; pointer-events: none;">
-          <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 3px;">
-            <strong style="color: #fde047; font-size: 12px;">🌍 ${city.name}</strong>
-            <span style="color: #94a3b8; font-size: 9.5px;">${city.country}</span>
-          </div>
-          <div style="color: #94a3b8; font-size: 10px;">👥 População Urbana: <b style="color: #e2e8f0;">${formatCasualtyNumber(city.urbanPopulation || 0)} hab</b></div>
-          <div style="margin-top: 4px; padding: 4px 6px; background: rgba(220, 38, 38, 0.2); border-radius: 4px; border: 1px solid rgba(248, 113, 113, 0.35);">
-            <div style="color: #f87171; font-weight: 800; font-size: 11.5px;">💀 Mortos: ${deathsFmt} pessoas</div>
-            <div style="color: #fdba74; font-weight: 700; font-size: 11px;">🩹 Feridos: ${injuriesFmt} pessoas</div>
-            <div style="color: #fde047; font-size: 10px; margin-top: 2px;">Letalidade: ${summary.mortalityPercentage.toFixed(1)}%</div>
-          </div>
-          <div style="color: #38bdf8; font-size: 10px; margin-top: 4px; font-weight: bold;">(Clique para ver o relatório completo ou detonar aqui)</div>
-        </div>`,
-        { direction: 'top', className: 'tactical-map-tooltip' }
-      );
-
-      marker.bindPopup(
-        `<div style="font-family: ui-sans-serif, system-ui, sans-serif; font-size: 12px; color: #f8fafc; line-height: 1.45; min-width: 280px;">
-          <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 4px;">
-            <strong style="font-size: 13px; color: #ffffff;">🏙️ ${city.name}</strong>
-            <span style="background: rgba(239,68,68,0.25); border: 1px solid #ef4444; color: #fca5a5; font-size: 9px; font-weight: bold; padding: 1px 6px; border-radius: 4px;">BAIXAS CALCULADAS</span>
-          </div>
-          <div style="color: #94a3b8; font-size: 11px; margin-bottom: 4px;">
-            <b>${city.country}</b> • <span style="font-family: monospace; color: #67e8f9;">${city.lat.toFixed(4)}°, ${city.lng.toFixed(4)}°</span>
-          </div>
-          <div style="font-size: 11px; color: #cbd5e1; margin-bottom: 6px;">
-            População estimada: <b style="color: #ffffff;">${formatCasualtyNumber(city.urbanPopulation || 0)}</b> habitantes
-          </div>
-          <div style="background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 6px 8px; margin-bottom: 6px;">
-            <div style="font-size: 10.5px; color: #e2e8f0; margin-bottom: 4px;">Arma: <b style="color: #fde047;">${selectedBomb.name}</b> (${selectedBomb.yieldDisplay})</div>
-            <div style="display: flex; flex-direction: column; gap: 3px;">
-              <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(239,68,68,0.2); padding: 3px 6px; border-radius: 4px;">
-                <span style="color: #fca5a5; font-weight: bold; font-size: 11.5px;">💀 Mortos Totais:</span>
-                <b style="color: #ffffff; font-size: 12.5px;">${deathsFmt}</b>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(245,158,11,0.2); padding: 3px 6px; border-radius: 4px;">
-                <span style="color: #fde047; font-weight: bold; font-size: 11.5px;">🩹 Feridos Graves:</span>
-                <b style="color: #ffffff; font-size: 12.5px;">${injuriesFmt}</b>
-              </div>
-            </div>
-            <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: #94a3b8; margin-top: 4px;">
-              <span>Letalidade: <b style="color: #fca5a5;">${summary.mortalityPercentage.toFixed(1)}%</b></span>
-              <span>Atingidos: <b style="color: #cbd5e1;">${formatCasualtyNumber(summary.totalAffectedPop)}</b></span>
-            </div>
-          </div>
-          <div style="font-size: 10px; color: #94a3b8; margin-bottom: 6px; line-height: 1.4;">
-            <div style="font-weight: bold; color: #cbd5e1; margin-bottom: 2px;">Distribuição de Baixas por Faixa:</div>
-            <div>• Bola de Fogo: <b style="color: #fca5a5;">${formatCasualtyNumber(summary.zoneEstimates.fireball.fatalities)} mortos</b></div>
-            <div>• Vaporização: <b style="color: #fca5a5;">${formatCasualtyNumber(summary.zoneEstimates.vaporization.fatalities)} mortos</b></div>
-            <div>• Carbonização: <b style="color: #fca5a5;">${formatCasualtyNumber(summary.zoneEstimates.carbonization.fatalities)} mortos</b></div>
-            <div>• Choque Pesado: <b style="color: #fca5a5;">${formatCasualtyNumber(summary.zoneEstimates.heavy.fatalities)} mortos</b> • <b style="color: #fde047;">${formatCasualtyNumber(summary.zoneEstimates.heavy.injuries)} feridos</b></div>
-            <div>• Raio Térmico: <b style="color: #fca5a5;">${formatCasualtyNumber(summary.zoneEstimates.thermal.fatalities)} mortos</b> • <b style="color: #fde047;">${formatCasualtyNumber(summary.zoneEstimates.thermal.injuries)} feridos</b></div>
-            <div>• Choque Leve: <b style="color: #fca5a5;">${formatCasualtyNumber(summary.zoneEstimates.light.fatalities)} mortos</b> • <b style="color: #fde047;">${formatCasualtyNumber(summary.zoneEstimates.light.injuries)} feridos</b></div>
-          </div>
-          <button id="btn-detonate-city-${city.id}" style="width: 100%; padding: 8px 10px; background: #dc2626; color: #ffffff; font-weight: 800; font-size: 11px; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;">
-            🎯 Detonar Bomba em ${city.name}
-          </button>
-        </div>`
-      );
-
-      marker.on('popupopen', () => {
-        const btn = document.getElementById(`btn-detonate-city-${city.id}`);
-        if (btn) {
-          btn.onclick = () => {
-            handleSelectCity(city);
-            setIsDetonated(true);
-            shouldFitBoundsOnDetonateRef.current = true;
-            map.closePopup();
-          };
-        }
-      });
-
-      group.addLayer(marker);
-    });
-  }, [showWorldCasualties, worldCalculatedCasualties, selectedCity]);
-
   // Update blast circles, fallout plumes, and center whenever configuration changes
   useEffect(() => {
     const map = mapInstanceRef.current;
@@ -1153,8 +1008,8 @@ export const NuclearRankingMapTab: React.FC = () => {
     const center: [number, number] = [selectedCity.lat, selectedCity.lng];
     const allFalloutPoints: [number, number][] = [];
 
-    // Se a bomba NÃO foi detonada: renderiza APENAS o alvo tático no centro
-    // As zonas de destruição e precipitação radioativa só aparecem quando o usuário clica em "DETONAR BOMBA"
+    // Se a bomba NÃO foi detonada: renderiza APENAS o alvo tático no centro (sem número de baixas)
+    // O número de mortos e feridos só aparece na cidade quando a bomba for detonada
     if (!isDetonated) {
       const targetingReticleIcon = L.divIcon({
         className: 'ground-zero-targeting-reticle',
@@ -1174,17 +1029,10 @@ export const NuclearRankingMapTab: React.FC = () => {
               <div class="w-1.5 h-1.5 rounded-full bg-red-600"></div>
             </div>
 
-            <!-- Floating Label below target with exact dead and injured calculated -->
-            <div class="absolute top-16 whitespace-nowrap bg-neutral-950/95 text-white font-bold text-[10px] px-2.5 py-1 rounded-md border border-amber-500/60 shadow-2xl flex flex-col items-center gap-0.5 pointer-events-none">
-              <div class="flex items-center gap-1 text-amber-300">
-                <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
-                <span>🎯 ${selectedCity.name}</span>
-              </div>
-              <div class="flex items-center gap-2 font-mono text-[10px] pt-0.5 border-t border-white/10">
-                <span class="text-red-400 font-bold">💀 ${formatCasualtyNumber(casualties.totalDeaths)} mortos</span>
-                <span class="text-white/30">•</span>
-                <span class="text-amber-300 font-bold">🩹 ${formatCasualtyNumber(casualties.totalInjuries)} feridos</span>
-              </div>
+            <!-- Floating Label below target -->
+            <div class="absolute top-16 whitespace-nowrap bg-neutral-950/95 text-amber-300 font-bold text-[10px] px-2.5 py-0.5 rounded-md border border-amber-500/60 shadow-2xl flex items-center gap-1 pointer-events-none">
+              <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+              <span>🎯 ALVO ARMADO (Arraste para mover)</span>
             </div>
           </div>
         `,
@@ -2153,12 +2001,18 @@ export const NuclearRankingMapTab: React.FC = () => {
                     <span className="font-extrabold tracking-wide">DETONAR BOMBA</span>
                   </button>
                 ) : (
-                  <div className="flex items-center gap-1.5 bg-[#121212]/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-red-500/50 shadow-2xl text-xs font-mono">
+                  <div className="flex items-center gap-2 bg-[#121212]/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-red-500/50 shadow-2xl text-xs font-mono">
                     <div className="flex items-center gap-1.5 text-red-300 font-bold">
                       <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
-                      <span>DETONADA ({selectedBomb.yieldDisplay})</span>
+                      <span>{selectedCity.name}</span>
                     </div>
-                    <div className="w-px h-4 bg-white/20 mx-1" />
+                    <div className="w-px h-4 bg-white/20 mx-0.5" />
+                    <div className="flex items-center gap-2 font-bold">
+                      <span className="text-red-400">💀 {formatCasualtyNumber(casualties.totalDeaths)} mortos</span>
+                      <span className="text-white/30">•</span>
+                      <span className="text-amber-300">🩹 {formatCasualtyNumber(casualties.totalInjuries)} feridos</span>
+                    </div>
+                    <div className="w-px h-4 bg-white/20 mx-0.5" />
                     <button
                       onClick={handleResetDetonation}
                       className="px-2 py-0.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-amber-300 hover:text-white border border-white/10 font-sans font-bold text-[11px] flex items-center gap-1 transition-all cursor-pointer"
@@ -2259,32 +2113,6 @@ export const NuclearRankingMapTab: React.FC = () => {
                     aria-label="Locais Históricos de Testes"
                   >
                     <Radiation className="w-3.5 h-3.5" />
-                  </button>
-
-                  {/* World Casualties on Map Toggle */}
-                  <button
-                    onClick={() => setShowWorldCasualties(!showWorldCasualties)}
-                    className={`px-2.5 py-1.5 rounded-xl border text-xs font-bold transition-all flex items-center space-x-1.5 backdrop-blur-md shadow-xl cursor-pointer ${
-                      showWorldCasualties
-                        ? 'bg-red-600/90 text-white border-red-400 shadow-red-950/40 ring-1 ring-red-400'
-                        : 'bg-[#161616]/95 text-neutral-400 hover:text-white border-white/20'
-                    }`}
-                    title={showWorldCasualties ? 'Ocultar Baixas Mundiais no Mapa (Clique para ocultar)' : 'Exibir Mortos e Feridos em Cada Local do Mundo no Mapa'}
-                    aria-label="Baixas Mundiais no Mapa"
-                  >
-                    <Users className="w-3.5 h-3.5 text-amber-300" />
-                    <span>Baixas Mundiais</span>
-                  </button>
-
-                  {/* Open World Casualties Table Modal */}
-                  <button
-                    onClick={() => setShowWorldCasualtiesModal(true)}
-                    className="px-2.5 py-1.5 rounded-xl bg-[#161616]/95 hover:bg-[#252525] text-neutral-200 hover:text-white border border-white/20 text-xs font-bold backdrop-blur-md shadow-xl transition-all flex items-center space-x-1.5 cursor-pointer"
-                    title="Abrir Tabela Detalhada com Mortos e Feridos em Todos os Locais do Mundo"
-                    aria-label="Tabela de Baixas Mundiais"
-                  >
-                    <Table className="w-3.5 h-3.5 text-red-500" />
-                    <span className="hidden sm:inline">Tabela Baixas</span>
                   </button>
 
                   {/* Zoom In & Out Pod inside map */}
@@ -3905,236 +3733,6 @@ export const NuclearRankingMapTab: React.FC = () => {
               >
                 <Check className="w-3.5 h-3.5" />
                 <span>Aplicar Impacto</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* MODAL: TABELA COMPLETA DE BAIXAS MUNDIAIS (MORTOS E FERIDOS CALCULADOS EM CADA LOCAL DO MUNDO) */}
-      {showWorldCasualtiesModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="bg-[#141414] border border-white/15 rounded-2xl max-w-6xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden">
-            {/* Modal Header */}
-            <div className="bg-[#181818] border-b border-white/10 px-5 py-4 flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 rounded-xl bg-[#222222] border border-white/15 text-red-500 shadow-sm">
-                  <Skull className="w-5 h-5 text-red-500" />
-                </div>
-                <div>
-                  <h3 className="text-sm sm:text-base font-black text-white uppercase tracking-tight flex items-center gap-2">
-                    <span>Cálculo Exato de Mortos e Feridos em Cada Local do Mundo</span>
-                    <span className="px-2 py-0.5 rounded-full bg-red-600/30 border border-red-500/50 text-red-300 text-[10px] font-mono">
-                      {WORLD_PRESET_CITIES.length} Locais
-                    </span>
-                  </h3>
-                  <p className="text-xs text-neutral-300 mt-0.5">
-                    Impacto humano simulado com <strong className="text-amber-300">{selectedBomb.name} ({selectedBomb.yieldDisplay})</strong> em detonação de {burstType === 'surface' ? 'superfície' : 'altitude otimizada'}.
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowWorldCasualtiesModal(false)}
-                className="p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-                title="Fechar tabela de baixas mundiais"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Filter and Search Bar */}
-            <div className="bg-[#161616] px-5 py-3 border-b border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-              <div className="relative flex-1 max-w-md">
-                <Search className="w-4 h-4 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  value={worldCasualtiesSearch}
-                  onChange={(e) => setWorldCasualtiesSearch(e.target.value)}
-                  placeholder="Filtrar por cidade ou país (ex: Tóquio, Brasil, Londres)..."
-                  className="w-full bg-[#111111] border border-white/15 rounded-xl pl-9 pr-3 py-1.5 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-red-500"
-                />
-              </div>
-
-              <div className="flex items-center gap-2 text-xs">
-                <span className="text-neutral-400 text-[11px] font-semibold">Ordenar por:</span>
-                <div className="flex items-center bg-[#111111] border border-white/15 rounded-xl p-0.5">
-                  <button
-                    onClick={() => setWorldCasualtiesSort('deaths')}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
-                      worldCasualtiesSort === 'deaths'
-                        ? 'bg-red-600 text-white shadow'
-                        : 'text-neutral-400 hover:text-white'
-                    }`}
-                  >
-                    💀 Mortos
-                  </button>
-                  <button
-                    onClick={() => setWorldCasualtiesSort('injuries')}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
-                      worldCasualtiesSort === 'injuries'
-                        ? 'bg-amber-600 text-white shadow'
-                        : 'text-neutral-400 hover:text-white'
-                    }`}
-                  >
-                    🩹 Feridos
-                  </button>
-                  <button
-                    onClick={() => setWorldCasualtiesSort('lethality')}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
-                      worldCasualtiesSort === 'lethality'
-                        ? 'bg-rose-700 text-white shadow'
-                        : 'text-neutral-400 hover:text-white'
-                    }`}
-                  >
-                    % Letalidade
-                  </button>
-                  <button
-                    onClick={() => setWorldCasualtiesSort('population')}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
-                      worldCasualtiesSort === 'population'
-                        ? 'bg-neutral-700 text-white shadow'
-                        : 'text-neutral-400 hover:text-white'
-                    }`}
-                  >
-                    👥 População
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Modal Content Scrollable */}
-            <div className="p-4 sm:p-6 overflow-y-auto space-y-4 bg-[#141414] flex-1">
-              <div className="border border-white/15 rounded-xl overflow-x-auto shadow-inner bg-[#161616]">
-                <table className="w-full text-left text-xs font-mono">
-                  <thead className="bg-[#1c1c1c] border-b border-white/15 text-[10px] text-white uppercase font-bold sticky top-0 z-10">
-                    <tr>
-                      <th className="p-3 text-neutral-400 text-center w-12">#</th>
-                      <th className="p-3 text-white">Local / Metrópole</th>
-                      <th className="p-3 text-white">País</th>
-                      <th className="p-3 text-white text-right">População Residente</th>
-                      <th className="p-3 text-red-400 text-right font-black">💀 Mortos Calculados</th>
-                      <th className="p-3 text-amber-300 text-right font-black">🩹 Feridos Calculados</th>
-                      <th className="p-3 text-rose-300 text-right">Letalidade %</th>
-                      <th className="p-3 text-neutral-300 text-right">Pop. sob Efeito</th>
-                      <th className="p-3 text-center text-white">Ação</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-white/10 text-[11px] bg-[#141414]">
-                    {(() => {
-                      const filtered = worldCalculatedCasualties.filter(({ city }) => {
-                        if (!worldCasualtiesSearch) return true;
-                        const s = worldCasualtiesSearch.toLowerCase();
-                        return (
-                          city.name.toLowerCase().includes(s) ||
-                          city.country.toLowerCase().includes(s) ||
-                          (city.highlightTag && city.highlightTag.toLowerCase().includes(s))
-                        );
-                      });
-
-                      const sorted = [...filtered].sort((a, b) => {
-                        if (worldCasualtiesSort === 'deaths') {
-                          return b.summary.totalDeaths - a.summary.totalDeaths;
-                        }
-                        if (worldCasualtiesSort === 'injuries') {
-                          return b.summary.totalInjuries - a.summary.totalInjuries;
-                        }
-                        if (worldCasualtiesSort === 'lethality') {
-                          return b.summary.mortalityPercentage - a.summary.mortalityPercentage;
-                        }
-                        return (b.city.urbanPopulation || 0) - (a.city.urbanPopulation || 0);
-                      });
-
-                      if (sorted.length === 0) {
-                        return (
-                          <tr>
-                            <td colSpan={9} className="p-8 text-center text-neutral-400 font-sans">
-                              Nenhum local do mundo encontrado para "{worldCasualtiesSearch}".
-                            </td>
-                          </tr>
-                        );
-                      }
-
-                      return sorted.map(({ city, summary }, idx) => {
-                        const isCurrentTarget = selectedCity.id === city.id;
-                        return (
-                          <tr
-                            key={city.id}
-                            className={`hover:bg-[#222222] transition-colors ${
-                              isCurrentTarget ? 'bg-red-600/15' : ''
-                            }`}
-                          >
-                            <td className="p-3 text-center text-neutral-500 font-mono font-bold">
-                              {idx + 1}
-                            </td>
-                            <td className="p-3 font-sans">
-                              <div className="font-bold text-white flex items-center gap-1.5">
-                                <span>{city.name}</span>
-                                {isCurrentTarget && (
-                                  <span className="px-1.5 py-0.2 rounded bg-red-600 text-[9px] text-white font-mono font-bold">
-                                    Alvo Atual
-                                  </span>
-                                )}
-                              </div>
-                              {city.highlightTag && (
-                                <div className="text-[10px] text-amber-300 font-mono mt-0.5">
-                                  {city.highlightTag}
-                                </div>
-                              )}
-                            </td>
-                            <td className="p-3 font-sans text-neutral-300">
-                              {city.country}
-                            </td>
-                            <td className="p-3 text-right font-mono text-neutral-200">
-                              {city.urbanPopulation !== undefined && city.urbanPopulation > 0
-                                ? formatCasualtyNumber(city.urbanPopulation)
-                                : '0 (Desabitada)'}
-                            </td>
-                            <td className="p-3 text-right font-mono font-black text-red-400 text-xs">
-                              {formatCasualtyNumber(summary.totalDeaths)}
-                            </td>
-                            <td className="p-3 text-right font-mono font-black text-amber-300 text-xs">
-                              {formatCasualtyNumber(summary.totalInjuries)}
-                            </td>
-                            <td className="p-3 text-right font-mono font-bold text-rose-300">
-                              {summary.mortalityPercentage.toFixed(1)}%
-                            </td>
-                            <td className="p-3 text-right font-mono text-neutral-400">
-                              {formatCasualtyNumber(summary.totalAffectedPop)}
-                            </td>
-                            <td className="p-3 text-center">
-                              <button
-                                onClick={() => {
-                                  handleSelectCity(city);
-                                  setIsDetonated(true);
-                                  shouldFitBoundsOnDetonateRef.current = true;
-                                  setShowWorldCasualtiesModal(false);
-                                }}
-                                className="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white font-sans font-bold text-[11px] transition-all flex items-center justify-center gap-1 shadow cursor-pointer mx-auto"
-                                title={`Detonar ${selectedBomb.name} em ${city.name}`}
-                              >
-                                <Crosshair className="w-3 h-3" />
-                                <span>Detonar no Mapa</span>
-                              </button>
-                            </td>
-                          </tr>
-                        );
-                      });
-                    })()}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Modal Footer */}
-            <div className="bg-[#181818] border-t border-white/10 px-5 py-3 flex items-center justify-between text-xs">
-              <span className="text-neutral-400">
-                Os cálculos de mortos e feridos são baseados em gradientes demográficos reais e curvas de letalidade física.
-              </span>
-              <button
-                onClick={() => setShowWorldCasualtiesModal(false)}
-                className="px-4 py-1.5 rounded-xl bg-[#222222] hover:bg-[#333333] text-white font-bold transition-colors cursor-pointer"
-              >
-                Fechar
               </button>
             </div>
           </div>
