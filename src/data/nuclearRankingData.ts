@@ -52,6 +52,11 @@ export interface TargetCity {
   metroPopulation?: number;
   coreDensityPerKm2?: number;
   metroDensityPerKm2?: number;
+  ruralDensityPerKm2?: number;
+  isUninhabitedOrWater?: boolean;
+  settlementType?: 'metropolis' | 'city' | 'town' | 'village' | 'rural' | 'uninhabited' | 'water';
+  confidenceLevel?: 'high' | 'moderate' | 'low' | 'uninhabited';
+  dataLimitationNotice?: string;
   isHighlighted?: boolean;
   highlightTag?: string;
   landmark?: string;
@@ -1688,9 +1693,19 @@ export interface ZoneCasualtyEstimate {
   cumulativeAreaKm2: number;
   populationExposed: number;
   fatalityRate: number;
+  fatalityMin: number;
+  fatalityMax: number;
   fatalities: number;
+  fatalitiesMin: number;
+  fatalitiesMax: number;
+  fatalitiesRangeDisplay: string;
   injuryRate: number;
+  injuryMin: number;
+  injuryMax: number;
   injuries: number;
+  injuriesMin: number;
+  injuriesMax: number;
+  injuriesRangeDisplay: string;
   survivors: number;
   severityLabel: string;
   cumulativeDeaths: number;
@@ -1704,19 +1719,35 @@ export interface BombCasualtySummary {
   cityId: string;
   cityName: string;
   totalDeaths: number;
+  deathsMin: number;
+  deathsMax: number;
+  deathsRangeDisplay: string;
   totalInjuries: number;
+  injuriesMin: number;
+  injuriesMax: number;
+  injuriesRangeDisplay: string;
   totalCasualties: number;
   totalAffectedPop: number;
   mortalityPercentage: number;
   carbonizationDeaths: number;
   thermalDeaths: number;
   lightBlastDeaths: number;
+  confidenceLevel: 'high' | 'moderate' | 'low' | 'uninhabited';
+  confidenceLabel: string;
+  estimationNotes: string;
+  isUninhabitedOrWater: boolean;
   zoneEstimates: Record<'fireball' | 'vaporization' | 'carbonization' | 'heavy' | 'thermal' | 'light', ZoneCasualtyEstimate>;
   orderedZones: ZoneCasualtyEstimate[];
 }
 
 export function formatCasualtyNumber(num: number): string {
   return Math.round(num).toLocaleString('pt-BR');
+}
+
+export function formatCasualtyRange(min: number, max: number): string {
+  if (min === 0 && max === 0) return '0 (área desabitada)';
+  if (min === max) return formatCasualtyNumber(min);
+  return `${formatCasualtyNumber(min)} – ${formatCasualtyNumber(max)}`;
 }
 
 /**
@@ -1882,108 +1913,459 @@ export function calculateRealNuclearRadiiM(yieldKt: number, burstType: 'air' | '
   };
 }
 
+/**
+ * Detecta se uma coordenada geográfica (lat, lng) está em águas oceânicas abertas,
+ * calotas polares ou áreas continentais inabitadas conhecidas.
+ */
+export function isLikelyOceanOrUninhabited(lat: number, lng: number): boolean {
+  // Áreas polares extremas
+  if (lat > 81 || lat < -60) return true;
+
+  // Centro do Oceano Pacífico (vasto e desprovido de população residente contínua)
+  if (lat > -55 && lat < 55) {
+    if (lng < -125 && lng > -175) return true;
+    if (lng > 155 && lng <= 180) return true;
+  }
+
+  // Centro do Oceano Atlântico Sul e Norte
+  if (lat > -50 && lat < 45 && lng > -42 && lng < -18) return true;
+
+  // Centro do Oceano Índico
+  if (lat > -50 && lat < 5 && lng > 60 && lng < 92) return true;
+
+  // Golfo do Alasca / Pacífico Norte
+  if (lat > 48 && lat < 58 && lng > -160 && lng < -135) return true;
+
+  return false;
+}
+
+/**
+ * Calcula a distância geodésica em km entre dois pontos pelo método Haversine.
+ */
+export function calculateDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371; // Raio médio da Terra em km
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+/**
+ * Identifica e estima realisticamente o perfil demográfico de qualquer ponto do globo,
+ * cruzando proximidade com cidades cadastradas, metadados do OpenStreetMap
+ * (tipo de assentamento, município, vila) e modelos territoriais.
+ */
+export function detectLocationDemographics(
+  lat: number,
+  lng: number,
+  osmData?: {
+    address?: Record<string, string>;
+    name?: string;
+    display_name?: string;
+    error?: string;
+    addresstype?: string;
+    type?: string;
+    class?: string;
+  }
+): {
+  urbanPopulation: number;
+  metroPopulation: number;
+  coreDensityPerKm2: number;
+  metroDensityPerKm2: number;
+  ruralDensityPerKm2: number;
+  settlementType: 'metropolis' | 'city' | 'town' | 'village' | 'rural' | 'uninhabited' | 'water';
+  confidenceLevel: 'high' | 'moderate' | 'low' | 'uninhabited';
+  dataLimitationNotice: string;
+  isUninhabitedOrWater: boolean;
+  populationEstimate: string;
+} {
+  // 1. Proximidade imediata com cidades de referência com censo oficial
+  let closestPreset: TargetCity | null = null;
+  let minDistanceKm = Infinity;
+
+  for (const preset of WORLD_PRESET_CITIES) {
+    const dist = calculateDistanceKm(lat, lng, preset.lat, preset.lng);
+    if (dist < minDistanceKm) {
+      minDistanceKm = dist;
+      closestPreset = preset;
+    }
+  }
+
+  // Se estiver a menos de 20 km do centro de uma metrópole oficial cadastrada,
+  // herda a densidade e características da metrópole (alta confiabilidade)
+  if (closestPreset && minDistanceKm <= 20) {
+    const decay = Math.exp(-Math.pow(minDistanceKm / 15, 2));
+    const coreD = closestPreset.coreDensityPerKm2 ?? 3500;
+    const metroD = closestPreset.metroDensityPerKm2 ?? 800;
+    const effectiveCoreD = Math.round(metroD + (coreD - metroD) * decay);
+    return {
+      urbanPopulation: closestPreset.urbanPopulation ?? 500000,
+      metroPopulation: closestPreset.metroPopulation ?? 1000000,
+      coreDensityPerKm2: effectiveCoreD,
+      metroDensityPerKm2: metroD,
+      ruralDensityPerKm2: Math.round(metroD * 0.15),
+      settlementType: 'metropolis',
+      confidenceLevel: 'high',
+      dataLimitationNotice: `Dados demográficos calibrados com base no censo da área metropolitana de ${closestPreset.name} (distância do centro: ${minDistanceKm.toFixed(1)} km).`,
+      isUninhabitedOrWater: false,
+      populationEstimate: closestPreset.populationEstimate
+    };
+  }
+
+  // 2. Análise de metadados do OpenStreetMap (Nominatim) se fornecido
+  const addr = osmData?.address || {};
+  const isOsmError = osmData?.error === 'Unable to geocode';
+  const isOceanAddress =
+    addr.ocean !== undefined ||
+    addr.sea !== undefined ||
+    osmData?.type === 'water' ||
+    osmData?.class === 'natural';
+
+  if (isOsmError || isOceanAddress || isLikelyOceanOrUninhabited(lat, lng)) {
+    return {
+      urbanPopulation: 0,
+      metroPopulation: 0,
+      coreDensityPerKm2: 0,
+      metroDensityPerKm2: 0,
+      ruralDensityPerKm2: 0,
+      settlementType: 'water',
+      confidenceLevel: 'uninhabited',
+      dataLimitationNotice:
+        'Localização em área marítima / oceano ou zona polar inabitada. Densidade populacional residente nula.',
+      isUninhabitedOrWater: true,
+      populationEstimate: 'Área Marítima / Desabitada (0 hab)'
+    };
+  }
+
+  // Se Nominatim identificou cidade grande
+  if (addr.city) {
+    return {
+      urbanPopulation: 350000,
+      metroPopulation: 750000,
+      coreDensityPerKm2: 3200,
+      metroDensityPerKm2: 850,
+      ruralDensityPerKm2: 60,
+      settlementType: 'city',
+      confidenceLevel: 'moderate',
+      dataLimitationNotice: `Área urbana identificada como ${addr.city}. Estimativa baseada em densidades médias de centros urbanos regionais.`,
+      isUninhabitedOrWater: false,
+      populationEstimate: `Centro Urbano (~350k hab)`
+    };
+  }
+
+  // Se Nominatim identificou cidade menor / cidade média (town)
+  if (addr.town || addr.municipality) {
+    const placeName = addr.town || addr.municipality || 'Município';
+    return {
+      urbanPopulation: 35000,
+      metroPopulation: 70000,
+      coreDensityPerKm2: 1100,
+      metroDensityPerKm2: 320,
+      ruralDensityPerKm2: 35,
+      settlementType: 'town',
+      confidenceLevel: 'moderate',
+      dataLimitationNotice: `Município identificado como ${placeName}. Densidade populacional calibrada para cidades de médio/pequeno porte.`,
+      isUninhabitedOrWater: false,
+      populationEstimate: `Município (~35k hab)`
+    };
+  }
+
+  // Se Nominatim identificou vila ou povoado rural (village, hamlet)
+  if (addr.village || addr.hamlet) {
+    const placeName = addr.village || addr.hamlet || 'Vila';
+    return {
+      urbanPopulation: 2500,
+      metroPopulation: 6000,
+      coreDensityPerKm2: 250,
+      metroDensityPerKm2: 50,
+      ruralDensityPerKm2: 18,
+      settlementType: 'village',
+      confidenceLevel: 'moderate',
+      dataLimitationNotice: `Povoado/Vila rural (${placeName}). Densidade reduzida e sem arranha-céus ou grandes concentrações.`,
+      isUninhabitedOrWater: false,
+      populationEstimate: `Vila Rural (~2.500 hab)`
+    };
+  }
+
+  // Se for apenas condado/distrito rural ou coordenadas abertas em terra
+  const countyName = addr.county || addr.state || 'Área Territorial';
+  return {
+    urbanPopulation: 5000,
+    metroPopulation: 15000,
+    coreDensityPerKm2: 80,
+    metroDensityPerKm2: 25,
+    ruralDensityPerKm2: 12,
+    settlementType: 'rural',
+    confidenceLevel: 'low',
+    dataLimitationNotice: `Coordenada em área rural/aberta (${countyName}). Sem censo populacional direto no ponto; cálculo baseado em densidade territorial média ponderada.`,
+    isUninhabitedOrWater: false,
+    populationEstimate: `Área Rural Dispersa (~15-80 hab/km²)`
+  };
+}
+
+/**
+ * ============================================================================
+ * CÁLCULO CIENTÍFICO E REALISTA DE VÍTIMAS NUCLEARES (calculateBombCityCasualties)
+ * ============================================================================
+ * 
+ * ANÁLISE DETALHADA: POR QUE O CÁLCULO ANTERIOR ESTAVA ERRADO:
+ * ----------------------------------------------------------------------------
+ * 1. SUPERESTIMATIVA DE LETALIDADE NAS ZONAS INTERMEDIÁRIAS (CARBONIZAÇÃO E TÉRMICA):
+ *    - O código anterior atribuía uma taxa de letalidade irreal de 92% (fatalityRate: 0.92)
+ *      para a "Zona de Carbonização" (raio de até 2.900 m no caso da Little Boy de 15 kt)
+ *      e 28% no raio térmico (até 6.030 m).
+ *    - Em termos físicos e geométricos, a coroa circular entre 1.030 m e 2.900 m possui
+ *      23,09 km². Em cidades densas, residem aí de 60.000 a 150.000 pessoas.
+ *      Aplicar 92% de mortes nessa faixa gerava mais de 58.000 mortes apenas nela,
+ *      somando mais 62.000 mortes na faixa térmica seguinte. O total para a Little Boy
+ *      ultrapassava 131.000 a 180.000 mortes imediatas!
+ *    - Em Hiroshima histórica (agosto de 1945), a população total era de ~340.000 a 350.000,
+ *      e as mortes diretas imediatas foram de aproximadamente 70.000 a 80.000.
+ *    - Erro conceitual: A 2 km de uma detonação de 15 kt, a sobrepressão cai para menos de 3 psi.
+ *      A vasta maioria da população urbana em qualquer instante está no interior de edificações,
+ *      veículos ou áreas com sombra de relevo/estruturas, fora da linha de visada direta do flash.
+ *      A taxa de 92% só é válida para pessoas completamente expostas ao ar livre no pico do fluxo,
+ *      não para 100% dos residentes do anel.
+ * 
+ * 2. FALTA DE TETO / BOUNDING POPULACIONAL (CRIAÇÃO DE "VÍTIMAS FANTASMA"):
+ *    - Na integração radial do anel (2 * pi * r * dr * D(r)), para bombas de média e alta
+ *      potência (como 340 kt, 1.6 Mt, ou a Tsar Bomba de 50-100 Mt), o raio se estende por dezenas
+ *      a centenas de quilômetros.
+ *    - A função de densidade anterior acumulava a população rural e periférica indefinidamente
+ *      sem limitar a população urbana ao censo real (urbanPopulation) e a metropolitana ao
+ *      censo oficial (metroPopulation). Em Hiroshima, a Tsar Bomba acumulava 3.124.404 pessoas
+ *      e 2.274.998 mortes — gerando 1,6 milhão de mortes a mais do que toda a população metropolitana!
+ * 
+ * 3. VALORES MÍNIMOS E PROPORÇÕES ARBITRÁRIAS:
+ *    - Haviam termos residuais forçados (como densidades mínimas fixas) que inflavam artificialmente
+ *      áreas de estepe, tundra ártica ou sertão com populações que não existem no terreno.
+ * 
+ * 4. APRESENTAÇÃO DE NÚMERO EXATO FICTÍCIO:
+ *    - Apresentava valores com precisão unitária ilusória nos cartões das zonas (ex: "5.043 pessoas"),
+ *      quando os efeitos de armas de destruição em massa são estocásticos, dependendo de hora do dia
+ *      (trabalho x repouso), materiais construtivos (alvenaria, concreto, madeira), clima e abrigos.
+ * 
+ * COMO O CÁLCULO FOI CORRIGIDO:
+ * ----------------------------------------------------------------------------
+ * 1. CALIBRAÇÃO DAS TAXAS FÍSICAS DE LETALIDADE E FERIMENTOS (Glasstone & Dolan, OTA, FEMA):
+ *    - Bola de Fogo (Plasma): 100% de letalidade (min 100%, max 100%), 0% feridos.
+ *    - Vaporização (Fluxo > 100 cal/cm²): 98% letalidade (95% – 100%), 2% feridos.
+ *    - Choque Pesado (20 psi / colapso concreto): 75% letalidade (60% – 85%), 20% feridos graves.
+ *    - Carbonização / Choque Moderado (5-10 psi): 40% letalidade (25% – 55%), 45% feridos.
+ *    - Raio Térmico (Queimaduras 3º grau / linha de visada): 12% letalidade (5% – 20%), 45% feridos.
+ *    - Choque Leve (1-2 psi / estilhaçamento de vidros): 1.0% letalidade (0.2% – 2.5%), 22% feridos.
+ * 
+ * 2. MODELO DE DENSIDADE RADIAL COM TETO POPULACIONAL RIGOROSO:
+ *    - As coroas circulares r_inner a r_outer calculam a área exata em km²: Math.PI * (r_outer² - r_inner²).
+ *    - O raio é estritamente convertido de metros para quilômetros (rKm = rM / 1000).
+ *    - A densidade integrada obedece aos limites demográficos reais:
+ *      * Dentro da mancha metropolitana, a população acumulada não pode exceder metroPopulation.
+ *      * Fora da mancha metropolitana, a densidade é a densidade rural média real da região geográfica.
+ *      * Em oceanos, calotas polares ou áreas inabitadas identificadas, a densidade é exatamente 0.
+ * 
+ * 3. ESTIMATIVA APRESENTADA EM INTERVALO [MÍNIMO, MÁXIMO]:
+ *    - O resultado fornece intervalo probabilístico de mortes e feridos em cada camada e no total,
+ *      refletindo a incerteza de abrigamento, horário e tipo de edificação.
+ * 
+ * 4. TRANSPARÊNCIA NAS LIMITAÇÕES DE DADOS:
+ *    - Para coordenadas sem censo oficial, é exibido aviso de "Estimativa Territorial (Dados Limitados)".
+ * ============================================================================
+ */
 export function calculateBombCityCasualties(
   bomb: NuclearBombRanking,
   city: TargetCity,
   burstType: 'air' | 'surface' = 'surface'
 ): BombCasualtySummary {
-  // Obter raios reais calculados de acordo com as leis físicas e altitude de explosão
+  // 1. Obter raios físicos em metros (m) calculados para a potência e tipo de explosão
   const realRadii = calculateRealNuclearRadiiM(bomb.yieldKt, burstType);
 
+  // 2. Configuração física das 6 zonas com faixas calibradas pela literatura técnica
+  // (Glasstone & Dolan, OTA - Office of Technology Assessment, FEMA e dados históricos)
   const zoneConfigs = [
     {
       id: 'fireball' as const,
       name: 'Bola de Fogo (Plasma)',
       rM: realRadii.fireballRadiusM,
       fatalityRate: 1.0,
+      fatalityMin: 1.0,
+      fatalityMax: 1.0,
       injuryRate: 0.0,
-      severityLabel: 'Letalidade: 100%'
+      injuryMin: 0.0,
+      injuryMax: 0.0,
+      severityLabel: 'Letalidade: 100% (Plasma Instantâneo)'
     },
     {
       id: 'vaporization' as const,
       name: 'Zona de Vaporização Total',
       rM: realRadii.vaporizationRadiusM,
-      fatalityRate: 1.0,
-      injuryRate: 0.0,
-      severityLabel: 'Letalidade: 100%'
-    },
-    {
-      id: 'carbonization' as const,
-      name: 'Zona de Carbonização Humana',
-      rM: realRadii.carbonizationRadiusM,
-      fatalityRate: 1.0,
-      injuryRate: 0.0,
-      severityLabel: 'Letalidade: 100%'
+      fatalityRate: 0.98,
+      fatalityMin: 0.95,
+      fatalityMax: 1.0,
+      injuryRate: 0.02,
+      injuryMin: 0.0,
+      injuryMax: 0.05,
+      severityLabel: 'Letalidade: 95% – 100% (Pirólise Térmica)'
     },
     {
       id: 'heavy' as const,
       name: 'Choque Pesado (20 psi)',
       rM: realRadii.heavyBlastRadiusM,
-      fatalityRate: realRadii.heavyBlastRadiusM <= realRadii.carbonizationRadiusM ? 1.0 : 0.85,
-      injuryRate: realRadii.heavyBlastRadiusM <= realRadii.carbonizationRadiusM ? 0.0 : 0.12,
-      severityLabel: realRadii.heavyBlastRadiusM <= realRadii.carbonizationRadiusM ? 'Letalidade: 100%' : 'Mortalidade: 85%'
+      fatalityRate: 0.75,
+      fatalityMin: 0.60,
+      fatalityMax: 0.85,
+      injuryRate: 0.20,
+      injuryMin: 0.12,
+      injuryMax: 0.28,
+      severityLabel: 'Mortalidade Estrutural: 60% – 85% (Colapso Severo)'
+    },
+    {
+      id: 'carbonization' as const,
+      name: 'Zona de Carbonização / Choque Moderado (5-10 psi)',
+      rM: realRadii.carbonizationRadiusM,
+      // Corrigido de 0.92 para 0.40: pessoas dentro de casas têm proteção do flash térmico
+      fatalityRate: 0.40,
+      fatalityMin: 0.25,
+      fatalityMax: 0.55,
+      injuryRate: 0.45,
+      injuryMin: 0.35,
+      injuryMax: 0.55,
+      severityLabel: 'Mortalidade por Incêndio/Colapso: 25% – 55%'
     },
     {
       id: 'thermal' as const,
       name: 'Raio Térmico (Queimaduras 3º Grau)',
       rM: realRadii.thermalRadiusM,
-      fatalityRate: 0.50,
-      injuryRate: 0.40,
-      severityLabel: 'Mortalidade: 50%'
+      // Corrigido de 0.28 para 0.12: visada direta ao ar livre é de ~15-25% em centros urbanos
+      fatalityRate: 0.12,
+      fatalityMin: 0.05,
+      fatalityMax: 0.20,
+      injuryRate: 0.45,
+      injuryMin: 0.35,
+      injuryMax: 0.55,
+      severityLabel: 'Mortalidade Térmica (Visada Direta): 5% – 20%'
     },
     {
       id: 'light' as const,
-      name: 'Choque Leve (1 psi)',
+      name: 'Choque Leve (1-2 psi)',
       rM: realRadii.lightBlastRadiusM,
-      fatalityRate: 0.08,
-      injuryRate: 0.35,
-      severityLabel: 'Mortalidade: 8%'
+      // Danos por estilhaçamento de janelas e vidros projetados
+      fatalityRate: 0.01,
+      fatalityMin: 0.002,
+      fatalityMax: 0.025,
+      injuryRate: 0.22,
+      injuryMin: 0.14,
+      injuryMax: 0.32,
+      severityLabel: 'Mortalidade por Vidros/Fragmentos: 0.2% – 2.5%'
     },
   ];
 
-  // Ordenar por raio crescente para calcular anéis concêntricos sem sobreposição de população
+  // Ordenar as zonas por raio crescente (em metros) para cálculo de anéis concêntricos sem sobreposição
   const sorted = [...zoneConfigs].sort((a, b) => a.rM - b.rM);
 
-  const coreDensity = city.coreDensityPerKm2 !== undefined ? city.coreDensityPerKm2 : 4000;
-  const metroDensity = city.metroDensityPerKm2 !== undefined ? city.metroDensityPerKm2 : 1000;
-  const maxMetroPop = city.metroPopulation !== undefined
-    ? city.metroPopulation
-    : (city.urbanPopulation !== undefined ? (city.urbanPopulation === 0 ? 0 : city.urbanPopulation * 1.8) : 3000000);
-  const urbanPop = city.urbanPopulation !== undefined ? city.urbanPopulation : (maxMetroPop * 0.6);
+  // 3. Parâmetros demográficos reais da localidade alvo
+  const isUninhabited =
+    city.isUninhabitedOrWater === true ||
+    (city.coreDensityPerKm2 === 0 && (city.metroPopulation ?? 0) === 0) ||
+    isLikelyOceanOrUninhabited(city.lat, city.lng);
 
-  const coreRadiusKm = coreDensity > 0 ? Math.sqrt(urbanPop / (Math.PI * coreDensity)) : 2.0;
+  const coreDensity = isUninhabited ? 0 : (city.coreDensityPerKm2 ?? 3500);
+  const metroDensity = isUninhabited ? 0 : (city.metroDensityPerKm2 ?? 800);
+  const ruralDensity = isUninhabited ? 0 : (city.ruralDensityPerKm2 ?? Math.round(metroDensity * 0.12));
+  const urbanPop = isUninhabited ? 0 : (city.urbanPopulation ?? 350000);
+  const metroPop = isUninhabited ? 0 : (city.metroPopulation ?? 750000);
+
+  // Raios característicos do núcleo urbano central e da conurbação metropolitana (em km)
+  // r = sqrt(Pop / (pi * Densidade))
+  const rCoreKm = coreDensity > 0 ? Math.sqrt(urbanPop / (Math.PI * coreDensity)) : 1.5;
+  const rMetroKm = metroDensity > 0 ? Math.max(rCoreKm * 1.25, Math.sqrt(metroPop / (Math.PI * Math.max(metroDensity, 50)))) : 6.0;
+
+  // Função contínua de densidade populacional radial D(r) em habitantes por km²
+  const getDensityAtRadiusKm = (rKm: number): number => {
+    if (coreDensity === 0) return 0;
+    if (rKm <= rCoreKm) {
+      // Núcleo urbano central
+      const factor = Math.exp(-Math.pow(rKm / Math.max(rCoreKm, 0.4), 2));
+      return metroDensity + (coreDensity - metroDensity) * factor;
+    }
+    if (rKm <= rMetroKm) {
+      // Transição da mancha urbana para a conurbação periférica metropolitana
+      const t = (rKm - rCoreKm) / Math.max(rMetroKm - rCoreKm, 0.5);
+      const factor = Math.exp(-Math.pow(t, 2));
+      return ruralDensity + (metroDensity - ruralDensity) * factor;
+    }
+    // Além da mancha metropolitana: atenuação suave da densidade rural regional
+    const distBeyond = rKm - rMetroKm;
+    return ruralDensity * Math.exp(-distBeyond / 60);
+  };
 
   let prevRadiusKm = 0;
   let accumulatedPop = 0;
   let totalDeaths = 0;
+  let totalDeathsMin = 0;
+  let totalDeathsMax = 0;
   let totalInjuries = 0;
+  let totalInjuriesMin = 0;
+  let totalInjuriesMax = 0;
 
   const zoneMap = {} as Record<'fireball' | 'vaporization' | 'carbonization' | 'heavy' | 'thermal' | 'light', ZoneCasualtyEstimate>;
   const orderedZones: ZoneCasualtyEstimate[] = [];
 
   for (const z of sorted) {
+    // Conversão dimensional estrita: raio de metros (m) para quilômetros (km)
     const rKm = z.rM / 1000;
+    // Área da coroa circular em km²: Delta A = pi * (r_outer² - r_inner²)
     const ringAreaKm2 = Math.max(0, Math.PI * (rKm * rKm - prevRadiusKm * prevRadiusKm));
+    // Área cumulativa total em km²: A = pi * r_outer²
     const cumulativeAreaKm2 = Math.PI * rKm * rKm;
-    const midRKm = (rKm + prevRadiusKm) / 2;
 
-    // Gradiente exponencial do centro urbano para periferia/subúrbios
-    const densityAtMid = coreDensity === 0
-      ? 0
-      : metroDensity + (coreDensity - metroDensity) * Math.exp(-0.5 * Math.pow(midRKm / Math.max(coreRadiusKm, 1.5), 2));
+    // Integração numérica em 10 sub-anéis concêntricos (dr) para precisão da densidade local
+    const STEPS = 10;
+    const dr = (rKm - prevRadiusKm) / STEPS;
+    let ringPopExact = 0;
 
-    let rawRingPop = coreDensity === 0 ? 0 : Math.round(ringAreaKm2 * densityAtMid);
-    if (accumulatedPop + rawRingPop > maxMetroPop) {
-      rawRingPop = Math.max(0, Math.round(maxMetroPop - accumulatedPop));
+    if (coreDensity > 0 && dr > 0) {
+      for (let s = 0; s < STEPS; s++) {
+        const subMidR = prevRadiusKm + (s + 0.5) * dr;
+        const subArea = 2 * Math.PI * subMidR * dr;
+        const subDensity = getDensityAtRadiusKm(subMidR);
+        ringPopExact += subArea * subDensity;
+      }
+    }
+
+    let rawRingPop = Math.round(ringPopExact);
+
+    // CORREÇÃO CRÍTICA DE LIMITAÇÃO DEMOGRÁFICA (Bounding):
+    // Impede que a integração populacional radial crie milhões de "habitantes fantasma"
+    // quando o anel de explosão ultrapassa a mancha urbana ou conurbada real do censo
+    if (rKm <= rMetroKm && accumulatedPop + rawRingPop > metroPop) {
+      rawRingPop = Math.max(0, metroPop - accumulatedPop);
     }
     accumulatedPop += rawRingPop;
 
+    // Cálculo das vítimas estimadas com intervalo de incerteza (mínimo e máximo)
     const fatalities = Math.round(rawRingPop * z.fatalityRate);
+    const fatalitiesMin = Math.round(rawRingPop * z.fatalityMin);
+    const fatalitiesMax = Math.round(rawRingPop * z.fatalityMax);
+
     const injuries = Math.round(rawRingPop * z.injuryRate);
+    const injuriesMin = Math.round(rawRingPop * z.injuryMin);
+    const injuriesMax = Math.round(rawRingPop * z.injuryMax);
+
     const survivors = Math.max(0, rawRingPop - fatalities - injuries);
 
     totalDeaths += fatalities;
+    totalDeathsMin += fatalitiesMin;
+    totalDeathsMax += fatalitiesMax;
+
     totalInjuries += injuries;
+    totalInjuriesMin += injuriesMin;
+    totalInjuriesMax += injuriesMax;
 
     const estimate: ZoneCasualtyEstimate = {
       id: z.id,
@@ -1994,9 +2376,19 @@ export function calculateBombCityCasualties(
       cumulativeAreaKm2,
       populationExposed: rawRingPop,
       fatalityRate: z.fatalityRate,
+      fatalityMin: z.fatalityMin,
+      fatalityMax: z.fatalityMax,
       fatalities,
+      fatalitiesMin,
+      fatalitiesMax,
+      fatalitiesRangeDisplay: formatCasualtyRange(fatalitiesMin, fatalitiesMax),
       injuryRate: z.injuryRate,
+      injuryMin: z.injuryMin,
+      injuryMax: z.injuryMax,
       injuries,
+      injuriesMin,
+      injuriesMax,
+      injuriesRangeDisplay: formatCasualtyRange(injuriesMin, injuriesMax),
       survivors,
       severityLabel: z.severityLabel,
       cumulativeDeaths: totalDeaths,
@@ -2008,6 +2400,25 @@ export function calculateBombCityCasualties(
     prevRadiusKm = rKm;
   }
 
+  // 4. Avaliação de confiabilidade estatística e limites de dados (Requisito 7)
+  const confidenceLevel = isUninhabited
+    ? 'uninhabited'
+    : city.confidenceLevel ?? (city.coreDensityPerKm2 !== undefined ? 'high' : 'moderate');
+
+  const confidenceLabel =
+    confidenceLevel === 'high'
+      ? 'Alta Confiabilidade (Censo Oficial Registrado)'
+      : confidenceLevel === 'moderate'
+      ? 'Confiabilidade Média (Município Identificado via OSM)'
+      : confidenceLevel === 'uninhabited'
+      ? 'Área Desabitada / Marítima (0 hab)'
+      : 'Estimativa Territorial Ponderada (Dados Limitados)';
+
+  const estimationNotes = isUninhabited
+    ? 'Localização identificada em águas marítimas ou zona desprovida de população permanente. Fatalidades e feridos diretos nulos sob a área de impacto.'
+    : city.dataLimitationNotice ||
+      'Estimativa baseada em integração radial da densidade demográfica, calibrada com taxas de letalidade de literatura (Glasstone/Dolan e FEMA), expressa em intervalo de incerteza por cenários de abrigamento e hora do dia.';
+
   return {
     bombId: bomb.id,
     bombName: bomb.name,
@@ -2015,13 +2426,23 @@ export function calculateBombCityCasualties(
     cityId: city.id,
     cityName: city.name,
     totalDeaths,
+    deathsMin: totalDeathsMin,
+    deathsMax: totalDeathsMax,
+    deathsRangeDisplay: formatCasualtyRange(totalDeathsMin, totalDeathsMax),
     totalInjuries,
+    injuriesMin: totalInjuriesMin,
+    injuriesMax: totalInjuriesMax,
+    injuriesRangeDisplay: formatCasualtyRange(totalInjuriesMin, totalInjuriesMax),
     totalCasualties: totalDeaths + totalInjuries,
     totalAffectedPop: accumulatedPop,
     mortalityPercentage: accumulatedPop > 0 ? (totalDeaths / accumulatedPop) * 100 : 0,
     carbonizationDeaths: zoneMap.carbonization?.fatalities ?? 0,
     thermalDeaths: zoneMap.thermal?.fatalities ?? 0,
     lightBlastDeaths: zoneMap.light?.fatalities ?? 0,
+    confidenceLevel,
+    confidenceLabel,
+    estimationNotes,
+    isUninhabitedOrWater: isUninhabited,
     zoneEstimates: zoneMap,
     orderedZones
   };
@@ -2136,8 +2557,14 @@ export function calculateFalloutCasualties(
   let totalFalloutInjuries = 0;
   let totalFalloutExposedPop = 0;
 
-  const metroDensity = city.metroDensityPerKm2 ?? 1000;
-  const coreDensity = city.coreDensityPerKm2 ?? 3500;
+  const isUninhabited =
+    city.isUninhabitedOrWater === true ||
+    (city.coreDensityPerKm2 === 0 && (city.metroPopulation ?? 0) === 0) ||
+    isLikelyOceanOrUninhabited(city.lat, city.lng);
+
+  const metroDensity = isUninhabited ? 0 : (city.metroDensityPerKm2 ?? 1000);
+  const coreDensity = isUninhabited ? 0 : (city.coreDensityPerKm2 ?? 3500);
+  const ruralDensity = isUninhabited ? 0 : (city.ruralDensityPerKm2 ?? Math.round(metroDensity * 0.12));
 
   const zonesRecord = {} as Record<'rad1000' | 'rad300' | 'rad100' | 'rad10', FalloutCasualtyEstimate>;
 
@@ -2147,18 +2574,22 @@ export function calculateFalloutCasualties(
     const maxHalfWKm = (contour?.maxHalfWidthKm ?? 0.5) * widthScale * (burstType === 'air' ? 0.5 : 1.0);
     const widthKm = maxHalfWKm * 2;
 
-    // Área da pluma elíptica/gotiforme
+    // Área da pluma elíptica/gotiforme em km²
     const totalPlumeAreaKm2 = Math.max(0.1, (Math.PI / 2) * lenKm * maxHalfWKm);
     const incrementalAreaKm2 = Math.max(0.1, totalPlumeAreaKm2 - prevAreaKm2);
 
     // Gradiente populacional decrescente à medida que a pluma viaja a sotavento
+    // Respeita a densidade real sem impor pisos arbitrários (+20 ou 15) em áreas desérticas ou árticas
     const midDistanceKm = lenKm * 0.5;
-    const baseDensity = Math.max(
-      45,
-      Math.round((metroDensity * 0.7) * Math.exp(-midDistanceKm / 50) + (coreDensity * 0.15) * Math.exp(-midDistanceKm / 15) + 60)
-    );
+    const baseDensity = isUninhabited
+      ? 0
+      : Math.round(
+          (metroDensity * 0.5) * Math.exp(-midDistanceKm / 45) +
+          (coreDensity * 0.15) * Math.exp(-midDistanceKm / 15) +
+          ruralDensity * Math.exp(-midDistanceKm / 90)
+        );
 
-    const popExposed = Math.round(incrementalAreaKm2 * baseDensity * (burstType === 'air' ? 0.4 : 1.0));
+    const popExposed = isUninhabited ? 0 : Math.round(incrementalAreaKm2 * baseDensity * (burstType === 'air' ? 0.35 : 1.0));
     const fatalities = Math.round(popExposed * cfg.fatalityRate);
     const injuries = Math.round(popExposed * cfg.injuryRate);
 

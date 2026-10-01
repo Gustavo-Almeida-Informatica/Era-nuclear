@@ -137,7 +137,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ onNavigate }) => {
       {/* Lightbox Modal with Full Details */}
       {activeLightboxItem && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-lg animate-in fade-in duration-150"
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-lg animate-in fade-in duration-150"
           onClick={() => setActiveLightboxItem(null)}
         >
           <div

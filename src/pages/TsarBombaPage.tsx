@@ -796,7 +796,7 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
       {/* ========================================================================= */}
       {lightboxImg && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/95 backdrop-blur-md animate-in fade-in duration-200"
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-6 bg-black/95 backdrop-blur-md animate-in fade-in duration-200"
           onClick={() => setLightboxImg(null)}
         >
           <div

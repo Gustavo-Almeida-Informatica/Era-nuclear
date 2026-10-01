@@ -713,7 +713,7 @@ export const FusionReactorsSection: React.FC = () => {
       {/* Lightbox Modal */}
       {lightboxImg && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-200"
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-200"
           onClick={() => setLightboxImg(null)}
         >
           <div

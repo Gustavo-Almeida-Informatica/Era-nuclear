@@ -14,6 +14,9 @@ import {
   calculateRealNuclearRadiiM,
   calculateBombCityCasualties,
   formatCasualtyNumber,
+  formatCasualtyRange,
+  detectLocationDemographics,
+  isLikelyOceanOrUninhabited,
   lookupLocationDemographics,
   BombCasualtySummary,
   ZoneCasualtyEstimate,
@@ -353,11 +356,12 @@ export const NuclearRankingMapTab: React.FC = () => {
   const circlesLayerGroupRef = useRef<L.LayerGroup | null>(null);
   const testSitesLayerGroupRef = useRef<L.LayerGroup | null>(null);
   const tileLayerRef = useRef<L.TileLayer | null>(null);
+  const referenceLayerRef = useRef<L.TileLayer | null>(null);
   const isDraggingTargetRef = useRef<boolean>(false);
   const shouldFitBoundsOnDetonateRef = useRef<boolean>(false);
 
   // Toggle for rendering Historic Nuclear Test Sites on the map (Bikini, Novaya Zemlya, Nevada, Semipalatinsk)
-  const [showTestSites, setShowTestSites] = useState<boolean>(true);
+  const [showTestSites, setShowTestSites] = useState<boolean>(false);
 
   // Compass directions for quick wind presets
   const WIND_COMPASS_PRESETS = [
@@ -526,20 +530,12 @@ export const NuclearRankingMapTab: React.FC = () => {
     }
   };
 
-  // Switch to whole World Map (Planisfério Global)
+  // Switch to whole World Map (Planisfério Global - Todos os países inteiros)
   const handleViewWorldMap = () => {
     if (!mapInstanceRef.current) return;
     isWorldViewRef.current = true;
     setIsWorldView(true);
-    try {
-      const worldBounds = L.latLngBounds(L.latLng(-60, -170), L.latLng(75, 180));
-      mapInstanceRef.current.fitBounds(worldBounds, {
-        padding: [20, 20],
-        animate: true
-      });
-    } catch {
-      mapInstanceRef.current.setView([20, 0], 2, { animate: true });
-    }
+    mapInstanceRef.current.setView([20, 0], 2, { animate: true });
   };
 
   // Handle click or drag on the map to set Ground Zero anywhere in the world
@@ -547,18 +543,27 @@ export const NuclearRankingMapTab: React.FC = () => {
     isDraggingTargetRef.current = true;
     const latStr = lat >= 0 ? `${lat.toFixed(4)}°N` : `${Math.abs(lat).toFixed(4)}°S`;
     const lngStr = lng >= 0 ? `${lng.toFixed(4)}°E` : `${Math.abs(lng).toFixed(4)}°W`;
+
+    // Detectar realisticamente se a coordenada é oceano ou terra e estimar a demografia real
+    const initialDemo = detectLocationDemographics(lat, lng);
+
     const customCity: TargetCity = {
       id: `coord-${lat.toFixed(4)}-${lng.toFixed(4)}`,
-      name: 'Local no Mapa',
+      name: initialDemo.isUninhabitedOrWater ? 'Zona Marítima / Oceânica' : 'Local no Mapa',
       country: `${latStr}, ${lngStr}`,
       lat,
       lng,
-      description: 'Ponto de impacto definido diretamente no mapa interativo.',
-      populationEstimate: 'Área Sob Análise Tática',
-      urbanPopulation: 1200000,
-      metroPopulation: 2500000,
-      coreDensityPerKm2: 3800,
-      metroDensityPerKm2: 950
+      description: initialDemo.dataLimitationNotice,
+      populationEstimate: initialDemo.populationEstimate,
+      urbanPopulation: initialDemo.urbanPopulation,
+      metroPopulation: initialDemo.metroPopulation,
+      coreDensityPerKm2: initialDemo.coreDensityPerKm2,
+      metroDensityPerKm2: initialDemo.metroDensityPerKm2,
+      ruralDensityPerKm2: initialDemo.ruralDensityPerKm2,
+      isUninhabitedOrWater: initialDemo.isUninhabitedOrWater,
+      settlementType: initialDemo.settlementType,
+      confidenceLevel: initialDemo.confidenceLevel,
+      dataLimitationNotice: initialDemo.dataLimitationNotice
     };
 
     setSelectedCity(customCity);
@@ -567,7 +572,8 @@ export const NuclearRankingMapTab: React.FC = () => {
     fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=11`)
       .then((res) => res.json())
       .then((data) => {
-        if (data && (data.address || data.name)) {
+        if (data) {
+          const updatedDemo = detectLocationDemographics(lat, lng, data);
           const addr = data.address || {};
           const detectedName =
             addr.city ||
@@ -577,8 +583,9 @@ export const NuclearRankingMapTab: React.FC = () => {
             addr.county ||
             addr.state ||
             data.name ||
-            'Local Selecionado';
+            (updatedDemo.isUninhabitedOrWater ? 'Zona Marítima Desabitada' : 'Local Selecionado');
           const detectedCountry = addr.country || '';
+
           setSelectedCity((prev) => {
             if (Math.abs(prev.lat - lat) < 0.001 && Math.abs(prev.lng - lng) < 0.001) {
               return {
@@ -586,8 +593,18 @@ export const NuclearRankingMapTab: React.FC = () => {
                 name: detectedName,
                 country: detectedCountry ? `${detectedCountry} (${latStr}, ${lngStr})` : prev.country,
                 description: data.display_name
-                  ? `Identificado via OpenStreetMap: ${data.display_name}`
-                  : prev.description
+                  ? `${data.display_name}. ${updatedDemo.dataLimitationNotice}`
+                  : updatedDemo.dataLimitationNotice,
+                populationEstimate: updatedDemo.populationEstimate,
+                urbanPopulation: updatedDemo.urbanPopulation,
+                metroPopulation: updatedDemo.metroPopulation,
+                coreDensityPerKm2: updatedDemo.coreDensityPerKm2,
+                metroDensityPerKm2: updatedDemo.metroDensityPerKm2,
+                ruralDensityPerKm2: updatedDemo.ruralDensityPerKm2,
+                isUninhabitedOrWater: updatedDemo.isUninhabitedOrWater,
+                settlementType: updatedDemo.settlementType,
+                confidenceLevel: updatedDemo.confidenceLevel,
+                dataLimitationNotice: updatedDemo.dataLimitationNotice
               };
             }
             return prev;
@@ -648,14 +665,27 @@ export const NuclearRankingMapTab: React.FC = () => {
                 item.name ||
                 item.display_name.split(',')[0];
               const country = addr.country || '';
+              const itemLat = parseFloat(item.lat);
+              const itemLng = parseFloat(item.lon);
+              const demo = detectLocationDemographics(itemLat, itemLng, item);
+
               return {
                 id: `osm-${item.place_id || idx}`,
                 name: name.trim(),
                 country: country ? `${country}` : '',
-                lat: parseFloat(item.lat),
-                lng: parseFloat(item.lon),
+                lat: itemLat,
+                lng: itemLng,
                 description: item.display_name,
-                populationEstimate: 'Área Urbana Global'
+                populationEstimate: demo.populationEstimate,
+                urbanPopulation: demo.urbanPopulation,
+                metroPopulation: demo.metroPopulation,
+                coreDensityPerKm2: demo.coreDensityPerKm2,
+                metroDensityPerKm2: demo.metroDensityPerKm2,
+                ruralDensityPerKm2: demo.ruralDensityPerKm2,
+                isUninhabitedOrWater: demo.isUninhabitedOrWater,
+                settlementType: demo.settlementType,
+                confidenceLevel: demo.confidenceLevel,
+                dataLimitationNotice: demo.dataLimitationNotice
               };
             });
 
@@ -704,18 +734,24 @@ export const NuclearRankingMapTab: React.FC = () => {
       alert('Por favor, insira coordenadas válidas: Latitude entre -90 e 90, Longitude entre -180 e 180.');
       return;
     }
+    const demo = detectLocationDemographics(parsedLat, parsedLng);
     const customCity: TargetCity = {
       id: `coord-${Date.now()}`,
-      name: coordCityName.trim() || 'Ponto Informado',
+      name: coordCityName.trim() || (demo.isUninhabitedOrWater ? 'Ponto Marítimo / Desabitado' : 'Ponto Informado'),
       country: `[${parsedLat.toFixed(4)}°, ${parsedLng.toFixed(4)}°]`,
       lat: parsedLat,
       lng: parsedLng,
-      description: 'Coordenadas inseridas manualmente pelo usuário.',
-      populationEstimate: 'Coordenadas Customizadas',
-      urbanPopulation: 1200000,
-      metroPopulation: 2500000,
-      coreDensityPerKm2: 3800,
-      metroDensityPerKm2: 950
+      description: demo.dataLimitationNotice,
+      populationEstimate: demo.populationEstimate,
+      urbanPopulation: demo.urbanPopulation,
+      metroPopulation: demo.metroPopulation,
+      coreDensityPerKm2: demo.coreDensityPerKm2,
+      metroDensityPerKm2: demo.metroDensityPerKm2,
+      ruralDensityPerKm2: demo.ruralDensityPerKm2,
+      isUninhabitedOrWater: demo.isUninhabitedOrWater,
+      settlementType: demo.settlementType,
+      confidenceLevel: demo.confidenceLevel,
+      dataLimitationNotice: demo.dataLimitationNotice
     };
     handleSelectCity(customCity);
     setShowCoordModal(false);
@@ -744,7 +780,7 @@ export const NuclearRankingMapTab: React.FC = () => {
       // Attribution
       L.control
         .attribution({ position: 'bottomright' })
-        .addAttribution('&copy; OpenStreetMap &copy; CARTO')
+        .addAttribution('&copy; OpenStreetMap &copy; Esri')
         .addTo(map);
 
       // Track zoom level & world view status
@@ -764,15 +800,24 @@ export const NuclearRankingMapTab: React.FC = () => {
       // O listener de clique no mapa foi removido conforme solicitado pelo usuário.
 
       // Helper function to resolve tile configurations without API keys or watermarks
-      const getTileConfig = (theme: 'tactical' | 'satellite' | 'osm') => {
+      const getTileConfig = (theme: 'tactical' | 'satellite' | 'osm'): {
+        url: string;
+        referenceUrl?: string;
+        className: string;
+        subdomains: string[];
+        maxZoom: number;
+        maxNativeZoom: number;
+        attribution: string;
+      } => {
         if (theme === 'tactical') {
           return {
-            url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+            referenceUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
             className: 'tactical-dark-tiles',
-            subdomains: ['a', 'b', 'c', 'd'],
+            subdomains: [],
             maxZoom: 19,
-            maxNativeZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a>'
+            maxNativeZoom: 16,
+            attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
           };
         }
         if (theme === 'satellite') {
@@ -807,14 +852,31 @@ export const NuclearRankingMapTab: React.FC = () => {
         noWrap: false
       }).addTo(map);
 
+      // Adiciona camada de referência de fronteiras e países no tema tático
+      if (initialTileConfig.referenceUrl) {
+        const refLayer = L.tileLayer(initialTileConfig.referenceUrl, {
+          minZoom: 1,
+          maxZoom: initialTileConfig.maxZoom,
+          maxNativeZoom: initialTileConfig.maxNativeZoom,
+          detectRetina: false,
+          subdomains: initialTileConfig.subdomains,
+          className: 'tactical-reference-tiles',
+          noWrap: false,
+          zIndex: 400
+        }).addTo(map);
+        referenceLayerRef.current = refLayer;
+      }
+
       // Fallback em caso de erro no carregamento de azulejo
       tileLayer.on('tileerror', (e) => {
         const coords = (e as unknown as { coords?: { z: number; x: number; y: number } }).coords;
         if (coords && e.tile) {
           if (mapTheme === 'tactical') {
-            (e.tile as HTMLImageElement).src = `https://a.basemaps.cartocdn.com/dark_all/${coords.z}/${coords.x}/${coords.y}.png`;
-          } else {
+            (e.tile as HTMLImageElement).src = `https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/${coords.z}/${coords.y}/${coords.x}`;
+          } else if (mapTheme === 'osm') {
             (e.tile as HTMLImageElement).src = `https://tile.openstreetmap.org/${coords.z}/${coords.x}/${coords.y}.png`;
+          } else if (mapTheme === 'satellite') {
+            (e.tile as HTMLImageElement).src = `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${coords.z}/${coords.y}/${coords.x}`;
           }
         }
       });
@@ -842,6 +904,10 @@ export const NuclearRankingMapTab: React.FC = () => {
 
     return () => {
       if (mapInstanceRef.current) {
+        if (referenceLayerRef.current) {
+          mapInstanceRef.current.removeLayer(referenceLayerRef.current);
+          referenceLayerRef.current = null;
+        }
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
       }
@@ -853,16 +919,21 @@ export const NuclearRankingMapTab: React.FC = () => {
     if (!mapInstanceRef.current || !tileLayerRef.current) return;
 
     mapInstanceRef.current.removeLayer(tileLayerRef.current);
+    if (referenceLayerRef.current) {
+      mapInstanceRef.current.removeLayer(referenceLayerRef.current);
+      referenceLayerRef.current = null;
+    }
     
     const tileConfig = (() => {
       if (mapTheme === 'tactical') {
         return {
-          url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+          url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+          referenceUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
           className: 'tactical-dark-tiles',
-          subdomains: ['a', 'b', 'c', 'd'],
+          subdomains: [],
           maxZoom: 19,
-          maxNativeZoom: 19,
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a>'
+          maxNativeZoom: 16,
+          attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
         };
       }
       if (mapTheme === 'satellite') {
@@ -896,13 +967,29 @@ export const NuclearRankingMapTab: React.FC = () => {
       noWrap: false
     }).addTo(mapInstanceRef.current);
 
+    if (tileConfig.referenceUrl) {
+      const refLayer = L.tileLayer(tileConfig.referenceUrl, {
+        minZoom: 1,
+        maxZoom: tileConfig.maxZoom,
+        maxNativeZoom: tileConfig.maxNativeZoom,
+        detectRetina: false,
+        subdomains: tileConfig.subdomains,
+        className: 'tactical-reference-tiles',
+        noWrap: false,
+        zIndex: 400
+      }).addTo(mapInstanceRef.current);
+      referenceLayerRef.current = refLayer;
+    }
+
     newTileLayer.on('tileerror', (e) => {
       const coords = (e as unknown as { coords?: { z: number; x: number; y: number } }).coords;
       if (coords && e.tile) {
         if (mapTheme === 'tactical') {
-          (e.tile as HTMLImageElement).src = `https://a.basemaps.cartocdn.com/dark_all/${coords.z}/${coords.x}/${coords.y}.png`;
-        } else {
+          (e.tile as HTMLImageElement).src = `https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/${coords.z}/${coords.y}/${coords.x}`;
+        } else if (mapTheme === 'osm') {
           (e.tile as HTMLImageElement).src = `https://tile.openstreetmap.org/${coords.z}/${coords.x}/${coords.y}.png`;
+        } else if (mapTheme === 'satellite') {
+          (e.tile as HTMLImageElement).src = `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${coords.z}/${coords.y}/${coords.x}`;
         }
       }
     });
@@ -1027,12 +1114,6 @@ export const NuclearRankingMapTab: React.FC = () => {
             <!-- Center target bullseye -->
             <div class="w-3.5 h-3.5 rounded-full bg-amber-400 border-2 border-neutral-950 z-10 shadow-lg shadow-red-600/80 flex items-center justify-center">
               <div class="w-1.5 h-1.5 rounded-full bg-red-600"></div>
-            </div>
-
-            <!-- Floating Label below target -->
-            <div class="absolute top-16 whitespace-nowrap bg-neutral-950/95 text-amber-300 font-bold text-[10px] px-2.5 py-0.5 rounded-md border border-amber-500/60 shadow-2xl flex items-center gap-1 pointer-events-none">
-              <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
-              <span>🎯 ALVO ARMADO (Arraste para mover)</span>
             </div>
           </div>
         `,
@@ -1322,14 +1403,14 @@ export const NuclearRankingMapTab: React.FC = () => {
       const zoneEst = casualties.zoneEstimates[layer.id as keyof typeof casualties.zoneEstimates];
       const casualtyInfo = zoneEst
         ? `<div style="margin-top: 5px; padding-top: 5px; border-top: 1px dashed rgba(255,255,255,0.2); text-align: left;">
-            <div style="color: #f87171; font-weight: 800; font-size: 11.5px;">💀 Mortes Estimadas Nesta Zona: <span style="color: #fca5a5; font-size: 12px; font-weight: 800;">${formatCasualtyNumber(zoneEst.fatalities)} pessoas</span></div>
+            <div style="color: #f87171; font-weight: 800; font-size: 11.5px;">💀 Mortes Estimadas Nesta Zona: <span style="color: #fca5a5; font-size: 12px; font-weight: 800;">${zoneEst.fatalitiesRangeDisplay}</span></div>
             <div style="font-size: 10.5px; margin-top: 2px;">
               <span style="color: #94a3b8;">👥 População da Faixa:</span> <b style="color: #e2e8f0;">${formatCasualtyNumber(zoneEst.populationExposed)} hab</b>
               <span style="color: #64748b;"> • </span>
               <span style="color: #94a3b8;">Letalidade:</span> <b style="color: #fde047;">${(zoneEst.fatalityRate * 100).toFixed(0)}%</b>
             </div>
             <div style="color: #fca5a5; font-size: 10.5px; font-weight: 700; margin-top: 2px;">
-              🌐 Mortes Totais em ${selectedCity.name}: <span style="color: #fed7aa; font-weight: 800;">${formatCasualtyNumber(casualties.totalDeaths)} mortos</span>
+              🌐 Estimativa Total em ${selectedCity.name}: <span style="color: #fed7aa; font-weight: 800;">${casualties.deathsRangeDisplay}</span>
             </div>
           </div>`
         : '';
@@ -1362,13 +1443,13 @@ export const NuclearRankingMapTab: React.FC = () => {
             <div>${metricLine}</div>
             <div style="margin-top: 2px;"><span style="color: #94a3b8;">Área Acumulada:</span> <b style="color: #a7f3d0;">${calculateAreaKm2(layer.radius)}</b></div>
             <div style="margin-top: 6px; padding: 6px 8px; background: rgba(239, 68, 68, 0.15); border-radius: 6px; border: 1px solid rgba(239, 68, 68, 0.35);">
-              <div style="color: #fca5a5; font-weight: bold; font-size: 12px;">💀 Mortes Nesta Faixa: <span style="color: #ffffff;">${formatCasualtyNumber(zoneEst.fatalities)} pessoas</span></div>
-              <div style="color: #fdba74; font-size: 11px; margin-top: 1px;">🩹 Feridos na Faixa: ${formatCasualtyNumber(zoneEst.injuries)} pessoas</div>
+              <div style="color: #fca5a5; font-weight: bold; font-size: 12px;">💀 Mortes Nesta Faixa: <span style="color: #ffffff;">${zoneEst.fatalitiesRangeDisplay}</span></div>
+              <div style="color: #fdba74; font-size: 11px; margin-top: 1px;">🩹 Feridos na Faixa: ${zoneEst.injuriesRangeDisplay}</div>
               <div style="color: #e2e8f0; font-size: 11px; margin-top: 1px;">👥 População Residente: ${formatCasualtyNumber(zoneEst.populationExposed)} hab</div>
               <div style="color: #fde047; font-size: 11px; font-weight: bold; margin-top: 1px;">Taxa de Letalidade: ${(zoneEst.fatalityRate * 100).toFixed(0)}%</div>
             </div>
             <div style="margin-top: 6px; font-size: 11px; color: #cbd5e1;">
-              💀 Mortes Totais da Bomba em <b>${selectedCity.name}</b>: <b style="color: #f87171;">${formatCasualtyNumber(casualties.totalDeaths)} mortos</b>
+              💀 Mortes Totais da Bomba em <b>${selectedCity.name}</b>: <b style="color: #f87171;">${casualties.deathsRangeDisplay}</b>
             </div>
           </div>
         `);
@@ -1388,22 +1469,10 @@ export const NuclearRankingMapTab: React.FC = () => {
             <div class="absolute w-3.5 h-3.5 rounded-full bg-red-500 border-2 border-white shadow-lg"></div>
             <div class="w-1.5 h-1.5 rounded-full bg-white"></div>
           </div>
-          <!-- Exact Casualty Badge on Ground Zero Map Marker -->
-          <div class="mt-1 whitespace-nowrap bg-[#121212]/95 text-white px-2.5 py-0.5 rounded-lg border border-red-500/70 shadow-2xl flex items-center gap-2 pointer-events-none backdrop-blur-md">
-            <span class="text-red-400 font-black text-[11px] flex items-center gap-1">
-              <span>💀</span>
-              <span>${formatCasualtyNumber(casualties.totalDeaths)} mortos</span>
-            </span>
-            <span class="text-white/30">•</span>
-            <span class="text-amber-300 font-black text-[10px] flex items-center gap-1">
-              <span>🩹</span>
-              <span>${formatCasualtyNumber(casualties.totalInjuries)} feridos</span>
-            </span>
-          </div>
         </div>
       `,
-      iconSize: [160, 48],
-      iconAnchor: [80, 16]
+      iconSize: [32, 32],
+      iconAnchor: [16, 16]
     });
 
     const marker = L.marker(center, { icon: groundZeroIcon, draggable: true });
@@ -1419,23 +1488,29 @@ export const NuclearRankingMapTab: React.FC = () => {
       onMapClickRef.current(newPos.lat, newPos.lng);
     });
     marker.bindPopup(`
-      <div style="font-family: ui-sans-serif, system-ui, sans-serif; font-size: 12px; color: #f8fafc; line-height: 1.4; min-width: 240px;">
+      <div style="font-family: ui-sans-serif, system-ui, sans-serif; font-size: 12px; color: #f8fafc; line-height: 1.4; min-width: 250px;">
         <strong style="font-size: 13px; color: #f87171;">🎯 MARCO ZERO (GROUND ZERO)</strong><br/>
         <span style="color: #fde047; font-weight: 700;">${selectedBomb.name}</span> <span style="color: #cbd5e1;">(${selectedBomb.yieldDisplay})</span><br/>
         <span style="color: #94a3b8;">Alvo:</span> <b style="color: #ffffff;">${selectedCity.name}</b> <span style="color: #94a3b8;">(${selectedCity.country})</span><br/>
         <span style="color: #94a3b8;">Coordenadas:</span> <span style="font-family: monospace; color: #67e8f9;">${selectedCity.lat.toFixed(4)}°, ${selectedCity.lng.toFixed(4)}°</span><br/>
         <div style="margin-top: 6px; padding: 6px 8px; background: rgba(220, 38, 38, 0.18); border-radius: 6px; border: 1px solid rgba(248, 113, 113, 0.35);">
           <div style="font-size: 12.5px; font-weight: 800; color: #fca5a5;">
-            💀 Mortes Totais Estimadas: ${formatCasualtyNumber(casualties.totalDeaths)}
+            💀 Mortes Estimadas: ${casualties.deathsRangeDisplay}
           </div>
-          <div style="font-size: 11px; font-weight: bold; color: #fdba74; margin-top: 1px;">
-            🩹 Feridos Graves: ${formatCasualtyNumber(casualties.totalInjuries)}
+          <div style="font-size: 10px; color: #cbd5e1; margin-top: 1px;">
+            (Estimativa média central: ~${formatCasualtyNumber(casualties.totalDeaths)})
+          </div>
+          <div style="font-size: 11px; font-weight: bold; color: #fdba74; margin-top: 2px;">
+            🩹 Feridos Graves: ${casualties.injuriesRangeDisplay}
           </div>
           <div style="font-size: 11px; color: #e2e8f0; margin-top: 1px;">
-            👥 População sob Efeito: ${formatCasualtyNumber(casualties.totalAffectedPop)}
+            👥 População sob Efeito: ${formatCasualtyNumber(casualties.totalAffectedPop)} hab
           </div>
           <div style="font-size: 10.5px; color: #fde047; font-weight: bold; margin-top: 2px;">
             Letalidade Global na Área: ${casualties.mortalityPercentage.toFixed(1)}%
+          </div>
+          <div style="margin-top: 5px; padding-top: 4px; border-top: 1px solid rgba(255,255,255,0.15); font-size: 9.5px; color: #94a3b8;">
+            📊 Confiabilidade: <span style="color: #e2e8f0; font-weight: bold;">${casualties.confidenceLabel}</span>
           </div>
         </div>
         <div style="margin-top: 6px; font-size: 10px; color: #94a3b8; font-style: italic;">
@@ -1601,7 +1676,12 @@ export const NuclearRankingMapTab: React.FC = () => {
           {/* Left: Tabela Técnica Completa das 12 Armas (Mesmo tom de preto bg-[#222222] das outras opções) */}
           <div className="flex items-center shrink-0">
             <button
-              onClick={() => setShowBenchmarkModal(true)}
+              onClick={() => {
+                setIsBombDropdownOpen(false);
+                setIsWorldDropdownOpen(false);
+                setIsSearchOpen(false);
+                setShowBenchmarkModal(true);
+              }}
               className="px-3.5 py-2 rounded-lg bg-[#222222] hover:bg-[#282828] border border-white/15 hover:border-white/30 text-white text-xs font-bold flex items-center space-x-2 transition-all shadow-md shrink-0 cursor-pointer"
               title="Visualizar a Tabela Técnica Completa das 12 Armas e todas as suas 6 Zonas de Destruição com Raio e Diâmetro"
             >
@@ -1635,7 +1715,11 @@ export const NuclearRankingMapTab: React.FC = () => {
             {/* Metrópoles Populares Dropdown */}
             <div className="relative shrink-0">
               <button
-                onClick={() => setIsWorldDropdownOpen(!isWorldDropdownOpen)}
+                onClick={() => {
+                  setIsBombDropdownOpen(false);
+                  setIsSearchOpen(false);
+                  setIsWorldDropdownOpen(!isWorldDropdownOpen);
+                }}
                 className="px-2 py-1 rounded-lg bg-[#222222] border border-white/15 hover:border-white/20 text-xs font-medium text-neutral-200 hover:text-white flex items-center space-x-1 transition-all"
                 title="Lista de grandes capitais mundiais"
               >
@@ -1672,7 +1756,12 @@ export const NuclearRankingMapTab: React.FC = () => {
 
             {/* Botão de Coordenadas Manuais */}
             <button
-              onClick={() => setShowCoordModal(true)}
+              onClick={() => {
+                setIsBombDropdownOpen(false);
+                setIsWorldDropdownOpen(false);
+                setIsSearchOpen(false);
+                setShowCoordModal(true);
+              }}
               className="px-2 py-1 rounded-lg bg-[#222222] border border-white/15 hover:border-white/20 text-xs font-medium text-neutral-200 hover:text-white flex items-center space-x-1 transition-all shrink-0"
               title="Digitar Latitude e Longitude exatas"
             >
@@ -1846,7 +1935,7 @@ export const NuclearRankingMapTab: React.FC = () => {
           </div>
 
           {/* Escolher Bomba & Escolher Potência (0,02 kt a 100 Mt) posicionados na frente do mapa */}
-          <div className="relative z-[1100] bg-[#161616] border-b border-white/10 px-2.5 sm:px-3 py-1.5 flex flex-wrap items-center justify-start gap-2.5 sm:gap-3.5 overflow-visible">
+          <div className="relative z-30 bg-[#161616] border-b border-white/10 px-2.5 sm:px-3 py-1.5 flex flex-wrap items-center justify-start gap-2.5 sm:gap-3.5 overflow-visible">
             {/* Escolher Bomba */}
             <div className="flex items-center gap-2 shrink-0">
               <div className="flex items-center gap-1.5 text-xs font-black text-amber-400 uppercase tracking-wider shrink-0">
@@ -1855,10 +1944,14 @@ export const NuclearRankingMapTab: React.FC = () => {
               </div>
 
               {/* Seletor Customizado com visual em destaque na frente do mapa */}
-              <div ref={bombDropdownRef} className="relative shrink-0 z-[1200]">
+              <div ref={bombDropdownRef} className="relative shrink-0 z-40">
                 <button
                   type="button"
-                  onClick={() => setIsBombDropdownOpen(!isBombDropdownOpen)}
+                  onClick={() => {
+                    setIsWorldDropdownOpen(false);
+                    setIsSearchOpen(false);
+                    setIsBombDropdownOpen(!isBombDropdownOpen);
+                  }}
                   className="bg-[#222222] hover:bg-[#282828] text-white text-xs font-bold px-2.5 py-1.5 rounded-lg border border-white/15 hover:border-white/30 focus:outline-none focus:border-rose-500 cursor-pointer flex items-center gap-2 transition-all max-w-[210px] sm:max-w-xs shadow-sm"
                   title="Clique para escolher uma arma atômica do ranking"
                 >
@@ -1870,7 +1963,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                 </button>
 
                 {isBombDropdownOpen && (
-                  <div className="absolute left-0 top-full mt-1.5 w-80 sm:w-[440px] max-w-[95vw] bg-[#141414] border-2 border-rose-500/60 rounded-xl shadow-[0_25px_60px_rgba(0,0,0,0.98)] z-[99999] max-h-80 sm:max-h-96 overflow-y-auto p-1.5 space-y-1 pointer-events-auto backdrop-blur-md">
+                  <div className="absolute left-0 top-full mt-1.5 w-80 sm:w-[440px] max-w-[95vw] bg-[#141414] border-2 border-rose-500/60 rounded-xl shadow-[0_25px_60px_rgba(0,0,0,0.98)] z-50 max-h-80 sm:max-h-96 overflow-y-auto p-1.5 space-y-1 pointer-events-auto backdrop-blur-md">
                     <div className="px-2.5 py-1.5 text-[10px] uppercase font-bold text-neutral-400 flex items-center justify-between border-b border-white/10">
                       <span className="tracking-wider">Armas Nucleares do Ranking</span>
                       <span className="text-rose-400 font-mono text-[9px]">0,02 kt a 100 Mt</span>
@@ -1898,7 +1991,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                               {b.type} • {b.country} ({b.year})
                             </p>
                             <div className="text-[9px] font-mono text-rose-400/90 mt-0.5 flex items-center gap-1">
-                              <span>💀 ~{formatCasualtyNumber(bCas.totalDeaths)} mortes estimadas em {selectedCity.name}</span>
+                              <span>💀 {bCas.deathsRangeDisplay} mortes estimadas em {selectedCity.name}</span>
                             </div>
                           </div>
                           <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-black/50 border border-white/10 text-neutral-300 shrink-0 mt-0.5">
@@ -2008,9 +2101,13 @@ export const NuclearRankingMapTab: React.FC = () => {
                     </div>
                     <div className="w-px h-4 bg-white/20 mx-0.5" />
                     <div className="flex items-center gap-2 font-bold">
-                      <span className="text-red-400">💀 {formatCasualtyNumber(casualties.totalDeaths)} mortos</span>
+                      <span className="text-red-400" title={`Estimativa central: ~${formatCasualtyNumber(casualties.totalDeaths)} mortos`}>
+                        💀 {casualties.deathsRangeDisplay} mortos
+                      </span>
                       <span className="text-white/30">•</span>
-                      <span className="text-amber-300">🩹 {formatCasualtyNumber(casualties.totalInjuries)} feridos</span>
+                      <span className="text-amber-300" title={`Estimativa central: ~${formatCasualtyNumber(casualties.totalInjuries)} feridos`}>
+                        🩹 {casualties.injuriesRangeDisplay} feridos
+                      </span>
                     </div>
                     <div className="w-px h-4 bg-white/20 mx-0.5" />
                     <button
@@ -2023,12 +2120,6 @@ export const NuclearRankingMapTab: React.FC = () => {
                     </button>
                   </div>
                 )}
-
-                {/* Tactical Drag Instruction Pill */}
-                <div className="hidden sm:flex items-center gap-1 bg-[#121212]/90 backdrop-blur-md px-2.5 py-1.5 rounded-xl border border-white/15 text-[10px] text-neutral-300 font-mono shadow-md">
-                  <Crosshair className="w-3 h-3 text-amber-400" />
-                  <span>Mover bomba: arraste o alvo no centro</span>
-                </div>
               </div>
 
               {/* Tactical Zoom, Style & Global View Floating Controls Inside The Map */}
@@ -2039,7 +2130,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                     onClick={() => setMapTheme('tactical')}
                     className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                       mapTheme === 'tactical'
-                        ? 'bg-red-600 text-white shadow-md'
+                        ? 'bg-rose-600 text-white shadow-md'
                         : 'text-neutral-400 hover:text-white hover:bg-white/10'
                     }`}
                     title="Modo Tático Militar (Mapa Escuro de Alto Contraste)"
@@ -2080,7 +2171,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                     onClick={handleViewWorldMap}
                     className={`px-2.5 py-1.5 rounded-xl border text-xs font-bold transition-all flex items-center space-x-1.5 backdrop-blur-md shadow-xl cursor-pointer ${
                       isWorldView
-                        ? 'bg-red-600 text-white border-red-400 shadow-red-950/50 ring-2 ring-red-400'
+                        ? 'bg-rose-600 text-white border-rose-400 shadow-rose-950/50 ring-2 ring-rose-400'
                         : 'bg-[#161616]/95 text-neutral-200 hover:text-white hover:bg-[#252525] border-white/20'
                     }`}
                     title="Ver todo o Mapa Mundi (Planisfério Global 100%)"
@@ -2097,7 +2188,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                     title="Focar no Alvo (Marco Zero da Detonação)"
                     aria-label="Focar no Alvo"
                   >
-                    <Crosshair className="w-3.5 h-3.5 text-red-500" />
+                    <Crosshair className="w-3.5 h-3.5 text-rose-500" />
                     <span>Focar</span>
                   </button>
 
@@ -2119,7 +2210,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                   <div className="bg-[#161616]/95 backdrop-blur-md border border-white/20 rounded-xl p-0.5 shadow-xl flex items-center space-x-0.5">
                     <button
                       onClick={handleZoomIn}
-                      className="w-7 h-7 rounded-lg bg-[#222222] hover:bg-red-600 text-white flex items-center justify-center transition-all shadow cursor-pointer"
+                      className="w-7 h-7 rounded-lg bg-[#222222] hover:bg-rose-600 text-white flex items-center justify-center transition-all shadow cursor-pointer"
                       title="Ampliar visão (+ Zoom)"
                       aria-label="Ampliar visão"
                     >
@@ -2127,7 +2218,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                     </button>
                     <button
                       onClick={handleZoomOut}
-                      className="w-7 h-7 rounded-lg bg-[#222222] hover:bg-red-600 text-white flex items-center justify-center transition-all shadow cursor-pointer"
+                      className="w-7 h-7 rounded-lg bg-[#222222] hover:bg-rose-600 text-white flex items-center justify-center transition-all shadow cursor-pointer"
                       title="Diminuir visão (- Zoom)"
                       aria-label="Diminuir visão"
                     >
@@ -2135,31 +2226,30 @@ export const NuclearRankingMapTab: React.FC = () => {
                     </button>
                   </div>
                 </div>
-
-                {/* Tactical Zoom Level Badge */}
-                <div className="bg-[#161616]/90 backdrop-blur-md border border-white/10 rounded-xl px-2.5 py-1 shadow-lg text-[10px] font-mono text-neutral-300 flex items-center space-x-1.5">
-                  <span className="text-neutral-400 uppercase tracking-wider">Visão:</span>
-                  <span className="text-amber-400 font-bold">
-                    {isWorldView ? 'Global (Mundo)' : `${Math.round(currentZoom)}x`}
-                  </span>
-                </div>
               </div>
 
-              {/* Global World Map Active Banner */}
+              {/* Global World Map Active Minimal Indicator */}
               {isWorldView && (
-                <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 pointer-events-auto max-w-md w-auto px-4 py-2 rounded-2xl bg-[#161616]/95 backdrop-blur-md border border-emerald-500/40 text-emerald-300 shadow-2xl flex items-center space-x-2 text-xs">
-                  <Globe className="w-4 h-4 text-emerald-400 shrink-0 animate-spin-slow" />
-                  <div className="flex-1 leading-tight">
-                    <span className="font-bold text-white">Planisfério Global Ativo</span>
-                    <span className="text-neutral-300 hidden sm:inline"> — Vendo a Terra inteira. Clique em qualquer ponto do globo ou use [+] para aproximar.</span>
-                  </div>
+                <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 pointer-events-auto px-3.5 py-1.5 rounded-full bg-[#161616]/95 backdrop-blur-md border border-white/20 text-neutral-200 shadow-2xl flex items-center gap-2 text-xs">
+                  <Globe className="w-3.5 h-3.5 text-emerald-400 animate-spin-slow" />
+                  <span className="font-bold text-white text-[11px]">Planisfério Global</span>
                   <button
                     onClick={handleRecenter}
-                    className="ml-2 px-2.5 py-0.5 rounded-lg bg-red-500 hover:bg-red-600 text-white font-bold text-[10px] flex items-center gap-1 transition-all shrink-0"
+                    className="ml-1 px-2.5 py-0.5 rounded-md bg-rose-600 hover:bg-rose-500 text-white font-bold text-[10px] flex items-center gap-1 transition-all"
                   >
                     <Crosshair className="w-3 h-3" />
-                    <span>Focar Alvo</span>
+                    <span>Focar</span>
                   </button>
+                </div>
+              )}
+
+              {/* Tactical Esri Dark Canvas Status Indicator */}
+              {mapTheme === 'tactical' && (
+                <div className="absolute bottom-3 left-3 z-20 pointer-events-auto bg-[#121212]/90 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/15 text-[10px] font-mono text-neutral-300 flex items-center gap-2 shadow-xl">
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
+                  <span className="font-bold text-white">Tático Militar</span>
+                  <span className="text-white/20">|</span>
+                  <span className="text-emerald-400 font-semibold">Esri Canvas Dark (Alta Precisão • Online)</span>
                 </div>
               )}
 
@@ -2361,31 +2451,48 @@ export const NuclearRankingMapTab: React.FC = () => {
 
                     <div className="grid grid-cols-2 gap-2">
                       <div className="p-2.5 rounded-xl bg-neutral-950 border border-rose-500/40">
-                        <span className="text-[10px] text-rose-300/90 block font-semibold">💀 Mortes Totais</span>
-                        <span className="text-lg font-black text-rose-200 font-mono tracking-tight block">
-                          {isDetonated ? formatCasualtyNumber(casualties.totalDeaths) : '—'}
+                        <span className="text-[10px] text-rose-300/90 block font-semibold">💀 Mortes Estimadas</span>
+                        <span className="text-base font-black text-rose-200 font-mono tracking-tight block truncate" title={`Faixa de estimativa: ${casualties.deathsRangeDisplay}`}>
+                          {isDetonated ? casualties.deathsRangeDisplay : '—'}
                         </span>
-                        <span className="text-[9px] text-neutral-400 block font-mono">
-                          {isDetonated ? `Óbitos em ${selectedCity.name}` : 'Aguardando detonação'}
+                        <span className="text-[9px] text-neutral-400 block font-mono mt-0.5">
+                          {isDetonated ? `Média: ~${formatCasualtyNumber(casualties.totalDeaths)}` : 'Aguardando detonação'}
                         </span>
                       </div>
                       <div className="p-2.5 rounded-xl bg-neutral-950 border border-amber-500/40">
                         <span className="text-[10px] text-amber-300/90 block font-semibold">🩹 Feridos Graves</span>
-                        <span className="text-lg font-black text-amber-200 font-mono tracking-tight block">
-                          {isDetonated ? formatCasualtyNumber(casualties.totalInjuries) : '—'}
+                        <span className="text-base font-black text-amber-200 font-mono tracking-tight block truncate" title={`Faixa de feridos: ${casualties.injuriesRangeDisplay}`}>
+                          {isDetonated ? casualties.injuriesRangeDisplay : '—'}
                         </span>
-                        <span className="text-[9px] text-neutral-400 block font-mono">
-                          {isDetonated ? 'Trauma e queimaduras' : 'Aguardando detonação'}
+                        <span className="text-[9px] text-neutral-400 block font-mono mt-0.5">
+                          {isDetonated ? `Média: ~${formatCasualtyNumber(casualties.totalInjuries)}` : 'Aguardando detonação'}
                         </span>
                       </div>
                     </div>
 
                     <div className="p-2 rounded-xl bg-neutral-950 border border-white/10 flex items-center justify-between text-[11px] font-mono text-neutral-300">
-                      <span className="text-neutral-400">População sob Impacto:</span>
+                      <span className="text-neutral-400">População sob Impacto Real:</span>
                       <span className="text-white font-bold">
                         {isDetonated ? `${formatCasualtyNumber(casualties.totalAffectedPop)} pessoas` : '—'}
                       </span>
                     </div>
+
+                    {/* Banner de Metodologia e Limitação de Dados */}
+                    {isDetonated && (
+                      <div className={`p-2.5 rounded-xl border text-[10px] leading-relaxed space-y-1 ${
+                        casualties.isUninhabitedOrWater
+                          ? 'bg-amber-950/30 border-amber-500/40 text-amber-200'
+                          : casualties.confidenceLevel === 'high'
+                          ? 'bg-emerald-950/20 border-emerald-500/30 text-emerald-300'
+                          : 'bg-neutral-900/90 border-white/15 text-neutral-300'
+                      }`}>
+                        <div className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-[9px]">
+                          <Info className="w-3 h-3 shrink-0" />
+                          <span>{casualties.confidenceLabel}</span>
+                        </div>
+                        <p className="opacity-90">{casualties.estimationNotes}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -2471,15 +2578,15 @@ export const NuclearRankingMapTab: React.FC = () => {
                     <div className="text-[10px] text-amber-100/90 leading-snug space-y-0.5">
                       <div>Plasma nuclear incandescente (&gt;100.000.000 °C).</div>
                       <div>Desintegração atômica instantânea em microssegundos.</div>
-                      <div>Letalidade 100% absoluta.</div>
+                      <div>Letalidade 100% absoluta (Plasma).</div>
                     </div>
                     <div className="p-2 rounded-lg bg-[#0c0c0c] border border-amber-500/30 space-y-1 font-mono text-[11px]">
                       <div className="flex justify-between items-center text-amber-200 font-bold">
                         <span className="flex items-center gap-1">
                           <Skull className="w-3 h-3 text-red-400" />
-                          Mortes Nesta Zona:
+                          Mortes Estimadas:
                         </span>
-                        <span>{isDetonated ? `${formatCasualtyNumber(casualties.zoneEstimates.fireball.fatalities)} pessoas` : '—'}</span>
+                        <span>{isDetonated ? `${casualties.zoneEstimates.fireball.fatalitiesRangeDisplay} pessoas` : '—'}</span>
                       </div>
                       <div className="flex justify-between text-[10px] text-neutral-300">
                         <span>População residente na faixa:</span>
@@ -2547,15 +2654,15 @@ export const NuclearRankingMapTab: React.FC = () => {
                     <div className="text-[10px] text-yellow-100/90 leading-snug space-y-0.5">
                       <div>Fluxo radiativo extremo (&gt;150 cal/cm²).</div>
                       <div>Aço, rocha e concreto evaporam antes da onda mecânica.</div>
-                      <div>Letalidade 100% imediata.</div>
+                      <div>Letalidade 95% – 100% imediata.</div>
                     </div>
                     <div className="p-2 rounded-lg bg-[#0c0c0c] border border-yellow-500/30 space-y-1 font-mono text-[11px]">
                       <div className="flex justify-between items-center text-yellow-200 font-bold">
                         <span className="flex items-center gap-1">
                           <Skull className="w-3 h-3 text-red-400" />
-                          Mortes Nesta Zona:
+                          Mortes Estimadas:
                         </span>
-                        <span>{isDetonated ? `${formatCasualtyNumber(casualties.zoneEstimates.vaporization.fatalities)} pessoas` : '—'}</span>
+                        <span>{isDetonated ? `${casualties.zoneEstimates.vaporization.fatalitiesRangeDisplay} pessoas` : '—'}</span>
                       </div>
                       <div className="flex justify-between text-[10px] text-neutral-300">
                         <span>População residente na faixa:</span>
@@ -2563,7 +2670,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                       <div className="flex justify-between text-[10px] text-neutral-300">
                         <span>Letalidade Física da Zona:</span>
-                        <span className="text-yellow-400 font-bold">100% Instantânea</span>
+                        <span className="text-yellow-400 font-bold">95% – 100%</span>
                       </div>
                     </div>
                   </div>
@@ -2577,7 +2684,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <span className={`w-2.5 h-2.5 rounded-full ${visibleLayers.carbonization ? 'bg-rose-500 shadow-sm shadow-rose-600/50' : 'bg-neutral-600'}`} />
-                        <span className={`text-xs font-bold ${visibleLayers.carbonization ? 'text-rose-300' : 'text-neutral-400'}`}>3. Zona de Carbonização Humana</span>
+                        <span className={`text-xs font-bold ${visibleLayers.carbonization ? 'text-rose-300' : 'text-neutral-400'}`}>3. Zona de Carbonização / 5-10 psi</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <span className="text-[10px] font-mono font-bold text-rose-300">
@@ -2621,26 +2728,25 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                     </div>
                     <div className="text-[10px] text-rose-100/95 leading-snug space-y-0.5">
-                      <div>Fluxo térmico direto (&gt;25-35 cal/cm²).</div>
-                      <div>Qualquer ser humano ao ar livre é instantaneamente carbonizado</div>
-                      <div>e calcinado até os ossos antes da onda mecânica.</div>
-                      <div>Roupas entram em combustão imediata. <span className="text-rose-400 font-black">Letalidade 100%</span></div>
+                      <div>Fluxo térmico direto (&gt;25-35 cal/cm²) e sobrepressão 5-10 psi.</div>
+                      <div>Pessoas ao ar livre sofrem carbonização; estruturas residenciais colapsam.</div>
+                      <div>Abrigamento parcial atenua mortes diretas. <span className="text-rose-400 font-black">Mortalidade: 25% – 55%</span></div>
                     </div>
                     <div className="p-2 rounded-lg bg-[#0c0c0c] border border-rose-500/30 space-y-1 font-mono text-[11px]">
                       <div className="flex justify-between items-center text-rose-200 font-bold">
                         <span className="flex items-center gap-1">
                           <Skull className="w-3 h-3 text-rose-400" />
-                          Mortes Nesta Zona:
+                          Mortes Estimadas:
                         </span>
-                        <span>{isDetonated ? `${formatCasualtyNumber(casualties.zoneEstimates.carbonization.fatalities)} pessoas` : '—'}</span>
+                        <span>{isDetonated ? `${casualties.zoneEstimates.carbonization.fatalitiesRangeDisplay} pessoas` : '—'}</span>
                       </div>
                       <div className="flex justify-between text-[10px] text-neutral-300">
                         <span>População residente na faixa:</span>
                         <span className="text-neutral-100">{isDetonated ? `${formatCasualtyNumber(casualties.zoneEstimates.carbonization.populationExposed)} hab` : '—'}</span>
                       </div>
                       <div className="flex justify-between text-[10px] text-neutral-300">
-                        <span>Letalidade Física da Zona:</span>
-                        <span className="text-rose-400 font-bold">100%</span>
+                        <span>Letalidade Física Calibrada:</span>
+                        <span className="text-rose-400 font-bold">~40% (25% – 55%)</span>
                       </div>
                     </div>
                   </div>
@@ -2698,17 +2804,17 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                     </div>
                     <div className="text-[10px] text-pink-100/90 leading-snug space-y-0.5">
-                      <div>Sobrepressão severa de 20 psi e ventos &gt;800 km/h.</div>
-                      <div>Demolição total de estruturas de concreto armado.</div>
-                      <div>Letalidade 85% por trauma físico e escombros.</div>
+                      <div>Sobrepressão extrema de 20 psi e ventos &gt;800 km/h.</div>
+                      <div>Demolição de edifícios de concreto armado e pontes.</div>
+                      <div>Letalidade 60% – 85% por escombros e traumatismos.</div>
                     </div>
                     <div className="p-2 rounded-lg bg-[#0c0c0c] border border-pink-500/30 space-y-1 font-mono text-[11px]">
                       <div className="flex justify-between items-center text-pink-200 font-bold">
                         <span className="flex items-center gap-1">
                           <Skull className="w-3 h-3 text-pink-400" />
-                          Mortes Nesta Zona:
+                          Mortes Estimadas:
                         </span>
-                        <span>{isDetonated ? `${formatCasualtyNumber(casualties.zoneEstimates.heavy.fatalities)} pessoas` : '—'}</span>
+                        <span>{isDetonated ? `${casualties.zoneEstimates.heavy.fatalitiesRangeDisplay} pessoas` : '—'}</span>
                       </div>
                       <div className="flex justify-between text-[10px] text-neutral-300">
                         <span>População residente na faixa:</span>
@@ -2716,11 +2822,11 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                       <div className="flex justify-between text-[10px] text-neutral-300">
                         <span>Feridos graves na faixa:</span>
-                        <span className="text-amber-300">{isDetonated ? `${formatCasualtyNumber(casualties.zoneEstimates.heavy.injuries)} feridos` : '—'}</span>
+                        <span className="text-amber-300">{isDetonated ? `${casualties.zoneEstimates.heavy.injuriesRangeDisplay}` : '—'}</span>
                       </div>
                       <div className="flex justify-between text-[10px] text-neutral-300">
-                        <span>Letalidade Física da Zona:</span>
-                        <span className="text-pink-400 font-bold">85%</span>
+                        <span>Letalidade Física Calibrada:</span>
+                        <span className="text-pink-400 font-bold">~75% (60% – 85%)</span>
                       </div>
                     </div>
                   </div>
@@ -2774,21 +2880,21 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-orange-200/70">Efeito Biológico:</span>
-                        <span className="text-orange-300 font-bold">Necrose dérmica completa</span>
+                        <span className="text-orange-300 font-bold">Queimaduras graves 3º grau</span>
                       </div>
                     </div>
                     <div className="text-[10px] text-orange-100/90 leading-snug space-y-0.5">
-                      <div>Radiação térmica incidente severa.</div>
-                      <div>Queimaduras de 3º grau em toda a pele desprotegida.</div>
-                      <div>Incêndios em massa e necrose dérmica. Letalidade 50%.</div>
+                      <div>Radiação térmica incidente (~8-12 cal/cm²).</div>
+                      <div>Queimaduras de 3º grau em quem estiver ao ar livre desprotegido.</div>
+                      <div>Abrigamento interno reduz fatalidades diretas para 5% – 20%.</div>
                     </div>
                     <div className="p-2 rounded-lg bg-[#0c0c0c] border border-orange-500/30 space-y-1 font-mono text-[11px]">
                       <div className="flex justify-between items-center text-orange-200 font-bold">
                         <span className="flex items-center gap-1">
                           <Skull className="w-3 h-3 text-red-400" />
-                          Mortes Nesta Zona:
+                          Mortes Estimadas:
                         </span>
-                        <span>{isDetonated ? `${formatCasualtyNumber(casualties.zoneEstimates.thermal.fatalities)} pessoas` : '—'}</span>
+                        <span>{isDetonated ? `${casualties.zoneEstimates.thermal.fatalitiesRangeDisplay} pessoas` : '—'}</span>
                       </div>
                       <div className="flex justify-between text-[10px] text-neutral-300">
                         <span>População residente na faixa:</span>
@@ -2796,11 +2902,11 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                       <div className="flex justify-between text-[10px] text-neutral-300">
                         <span>Feridos graves (3º grau):</span>
-                        <span className="text-amber-300">{isDetonated ? `${formatCasualtyNumber(casualties.zoneEstimates.thermal.injuries)} feridos` : '—'}</span>
+                        <span className="text-amber-300">{isDetonated ? `${casualties.zoneEstimates.thermal.injuriesRangeDisplay}` : '—'}</span>
                       </div>
                       <div className="flex justify-between text-[10px] text-neutral-300">
-                        <span>Letalidade Física da Zona:</span>
-                        <span className="text-orange-400 font-bold">50%</span>
+                        <span>Letalidade Térmica (Visada Direta):</span>
+                        <span className="text-orange-400 font-bold">~12% (5% – 20%)</span>
                       </div>
                     </div>
                   </div>
@@ -2814,7 +2920,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <span className={`w-2.5 h-2.5 rounded-full ${visibleLayers.light ? 'bg-[#737373] shadow-sm' : 'bg-neutral-600'}`} />
-                        <span className={`text-xs font-bold ${visibleLayers.light ? 'text-slate-200' : 'text-neutral-400'}`}>6. Choque Leve (1 psi)</span>
+                        <span className={`text-xs font-bold ${visibleLayers.light ? 'text-slate-200' : 'text-neutral-400'}`}>6. Choque Leve (1-2 psi)</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <span className="text-[10px] font-mono font-bold text-slate-300">
@@ -2854,21 +2960,21 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-slate-300/70">Efeito Mecânico:</span>
-                        <span className="text-slate-200 font-bold">1 psi (0.07 bar)</span>
+                        <span className="text-slate-200 font-bold">1-2 psi (0.07 – 0.14 bar)</span>
                       </div>
                     </div>
                     <div className="text-[10px] text-slate-100/90 leading-snug space-y-0.5">
-                      <div>Sobrepressão residual de 1 a 2 psi a quilômetros.</div>
-                      <div>Quebra em massa de vidraças e esquadrias.</div>
-                      <div>Estilhaços em velocidade letal. Letalidade 8%.</div>
+                      <div>Sobrepressão residual de 1 a 2 psi a grandes distâncias.</div>
+                      <div>Estilhaçamento em massa de vidraças e esquadrias.</div>
+                      <div>Lesões por corte e fragmentos; letalidade baixa: 0.2% – 2.5%.</div>
                     </div>
                     <div className="p-2 rounded-lg bg-[#0c0c0c] border border-white/10 space-y-1 font-mono text-[11px]">
                       <div className="flex justify-between items-center text-slate-200 font-bold">
                         <span className="flex items-center gap-1">
                           <Skull className="w-3 h-3 text-red-400" />
-                          Mortes Nesta Zona:
+                          Mortes Estimadas:
                         </span>
-                        <span>{isDetonated ? `${formatCasualtyNumber(casualties.zoneEstimates.light.fatalities)} pessoas` : '—'}</span>
+                        <span>{isDetonated ? `${casualties.zoneEstimates.light.fatalitiesRangeDisplay} pessoas` : '—'}</span>
                       </div>
                       <div className="flex justify-between text-[10px] text-neutral-300">
                         <span>População residente na faixa:</span>
@@ -2876,11 +2982,11 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                       <div className="flex justify-between text-[10px] text-neutral-300">
                         <span>Feridos por estilhaços:</span>
-                        <span className="text-amber-300">{isDetonated ? `${formatCasualtyNumber(casualties.zoneEstimates.light.injuries)} feridos` : '—'}</span>
+                        <span className="text-amber-300">{isDetonated ? `${casualties.zoneEstimates.light.injuriesRangeDisplay}` : '—'}</span>
                       </div>
                       <div className="flex justify-between text-[10px] text-neutral-300">
-                        <span>Letalidade Física da Zona:</span>
-                        <span className="text-slate-300 font-bold">8%</span>
+                        <span>Letalidade por Vidros/Fragmentos:</span>
+                        <span className="text-slate-300 font-bold">~1.0% (0.2% – 2.5%)</span>
                       </div>
                     </div>
                   </div>
@@ -3122,9 +3228,9 @@ export const NuclearRankingMapTab: React.FC = () => {
                       <div className="flex justify-between items-center text-purple-200 font-bold">
                         <span className="flex items-center gap-1">
                           <Skull className="w-3 h-3 text-red-400" />
-                          Mortes Nesta Zona:
+                          Mortes Estimadas:
                         </span>
-                        <span className="text-white font-black">{isDetonated ? `${formatCasualtyNumber(falloutCasualties.zones.rad1000.fatalities)} pessoas` : '— (Aguardando Detonação)'}</span>
+                        <span className="text-white font-black">{isDetonated ? `~${formatCasualtyNumber(falloutCasualties.zones.rad1000.fatalities)} pessoas` : '— (Aguardando Detonação)'}</span>
                       </div>
                       <div className="flex justify-between text-[10px] text-purple-200/80">
                         <span>População na Pluma:</span>
@@ -3167,9 +3273,9 @@ export const NuclearRankingMapTab: React.FC = () => {
                       <div className="flex justify-between items-center text-red-200 font-bold">
                         <span className="flex items-center gap-1">
                           <Skull className="w-3 h-3 text-red-400" />
-                          Mortes Nesta Zona:
+                          Mortes Estimadas:
                         </span>
-                        <span className="text-white font-black">{isDetonated ? `${formatCasualtyNumber(falloutCasualties.zones.rad300.fatalities)} pessoas` : '— (Aguardando Detonação)'}</span>
+                        <span className="text-white font-black">{isDetonated ? `~${formatCasualtyNumber(falloutCasualties.zones.rad300.fatalities)} pessoas` : '— (Aguardando Detonação)'}</span>
                       </div>
                       <div className="flex justify-between text-[10px] text-red-200/80">
                         <span>População na Pluma:</span>
@@ -3214,7 +3320,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                           <Skull className="w-3 h-3 text-red-400" />
                           Mortes Estimadas:
                         </span>
-                        <span className="text-white font-black">{isDetonated ? `${formatCasualtyNumber(falloutCasualties.zones.rad100.fatalities)} pessoas` : '— (Aguardando Detonação)'}</span>
+                        <span className="text-white font-black">{isDetonated ? `~${formatCasualtyNumber(falloutCasualties.zones.rad100.fatalities)} pessoas` : '— (Aguardando Detonação)'}</span>
                       </div>
                       <div className="flex justify-between text-[10px] text-orange-200/80">
                         <span>Feridos graves na faixa:</span>
@@ -3259,7 +3365,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                           <Skull className="w-3 h-3 text-red-400" />
                           Mortes Tardias / Neoplasias:
                         </span>
-                        <span className="text-white font-black">{isDetonated ? `${formatCasualtyNumber(falloutCasualties.zones.rad10.fatalities)} pessoas` : '— (Aguardando Detonação)'}</span>
+                        <span className="text-white font-black">{isDetonated ? `~${formatCasualtyNumber(falloutCasualties.zones.rad10.fatalities)} pessoas` : '— (Aguardando Detonação)'}</span>
                       </div>
                       <div className="flex justify-between text-[10px] text-yellow-200/80">
                         <span>População Monitorada:</span>
@@ -3315,8 +3421,10 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                     )}
                     <div className="flex justify-between text-[10px] text-rose-300 font-mono font-bold pt-1 border-t border-white/10">
-                      <span>💀 Mortes Totais com {selectedBomb.name}:</span>
-                      <span className="text-white font-extrabold">{formatCasualtyNumber(casualties.totalDeaths)}</span>
+                      <span>💀 Mortes Estimadas ({selectedBomb.name}):</span>
+                      <span className="text-white font-extrabold" title={`Estimativa central: ~${formatCasualtyNumber(casualties.totalDeaths)} mortos`}>
+                        {isDetonated ? casualties.deathsRangeDisplay : 'Aguardando Detonação'}
+                      </span>
                     </div>
                   </div>
 
@@ -3431,9 +3539,13 @@ export const NuclearRankingMapTab: React.FC = () => {
                             </div>
                             <div className="text-[10px] font-mono text-rose-400 font-bold flex items-center gap-1 mt-0.5">
                               <Skull className="w-2.5 h-2.5 shrink-0" />
-                              <span>{formatCasualtyNumber(bCas.totalDeaths)} mortos</span>
+                              <span title={`Estimativa central: ~${formatCasualtyNumber(bCas.totalDeaths)} mortos`}>
+                                {bCas.deathsRangeDisplay} mortos
+                              </span>
                               <span className="text-neutral-500">•</span>
-                              <span className="text-neutral-400 font-normal">{formatCasualtyNumber(bCas.totalInjuries)} feridos</span>
+                              <span className="text-neutral-400 font-normal" title={`Estimativa central: ~${formatCasualtyNumber(bCas.totalInjuries)} feridos`}>
+                                {bCas.injuriesRangeDisplay} feridos
+                              </span>
                             </div>
                           </div>
                           <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-black/40 border border-white/10 text-neutral-400 shrink-0">
@@ -3473,7 +3585,7 @@ export const NuclearRankingMapTab: React.FC = () => {
 
       {/* MODAL: TABELA TÉCNICA COMPLETA DE ZONAS DE DESTRUIÇÃO (12 ARMAS CALIBRADAS) */}
       {showBenchmarkModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
           <div className="bg-[#141414] border border-white/15 rounded-2xl max-w-6xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
             {/* Modal Header */}
             <div className="bg-[#181818] border-b border-white/10 px-5 py-4 flex items-center justify-between">
@@ -3657,7 +3769,7 @@ export const NuclearRankingMapTab: React.FC = () => {
 
       {/* MODAL: INSERIR COORDENADAS MANUAIS DE QUALQUER LUGAR DO MUNDO */}
       {showCoordModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#181818]/90 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-[#181818]/90 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-[#141414] border border-white/15 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center space-x-2 text-white font-bold text-sm">

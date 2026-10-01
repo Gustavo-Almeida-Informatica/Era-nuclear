@@ -310,7 +310,7 @@ export const IvyMikePage: React.FC<IvyMikePageProps> = ({ onNavigate }) => {
       {/* Lightbox Modal */}
       {lightboxImg && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-150"
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-150"
           onClick={() => setLightboxImg(null)}
         >
           <div className="max-w-4xl w-full bg-[#141414] border border-white/15 rounded-2xl overflow-hidden shadow-2xl relative" onClick={(e) => e.stopPropagation()}>

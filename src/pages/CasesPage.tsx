@@ -122,7 +122,7 @@ export const CasesPage: React.FC<CasesPageProps> = ({ onNavigate }) => {
 
       {/* Case Study Modal */}
       {activeModalCase && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-150">
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-150">
           <div className="bg-[#141414] border border-white/15 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl space-y-6 relative animate-in zoom-in-95 duration-150">
             <button
               onClick={() => setActiveModalCase(null)}

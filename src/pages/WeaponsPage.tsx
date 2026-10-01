@@ -827,7 +827,7 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
       {/* Lightbox Modal for Architecture Diagrams */}
       {diagramLightbox && (
         <div
-          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-fadeIn"
+          className="fixed inset-0 z-[99999] bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-fadeIn"
           onClick={() => setDiagramLightbox(null)}
         >
           <div
