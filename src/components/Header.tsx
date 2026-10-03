@@ -31,6 +31,7 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
   ];
 
   const specialCaseLinks: { id: PageId; label: string; icon: React.ReactNode }[] = [
+    { id: 'cases', label: 'Casos Históricos Marcantes', icon: <ShieldAlert className="w-4 h-4 text-amber-400" /> },
     { id: 'operation-castle', label: 'Operação Castle (1954)', icon: <Zap className="w-4 h-4 text-[#73CAE5]" /> },
     { id: 'tsar-bomba', label: 'Tsar Bomba (1961)', icon: <Flame className="w-4 h-4 text-[#8F83FF]" /> },
     { id: 'ivy-mike', label: 'Ivy Mike (1952)', icon: <Zap className="w-4 h-4 text-[#73CAE5]" /> },
@@ -104,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
               onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
               onBlur={() => setTimeout(() => setMoreDropdownOpen(false), 250)}
               className={`px-3 py-2 text-sm font-medium rounded-md flex items-center space-x-1 whitespace-nowrap transition-colors ${
-                ['operation-castle', 'tsar-bomba', 'ivy-mike', 'manhattan-project', 'ivy-king', 'b41', 'chernobyl', 'fission-fusion', 'impacts', 'glossary', 'sources', 'about'].includes(currentPage)
+                ['cases', 'operation-castle', 'tsar-bomba', 'ivy-mike', 'manhattan-project', 'ivy-king', 'b41', 'chernobyl', 'fission-fusion', 'impacts', 'glossary', 'sources', 'about'].includes(currentPage)
                   ? 'text-[#8F83FF] bg-white/5 border border-[#8F83FF]/30'
                   : 'text-[#B7B7B7] hover:text-white hover:bg-white/5'
               }`}
@@ -118,7 +119,7 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
                 <div className="px-3 py-1 text-[10px] font-mono uppercase text-[#73CAE5] font-bold">
                   Casos & Detonações Especiais
                 </div>
-                {specialCaseLinks.slice(0, 6).map((item) => (
+                {specialCaseLinks.slice(0, 7).map((item) => (
                   <button
                     key={item.id}
                     onClick={() => handleNavClick(item.id)}
@@ -136,7 +137,7 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
                 <div className="px-3 pt-2 pb-1 text-[10px] font-mono uppercase text-[#8F83FF] font-bold border-t border-white/5 mt-1">
                   Recursos & Didática
                 </div>
-                {specialCaseLinks.slice(6).map((item) => (
+                {specialCaseLinks.slice(7).map((item) => (
                   <button
                     key={item.id}
                     onClick={() => handleNavClick(item.id)}

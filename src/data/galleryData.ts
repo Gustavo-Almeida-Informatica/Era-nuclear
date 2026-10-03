@@ -20,7 +20,7 @@ import iterTokamakImg from '../assets/images/tokamak_fusion_reactor_real.jpg';
 import fissionReactorModelImg from '../assets/images/fission_reactor_pwr_model_authentic.jpg';
 import fissionDiagramImg from '../assets/images/fission_diagram_sci_1787677675023.jpg';
 import fusionDiagramImg from '../assets/images/fusion_diagram_sci_1787677708566.jpg';
-import gunTypeDiagramImg from '../assets/images/gun_type_fission_diagram_real.png';
+import gunTypeDiagramImg from '../assets/images/little_boy_gun_type_diagram_pt.svg';
 import implosionTypeDiagramImg from '../assets/images/fatman_implosion_diagram_authentic.jpg';
 import tellerUlamDiagramImg from '../assets/images/BombH_explosion.svg';
 import fukushimaDamageImg from '../assets/images/fukushima_daiichi_damage_2011.jpg';

@@ -107,7 +107,7 @@ export const CasesPage: React.FC<CasesPageProps> = ({ onNavigate }) => {
               </p>
             </div>
 
-            <div className="pt-4 border-t border-white/5 flex items-center justify-between">
+            <div className="pt-4 border-t border-white/5 flex flex-col gap-2">
               <button
                 onClick={() => setActiveModalCase(cs)}
                 className="w-full py-2.5 rounded-xl bg-white/5 hover:bg-[#73CAE5] hover:text-[#0D0D0D] text-xs font-bold text-white transition-all flex items-center justify-center space-x-2 border border-white/5 hover:border-transparent"
@@ -115,6 +115,16 @@ export const CasesPage: React.FC<CasesPageProps> = ({ onNavigate }) => {
                 <span>Ver Análise Completa</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>
+
+              {cs.id === 'tsar-bomba-1961' && (
+                <button
+                  onClick={() => onNavigate('tsar-bomba')}
+                  className="w-full py-2 rounded-xl bg-[#8F83FF]/15 hover:bg-[#8F83FF] hover:text-white text-xs font-bold text-[#8F83FF] transition-all flex items-center justify-center space-x-1.5 border border-[#8F83FF]/30"
+                >
+                  <span>Abrir Página Especial da Tsar Bomba</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              )}
             </div>
           </div>
         ))}

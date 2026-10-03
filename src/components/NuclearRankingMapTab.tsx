@@ -85,6 +85,7 @@ export const NuclearRankingMapTab: React.FC = () => {
     vaporizationRadiusM: realRadii.vaporizationRadiusM,
     carbonizationRadiusM: realRadii.carbonizationRadiusM,
     heavyBlastRadiusM: realRadii.heavyBlastRadiusM,
+    moderateBlastRadiusM: realRadii.moderateBlastRadiusM,
     thermalRadiusM: realRadii.thermalRadiusM,
     lightBlastRadiusM: realRadii.lightBlastRadiusM,
   };
@@ -122,13 +123,77 @@ export const NuclearRankingMapTab: React.FC = () => {
     vaporization: true,
     carbonization: true, // Zona de carbonização humana instantânea
     heavy: true,
+    moderate: true, // 5º Onda de Choque Moderada (~5 psi)
     thermal: true,
     light: true
   });
+  // Estado de Zona em Destaque (Hover): ativa o brilho sincronizado no mapa e na área de opções/métricas
+  const [hoveredZoneId, setHoveredZoneId] = useState<string | null>(null);
+  const zoneCirclesRef = useRef<Record<string, { circle: L.Circle; baseStyle: any; color: string }>>({});
+
+  // Efeito de brilho luminoso sincronizado nas zonas do mapa ao passar o mouse ou focar no painel
+  useEffect(() => {
+    const entries = Object.entries(zoneCirclesRef.current) as [string, { circle: L.Circle; baseStyle: L.PathOptions; color: string }][];
+    entries.forEach(([id, item]) => {
+      const isHovered = hoveredZoneId === id;
+      const pathEl = (item.circle as any)._path as SVGPathElement | undefined;
+      if (isHovered) {
+        item.circle.setStyle({
+          weight: 4.5,
+          color: '#FFFFFF',
+          fillOpacity: Math.min(0.88, (item.baseStyle.fillOpacity ?? 0.2) + 0.32)
+        });
+        if (pathEl) {
+          pathEl.style.filter = `drop-shadow(0 0 10px #FFFFFF) drop-shadow(0 0 24px ${item.color})`;
+          pathEl.style.transition = 'stroke 0.2s ease, stroke-width 0.2s ease, fill-opacity 0.2s ease, filter 0.2s ease';
+        }
+      } else {
+        item.circle.setStyle(item.baseStyle);
+        if (pathEl) {
+          pathEl.style.filter = '';
+          pathEl.style.transition = 'stroke 0.2s ease, stroke-width 0.2s ease, fill-opacity 0.2s ease, filter 0.2s ease';
+        }
+      }
+    });
+  }, [hoveredZoneId]);
+
+  // Estado de Zona de Fallout em Destaque (Hover): brilho sincronizado nas plumas de precipitação radioativa
+  const [hoveredFalloutZoneId, setHoveredFalloutZoneId] = useState<string | null>(null);
+  const falloutPolygonsRef = useRef<Record<string, { polygon: L.Polygon; baseStyle: any; color: string }>>({});
+
+  // Efeito de brilho luminoso sincronizado nas plumas de fallout no mapa ao passar o mouse ou focar no painel
+  useEffect(() => {
+    const entries = Object.entries(falloutPolygonsRef.current) as [
+      string,
+      { polygon: L.Polygon; baseStyle: L.PathOptions; color: string }
+    ][];
+    entries.forEach(([id, item]) => {
+      const isHovered = hoveredFalloutZoneId === id;
+      const pathEl = (item.polygon as any)._path as SVGPathElement | undefined;
+      if (isHovered) {
+        item.polygon.setStyle({
+          weight: 4.5,
+          color: '#FFFFFF',
+          fillOpacity: Math.min(0.88, (item.baseStyle.fillOpacity ?? 0.25) + 0.35)
+        });
+        if (pathEl) {
+          pathEl.style.filter = `drop-shadow(0 0 12px #FFFFFF) drop-shadow(0 0 28px ${item.color})`;
+          pathEl.style.transition = 'stroke 0.2s ease, stroke-width 0.2s ease, fill-opacity 0.2s ease, filter 0.2s ease';
+        }
+      } else {
+        item.polygon.setStyle(item.baseStyle);
+        if (pathEl) {
+          pathEl.style.filter = '';
+          pathEl.style.transition = 'stroke 0.2s ease, stroke-width 0.2s ease, fill-opacity 0.2s ease, filter 0.2s ease';
+        }
+      }
+    });
+  }, [hoveredFalloutZoneId]);
+
   const [dimensionMode, setDimensionMode] = useState<'radius' | 'diameter' | 'both'>('both'); // Opção de ver raio, diâmetro ou ambos
-  const [mapTheme, setMapTheme] = useState<'tactical' | 'satellite' | 'osm'>('tactical');
+  const [mapTheme, setMapTheme] = useState<'tactical' | 'satellite' | 'osm'>('satellite'); // Modelo realista de satélite como padrão
   const [isCasualtyHudCollapsed, setIsCasualtyHudCollapsed] = useState<boolean>(false); // Minimizar ou expandir o quadro tático de mortes reais no mapa
-  const [showAllCasualtyZones, setShowAllCasualtyZones] = useState<boolean>(false); // Alternar entre as 3 zonas solicitadas ou todas as 6 zonas
+  const [showAllCasualtyZones, setShowAllCasualtyZones] = useState<boolean>(false); // Alternar entre as 3 zonas solicitadas ou todas as 7 zonas
 
   // Map visibility, layout, and sizing states
   const [mapHeightMode, setMapHeightMode] = useState<'compact' | 'standard' | 'large' | 'immersive'>('standard'); // Default to spacious standard height (640px)
@@ -142,13 +207,14 @@ export const NuclearRankingMapTab: React.FC = () => {
     return directions[index];
   };
 
-  // Helper to toggle all 6 blast layers at once
+  // Helper to toggle all 7 blast layers at once
   const setAllLayers = (enable: boolean) => {
     setVisibleLayers({
       fireball: enable,
       vaporization: enable,
       carbonization: enable,
       heavy: enable,
+      moderate: enable,
       thermal: enable,
       light: enable
     });
@@ -357,6 +423,8 @@ export const NuclearRankingMapTab: React.FC = () => {
   const testSitesLayerGroupRef = useRef<L.LayerGroup | null>(null);
   const tileLayerRef = useRef<L.TileLayer | null>(null);
   const referenceLayerRef = useRef<L.TileLayer | null>(null);
+  const oceanReferenceLayerRef = useRef<L.TileLayer | null>(null);
+  const transportationReferenceLayerRef = useRef<L.TileLayer | null>(null);
   const isDraggingTargetRef = useRef<boolean>(false);
   const shouldFitBoundsOnDetonateRef = useRef<boolean>(false);
 
@@ -425,6 +493,7 @@ export const NuclearRankingMapTab: React.FC = () => {
       effectiveBomb.vaporizationRadiusM,
       effectiveBomb.carbonizationRadiusM,
       effectiveBomb.heavyBlastRadiusM,
+      effectiveBomb.moderateBlastRadiusM,
       effectiveBomb.thermalRadiusM,
       effectiveBomb.lightBlastRadiusM
     );
@@ -520,13 +589,13 @@ export const NuclearRankingMapTab: React.FC = () => {
   // Zoom in & Zoom out helpers
   const handleZoomIn = () => {
     if (mapInstanceRef.current) {
-      mapInstanceRef.current.zoomIn();
+      mapInstanceRef.current.zoomIn(1, { animate: true });
     }
   };
 
   const handleZoomOut = () => {
     if (mapInstanceRef.current) {
-      mapInstanceRef.current.zoomOut();
+      mapInstanceRef.current.zoomOut(1, { animate: true });
     }
   };
 
@@ -772,6 +841,12 @@ export const NuclearRankingMapTab: React.FC = () => {
         maxZoom: 19, // Suporte a zoom detalhado
         zoomDelta: 1,
         zoomSnap: 1, // CRÍTICO: remove zoom fracionário que causava embaçamento/blur nos blocos do mapa
+        zoomAnimation: true, // Transição suave como era antes ao aumentar e diminuir o zoom
+        markerZoomAnimation: true,
+        fadeAnimation: true,
+        scrollWheelZoom: true,
+        doubleClickZoom: true,
+        touchZoom: true,
         worldCopyJump: true,
         zoomControl: false,
         attributionControl: false
@@ -803,6 +878,9 @@ export const NuclearRankingMapTab: React.FC = () => {
       const getTileConfig = (theme: 'tactical' | 'satellite' | 'osm'): {
         url: string;
         referenceUrl?: string;
+        oceanReferenceUrl?: string;
+        transportationReferenceUrl?: string;
+        referenceClassName?: string;
         className: string;
         subdomains: string[];
         maxZoom: number;
@@ -813,8 +891,10 @@ export const NuclearRankingMapTab: React.FC = () => {
           return {
             url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
             referenceUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
+            oceanReferenceUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Reference/MapServer/tile/{z}/{y}/{x}',
+            referenceClassName: 'tactical-reference-tiles',
             className: 'tactical-dark-tiles',
-            subdomains: [],
+            subdomains: ['a', 'b', 'c'],
             maxZoom: 19,
             maxNativeZoom: 16,
             attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
@@ -823,11 +903,14 @@ export const NuclearRankingMapTab: React.FC = () => {
         if (theme === 'satellite') {
           return {
             url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+            referenceUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
+            oceanReferenceUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Reference/MapServer/tile/{z}/{y}/{x}',
+            referenceClassName: 'satellite-reference-tiles',
             className: 'satellite-tiles',
-            subdomains: [],
+            subdomains: ['a', 'b', 'c'],
             maxZoom: 19,
-            maxNativeZoom: 18,
-            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and GIS User Community'
+            maxNativeZoom: 19,
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics'
           };
         }
         return {
@@ -852,15 +935,45 @@ export const NuclearRankingMapTab: React.FC = () => {
         noWrap: false
       }).addTo(map);
 
-      // Adiciona camada de referência de fronteiras e países no tema tático
+      // Adiciona camada de referência oceânica (Atlantic Ocean, Pacific Ocean, Indian Ocean, Southern Ocean)
+      if (initialTileConfig.oceanReferenceUrl) {
+        const oceanRefLayer = L.tileLayer(initialTileConfig.oceanReferenceUrl, {
+          minZoom: 1,
+          maxZoom: initialTileConfig.maxZoom,
+          maxNativeZoom: 10,
+          detectRetina: false,
+          subdomains: initialTileConfig.subdomains,
+          className: 'satellite-ocean-reference-tiles',
+          noWrap: false,
+          zIndex: 385
+        }).addTo(map);
+        oceanReferenceLayerRef.current = oceanRefLayer;
+      }
+
+      // Adiciona camada realista de vias, avenidas e malha urbana quando aproxima numa cidade no modo Satélite
+      if (initialTileConfig.transportationReferenceUrl) {
+        const transRefLayer = L.tileLayer(initialTileConfig.transportationReferenceUrl, {
+          minZoom: 9,
+          maxZoom: initialTileConfig.maxZoom,
+          maxNativeZoom: 19,
+          detectRetina: false,
+          subdomains: initialTileConfig.subdomains,
+          className: 'satellite-transportation-tiles',
+          noWrap: false,
+          zIndex: 392
+        }).addTo(map);
+        transportationReferenceLayerRef.current = transRefLayer;
+      }
+
+      // Adiciona camada de referência de fronteiras tracejadas discretas, países, estados, cidades e bairros do zoom 1 até o zoom 19
       if (initialTileConfig.referenceUrl) {
         const refLayer = L.tileLayer(initialTileConfig.referenceUrl, {
           minZoom: 1,
           maxZoom: initialTileConfig.maxZoom,
-          maxNativeZoom: initialTileConfig.maxNativeZoom,
+          maxNativeZoom: 16,
           detectRetina: false,
           subdomains: initialTileConfig.subdomains,
-          className: 'tactical-reference-tiles',
+          className: initialTileConfig.referenceClassName || 'tactical-reference-tiles',
           noWrap: false,
           zIndex: 400
         }).addTo(map);
@@ -908,13 +1021,21 @@ export const NuclearRankingMapTab: React.FC = () => {
           mapInstanceRef.current.removeLayer(referenceLayerRef.current);
           referenceLayerRef.current = null;
         }
+        if (oceanReferenceLayerRef.current) {
+          mapInstanceRef.current.removeLayer(oceanReferenceLayerRef.current);
+          oceanReferenceLayerRef.current = null;
+        }
+        if (transportationReferenceLayerRef.current) {
+          mapInstanceRef.current.removeLayer(transportationReferenceLayerRef.current);
+          transportationReferenceLayerRef.current = null;
+        }
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
       }
     };
   }, []);
 
-  // Update Tile Layer if theme changes (Tático = Mapa Escuro Autêntico, Satélite = Esri Imagery, Rua = OSM)
+  // Update Tile Layer if theme changes (Tático = Mapa Escuro Autêntico, Satélite = Esri Imagery + Labels, Rua = OSM)
   useEffect(() => {
     if (!mapInstanceRef.current || !tileLayerRef.current) return;
 
@@ -923,14 +1044,24 @@ export const NuclearRankingMapTab: React.FC = () => {
       mapInstanceRef.current.removeLayer(referenceLayerRef.current);
       referenceLayerRef.current = null;
     }
+    if (oceanReferenceLayerRef.current) {
+      mapInstanceRef.current.removeLayer(oceanReferenceLayerRef.current);
+      oceanReferenceLayerRef.current = null;
+    }
+    if (transportationReferenceLayerRef.current) {
+      mapInstanceRef.current.removeLayer(transportationReferenceLayerRef.current);
+      transportationReferenceLayerRef.current = null;
+    }
     
     const tileConfig = (() => {
       if (mapTheme === 'tactical') {
         return {
           url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
           referenceUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
+          oceanReferenceUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Reference/MapServer/tile/{z}/{y}/{x}',
+          referenceClassName: 'tactical-reference-tiles',
           className: 'tactical-dark-tiles',
-          subdomains: [],
+          subdomains: ['a', 'b', 'c'],
           maxZoom: 19,
           maxNativeZoom: 16,
           attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
@@ -939,11 +1070,14 @@ export const NuclearRankingMapTab: React.FC = () => {
       if (mapTheme === 'satellite') {
         return {
           url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+          referenceUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
+          oceanReferenceUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Reference/MapServer/tile/{z}/{y}/{x}',
+          referenceClassName: 'satellite-reference-tiles',
           className: 'satellite-tiles',
-          subdomains: [],
+          subdomains: ['a', 'b', 'c'],
           maxZoom: 19,
-          maxNativeZoom: 18,
-          attribution: 'Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and GIS User Community'
+          maxNativeZoom: 19,
+          attribution: 'Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics'
         };
       }
       return {
@@ -967,14 +1101,28 @@ export const NuclearRankingMapTab: React.FC = () => {
       noWrap: false
     }).addTo(mapInstanceRef.current);
 
+    if (tileConfig.oceanReferenceUrl) {
+      const oceanRefLayer = L.tileLayer(tileConfig.oceanReferenceUrl, {
+        minZoom: 1,
+        maxZoom: tileConfig.maxZoom,
+        maxNativeZoom: 10,
+        detectRetina: false,
+        subdomains: tileConfig.subdomains,
+        className: 'satellite-ocean-reference-tiles',
+        noWrap: false,
+        zIndex: 385
+      }).addTo(mapInstanceRef.current);
+      oceanReferenceLayerRef.current = oceanRefLayer;
+    }
+
     if (tileConfig.referenceUrl) {
       const refLayer = L.tileLayer(tileConfig.referenceUrl, {
         minZoom: 1,
         maxZoom: tileConfig.maxZoom,
-        maxNativeZoom: tileConfig.maxNativeZoom,
+        maxNativeZoom: 16,
         detectRetina: false,
         subdomains: tileConfig.subdomains,
-        className: 'tactical-reference-tiles',
+        className: tileConfig.referenceClassName || 'tactical-reference-tiles',
         noWrap: false,
         zIndex: 400
       }).addTo(mapInstanceRef.current);
@@ -1161,18 +1309,22 @@ export const NuclearRankingMapTab: React.FC = () => {
     }
 
     // 1. Draw Radioactive Fallout Polygons (rendered under prompt blast circles)
+    falloutPolygonsRef.current = {};
+
     if (showFallout && selectedBomb.fallout) {
       const speedScale = Math.pow(windSpeedKmh / 25, 0.65);
       const burstScale = burstType === 'air' ? 0.35 : 1.0;
       const widthScale = Math.pow(25 / windSpeedKmh, 0.3);
 
-      // Draw zones in reverse order: rad10 (outermost) first, down to rad1000 (innermost)
       const orderedZones = [...FALLOUT_ZONES_CONFIG].reverse();
 
       orderedZones.forEach((zone) => {
         if (!visibleFalloutZones[zone.id]) return;
 
-        const contour = selectedBomb.fallout.surfaceContours[zone.id as keyof typeof selectedBomb.fallout.surfaceContours];
+        const contour =
+          selectedBomb.fallout.surfaceContours[
+            zone.id as keyof typeof selectedBomb.fallout.surfaceContours
+          ];
         if (!contour) return;
 
         const lenKm = contour.lengthKm * speedScale * burstScale;
@@ -1189,77 +1341,33 @@ export const NuclearRankingMapTab: React.FC = () => {
 
         allFalloutPoints.push(...pts);
 
-        const poly = L.polygon(pts, {
+        const baseStyle: L.PathOptions = {
           color: zone.color,
           fillColor: zone.fillColor,
           fillOpacity: burstType === 'air' ? zone.fillOpacity * 0.6 : zone.fillOpacity,
           weight: zone.strokeWeight,
           dashArray: zone.id === 'rad10' ? '4, 4' : undefined
+        };
+
+        const poly = L.polygon(pts, {
+          ...baseStyle,
+          smoothFactor: 0,
+          className: `tactical-zone-path tactical-fallout-zone tactical-fallout-${zone.id}`
         });
 
-        const falloutColorMap: Record<string, { titleColor: string; badgeBg: string; badgeBorder: string; badgeText: string }> = {
-          rad1000: { titleColor: '#e9d5ff', badgeBg: 'rgba(168, 85, 247, 0.25)', badgeBorder: '#c084fc', badgeText: '#f3e8ff' },
-          rad300: { titleColor: '#fca5a5', badgeBg: 'rgba(239, 68, 68, 0.25)', badgeBorder: '#f87171', badgeText: '#fee2e2' },
-          rad100: { titleColor: '#fdba74', badgeBg: 'rgba(249, 115, 22, 0.25)', badgeBorder: '#fb923c', badgeText: '#ffedd5' },
-          rad10: { titleColor: '#93c5fd', badgeBg: 'rgba(59, 130, 246, 0.25)', badgeBorder: '#60a5fa', badgeText: '#eff6ff' },
+        poly.on('mouseover', () => {
+          setHoveredFalloutZoneId(zone.id);
+        });
+
+        poly.on('mouseout', () => {
+          setHoveredFalloutZoneId((prev) => (prev === zone.id ? null : prev));
+        });
+
+        falloutPolygonsRef.current[zone.id] = {
+          polygon: poly,
+          baseStyle,
+          color: zone.color
         };
-        const fColors = falloutColorMap[zone.id] || { titleColor: '#f8fafc', badgeBg: 'rgba(255,255,255,0.2)', badgeBorder: '#ffffff', badgeText: '#ffffff' };
-
-        const falloutEst = falloutCasualties.zones[zone.id as 'rad1000' | 'rad300' | 'rad100' | 'rad10'];
-        const fDeaths = falloutEst?.fatalities ?? 0;
-        const fPop = falloutEst?.popExposed ?? 0;
-        const fFatalityPct = Math.round((falloutEst?.fatalityRate ?? 0) * 100);
-
-        poly.bindTooltip(
-          `<div style="font-family: ui-sans-serif, system-ui, sans-serif; font-size: 11px; line-height: 1.4; color: #f8fafc; min-width: 235px; pointer-events: none;">
-            <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px;">
-              <span style="font-weight: 800; color: ${fColors.titleColor}; font-size: 12px;">☢️ ${zone.name}</span>
-              <span style="background: ${fColors.badgeBg}; border: 1px solid ${fColors.badgeBorder}; color: ${fColors.badgeText}; font-weight: 800; font-size: 10px; padding: 1px 6px; border-radius: 4px; white-space: nowrap;">${zone.doseDisplay}</span>
-            </div>
-            <div style="color: #94a3b8; font-size: 11px;">
-              Alcance a Sotavento: <b style="color: #67e8f9; font-weight: 700;">${lenKm.toFixed(1)} km</b> • Largura: <b style="color: #a7f3d0; font-weight: 700;">${(wKm * 2).toFixed(1)} km</b>
-            </div>
-            <div style="margin-top: 5px; padding: 5px 8px; background: rgba(220, 38, 38, 0.25); border: 1px solid rgba(248, 113, 113, 0.45); border-radius: 6px;">
-              <div style="color: #f87171; font-weight: 800; font-size: 11.5px;">
-                💀 Mortes Nesta Faixa: <span style="color: #ffffff; font-weight: 900; font-size: 12px;">${formatCasualtyNumber(fDeaths)} pessoas</span>
-              </div>
-              <div style="font-size: 10.5px; margin-top: 2px; color: #cbd5e1;">
-                <span style="color: #94a3b8;">👥 População Exposta:</span> <b style="color: #ffffff;">${formatCasualtyNumber(fPop)} hab</b>
-                <span style="color: #64748b;"> • </span>
-                <span style="color: #94a3b8;">Letalidade:</span> <b style="color: #fde047;">${fFatalityPct}%</b>
-              </div>
-            </div>
-            <div style="margin-top: 5px; padding-top: 4px; border-top: 1px dashed rgba(255,255,255,0.18); color: #f1f5f9; font-size: 10.5px; line-height: 1.35;">
-              <div style="color: #fde047; font-weight: 700; margin-bottom: 2px;">Impacto Biológico:</div>
-              ${zone.medicalImpact.split('\n').map(line => `<div>${line}</div>`).join('')}
-            </div>
-          </div>`,
-          {
-            sticky: true,
-            className: 'tactical-map-tooltip'
-          }
-        );
-
-        poly.bindPopup(
-          `<div style="font-family: ui-sans-serif, system-ui, sans-serif; font-size: 12px; color: #f8fafc; line-height: 1.4; min-width: 250px;">
-            <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
-              <strong style="color: ${fColors.titleColor}; font-size: 13px;">☢️ ${zone.name}</strong>
-              <span style="background: ${fColors.badgeBg}; border: 1px solid ${fColors.badgeBorder}; color: ${fColors.badgeText}; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px;">${zone.doseDisplay}</span>
-            </div>
-            <hr style="margin: 6px 0; border: none; border-top: 1px solid rgba(255,255,255,0.15);"/>
-            <div style="color: #94a3b8; font-size: 11px;">
-              Comprimento da pluma: <b style="color: #67e8f9;">${lenKm.toFixed(1)} km</b> | Largura: <b style="color: #a7f3d0;">${(wKm * 2).toFixed(1)} km</b>
-            </div>
-            <div style="margin-top: 6px; padding: 6px 8px; background: rgba(220, 38, 38, 0.2); border-radius: 6px; border: 1px solid rgba(248, 113, 113, 0.4);">
-              <div style="color: #fca5a5; font-weight: bold; font-size: 12px;">💀 Mortes Estimadas na Faixa: <span style="color: #ffffff; font-weight: 900;">${formatCasualtyNumber(fDeaths)} pessoas</span></div>
-              <div style="color: #e2e8f0; font-size: 11px; margin-top: 2px;">👥 População Exposta na Trajetória: <b style="color: #ffffff;">${formatCasualtyNumber(fPop)} hab</b></div>
-              <div style="color: #fde047; font-size: 11px; font-weight: bold; margin-top: 2px;">Taxa de Letalidade da Faixa: ${fFatalityPct}%</div>
-            </div>
-            <div style="margin-top: 6px; font-size: 11px; color: #cbd5e1; line-height: 1.35;">
-              <b style="color: #fde047;">Efeito Clínico:</b> ${zone.medicalImpact.replace(/\n/g, ' ')}
-            </div>
-          </div>`
-        );
 
         group.addLayer(poly);
       });
@@ -1292,18 +1400,8 @@ export const NuclearRankingMapTab: React.FC = () => {
       group.addLayer(windLine);
     }
 
-    // 2. Prompt Blast Layers com Dimensões Físicas Reais
+    // 2. Prompt Blast Layers com Dimensões Físicas Reais (7 Zonas Calibradas)
     const layersToDraw = [
-      {
-        id: 'thermal',
-        radius: effectiveBomb.thermalRadiusM,
-        color: '#F97316',
-        fillColor: '#F97316',
-        fillOpacity: 0.16,
-        weight: 1.8,
-        dashArray: '4, 4',
-        name: 'Raio Térmico (Queimaduras 3º Grau)'
-      },
       {
         id: 'light',
         radius: effectiveBomb.lightBlastRadiusM,
@@ -1312,17 +1410,27 @@ export const NuclearRankingMapTab: React.FC = () => {
         fillOpacity: 0.12,
         weight: 1.5,
         dashArray: '6, 6',
-        name: 'Onda de Choque Leve (1 psi - Estilhaços)'
+        name: '7º Onda de Choque Leve (1-2 psi - Estilhaços)'
       },
       {
-        id: 'carbonization',
-        radius: effectiveBomb.carbonizationRadiusM,
-        color: '#F43F5E',
-        fillColor: '#FB7185',
-        fillOpacity: 0.35,
-        weight: 2.4,
-        dashArray: '5, 3',
-        name: 'Zona de Carbonização (Pessoas Carbonizadas Instantaneamente)'
+        id: 'thermal',
+        radius: effectiveBomb.thermalRadiusM,
+        color: '#F97316',
+        fillColor: '#F97316',
+        fillOpacity: 0.16,
+        weight: 1.8,
+        dashArray: '4, 4',
+        name: '6º Raio Térmico (Queimaduras 3º Grau)'
+      },
+      {
+        id: 'moderate',
+        radius: effectiveBomb.moderateBlastRadiusM,
+        color: '#8B5CF6',
+        fillColor: '#8B5CF6',
+        fillOpacity: 0.22,
+        weight: 2.0,
+        dashArray: '4, 4',
+        name: '5º Onda de Choque Moderada (5 psi - Colapso Residencial)'
       },
       {
         id: 'heavy',
@@ -1331,7 +1439,17 @@ export const NuclearRankingMapTab: React.FC = () => {
         fillColor: '#F472B6',
         fillOpacity: 0.30,
         weight: 2.2,
-        name: 'Onda de Choque Pesada (20 psi - Colapso Estrutural)'
+        name: '4º Onda de Choque Pesada (20 psi - Colapso Estrutural)'
+      },
+      {
+        id: 'carbonization',
+        radius: effectiveBomb.carbonizationRadiusM,
+        color: '#DC2626',
+        fillColor: '#EF4444',
+        fillOpacity: 0.35,
+        weight: 2.4,
+        dashArray: '5, 3',
+        name: '3º Carbonização Total (Combustão Humana Instantânea)'
       },
       {
         id: 'vaporization',
@@ -1341,7 +1459,7 @@ export const NuclearRankingMapTab: React.FC = () => {
         fillOpacity: 0.38,
         weight: 2.2,
         dashArray: '3, 3',
-        name: 'Zona de Vaporização Fora da Bola de Fogo (Desintegração Instantânea)'
+        name: '2º Vaporização Imediata (Fusão Térmica de Materiais)'
       },
       {
         id: 'fireball',
@@ -1350,110 +1468,45 @@ export const NuclearRankingMapTab: React.FC = () => {
         fillColor: '#FACC15',
         fillOpacity: 0.58,
         weight: 2.6,
-        name: 'Bola de Fogo Nuclear (Plasma & Radiação Pura)'
+        name: '1º Bola de Fogo Nuclear (Plasma ~100M °C)'
       }
     ];
 
     // Sort so larger circles render behind smaller ones
     const sortedLayers = [...layersToDraw].sort((a, b) => b.radius - a.radius);
 
+    zoneCirclesRef.current = {};
+
     sortedLayers.forEach((layer) => {
       if (!visibleLayers[layer.id]) return;
 
-      const circle = L.circle(center, {
+      const baseStyle = {
         radius: layer.radius,
         color: layer.color,
         fillColor: layer.fillColor,
         fillOpacity: layer.fillOpacity,
         weight: layer.weight,
         dashArray: layer.dashArray
+      };
+
+      const circle = L.circle(center, {
+        ...baseStyle,
+        className: `tactical-zone-path tactical-zone-${layer.id}`
       });
 
-      const blastColorMap: Record<string, { titleColor: string; icon: string }> = {
-        fireball: { titleColor: '#fef08a', icon: '🔥' },
-        vaporization: { titleColor: '#fed7aa', icon: '⚡' },
-        heavy: { titleColor: '#f472b6', icon: '💥' },
-        carbonization: { titleColor: '#fb7185', icon: '☣️' },
-        thermal: { titleColor: '#fde047', icon: '☀️' },
-        light: { titleColor: '#93c5fd', icon: '💨' }
+      circle.on('mouseover', () => {
+        setHoveredZoneId(layer.id);
+      });
+
+      circle.on('mouseout', () => {
+        setHoveredZoneId((prev) => (prev === layer.id ? null : prev));
+      });
+
+      zoneCirclesRef.current[layer.id] = {
+        circle,
+        baseStyle,
+        color: layer.color
       };
-      const bColors = blastColorMap[layer.id] || { titleColor: '#f8fafc', icon: '🎯' };
-
-      const radiusStr = formatRadius(layer.radius);
-      const diamStr = formatDiameter(layer.radius);
-      let metricLine = '';
-      if (dimensionMode === 'radius') {
-        metricLine = `<span style="color: #94a3b8;">Raio (R):</span> <b style="color: #67e8f9; font-weight: 700;">${radiusStr}</b>`;
-      } else if (dimensionMode === 'diameter') {
-        metricLine = `<span style="color: #94a3b8;">Diâmetro (Ø):</span> <b style="color: #38bdf8; font-weight: 700;">${diamStr}</b>`;
-      } else {
-        metricLine = `<span style="color: #94a3b8;">Raio:</span> <b style="color: #67e8f9; font-weight: 700;">${radiusStr}</b> <span style="color: #64748b;">•</span> <span style="color: #94a3b8;">Diâmetro:</span> <b style="color: #38bdf8; font-weight: 700;">${diamStr}</b>`;
-      }
-
-      let tooltipExtra = '';
-      if (layer.id === 'carbonization') {
-        tooltipExtra = `<div style="margin-top: 5px; padding: 5px 8px; background: rgba(244, 63, 94, 0.22); border-left: 3px solid #fb7185; border-radius: 4px; color: #ffe4e6; font-size: 10px; line-height: 1.35;">
-          <div style="font-weight: 700; color: #ffffff;">⚠️ Fluxo térmico direto (>25-35 cal/cm²).</div>
-          <div>Qualquer ser humano ao ar livre é instantaneamente carbonizado</div>
-          <div>e calcinado até os ossos antes da onda mecânica.</div>
-          <div>Roupas entram em combustão imediata. <b style="color: #f472b6; font-weight: 800;">Letalidade 100%</b></div>
-        </div>`;
-      }
-
-      const zoneEst = casualties.zoneEstimates[layer.id as keyof typeof casualties.zoneEstimates];
-      const casualtyInfo = zoneEst
-        ? `<div style="margin-top: 5px; padding-top: 5px; border-top: 1px dashed rgba(255,255,255,0.2); text-align: left;">
-            <div style="color: #f87171; font-weight: 800; font-size: 11.5px;">💀 Mortes Estimadas Nesta Zona: <span style="color: #fca5a5; font-size: 12px; font-weight: 800;">${zoneEst.fatalitiesRangeDisplay}</span></div>
-            <div style="font-size: 10.5px; margin-top: 2px;">
-              <span style="color: #94a3b8;">👥 População da Faixa:</span> <b style="color: #e2e8f0;">${formatCasualtyNumber(zoneEst.populationExposed)} hab</b>
-              <span style="color: #64748b;"> • </span>
-              <span style="color: #94a3b8;">Letalidade:</span> <b style="color: #fde047;">${(zoneEst.fatalityRate * 100).toFixed(0)}%</b>
-            </div>
-            <div style="color: #fca5a5; font-size: 10.5px; font-weight: 700; margin-top: 2px;">
-              🌐 Estimativa Total em ${selectedCity.name}: <span style="color: #fed7aa; font-weight: 800;">${casualties.deathsRangeDisplay}</span>
-            </div>
-          </div>`
-        : '';
-
-      circle.bindTooltip(
-        `<div style="font-family: ui-sans-serif, system-ui, sans-serif; font-size: 11px; line-height: 1.4; color: #f8fafc; min-width: 220px; pointer-events: none;">
-          <div style="font-weight: 800; color: ${bColors.titleColor}; font-size: 12px; margin-bottom: 3px;">
-            ${bColors.icon} ${layer.name}
-          </div>
-          <div>${metricLine}</div>
-          <div style="margin-top: 1px;"><span style="color: #94a3b8;">Área Acumulada:</span> <b style="color: #a7f3d0; font-weight: 700;">${calculateAreaKm2(layer.radius)}</b></div>
-          ${tooltipExtra}
-          ${casualtyInfo}
-        </div>`,
-        {
-          direction: 'top',
-          className: 'tactical-map-tooltip'
-        }
-      );
-
-      if (zoneEst) {
-        circle.bindPopup(`
-          <div style="font-family: ui-sans-serif, system-ui, sans-serif; font-size: 12px; color: #f8fafc; line-height: 1.4; min-width: 240px;">
-            <div style="display: flex; align-items: center; gap: 6px;">
-              <span style="font-size: 14px;">${bColors.icon}</span>
-              <strong style="font-size: 13px; color: ${bColors.titleColor};">${layer.name}</strong>
-            </div>
-            <div style="color: #94a3b8; font-size: 11px; margin-top: 2px;">${IMPACT_LAYERS.find((il) => il.id === layer.id)?.subtitle || ''}</div>
-            <hr style="margin: 6px 0; border: none; border-top: 1px solid rgba(255,255,255,0.15);"/>
-            <div>${metricLine}</div>
-            <div style="margin-top: 2px;"><span style="color: #94a3b8;">Área Acumulada:</span> <b style="color: #a7f3d0;">${calculateAreaKm2(layer.radius)}</b></div>
-            <div style="margin-top: 6px; padding: 6px 8px; background: rgba(239, 68, 68, 0.15); border-radius: 6px; border: 1px solid rgba(239, 68, 68, 0.35);">
-              <div style="color: #fca5a5; font-weight: bold; font-size: 12px;">💀 Mortes Nesta Faixa: <span style="color: #ffffff;">${zoneEst.fatalitiesRangeDisplay}</span></div>
-              <div style="color: #fdba74; font-size: 11px; margin-top: 1px;">🩹 Feridos na Faixa: ${zoneEst.injuriesRangeDisplay}</div>
-              <div style="color: #e2e8f0; font-size: 11px; margin-top: 1px;">👥 População Residente: ${formatCasualtyNumber(zoneEst.populationExposed)} hab</div>
-              <div style="color: #fde047; font-size: 11px; font-weight: bold; margin-top: 1px;">Taxa de Letalidade: ${(zoneEst.fatalityRate * 100).toFixed(0)}%</div>
-            </div>
-            <div style="margin-top: 6px; font-size: 11px; color: #cbd5e1;">
-              💀 Mortes Totais da Bomba em <b>${selectedCity.name}</b>: <b style="color: #f87171;">${casualties.deathsRangeDisplay}</b>
-            </div>
-          </div>
-        `);
-      }
 
       group.addLayer(circle);
     });
@@ -1526,6 +1579,7 @@ export const NuclearRankingMapTab: React.FC = () => {
       effectiveBomb.vaporizationRadiusM,
       effectiveBomb.carbonizationRadiusM,
       effectiveBomb.heavyBlastRadiusM,
+      effectiveBomb.moderateBlastRadiusM,
       effectiveBomb.thermalRadiusM,
       effectiveBomb.lightBlastRadiusM
     );
@@ -1545,6 +1599,7 @@ export const NuclearRankingMapTab: React.FC = () => {
         map.fitBounds(safeBounds, {
           padding: [40, 40],
           animate: true,
+          duration: 0.9,
           maxZoom: 15
         });
       } catch (err) {
@@ -1631,6 +1686,7 @@ export const NuclearRankingMapTab: React.FC = () => {
       effectiveBomb.vaporizationRadiusM,
       effectiveBomb.carbonizationRadiusM,
       effectiveBomb.heavyBlastRadiusM,
+      effectiveBomb.moderateBlastRadiusM,
       effectiveBomb.thermalRadiusM,
       effectiveBomb.lightBlastRadiusM
     );
@@ -1653,7 +1709,9 @@ export const NuclearRankingMapTab: React.FC = () => {
       const safeBounds = getCombinedBounds(selectedCity.lat, selectedCity.lng, maxRadius, falloutPts);
       mapInstanceRef.current.fitBounds(safeBounds, {
         padding: [40, 40],
-        animate: true
+        animate: true,
+        duration: 0.9,
+        maxZoom: 15
       });
     } catch (err) {
       console.warn('Map handleRecenter warning:', err);
@@ -2496,27 +2554,27 @@ export const NuclearRankingMapTab: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Seção: Cartões de Métricas Físicas Detalhadas para Todas as 6 Camadas */}
+                {/* Seção: Cartões de Métricas Físicas Detalhadas para Todas as 7 Zonas */}
                 <div className="space-y-2.5 pt-1">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-1.5">
                       <Layers className="w-3.5 h-3.5 text-rose-400" />
                       <span className="text-[10px] text-neutral-400 uppercase tracking-wider font-bold block">
-                        Métricas e Limiares Físicos das Camadas
+                        Métricas e Limiares Físicos das 7 Zonas
                       </span>
                     </div>
                     <div className="flex items-center space-x-1.5 text-[10px]">
                       <button
                         onClick={() => setAllLayers(true)}
                         className="px-2 py-0.5 rounded bg-[#222222] hover:bg-[#282828] text-neutral-300 hover:text-white border border-white/15 transition-all font-semibold cursor-pointer"
-                        title="Ativar todas as 6 zonas no mapa"
+                        title="Ativar todas as 7 zonas no mapa"
                       >
                         Ativar Todas
                       </button>
                       <button
                         onClick={() => setAllLayers(false)}
                         className="px-2 py-0.5 rounded bg-[#222222] hover:bg-[#282828] text-neutral-300 hover:text-white border border-white/15 transition-all font-semibold cursor-pointer"
-                        title="Ocultar todas as 6 zonas no mapa"
+                        title="Ocultar todas as 7 zonas no mapa"
                       >
                         Ocultar Todas
                       </button>
@@ -2524,11 +2582,18 @@ export const NuclearRankingMapTab: React.FC = () => {
                   </div>
 
                   {/* 1. Métrica Bola de Fogo */}
-                  <div className={`p-3 rounded-xl bg-black border space-y-2 shadow-md transition-all ${
-                    visibleLayers.fireball
-                      ? 'border-amber-500/50'
-                      : 'border-white/10 opacity-60 bg-black/60'
-                  }`}>
+                  <div
+                    onMouseEnter={() => setHoveredZoneId('fireball')}
+                    onMouseLeave={() => setHoveredZoneId(null)}
+                    style={hoveredZoneId === 'fireball' ? { '--zone-glow-color': 'rgba(250, 204, 21, 0.85)' } as React.CSSProperties : undefined}
+                    className={`p-3 rounded-xl border space-y-2 shadow-md transition-all duration-300 ${
+                      hoveredZoneId === 'fireball'
+                        ? 'border-amber-300 ring-2 ring-amber-300 shadow-[0_0_30px_rgba(250,204,21,0.7)] bg-amber-950/60 zone-card-glowing'
+                        : visibleLayers.fireball
+                        ? 'bg-black border-amber-500/50'
+                        : 'border-white/10 opacity-60 bg-black/60'
+                    }`}
+                  >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <span className={`w-2.5 h-2.5 rounded-full ${visibleLayers.fireball ? 'bg-amber-400 shadow-sm shadow-amber-400/50' : 'bg-neutral-600'}`} />
@@ -2571,13 +2636,13 @@ export const NuclearRankingMapTab: React.FC = () => {
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-amber-200/70">Temperatura Interna:</span>
-                        <span className="text-amber-300 font-bold">&gt; 100.000.000 °C</span>
+                        <span className="text-amber-200/70">Temperatura do Sol:</span>
+                        <span className="text-amber-300 font-bold">~ 100.000.000 °C</span>
                       </div>
                     </div>
                     <div className="text-[10px] text-amber-100/90 leading-snug space-y-0.5">
-                      <div>Plasma nuclear incandescente (&gt;100.000.000 °C).</div>
-                      <div>Desintegração atômica instantânea em microssegundos.</div>
+                      <div>Temperatura do Sol (~ 100 milhões de °C).</div>
+                      <div>Vaporização imediata de qualquer matéria em contato direto.</div>
                       <div>Letalidade 100% absoluta (Plasma).</div>
                     </div>
                     <div className="p-2 rounded-lg bg-[#0c0c0c] border border-amber-500/30 space-y-1 font-mono text-[11px]">
@@ -2599,19 +2664,26 @@ export const NuclearRankingMapTab: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* 2. Métrica Vaporização */}
-                  <div className={`p-3 rounded-xl bg-black border space-y-2 shadow-md transition-all ${
-                    visibleLayers.vaporization
-                      ? 'border-yellow-500/50'
-                      : 'border-white/10 opacity-60 bg-black/60'
-                  }`}>
+                  {/* 2. Métrica Vaporização Imediata */}
+                  <div
+                    onMouseEnter={() => setHoveredZoneId('vaporization')}
+                    onMouseLeave={() => setHoveredZoneId(null)}
+                    style={hoveredZoneId === 'vaporization' ? { '--zone-glow-color': 'rgba(251, 146, 60, 0.85)' } as React.CSSProperties : undefined}
+                    className={`p-3 rounded-xl border space-y-2 shadow-md transition-all duration-300 ${
+                      hoveredZoneId === 'vaporization'
+                        ? 'border-orange-300 ring-2 ring-orange-300 shadow-[0_0_30px_rgba(251,146,60,0.7)] bg-orange-950/60 zone-card-glowing'
+                        : visibleLayers.vaporization
+                        ? 'bg-black border-orange-500/50'
+                        : 'border-white/10 opacity-60 bg-black/60'
+                    }`}
+                  >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <span className={`w-2.5 h-2.5 rounded-full ${visibleLayers.vaporization ? 'bg-yellow-400 shadow-sm shadow-yellow-400/50' : 'bg-neutral-600'}`} />
-                        <span className={`text-xs font-bold ${visibleLayers.vaporization ? 'text-yellow-300' : 'text-neutral-400'}`}>2. Raio de Vaporização Total</span>
+                        <span className={`w-2.5 h-2.5 rounded-full ${visibleLayers.vaporization ? 'bg-orange-400 shadow-sm shadow-orange-400/50' : 'bg-neutral-600'}`} />
+                        <span className={`text-xs font-bold ${visibleLayers.vaporization ? 'text-orange-300' : 'text-neutral-400'}`}>2. Vaporização Imediata</span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <span className="text-[10px] font-mono font-bold text-yellow-300">
+                        <span className="text-[10px] font-mono font-bold text-orange-300">
                           {calculateAreaKm2(effectiveBomb.vaporizationRadiusM)}
                         </span>
                         <button
@@ -2619,7 +2691,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                           onClick={() => toggleLayer('vaporization')}
                           className={`px-2 py-0.5 rounded-lg border text-[10px] font-mono font-bold flex items-center space-x-1 transition-all cursor-pointer ${
                             visibleLayers.vaporization
-                              ? 'bg-yellow-500/20 border-yellow-500/60 text-yellow-300 hover:bg-yellow-500/30'
+                              ? 'bg-orange-500/20 border-orange-500/60 text-orange-300 hover:bg-orange-500/30'
                               : 'bg-neutral-900 border-white/15 text-neutral-500 hover:text-neutral-300'
                           }`}
                           title={visibleLayers.vaporization ? 'Ocultar zona no mapa' : 'Exibir zona no mapa'}
@@ -2627,7 +2699,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                         >
                           {visibleLayers.vaporization ? (
                             <>
-                              <Eye className="w-3.5 h-3.5 text-yellow-400" />
+                              <Eye className="w-3.5 h-3.5 text-orange-400" />
                               <span>Visível</span>
                             </>
                           ) : (
@@ -2641,23 +2713,23 @@ export const NuclearRankingMapTab: React.FC = () => {
                     </div>
                     <div className="text-[11px] text-neutral-200 space-y-1 font-mono">
                       <div className="flex justify-between">
-                        <span className="text-yellow-200/70">Raio / Diâmetro Real:</span>
-                        <span className="text-yellow-100 font-bold">
+                        <span className="text-orange-200/70">Raio / Diâmetro Real:</span>
+                        <span className="text-orange-100 font-bold">
                           {formatRadius(effectiveBomb.vaporizationRadiusM)} / {formatDiameter(effectiveBomb.vaporizationRadiusM)}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-yellow-200/70">Fluxo Térmico Crítico:</span>
-                        <span className="text-yellow-300 font-bold">&gt; 150 cal/cm²</span>
+                        <span className="text-orange-200/70">Radiação Térmica Extrema:</span>
+                        <span className="text-orange-300 font-bold">&gt; 100 cal/cm²</span>
                       </div>
                     </div>
-                    <div className="text-[10px] text-yellow-100/90 leading-snug space-y-0.5">
-                      <div>Fluxo radiativo extremo (&gt;150 cal/cm²).</div>
-                      <div>Aço, rocha e concreto evaporam antes da onda mecânica.</div>
-                      <div>Letalidade 95% – 100% imediata.</div>
+                    <div className="text-[10px] text-orange-100/90 leading-snug space-y-0.5">
+                      <div>Radiação térmica extrema próximo ao limite da bola de fogo;</div>
+                      <div>estruturas de aço, concreto e rochas são vaporizadas ou derretidas.</div>
+                      <div>Letalidade 100% imediata (Vaporização e Fusão Térmica).</div>
                     </div>
-                    <div className="p-2 rounded-lg bg-[#0c0c0c] border border-yellow-500/30 space-y-1 font-mono text-[11px]">
-                      <div className="flex justify-between items-center text-yellow-200 font-bold">
+                    <div className="p-2 rounded-lg bg-[#0c0c0c] border border-orange-500/30 space-y-1 font-mono text-[11px]">
+                      <div className="flex justify-between items-center text-orange-200 font-bold">
                         <span className="flex items-center gap-1">
                           <Skull className="w-3 h-3 text-red-400" />
                           Mortes Estimadas:
@@ -2670,24 +2742,31 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                       <div className="flex justify-between text-[10px] text-neutral-300">
                         <span>Letalidade Física da Zona:</span>
-                        <span className="text-yellow-400 font-bold">95% – 100%</span>
+                        <span className="text-orange-400 font-bold">100% Instantânea</span>
                       </div>
                     </div>
                   </div>
 
-                  {/* 3. Métrica Carbonização */}
-                  <div className={`p-3 rounded-xl bg-black border space-y-2 shadow-md ring-1 transition-all ${
-                    visibleLayers.carbonization
-                      ? 'border-rose-500/70 ring-rose-500/20'
-                      : 'border-white/10 ring-transparent opacity-60 bg-black/60'
-                  }`}>
+                  {/* 3. Métrica Carbonização Total */}
+                  <div
+                    onMouseEnter={() => setHoveredZoneId('carbonization')}
+                    onMouseLeave={() => setHoveredZoneId(null)}
+                    style={hoveredZoneId === 'carbonization' ? { '--zone-glow-color': 'rgba(239, 68, 68, 0.9)' } as React.CSSProperties : undefined}
+                    className={`p-3 rounded-xl border space-y-2 shadow-md ring-1 transition-all duration-300 ${
+                      hoveredZoneId === 'carbonization'
+                        ? 'border-red-400 ring-2 ring-red-400 shadow-[0_0_30px_rgba(239,68,68,0.85)] bg-red-950/60 zone-card-glowing'
+                        : visibleLayers.carbonization
+                        ? 'bg-black border-red-500/70 ring-red-500/20'
+                        : 'border-white/10 ring-transparent opacity-60 bg-black/60'
+                    }`}
+                  >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <span className={`w-2.5 h-2.5 rounded-full ${visibleLayers.carbonization ? 'bg-rose-500 shadow-sm shadow-rose-600/50' : 'bg-neutral-600'}`} />
-                        <span className={`text-xs font-bold ${visibleLayers.carbonization ? 'text-rose-300' : 'text-neutral-400'}`}>3. Zona de Carbonização / 5-10 psi</span>
+                        <span className={`w-2.5 h-2.5 rounded-full ${visibleLayers.carbonization ? 'bg-red-500 shadow-sm shadow-red-600/50' : 'bg-neutral-600'}`} />
+                        <span className={`text-xs font-bold ${visibleLayers.carbonization ? 'text-red-300' : 'text-neutral-400'}`}>3. Carbonização Total</span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <span className="text-[10px] font-mono font-bold text-rose-300">
+                        <span className="text-[10px] font-mono font-bold text-red-300">
                           {calculateAreaKm2(effectiveBomb.carbonizationRadiusM)}
                         </span>
                         <button
@@ -2695,7 +2774,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                           onClick={() => toggleLayer('carbonization')}
                           className={`px-2 py-0.5 rounded-lg border text-[10px] font-mono font-bold flex items-center space-x-1 transition-all cursor-pointer ${
                             visibleLayers.carbonization
-                              ? 'bg-rose-500/20 border-rose-500/60 text-rose-300 hover:bg-rose-500/30'
+                              ? 'bg-red-500/20 border-red-500/60 text-red-300 hover:bg-red-500/30'
                               : 'bg-neutral-900 border-white/15 text-neutral-500 hover:text-neutral-300'
                           }`}
                           title={visibleLayers.carbonization ? 'Ocultar zona no mapa' : 'Exibir zona no mapa'}
@@ -2703,7 +2782,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                         >
                           {visibleLayers.carbonization ? (
                             <>
-                              <Eye className="w-3.5 h-3.5 text-rose-400" />
+                              <Eye className="w-3.5 h-3.5 text-red-400" />
                               <span>Visível</span>
                             </>
                           ) : (
@@ -2717,25 +2796,25 @@ export const NuclearRankingMapTab: React.FC = () => {
                     </div>
                     <div className="text-[11px] text-neutral-200 space-y-1 font-mono">
                       <div className="flex justify-between">
-                        <span className="text-rose-200/70">Raio / Diâmetro Real:</span>
-                        <span className="text-rose-100 font-bold">
+                        <span className="text-red-200/70">Raio / Diâmetro Real:</span>
+                        <span className="text-red-100 font-bold">
                           {formatRadius(effectiveBomb.carbonizationRadiusM)} / {formatDiameter(effectiveBomb.carbonizationRadiusM)}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-rose-200/70">Fluxo Térmico Incidente:</span>
-                        <span className="text-rose-300 font-bold">&gt; 25-35 cal/cm²</span>
+                        <span className="text-red-200/70">Ignição Instantânea:</span>
+                        <span className="text-red-300 font-bold">&gt; 40 cal/cm²</span>
                       </div>
                     </div>
-                    <div className="text-[10px] text-rose-100/95 leading-snug space-y-0.5">
-                      <div>Fluxo térmico direto (&gt;25-35 cal/cm²) e sobrepressão 5-10 psi.</div>
-                      <div>Pessoas ao ar livre sofrem carbonização; estruturas residenciais colapsam.</div>
-                      <div>Abrigamento parcial atenua mortes diretas. <span className="text-rose-400 font-black">Mortalidade: 25% – 55%</span></div>
+                    <div className="text-[10px] text-red-100/95 leading-snug space-y-0.5">
+                      <div>Ignição instantânea de qualquer material combustível.</div>
+                      <div>Vegetação, edifícios e compostos orgânicos viram cinzas antes da onda mecânica.</div>
+                      <div>Letalidade extrema: <span className="text-red-400 font-black">100%</span> (Combustão Humana Instantânea)</div>
                     </div>
-                    <div className="p-2 rounded-lg bg-[#0c0c0c] border border-rose-500/30 space-y-1 font-mono text-[11px]">
-                      <div className="flex justify-between items-center text-rose-200 font-bold">
+                    <div className="p-2 rounded-lg bg-[#0c0c0c] border border-red-500/30 space-y-1 font-mono text-[11px]">
+                      <div className="flex justify-between items-center text-red-200 font-bold">
                         <span className="flex items-center gap-1">
-                          <Skull className="w-3 h-3 text-rose-400" />
+                          <Skull className="w-3 h-3 text-red-400" />
                           Mortes Estimadas:
                         </span>
                         <span>{isDetonated ? `${casualties.zoneEstimates.carbonization.fatalitiesRangeDisplay} pessoas` : '—'}</span>
@@ -2745,22 +2824,29 @@ export const NuclearRankingMapTab: React.FC = () => {
                         <span className="text-neutral-100">{isDetonated ? `${formatCasualtyNumber(casualties.zoneEstimates.carbonization.populationExposed)} hab` : '—'}</span>
                       </div>
                       <div className="flex justify-between text-[10px] text-neutral-300">
-                        <span>Letalidade Física Calibrada:</span>
-                        <span className="text-rose-400 font-bold">~40% (25% – 55%)</span>
+                        <span>Letalidade Física da Zona:</span>
+                        <span className="text-red-400 font-bold">100% Instantânea</span>
                       </div>
                     </div>
                   </div>
 
-                  {/* 4. Métrica Choque Pesado */}
-                  <div className={`p-3 rounded-xl bg-black border space-y-2 shadow-md transition-all ${
-                    visibleLayers.heavy
-                      ? 'border-pink-500/50'
-                      : 'border-white/10 opacity-60 bg-black/60'
-                  }`}>
+                  {/* 4. Métrica Onda de Choque Pesada */}
+                  <div
+                    onMouseEnter={() => setHoveredZoneId('heavy')}
+                    onMouseLeave={() => setHoveredZoneId(null)}
+                    style={hoveredZoneId === 'heavy' ? { '--zone-glow-color': 'rgba(244, 114, 182, 0.9)' } as React.CSSProperties : undefined}
+                    className={`p-3 rounded-xl border space-y-2 shadow-md transition-all duration-300 ${
+                      hoveredZoneId === 'heavy'
+                        ? 'border-pink-300 ring-2 ring-pink-300 shadow-[0_0_30px_rgba(244,114,182,0.8)] bg-pink-950/60 zone-card-glowing'
+                        : visibleLayers.heavy
+                        ? 'bg-black border-pink-500/50'
+                        : 'border-white/10 opacity-60 bg-black/60'
+                    }`}
+                  >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <span className={`w-2.5 h-2.5 rounded-full ${visibleLayers.heavy ? 'bg-pink-500 shadow-sm' : 'bg-neutral-600'}`} />
-                        <span className={`text-xs font-bold ${visibleLayers.heavy ? 'text-pink-300' : 'text-neutral-400'}`}>4. Choque Pesado (20 psi)</span>
+                        <span className={`text-xs font-bold ${visibleLayers.heavy ? 'text-pink-300' : 'text-neutral-400'}`}>4. Onda de Choque Pesada (&gt; 20 psi)</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <span className="text-[10px] font-mono font-bold text-pink-300">
@@ -2800,13 +2886,13 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-pink-200/70">Sobrepressão e Vento:</span>
-                        <span className="text-pink-300 font-bold">20 psi • &gt; 800 km/h</span>
+                        <span className="text-pink-300 font-bold">&gt; 20 psi • &gt; 1.000 km/h</span>
                       </div>
                     </div>
                     <div className="text-[10px] text-pink-100/90 leading-snug space-y-0.5">
-                      <div>Sobrepressão extrema de 20 psi e ventos &gt;800 km/h.</div>
-                      <div>Demolição de edifícios de concreto armado e pontes.</div>
-                      <div>Letalidade 60% – 85% por escombros e traumatismos.</div>
+                      <div>Sobrepressão extrema (&gt; 20 psi). Destruição total de edifícios reforçados</div>
+                      <div>e estruturas de concreto armado. Ventos superiores a 1.000 km/h.</div>
+                      <div>Letalidade severa: 95% – 100% por colapso estrutural massivo.</div>
                     </div>
                     <div className="p-2 rounded-lg bg-[#0c0c0c] border border-pink-500/30 space-y-1 font-mono text-[11px]">
                       <div className="flex justify-between items-center text-pink-200 font-bold">
@@ -2821,26 +2907,120 @@ export const NuclearRankingMapTab: React.FC = () => {
                         <span className="text-neutral-100">{isDetonated ? `${formatCasualtyNumber(casualties.zoneEstimates.heavy.populationExposed)} hab` : '—'}</span>
                       </div>
                       <div className="flex justify-between text-[10px] text-neutral-300">
-                        <span>Feridos graves na faixa:</span>
+                        <span>Feridos na faixa:</span>
                         <span className="text-amber-300">{isDetonated ? `${casualties.zoneEstimates.heavy.injuriesRangeDisplay}` : '—'}</span>
                       </div>
                       <div className="flex justify-between text-[10px] text-neutral-300">
                         <span>Letalidade Física Calibrada:</span>
-                        <span className="text-pink-400 font-bold">~75% (60% – 85%)</span>
+                        <span className="text-pink-400 font-bold">~98% (95% – 100%)</span>
                       </div>
                     </div>
                   </div>
 
-                  {/* 5. Métrica Raio Térmico */}
-                  <div className={`p-3 rounded-xl bg-black border space-y-2 shadow-md transition-all ${
-                    visibleLayers.thermal
-                      ? 'border-orange-500/50'
-                      : 'border-white/10 opacity-60 bg-black/60'
-                  }`}>
+                  {/* 5. Métrica Onda de Choque Moderada */}
+                  <div
+                    onMouseEnter={() => setHoveredZoneId('moderate')}
+                    onMouseLeave={() => setHoveredZoneId(null)}
+                    style={hoveredZoneId === 'moderate' ? { '--zone-glow-color': 'rgba(167, 139, 250, 0.9)' } as React.CSSProperties : undefined}
+                    className={`p-3 rounded-xl border space-y-2 shadow-md transition-all duration-300 ${
+                      hoveredZoneId === 'moderate'
+                        ? 'border-purple-300 ring-2 ring-purple-300 shadow-[0_0_30px_rgba(167,139,250,0.8)] bg-purple-950/60 zone-card-glowing'
+                        : visibleLayers.moderate
+                        ? 'bg-black border-purple-500/50'
+                        : 'border-white/10 opacity-60 bg-black/60'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <span className={`w-2.5 h-2.5 rounded-full ${visibleLayers.moderate ? 'bg-purple-500 shadow-sm' : 'bg-neutral-600'}`} />
+                        <span className={`text-xs font-bold ${visibleLayers.moderate ? 'text-purple-300' : 'text-neutral-400'}`}>5. Onda de Choque Moderada (~ 5 psi)</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-[10px] font-mono font-bold text-purple-300">
+                          {calculateAreaKm2(effectiveBomb.moderateBlastRadiusM)}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => toggleLayer('moderate')}
+                          className={`px-2 py-0.5 rounded-lg border text-[10px] font-mono font-bold flex items-center space-x-1 transition-all cursor-pointer ${
+                            visibleLayers.moderate
+                              ? 'bg-purple-500/20 border-purple-500/60 text-purple-300 hover:bg-purple-500/30'
+                              : 'bg-neutral-900 border-white/15 text-neutral-500 hover:text-neutral-300'
+                          }`}
+                          title={visibleLayers.moderate ? 'Ocultar zona no mapa' : 'Exibir zona no mapa'}
+                          aria-label={visibleLayers.moderate ? 'Ocultar zona no mapa' : 'Exibir zona no mapa'}
+                        >
+                          {visibleLayers.moderate ? (
+                            <>
+                              <Eye className="w-3.5 h-3.5 text-purple-400" />
+                              <span>Visível</span>
+                            </>
+                          ) : (
+                            <>
+                              <EyeOff className="w-3.5 h-3.5 text-neutral-500" />
+                              <span>Oculta</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="text-[11px] text-neutral-200 space-y-1 font-mono">
+                      <div className="flex justify-between">
+                        <span className="text-purple-200/70">Raio / Diâmetro Real:</span>
+                        <span className="text-purple-100 font-bold">
+                          {formatRadius(effectiveBomb.moderateBlastRadiusM)} / {formatDiameter(effectiveBomb.moderateBlastRadiusM)}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-purple-200/70">Sobrepressão Média:</span>
+                        <span className="text-purple-300 font-bold">~ 5 psi (0.35 bar)</span>
+                      </div>
+                    </div>
+                    <div className="text-[10px] text-purple-100/90 leading-snug space-y-0.5">
+                      <div>Sobrepressão média (~ 5 psi). Colapso quase total de edifícios</div>
+                      <div>residenciais de alvenaria. Danos graves a estruturas pesadas.</div>
+                      <div>Mortalidade moderada: 30% – 55% e alto índice de feridos.</div>
+                    </div>
+                    <div className="p-2 rounded-lg bg-[#0c0c0c] border border-purple-500/30 space-y-1 font-mono text-[11px]">
+                      <div className="flex justify-between items-center text-purple-200 font-bold">
+                        <span className="flex items-center gap-1">
+                          <Skull className="w-3 h-3 text-purple-400" />
+                          Mortes Estimadas:
+                        </span>
+                        <span>{isDetonated ? `${casualties.zoneEstimates.moderate.fatalitiesRangeDisplay} pessoas` : '—'}</span>
+                      </div>
+                      <div className="flex justify-between text-[10px] text-neutral-300">
+                        <span>População residente na faixa:</span>
+                        <span className="text-neutral-100">{isDetonated ? `${formatCasualtyNumber(casualties.zoneEstimates.moderate.populationExposed)} hab` : '—'}</span>
+                      </div>
+                      <div className="flex justify-between text-[10px] text-neutral-300">
+                        <span>Feridos na faixa:</span>
+                        <span className="text-amber-300">{isDetonated ? `${casualties.zoneEstimates.moderate.injuriesRangeDisplay}` : '—'}</span>
+                      </div>
+                      <div className="flex justify-between text-[10px] text-neutral-300">
+                        <span>Letalidade Física Calibrada:</span>
+                        <span className="text-purple-400 font-bold">~45% (30% – 55%)</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 6. Métrica Raio Térmico */}
+                  <div
+                    onMouseEnter={() => setHoveredZoneId('thermal')}
+                    onMouseLeave={() => setHoveredZoneId(null)}
+                    style={hoveredZoneId === 'thermal' ? { '--zone-glow-color': 'rgba(249, 115, 22, 0.9)' } as React.CSSProperties : undefined}
+                    className={`p-3 rounded-xl border space-y-2 shadow-md transition-all duration-300 ${
+                      hoveredZoneId === 'thermal'
+                        ? 'border-orange-300 ring-2 ring-orange-300 shadow-[0_0_30px_rgba(249,115,22,0.8)] bg-orange-950/60 zone-card-glowing'
+                        : visibleLayers.thermal
+                        ? 'bg-black border-orange-500/50'
+                        : 'border-white/10 opacity-60 bg-black/60'
+                    }`}
+                  >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <span className={`w-2.5 h-2.5 rounded-full ${visibleLayers.thermal ? 'bg-orange-500 shadow-sm' : 'bg-neutral-600'}`} />
-                        <span className={`text-xs font-bold ${visibleLayers.thermal ? 'text-orange-300' : 'text-neutral-400'}`}>5. Raio Térmico (Queimaduras 3º Grau)</span>
+                        <span className={`text-xs font-bold ${visibleLayers.thermal ? 'text-orange-300' : 'text-neutral-400'}`}>6. Raio Térmico (Queimadura de 3º Grau)</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <span className="text-[10px] font-mono font-bold text-orange-300">
@@ -2884,9 +3064,9 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                     </div>
                     <div className="text-[10px] text-orange-100/90 leading-snug space-y-0.5">
-                      <div>Radiação térmica incidente (~8-12 cal/cm²).</div>
-                      <div>Queimaduras de 3º grau em quem estiver ao ar livre desprotegido.</div>
-                      <div>Abrigamento interno reduz fatalidades diretas para 5% – 20%.</div>
+                      <div>O pulso de luz e calor causa queimaduras de 3º grau em pele</div>
+                      <div>exposta e ignição de roupas e papel a dezenas de quilômetros.</div>
+                      <div>Letalidade direta: 8% – 22% (mitigada por abrigo).</div>
                     </div>
                     <div className="p-2 rounded-lg bg-[#0c0c0c] border border-orange-500/30 space-y-1 font-mono text-[11px]">
                       <div className="flex justify-between items-center text-orange-200 font-bold">
@@ -2906,21 +3086,28 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                       <div className="flex justify-between text-[10px] text-neutral-300">
                         <span>Letalidade Térmica (Visada Direta):</span>
-                        <span className="text-orange-400 font-bold">~12% (5% – 20%)</span>
+                        <span className="text-orange-400 font-bold">~15% (8% – 22%)</span>
                       </div>
                     </div>
                   </div>
 
-                  {/* 6. Métrica Choque Leve */}
-                  <div className={`p-3 rounded-xl bg-black border space-y-2 shadow-md transition-all ${
-                    visibleLayers.light
-                      ? 'border-slate-500/50'
-                      : 'border-white/10 opacity-60 bg-black/60'
-                  }`}>
+                  {/* 7. Métrica Onda de Choque Leve */}
+                  <div
+                    onMouseEnter={() => setHoveredZoneId('light')}
+                    onMouseLeave={() => setHoveredZoneId(null)}
+                    style={hoveredZoneId === 'light' ? { '--zone-glow-color': 'rgba(148, 163, 184, 0.9)' } as React.CSSProperties : undefined}
+                    className={`p-3 rounded-xl border space-y-2 shadow-md transition-all duration-300 ${
+                      hoveredZoneId === 'light'
+                        ? 'border-slate-200 ring-2 ring-slate-200 shadow-[0_0_30px_rgba(148,163,184,0.8)] bg-slate-900/80 zone-card-glowing'
+                        : visibleLayers.light
+                        ? 'bg-black border-slate-500/50'
+                        : 'border-white/10 opacity-60 bg-black/60'
+                    }`}
+                  >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <span className={`w-2.5 h-2.5 rounded-full ${visibleLayers.light ? 'bg-[#737373] shadow-sm' : 'bg-neutral-600'}`} />
-                        <span className={`text-xs font-bold ${visibleLayers.light ? 'text-slate-200' : 'text-neutral-400'}`}>6. Choque Leve (1-2 psi)</span>
+                        <span className={`text-xs font-bold ${visibleLayers.light ? 'text-slate-200' : 'text-neutral-400'}`}>7. Onda de Choque Leve (1-2 psi)</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <span className="text-[10px] font-mono font-bold text-slate-300">
@@ -2959,14 +3146,14 @@ export const NuclearRankingMapTab: React.FC = () => {
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-300/70">Efeito Mecânico:</span>
-                        <span className="text-slate-200 font-bold">1-2 psi (0.07 – 0.14 bar)</span>
+                        <span className="text-slate-300/70">Sobrepressão Baixa:</span>
+                        <span className="text-slate-200 font-bold">~ 1 a 2 psi (0.07 – 0.14 bar)</span>
                       </div>
                     </div>
                     <div className="text-[10px] text-slate-100/90 leading-snug space-y-0.5">
-                      <div>Sobrepressão residual de 1 a 2 psi a grandes distâncias.</div>
-                      <div>Estilhaçamento em massa de vidraças e esquadrias.</div>
-                      <div>Lesões por corte e fragmentos; letalidade baixa: 0.2% – 2.5%.</div>
+                      <div>Sobrepressão baixa (~ 1 a 2 psi). Quebra maciça de vidros,</div>
+                      <div>estilhaços voando e danos menores a estruturas leves.</div>
+                      <div>Letalidade baixa: 0.5% – 3% e ferimentos por fragmentos.</div>
                     </div>
                     <div className="p-2 rounded-lg bg-[#0c0c0c] border border-white/10 space-y-1 font-mono text-[11px]">
                       <div className="flex justify-between items-center text-slate-200 font-bold">
@@ -2981,12 +3168,12 @@ export const NuclearRankingMapTab: React.FC = () => {
                         <span className="text-neutral-100">{isDetonated ? `${formatCasualtyNumber(casualties.zoneEstimates.light.populationExposed)} hab` : '—'}</span>
                       </div>
                       <div className="flex justify-between text-[10px] text-neutral-300">
-                        <span>Feridos por estilhaços:</span>
+                        <span>Feridos na faixa:</span>
                         <span className="text-amber-300">{isDetonated ? `${casualties.zoneEstimates.light.injuriesRangeDisplay}` : '—'}</span>
                       </div>
                       <div className="flex justify-between text-[10px] text-neutral-300">
                         <span>Letalidade por Vidros/Fragmentos:</span>
-                        <span className="text-slate-300 font-bold">~1.0% (0.2% – 2.5%)</span>
+                        <span className="text-slate-300 font-bold">~1.5% (0.5% – 3%)</span>
                       </div>
                     </div>
                   </div>
@@ -3146,21 +3333,29 @@ export const NuclearRankingMapTab: React.FC = () => {
                           const distKm = getCalculatedFalloutLengthKm(
                             zone.id as 'rad1000' | 'rad300' | 'rad100' | 'rad10'
                           );
+                          const isHov = hoveredFalloutZoneId === zone.id;
 
-                          const zoneColorClasses: Record<string, { border: string; text: string; subtext: string }> = {
-                            rad1000: { border: 'border-purple-500/60', text: 'text-purple-200', subtext: 'text-purple-300/80' },
-                            rad300: { border: 'border-red-500/60', text: 'text-red-200', subtext: 'text-red-300/80' },
-                            rad100: { border: 'border-orange-500/60', text: 'text-orange-200', subtext: 'text-orange-300/80' },
-                            rad10: { border: 'border-yellow-500/60', text: 'text-yellow-200', subtext: 'text-yellow-300/80' }
+                          const zoneColorClasses: Record<string, { border: string; text: string; subtext: string; glow: string }> = {
+                            rad1000: { border: 'border-purple-500/60', text: 'text-purple-200', subtext: 'text-purple-300/80', glow: '#c084fc' },
+                            rad300: { border: 'border-red-500/60', text: 'text-red-200', subtext: 'text-red-300/80', glow: '#f87171' },
+                            rad100: { border: 'border-orange-500/60', text: 'text-orange-200', subtext: 'text-orange-300/80', glow: '#fb923c' },
+                            rad10: { border: 'border-yellow-500/60', text: 'text-yellow-200', subtext: 'text-yellow-300/80', glow: '#fde047' }
                           };
-                          const zc = zoneColorClasses[zone.id] || { border: 'border-white/20', text: 'text-white', subtext: 'text-neutral-400' };
+                          const zc = zoneColorClasses[zone.id] || { border: 'border-white/20', text: 'text-white', subtext: 'text-neutral-400', glow: '#ffffff' };
 
                           return (
                             <button
                               key={zone.id}
                               onClick={() => toggleFalloutZone(zone.id)}
+                              onMouseEnter={() => setHoveredFalloutZoneId(zone.id)}
+                              onMouseLeave={() => setHoveredFalloutZoneId((prev) => prev === zone.id ? null : prev)}
+                              style={{
+                                '--zone-glow-color': zc.glow
+                              } as React.CSSProperties}
                               className={`p-2 rounded-xl border text-left transition-all flex items-center justify-between cursor-pointer ${
-                                isVis
+                                isHov
+                                  ? 'zone-card-glowing bg-neutral-900 border-white ring-2 ring-white/50 shadow-lg'
+                                  : isVis
                                   ? `bg-black ${zc.border} shadow-sm ring-1 ring-white/10`
                                   : 'bg-black/60 border-white/10 text-neutral-500 opacity-60 hover:opacity-100'
                               }`}
@@ -3199,7 +3394,18 @@ export const NuclearRankingMapTab: React.FC = () => {
                   </span>
 
                   {/* 1. Zona Letal Imediata (1.000 rad) */}
-                  <div className="p-3 rounded-xl bg-black border border-purple-500/60 space-y-2 shadow-md">
+                  <div
+                    onMouseEnter={() => setHoveredFalloutZoneId('rad1000')}
+                    onMouseLeave={() => setHoveredFalloutZoneId((prev) => prev === 'rad1000' ? null : prev)}
+                    style={{
+                      '--zone-glow-color': '#c084fc'
+                    } as React.CSSProperties}
+                    className={`p-3 rounded-xl transition-all duration-200 cursor-pointer ${
+                      hoveredFalloutZoneId === 'rad1000'
+                        ? 'zone-card-glowing bg-[#1c0f2a] border-purple-400 ring-2 ring-purple-400 shadow-2xl'
+                        : 'bg-black border border-purple-500/60 shadow-md hover:border-purple-400/80'
+                    } space-y-2`}
+                  >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <span className="w-2.5 h-2.5 rounded-full bg-purple-500" />
@@ -3244,7 +3450,18 @@ export const NuclearRankingMapTab: React.FC = () => {
                   </div>
 
                   {/* 2. Síndrome Aguda SAR (300-1000 rad) */}
-                  <div className="p-3 rounded-xl bg-black border border-red-500/60 space-y-2 shadow-md">
+                  <div
+                    onMouseEnter={() => setHoveredFalloutZoneId('rad300')}
+                    onMouseLeave={() => setHoveredFalloutZoneId((prev) => prev === 'rad300' ? null : prev)}
+                    style={{
+                      '--zone-glow-color': '#f87171'
+                    } as React.CSSProperties}
+                    className={`p-3 rounded-xl transition-all duration-200 cursor-pointer ${
+                      hoveredFalloutZoneId === 'rad300'
+                        ? 'zone-card-glowing bg-[#280d0d] border-red-400 ring-2 ring-red-400 shadow-2xl'
+                        : 'bg-black border border-red-500/60 shadow-md hover:border-red-400/80'
+                    } space-y-2`}
+                  >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
@@ -3289,7 +3506,18 @@ export const NuclearRankingMapTab: React.FC = () => {
                   </div>
 
                   {/* 3. Doença da Radiação & Evacuação (100-300 rad) */}
-                  <div className="p-3 rounded-xl bg-black border border-orange-500/60 space-y-2 shadow-md">
+                  <div
+                    onMouseEnter={() => setHoveredFalloutZoneId('rad100')}
+                    onMouseLeave={() => setHoveredFalloutZoneId((prev) => prev === 'rad100' ? null : prev)}
+                    style={{
+                      '--zone-glow-color': '#fb923c'
+                    } as React.CSSProperties}
+                    className={`p-3 rounded-xl transition-all duration-200 cursor-pointer ${
+                      hoveredFalloutZoneId === 'rad100'
+                        ? 'zone-card-glowing bg-[#2a1407] border-orange-400 ring-2 ring-orange-400 shadow-2xl'
+                        : 'bg-black border border-orange-500/60 shadow-md hover:border-orange-400/80'
+                    } space-y-2`}
+                  >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <span className="w-2.5 h-2.5 rounded-full bg-orange-500" />
@@ -3334,7 +3562,18 @@ export const NuclearRankingMapTab: React.FC = () => {
                   </div>
 
                   {/* 4. Contaminação Prolongada (10-100 rad) */}
-                  <div className="p-3 rounded-xl bg-black border border-yellow-500/60 space-y-2 shadow-md">
+                  <div
+                    onMouseEnter={() => setHoveredFalloutZoneId('rad10')}
+                    onMouseLeave={() => setHoveredFalloutZoneId((prev) => prev === 'rad10' ? null : prev)}
+                    style={{
+                      '--zone-glow-color': '#fde047'
+                    } as React.CSSProperties}
+                    className={`p-3 rounded-xl transition-all duration-200 cursor-pointer ${
+                      hoveredFalloutZoneId === 'rad10'
+                        ? 'zone-card-glowing bg-[#262007] border-yellow-400 ring-2 ring-yellow-400 shadow-2xl'
+                        : 'bg-black border border-yellow-500/60 shadow-md hover:border-yellow-400/80'
+                    } space-y-2`}
+                  >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <span className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
@@ -3569,7 +3808,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                     </div>
                     <div className="bg-[#141414] p-1.5 rounded border border-white/10">
                       <span className="text-[9px] text-neutral-400 block">Bola Fogo</span>
-                      <span className="text-amber-400 font-bold">{(selectedBomb.fireballRadiusM / 180).toFixed(1)}×</span>
+                      <span className="text-amber-400 font-bold">{(effectiveBomb.fireballRadiusM / 200).toFixed(1)}×</span>
                     </div>
                     <div className="bg-[#141414] p-1.5 rounded border border-white/10">
                       <span className="text-[9px] text-neutral-400 block">Cogumelo</span>
@@ -3595,10 +3834,10 @@ export const NuclearRankingMapTab: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="text-sm sm:text-base font-black text-white uppercase tracking-tight">
-                    DADOS TÉCNICOS: ZONAS DE DESTRUIÇÃO E ESCALONAMENTO NUCLEAR
+                    TABELA DE MÉTRICAS FÍSICAS E RELAÇÃO DE ESCALA DE ZONAS DE DESTRUIÇÃO NUCLEARES
                   </h3>
                   <p className="text-xs text-neutral-300 mt-0.5">
-                    Tabela completa com raios (R) e diâmetros (Ø) das 6 zonas de destruição para as 12 potências calibradas
+                    Referência de Escala: Castle Bravo com Diâmetro de Bola de Fogo de 7,0 km (Raio 3,50 km) • 12 Armas Calibradas
                   </p>
                 </div>
               </div>
@@ -3613,42 +3852,47 @@ export const NuclearRankingMapTab: React.FC = () => {
 
             {/* Modal Content Scrollable */}
             <div className="p-4 sm:p-6 overflow-y-auto space-y-6 bg-[#141414]">
-              {/* Parâmetros de Referência Tsar 100 Mt */}
+              {/* Parâmetros de Referência Castle Bravo (15 Mt) & Tsar Bomba (50 Mt / 100 Mt) */}
               <div className="bg-[#181818] border border-white/15 rounded-xl p-4 space-y-3">
                 <div className="flex items-center space-x-2 text-white font-bold text-xs uppercase tracking-wider">
                   <ShieldAlert className="w-4 h-4 text-red-500" />
-                  <span>Parâmetros de Referência (Tsar Bomba 100 Mt — Projeto Teórico):</span>
+                  <span>Parâmetros de Referência de Escala (Castle Bravo 15 Mt — Ø Bola de Fogo 7,0 km):</span>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-2">
                   <div className="bg-[#222222] p-2.5 rounded-lg border border-white/15 text-center">
-                    <span className="text-[10px] text-white font-bold block">Bola de Fogo</span>
-                    <span className="text-xs text-white font-mono font-black">R: 6,7 km</span>
-                    <span className="text-[10px] text-neutral-400 font-mono block">Ø: 13,4 km</span>
+                    <span className="text-[10px] text-white font-bold block">1º Bola de Fogo</span>
+                    <span className="text-xs text-amber-300 font-mono font-black">R: 3,50 km</span>
+                    <span className="text-[10px] text-neutral-400 font-mono block">Ø: 7,00 km</span>
                   </div>
                   <div className="bg-[#222222] p-2.5 rounded-lg border border-white/15 text-center">
-                    <span className="text-[10px] text-white font-bold block">Vaporização</span>
-                    <span className="text-xs text-white font-mono font-black">R: 11,6 km</span>
-                    <span className="text-[10px] text-neutral-400 font-mono block">Ø: 23,2 km</span>
+                    <span className="text-[10px] text-white font-bold block">2º Vaporização</span>
+                    <span className="text-xs text-orange-300 font-mono font-black">R: 7,86 km</span>
+                    <span className="text-[10px] text-neutral-400 font-mono block">Ø: 15,72 km</span>
                   </div>
                   <div className="bg-[#222222] p-2.5 rounded-lg border border-white/15 text-center">
-                    <span className="text-[10px] text-white font-bold block">Choque Pesado (20 psi)</span>
-                    <span className="text-xs text-white font-mono font-black">R: 18,2 km</span>
-                    <span className="text-[10px] text-neutral-400 font-mono block">Ø: 36,4 km</span>
+                    <span className="text-[10px] text-white font-bold block">3º Carbonização</span>
+                    <span className="text-xs text-red-400 font-mono font-black">R: 11,10 km</span>
+                    <span className="text-[10px] text-neutral-400 font-mono block">Ø: 22,20 km</span>
                   </div>
                   <div className="bg-[#222222] p-2.5 rounded-lg border border-white/15 text-center">
-                    <span className="text-[10px] text-white font-bold block">Carbonização</span>
-                    <span className="text-xs text-white font-mono font-black">R: 51,0 km</span>
-                    <span className="text-[10px] text-neutral-400 font-mono block">Ø: 102,0 km</span>
+                    <span className="text-[10px] text-white font-bold block">4º Choque Pesado</span>
+                    <span className="text-xs text-pink-400 font-mono font-black">R: 10,30 km</span>
+                    <span className="text-[10px] text-neutral-400 font-mono block">Ø: 20,60 km (20 psi)</span>
                   </div>
                   <div className="bg-[#222222] p-2.5 rounded-lg border border-white/15 text-center">
-                    <span className="text-[10px] text-white font-bold block">Raio Térmico 3º Grau</span>
-                    <span className="text-xs text-white font-mono font-black">R: 106,3 km</span>
-                    <span className="text-[10px] text-neutral-400 font-mono block">Ø: 212,6 km</span>
+                    <span className="text-[10px] text-white font-bold block">5º Choque Moderado</span>
+                    <span className="text-xs text-purple-400 font-mono font-black">R: 22,21 km</span>
+                    <span className="text-[10px] text-neutral-400 font-mono block">Ø: 44,42 km (5 psi)</span>
                   </div>
                   <div className="bg-[#222222] p-2.5 rounded-lg border border-white/15 text-center">
-                    <span className="text-[10px] text-white font-bold block">Choque Leve (1 psi)</span>
-                    <span className="text-xs text-white font-mono font-black">R: 132,5 km</span>
-                    <span className="text-[10px] text-neutral-400 font-mono block">Ø: 265,0 km</span>
+                    <span className="text-[10px] text-white font-bold block">6º Raio Térmico</span>
+                    <span className="text-xs text-amber-400 font-mono font-black">R: 40,09 km</span>
+                    <span className="text-[10px] text-neutral-400 font-mono block">Ø: 80,18 km (3º Grau)</span>
+                  </div>
+                  <div className="bg-[#222222] p-2.5 rounded-lg border border-white/15 text-center">
+                    <span className="text-[10px] text-white font-bold block">7º Choque Leve</span>
+                    <span className="text-xs text-slate-300 font-mono font-black">R: 58,47 km</span>
+                    <span className="text-[10px] text-neutral-400 font-mono block">Ø: 116,94 km (1 psi)</span>
                   </div>
                 </div>
               </div>
@@ -3658,7 +3902,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
                     <Flame className="w-3.5 h-3.5 text-red-500" />
-                    <span>Tabela Completa de Impacto por Potência (12 Armas)</span>
+                    <span>Tabela Completa de Impacto por Potência (7 Zonas Calibradas)</span>
                   </h4>
                   <span className="text-[10px] font-mono text-neutral-400">
                     R = Raio • Ø = Diâmetro
@@ -3670,12 +3914,13 @@ export const NuclearRankingMapTab: React.FC = () => {
                     <thead className="bg-[#1c1c1c] border-b border-white/15 text-[10px] text-white uppercase font-bold">
                       <tr>
                         <th className="p-3 text-white">Arma / Potência</th>
-                        <th className="p-3 text-white">Bola de Fogo</th>
-                        <th className="p-3 text-white">Vaporização</th>
-                        <th className="p-3 text-white">Choque Pesado (20 psi)</th>
-                        <th className="p-3 text-white">Carbonização</th>
-                        <th className="p-3 text-white">Raio Térmico 3º</th>
-                        <th className="p-3 text-white">Choque Leve (1 psi)</th>
+                        <th className="p-3 text-white">1º Bola Fogo</th>
+                        <th className="p-3 text-white">2º Vaporização Exterior</th>
+                        <th className="p-3 text-white">3º Carbonização Instantânea</th>
+                        <th className="p-3 text-white">4º Choque Pesado (20 psi)</th>
+                        <th className="p-3 text-white">5º Choque Moderado (5 psi)</th>
+                        <th className="p-3 text-white">6º Queimaduras 3º Grau</th>
+                        <th className="p-3 text-white">7º Choque Leve (1 psi)</th>
                         <th className="p-3 text-center text-white">Ação</th>
                       </tr>
                     </thead>
@@ -3703,28 +3948,32 @@ export const NuclearRankingMapTab: React.FC = () => {
                               </span>
                             </td>
                             <td className="p-3 text-white font-mono">
-                              <div className="text-white font-semibold">R: {(b.fireballRadiusM / 1000).toFixed(2)} km</div>
-                              <div className="text-[10px] text-neutral-400">Ø: {(b.fireballRadiusM * 2 / 1000).toFixed(2)} km</div>
+                              <div className="text-white font-semibold">R: {formatRadius(b.fireballRadiusM)}</div>
+                              <div className="text-[10px] text-neutral-400">Ø: {formatDiameter(b.fireballRadiusM)}</div>
                             </td>
                             <td className="p-3 text-white font-mono">
-                              <div className="text-white font-semibold">R: {(b.vaporizationRadiusM / 1000).toFixed(2)} km</div>
-                              <div className="text-[10px] text-neutral-400">Ø: {(b.vaporizationRadiusM * 2 / 1000).toFixed(2)} km</div>
+                              <div className="text-white font-semibold">R: {formatRadius(b.vaporizationRadiusM)}</div>
+                              <div className="text-[10px] text-neutral-400">Ø: {formatDiameter(b.vaporizationRadiusM)}</div>
                             </td>
                             <td className="p-3 text-white font-mono">
-                              <div className="text-white font-semibold">R: {(b.heavyBlastRadiusM / 1000).toFixed(2)} km</div>
-                              <div className="text-[10px] text-neutral-400">Ø: {(b.heavyBlastRadiusM * 2 / 1000).toFixed(2)} km</div>
+                              <div className="text-white font-semibold">R: {formatRadius(b.carbonizationRadiusM)}</div>
+                              <div className="text-[10px] text-neutral-400">Ø: {formatDiameter(b.carbonizationRadiusM)}</div>
                             </td>
                             <td className="p-3 text-white font-mono">
-                              <div className="text-white font-semibold">R: {(b.carbonizationRadiusM / 1000).toFixed(2)} km</div>
-                              <div className="text-[10px] text-neutral-400">Ø: {(b.carbonizationRadiusM * 2 / 1000).toFixed(2)} km</div>
+                              <div className="text-white font-semibold">R: {formatRadius(b.heavyBlastRadiusM)}</div>
+                              <div className="text-[10px] text-neutral-400">Ø: {formatDiameter(b.heavyBlastRadiusM)}</div>
                             </td>
                             <td className="p-3 text-white font-mono">
-                              <div className="text-white font-semibold">R: {(b.thermalRadiusM / 1000).toFixed(2)} km</div>
-                              <div className="text-[10px] text-neutral-400">Ø: {(b.thermalRadiusM * 2 / 1000).toFixed(2)} km</div>
+                              <div className="text-white font-semibold">R: {formatRadius(b.moderateBlastRadiusM)}</div>
+                              <div className="text-[10px] text-neutral-400">Ø: {formatDiameter(b.moderateBlastRadiusM)}</div>
                             </td>
                             <td className="p-3 text-white font-mono">
-                              <div className="text-white font-semibold">R: {(b.lightBlastRadiusM / 1000).toFixed(2)} km</div>
-                              <div className="text-[10px] text-neutral-400">Ø: {(b.lightBlastRadiusM * 2 / 1000).toFixed(2)} km</div>
+                              <div className="text-white font-semibold">R: {formatRadius(b.thermalRadiusM)}</div>
+                              <div className="text-[10px] text-neutral-400">Ø: {formatDiameter(b.thermalRadiusM)}</div>
+                            </td>
+                            <td className="p-3 text-white font-mono">
+                              <div className="text-white font-semibold">R: {formatRadius(b.lightBlastRadiusM)}</div>
+                              <div className="text-[10px] text-neutral-400">Ø: {formatDiameter(b.lightBlastRadiusM)}</div>
                             </td>
                             <td className="p-3 text-center">
                               <button
@@ -3732,7 +3981,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                                   handleSelectBomb(b);
                                   setShowBenchmarkModal(false);
                                 }}
-                                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                                   isCurrent
                                     ? 'bg-red-600 text-white cursor-default'
                                     : 'bg-[#222222] hover:bg-red-600 text-white border border-white/15'

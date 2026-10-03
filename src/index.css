@@ -33,6 +33,26 @@
   border-image: linear-gradient(to bottom right, rgba(115, 202, 229, 0.4), rgba(143, 131, 255, 0.2), rgba(255, 255, 255, 0.05)) 1;
 }
 
+/* Zone Hover Glow & Shine Transitions */
+.tactical-zone-path {
+  transition: stroke 0.2s ease, stroke-width 0.2s ease, fill-opacity 0.2s ease, filter 0.25s ease;
+  cursor: pointer;
+}
+
+@keyframes zone-card-pulse {
+  0%, 100% {
+    box-shadow: 0 0 16px var(--zone-glow-color, rgba(239, 68, 68, 0.6)), inset 0 0 12px var(--zone-glow-color, rgba(239, 68, 68, 0.25));
+  }
+  50% {
+    box-shadow: 0 0 32px var(--zone-glow-color, rgba(239, 68, 68, 0.9)), inset 0 0 20px var(--zone-glow-color, rgba(239, 68, 68, 0.4));
+  }
+}
+
+.zone-card-glowing {
+  animation: zone-card-pulse 1.6s infinite ease-in-out;
+  transform: translateY(-2px);
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -124,16 +144,66 @@
   -webkit-filter: brightness(0.72) contrast(1.4) saturate(0.8) !important;
 }
 
-/* Tactical Reference Layer (Borders, labels, country names) */
+/* Tactical Reference Layer (Thin subtle grey dashed borders & labels) */
 .tactical-reference-tiles {
   pointer-events: none !important;
 }
 
 .tactical-reference-tiles .leaflet-tile,
 .tactical-reference-tiles img {
-  filter: brightness(1.2) contrast(1.3) !important;
-  -webkit-filter: brightness(1.2) contrast(1.3) !important;
+  filter: brightness(1.08) contrast(1.18) !important;
+  -webkit-filter: brightness(1.08) contrast(1.18) !important;
   opacity: 0.92 !important;
+}
+
+/* Satellite Hybrid Mode (Rich Deep-Navy Ocean & Forest Green Landmass + Thin Subtle Dashed Borders) */
+.satellite-tiles {
+  background-color: #0b1322 !important;
+}
+
+.satellite-tiles .leaflet-tile,
+.satellite-tiles img {
+  filter: brightness(0.92) contrast(1.1) saturate(1.06) !important;
+  -webkit-filter: brightness(0.92) contrast(1.1) saturate(1.06) !important;
+}
+
+.satellite-reference-tiles {
+  pointer-events: none !important;
+}
+
+.satellite-reference-tiles .leaflet-tile,
+.satellite-reference-tiles img {
+  filter: brightness(1.15) contrast(1.2) drop-shadow(0 1px 1.2px rgba(0, 0, 0, 0.75)) !important;
+  -webkit-filter: brightness(1.15) contrast(1.2) drop-shadow(0 1px 1.2px rgba(0, 0, 0, 0.75)) !important;
+  opacity: 0.94 !important;
+}
+
+.satellite-transportation-tiles {
+  pointer-events: none !important;
+}
+
+.satellite-transportation-tiles .leaflet-tile,
+.satellite-transportation-tiles img {
+  filter: brightness(0.92) contrast(1.08) saturate(0.35) !important;
+  -webkit-filter: brightness(0.92) contrast(1.08) saturate(0.35) !important;
+  opacity: 0.58 !important;
+}
+
+.satellite-ocean-reference-tiles {
+  pointer-events: none !important;
+}
+
+.satellite-ocean-reference-tiles .leaflet-tile,
+.satellite-ocean-reference-tiles img {
+  filter: brightness(0.95) contrast(1.12) saturate(1.15) !important;
+  -webkit-filter: brightness(0.95) contrast(1.12) saturate(1.15) !important;
+  opacity: 0.78 !important;
+}
+
+.ground-zero-targeting-reticle {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
 }
 
 .leaflet-tile {

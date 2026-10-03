@@ -32,6 +32,7 @@ export interface NuclearBombRanking {
   vaporizationRadiusM: number;
   carbonizationRadiusM: number;
   heavyBlastRadiusM: number;
+  moderateBlastRadiusM: number;
   thermalRadiusM: number;
   lightBlastRadiusM: number;
   mushroomCloudHeightKm: number;
@@ -1045,12 +1046,13 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
     carrier: 'Canhão sem recuo montado em jipe ou tripé',
     description:
       'Uma das menores armas nucleares já implantadas. Projetada para ser disparada por soldados de infantaria contra blindados soviéticos na Europa, com raio de radiação letal que podia atingir o próprio operador se o vento mudasse.',
-    fireballRadiusM: 40,
-    vaporizationRadiusM: 70,
-    heavyBlastRadiusM: 110,
-    carbonizationRadiusM: 300,
-    thermalRadiusM: 630,
-    lightBlastRadiusM: 790,
+    fireballRadiusM: 20,
+    vaporizationRadiusM: 40,
+    carbonizationRadiusM: 60,
+    heavyBlastRadiusM: 60,
+    moderateBlastRadiusM: 130,
+    thermalRadiusM: 210,
+    lightBlastRadiusM: 340,
     mushroomCloudHeightKm: 2.1,
     mushroomCloudCapDiameterKm: 1.8,
     badgeColor: 'border-emerald-500/40 text-emerald-400 bg-emerald-500/10',
@@ -1081,12 +1083,13 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
     carrier: 'Bombardeiro B-29 Superfortress (Enola Gay)',
     description:
       'A primeira arma nuclear utilizada em combate sobre Hiroshima. Mecanismo de tiro disparando um projétil subcrítico de Urânio-238 contra anéis alvos de urânio, com eficiência de fissão inferior a 1.4%.',
-    fireballRadiusM: 380,
-    vaporizationRadiusM: 660,
-    heavyBlastRadiusM: 1030,
-    carbonizationRadiusM: 2900,
-    thermalRadiusM: 6030,
-    lightBlastRadiusM: 7520,
+    fireballRadiusM: 200,
+    vaporizationRadiusM: 780,
+    carbonizationRadiusM: 1100,
+    heavyBlastRadiusM: 1020,
+    moderateBlastRadiusM: 2200,
+    thermalRadiusM: 1910,
+    lightBlastRadiusM: 5790,
     mushroomCloudHeightKm: 12.0,
     mushroomCloudCapDiameterKm: 5.0,
     badgeColor: 'border-cyan-500/40 text-cyan-400 bg-cyan-500/10',
@@ -1117,12 +1120,13 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
     carrier: 'Bombardeiro B-29 Superfortress (Bockscar)',
     description:
       'Lançada sobre Nagasaki. Utilizou lentes explosivas de alta e baixa velocidade para comprimir uniformemente um caroço de Plutônio-239 de 6.2 kg até a supercriticidade instantânea.',
-    fireballRadiusM: 430,
-    vaporizationRadiusM: 740,
-    heavyBlastRadiusM: 1160,
-    carbonizationRadiusM: 3330,
-    thermalRadiusM: 6920,
-    lightBlastRadiusM: 8420,
+    fireballRadiusM: 230,
+    vaporizationRadiusM: 870,
+    carbonizationRadiusM: 1230,
+    heavyBlastRadiusM: 1140,
+    moderateBlastRadiusM: 2460,
+    thermalRadiusM: 2220,
+    lightBlastRadiusM: 6480,
     mushroomCloudHeightKm: 13.5,
     mushroomCloudCapDiameterKm: 6.2,
     badgeColor: 'border-blue-500/40 text-blue-400 bg-blue-500/10',
@@ -1153,12 +1157,13 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
     carrier: 'ICBM LGM-30G Minuteman III, B-2 Spirit, B-52H',
     description:
       'Ogiva termonuclear de alta precisão utilizada nos mísseis balísticos intercontinentais Minuteman III dos EUA. Também representativa da família de armas de 340 kt como a B61 Mod 11, projetada com carcaça endurecida para penetração profunda.',
-    fireballRadiusM: 1080,
-    vaporizationRadiusM: 1870,
-    heavyBlastRadiusM: 2930,
-    carbonizationRadiusM: 8220,
-    thermalRadiusM: 17120,
-    lightBlastRadiusM: 21340,
+    fireballRadiusM: 690,
+    vaporizationRadiusM: 2210,
+    carbonizationRadiusM: 3120,
+    heavyBlastRadiusM: 2890,
+    moderateBlastRadiusM: 6230,
+    thermalRadiusM: 7840,
+    lightBlastRadiusM: 16400,
     mushroomCloudHeightKm: 18.0,
     mushroomCloudCapDiameterKm: 14.0,
     badgeColor: 'border-amber-500/40 text-amber-400 bg-amber-500/10',
@@ -1189,12 +1194,13 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
     carrier: 'Torre de aço de 30m no Polígono de Semipalatinsk',
     description:
       'Primeiro teste com queima termonuclear da União Soviética, concebido por Andrei Sakharov com a "Primeira Ideia" (camadas concêntricas alternadas de Urânio-238 e deutereto de lítio-6 enriquecido com trítio). Produziu 400 kt e demonstrou a capacidade soviética de empregar fusão nuclear em artefatos transportáveis. Também representativa da ogiva termonuclear americana W87 de 400 kt.',
-    fireballRadiusM: 1140,
-    vaporizationRadiusM: 1970,
-    heavyBlastRadiusM: 3090,
-    carbonizationRadiusM: 8680,
-    thermalRadiusM: 18080,
-    lightBlastRadiusM: 22530,
+    fireballRadiusM: 730,
+    vaporizationRadiusM: 2330,
+    carbonizationRadiusM: 3300,
+    heavyBlastRadiusM: 3050,
+    moderateBlastRadiusM: 6580,
+    thermalRadiusM: 8450,
+    lightBlastRadiusM: 17320,
     mushroomCloudHeightKm: 19.5,
     mushroomCloudCapDiameterKm: 16.5,
     badgeColor: 'border-yellow-500/40 text-yellow-400 bg-yellow-500/10',
@@ -1225,12 +1231,13 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
     carrier: 'Bombardeiro B-36H Peacemaker',
     description:
       'A mais potente arma exclusivamente de fissão já construída e detonada na história. Concebida como salvaguarda caso a fusão termonuclear falhasse, continha ~60 kg de Urânio-235 enriquecido a mais de 93% (mais de 4 massas críticas em casca oca), estabilizada por uma corrente de boro removida no ar antes do lançamento.',
-    fireballRadiusM: 1230,
-    vaporizationRadiusM: 2130,
-    heavyBlastRadiusM: 3330,
-    carbonizationRadiusM: 9350,
-    thermalRadiusM: 19480,
-    lightBlastRadiusM: 24280,
+    fireballRadiusM: 810,
+    vaporizationRadiusM: 2510,
+    carbonizationRadiusM: 3550,
+    heavyBlastRadiusM: 3290,
+    moderateBlastRadiusM: 7090,
+    thermalRadiusM: 9280,
+    lightBlastRadiusM: 18660,
     mushroomCloudHeightKm: 21.0,
     mushroomCloudCapDiameterKm: 18.5,
     badgeColor: 'border-emerald-500/40 text-emerald-400 bg-emerald-500/10',
@@ -1261,12 +1268,13 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
     carrier: 'Bombardeiro Tupolev Tu-16 / B-2 Spirit / B-52H',
     description:
       'A primeira verdadeira bomba de hidrogênio de dois estágios da URSS baseada em implosão por radiação (equivalente soviético ao conceito Teller-Ulam), reduzida para 1.6 MT. Também equivalente ao rendimento máximo da moderna bomba termonuclear americana B83 (1.2 - 1.6 MT).',
-    fireballRadiusM: 1810,
-    vaporizationRadiusM: 3140,
-    heavyBlastRadiusM: 4910,
-    carbonizationRadiusM: 13780,
-    thermalRadiusM: 28710,
-    lightBlastRadiusM: 35780,
+    fireballRadiusM: 1300,
+    vaporizationRadiusM: 3720,
+    carbonizationRadiusM: 5250,
+    heavyBlastRadiusM: 4870,
+    moderateBlastRadiusM: 10500,
+    thermalRadiusM: 15500,
+    lightBlastRadiusM: 27650,
     mushroomCloudHeightKm: 26.0,
     mushroomCloudCapDiameterKm: 28.0,
     badgeColor: 'border-indigo-500/40 text-indigo-400 bg-indigo-500/10',
@@ -1297,12 +1305,13 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
     carrier: 'Instalação industrial terrestre na Ilha de Elugelab (Atol de Enewetak)',
     description:
       'O primeiro teste termonuclear em escala real da história. Um laboratório industrial pesando mais de 74 toneladas com deutério líquido mantido a temperatura criogênica próxima ao zero absoluto. A detonação de 10.4 MT vaporizou por completo a ilha de Elugelab, deixando uma cratera submarina de 1.9 km.',
-    fireballRadiusM: 3370,
-    vaporizationRadiusM: 5840,
-    heavyBlastRadiusM: 9160,
-    carbonizationRadiusM: 25670,
-    thermalRadiusM: 53490,
-    lightBlastRadiusM: 66680,
+    fireballRadiusM: 2750,
+    vaporizationRadiusM: 6970,
+    carbonizationRadiusM: 9840,
+    heavyBlastRadiusM: 9130,
+    moderateBlastRadiusM: 19680,
+    thermalRadiusM: 34400,
+    lightBlastRadiusM: 51830,
     mushroomCloudHeightKm: 41.0,
     mushroomCloudCapDiameterKm: 52.0,
     badgeColor: 'border-teal-500/40 text-teal-400 bg-teal-500/10',
@@ -1333,12 +1342,13 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
     carrier: 'Teste em superfície (Atol de Bikini)',
     description:
       'O maior teste nuclear da história americana. Projetada para render ~6 MT, a reação imprevista do isótopo Lítio-7 gerou uma liberação cataclísmica de 15 MT, vaporizando ilhas inteiras e espalhando precipitação radioativa global.',
-    fireballRadiusM: 3810,
-    vaporizationRadiusM: 6600,
-    heavyBlastRadiusM: 10350,
-    carbonizationRadiusM: 29010,
-    thermalRadiusM: 60450,
-    lightBlastRadiusM: 75340,
+    fireballRadiusM: 3500,
+    vaporizationRadiusM: 7860,
+    carbonizationRadiusM: 11100,
+    heavyBlastRadiusM: 10300,
+    moderateBlastRadiusM: 22210,
+    thermalRadiusM: 40090,
+    lightBlastRadiusM: 58470,
     mushroomCloudHeightKm: 43.0,
     mushroomCloudCapDiameterKm: 60.0,
     badgeColor: 'border-orange-500/40 text-orange-400 bg-orange-500/10',
@@ -1369,12 +1379,13 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
     carrier: 'Bombardeiros B-52 Stratofortress e B-47 Stratojet',
     description:
       'A arma nuclear mais potente e com a mais alta relação rendimento-peso (5.2 Mt/ton) construída pelos Estados Unidos. Única bomba americana operacional de três estágios produzida em escala serial (~500 unidades).',
-    fireballRadiusM: 4510,
-    vaporizationRadiusM: 7810,
-    heavyBlastRadiusM: 12250,
-    carbonizationRadiusM: 34340,
-    thermalRadiusM: 71560,
-    lightBlastRadiusM: 89190,
+    fireballRadiusM: 4290,
+    vaporizationRadiusM: 9320,
+    carbonizationRadiusM: 13160,
+    heavyBlastRadiusM: 12210,
+    moderateBlastRadiusM: 26330,
+    thermalRadiusM: 49610,
+    lightBlastRadiusM: 69330,
     mushroomCloudHeightKm: 48.0,
     mushroomCloudCapDiameterKm: 72.0,
     badgeColor: 'border-red-500/40 text-red-400 bg-red-500/10',
@@ -1405,12 +1416,13 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
     carrier: 'Bombardeiro modificado Tupolev Tu-95V',
     description:
       'O evento explosivo artificial mais potente da história da humanidade. Detonada a 4.000m de altitude em Nova Zembla com rendimento medido de 50 Megatons. O tamper original de urânio foi substituído por chumbo para reduzir em 97% a precipitação radioativa, constituindo um dos testes mais "limpos" por megaton.',
-    fireballRadiusM: 5680,
-    vaporizationRadiusM: 9840,
-    heavyBlastRadiusM: 15440,
-    carbonizationRadiusM: 43260,
-    thermalRadiusM: 90150,
-    lightBlastRadiusM: 112370,
+    fireballRadiusM: 5300,
+    vaporizationRadiusM: 11750,
+    carbonizationRadiusM: 16580,
+    heavyBlastRadiusM: 15380,
+    moderateBlastRadiusM: 33180,
+    thermalRadiusM: 66000,
+    lightBlastRadiusM: 87350,
     mushroomCloudHeightKm: 67.0,
     mushroomCloudCapDiameterKm: 95.0,
     badgeColor: 'border-purple-500/40 text-purple-400 bg-purple-500/10',
@@ -1442,11 +1454,12 @@ export const NUCLEAR_RANKING_BOMBS: NuclearBombRanking[] = [
     description:
       'O projeto original e pleno idealizado por Andrei Sakharov e Igor Kurchatov. Equipado com uma camisa externa (tamper) de Urânio-238 no estágio final, a fissão induzida por nêutrons de fusão dobraria a energia para astronômicos 100 Megatons (>6.600 vezes Hiroshima). O teste foi limitado a 50 MT para evitar que a precipitação radioativa letal contaminasse populações na URSS e na Europa.',
     fireballRadiusM: 6700,
-    vaporizationRadiusM: 11600,
-    heavyBlastRadiusM: 18200,
-    carbonizationRadiusM: 51000,
-    thermalRadiusM: 106300,
-    lightBlastRadiusM: 132500,
+    vaporizationRadiusM: 14800,
+    carbonizationRadiusM: 20890,
+    heavyBlastRadiusM: 19380,
+    moderateBlastRadiusM: 41800,
+    thermalRadiusM: 87830,
+    lightBlastRadiusM: 110050,
     mushroomCloudHeightKm: 75.0,
     mushroomCloudCapDiameterKm: 115.0,
     badgeColor: 'border-fuchsia-500/40 text-fuchsia-400 bg-fuchsia-500/10',
@@ -1554,8 +1567,8 @@ export function computeFalloutContourCoordinates(
   const cosLat = Math.max(Math.cos((centerLat * Math.PI) / 180), 0.05);
 
   // 1. Upwind circular cap around ground zero (behind the wind direction)
-  const upwindR = Math.min(upwindRadiusKm, lengthKm * 0.12);
-  const numCapSteps = 10;
+  const upwindR = Math.min(upwindRadiusKm, lengthKm * 0.12, maxHalfWidthKm * 0.65);
+  const numCapSteps = 48;
   for (let i = 0; i <= numCapSteps; i++) {
     const angle = Math.PI / 2 + (Math.PI * i) / numCapSteps; // from PI/2 to 3PI/2
     const x = upwindR * Math.cos(angle);
@@ -1569,14 +1582,27 @@ export function computeFalloutContourCoordinates(
     points.push([lat, lng]);
   }
 
+  // Helper for smooth teardrop half-width at normalized distance s in [0, 1]
+  // Starts exactly at upwindR at s = 0, expands smoothly to peak around s = 0.22, and curves smoothly to 0 at s = 1
+  const getHalfWidth = (s: number) => {
+    const baseCap = upwindR * Math.pow(Math.max(0, 1 - s), 2.2);
+    const plumeProfile = maxHalfWidthKm * 2.85 * Math.sqrt(s) * Math.pow(Math.max(0, 1 - s), 1.15);
+    return Math.hypot(baseCap, plumeProfile);
+  };
+
+  // Non-linear parameter distribution: clusters points densely near s = 0 (stem curve) and s = 1 (downwind tip curve)
+  const numDownwindSteps = 140;
+  const getParamS = (i: number) => {
+    const t = i / numDownwindSteps;
+    // Smooth cosine-based clustering at both ends (s=0 and s=1) for completely curved edges even at high zoom
+    return 0.5 * (1 - Math.cos(Math.PI * t));
+  };
+
   // 2. Downwind right side (from stem to tip)
-  const numDownwindSteps = 20;
   for (let i = 1; i <= numDownwindSteps; i++) {
-    const s = i / numDownwindSteps;
+    const s = getParamS(i);
     const x = s * lengthKm;
-    // Teardrop profile: peak width around s = 0.22, smoothly tapering to 0 at s = 1.0
-    const wFactor = 2.85 * Math.sqrt(s) * Math.pow(Math.max(0, 1 - s), 1.15);
-    const y = -maxHalfWidthKm * wFactor;
+    const y = -getHalfWidth(s);
 
     const dEast = x * dirE + y * perpE;
     const dNorth = x * dirN + y * perpN;
@@ -1588,10 +1614,9 @@ export function computeFalloutContourCoordinates(
 
   // 3. Downwind left side (from tip back to stem)
   for (let i = numDownwindSteps - 1; i >= 1; i--) {
-    const s = i / numDownwindSteps;
+    const s = getParamS(i);
     const x = s * lengthKm;
-    const wFactor = 2.85 * Math.sqrt(s) * Math.pow(Math.max(0, 1 - s), 1.15);
-    const y = maxHalfWidthKm * wFactor;
+    const y = getHalfWidth(s);
 
     const dEast = x * dirE + y * perpE;
     const dNorth = x * dirN + y * perpN;
@@ -1605,7 +1630,7 @@ export function computeFalloutContourCoordinates(
 }
 
 export interface ImpactLayerInfo {
-  id: 'fireball' | 'vaporization' | 'carbonization' | 'heavy' | 'thermal' | 'light';
+  id: 'fireball' | 'vaporization' | 'carbonization' | 'heavy' | 'moderate' | 'thermal' | 'light';
   name: string;
   subtitle: string;
   color: string;
@@ -1618,74 +1643,85 @@ export interface ImpactLayerInfo {
 export const IMPACT_LAYERS: ImpactLayerInfo[] = [
   {
     id: 'fireball',
-    name: 'Bola de Fogo (Fireball)',
-    subtitle: 'Vaporização Instantânea & Plasma',
+    name: '1º Bola de Fogo Nuclear',
+    subtitle: 'Vaporização Instantânea & Plasma (100M °C)',
     color: '#FACC15',
     fillColor: '#FACC15',
     strokeColor: '#EAB308',
-    severity: 'Letalidade: 100%',
+    severity: 'Letalidade: 100% (Plasma)',
     effects:
-      'Temperatura na ordem de dezenas de milhões de °C.\nTudo dentro deste raio (edifícios, asfalto, aço e matéria orgânica)\né instantaneamente vaporizado em fração de segundo.'
+      'Temperatura do Sol (~ 100 milhões de °C). Vaporização imediata de qualquer matéria em contato direto.'
   },
   {
     id: 'vaporization',
-    name: 'Zona de Vaporização (Além da Bola de Fogo)',
-    subtitle: 'Desintegração Instantânea & Pirólise Térmica',
+    name: '2º Vaporização Imediata',
+    subtitle: 'Radiação Térmica Extrema & Fusão de Materiais',
     color: '#FB923C',
     fillColor: '#FB923C',
     strokeColor: '#EA580C',
     severity: 'Letalidade: 100%',
     effects:
-      'Fluxo radiativo direto (> 150 a 300 cal/cm²).\nVaporiza e desseca corpos biológicos, asfalto e materiais leves\nantes da chegada mecânica da onda de choque.'
+      'Radiação térmica extrema próximo ao limite da bola de fogo; estruturas de aço, concreto e rochas são instantaneamente vaporizadas ou derretidas.'
   },
   {
     id: 'carbonization',
-    name: 'Zona de Carbonização (Pessoas Carbonizadas)',
-    subtitle: 'Calcinação Térmica & Combustão Humana Instantânea',
-    color: '#F43F5E',
-    fillColor: '#FB7185',
-    strokeColor: '#E11D48',
+    name: '3º Carbonização Total',
+    subtitle: 'Ignição Instantânea & Cinzas',
+    color: '#DC2626',
+    fillColor: '#EF4444',
+    strokeColor: '#B91C1C',
     severity: 'Letalidade: 100%',
     effects:
-      'Fluxo térmico direto (>25-35 cal/cm²).\nQualquer ser humano ao ar livre é instantaneamente carbonizado\ne calcinado até os ossos antes da onda mecânica.\nRoupas entram em combustão imediata. Letalidade 100%'
+      'Ignição instantânea de qualquer material combustível. A vegetação, edifícios e compostos orgânicos viram cinzas antes mesmo da chegada da onda de choque.'
   },
   {
     id: 'heavy',
-    name: 'Onda de Choque Pesada (20 psi)',
-    subtitle: 'Colapso Estrutural Severo',
+    name: '4º Onda de Choque Pesada (> 20 psi)',
+    subtitle: 'Sobrepressão Extrema & Ventos > 1.000 km/h',
     color: '#EC4899',
     fillColor: '#F472B6',
     strokeColor: '#DB2777',
-    severity: 'Sobrevivência: < 1%',
+    severity: 'Letalidade: 95% – 100%',
     effects:
-      'Sobrepressão extrema de 20 psi.\nDestruição de edifícios de concreto armado, pontes e fábricas.\nVentos de choque superiores a 800 km/h rasgam estruturas.'
+      'Sobrepressão extrema (> 20 psi). Destruição total de edifícios reforçados e estruturas de concreto armado. Ventos superiores a 1.000 km/h.'
+  },
+  {
+    id: 'moderate',
+    name: '5º Onda de Choque Moderada (~ 5 psi)',
+    subtitle: 'Colapso Quase Total de Alvenaria Residencial',
+    color: '#8B5CF6',
+    fillColor: '#A78BFA',
+    strokeColor: '#7C3AED',
+    severity: 'Letalidade: 30% – 55%',
+    effects:
+      'Sobrepressão média (~ 5 psi). Colapso quase total de edifícios residenciais de alvenaria. Danos graves a estruturas pesadas.'
   },
   {
     id: 'thermal',
-    name: 'Raio de Radiação Térmica',
-    subtitle: 'Queimaduras de 3º Grau',
+    name: '6º Raio Térmico (Queimadura de 3º Grau)',
+    subtitle: 'Pulso de Luz e Calor Radiante a Quilômetros',
     color: '#F97316',
     fillColor: '#F97316',
     strokeColor: '#EA580C',
-    severity: 'Queimaduras Graves',
+    severity: 'Letalidade: 8% – 22%',
     effects:
-      'Pulso térmico emitido em segundos.\nQueimaduras de 3º grau e destruição de terminações nervosas.\nIgnição espontânea gerando tempestades de fogo.'
+      'O pulso de luz e calor causa queimaduras de 3º grau em pele exposta e ignição de roupas e papel a dezenas de quilômetros.'
   },
   {
     id: 'light',
-    name: 'Onda de Choque Leve (1-2 psi)',
-    subtitle: 'Danos Moderados & Estilhaços',
+    name: '7º Onda de Choque Leve (1-2 psi)',
+    subtitle: 'Sobrepressão Baixa & Estilhaços Voando',
     color: '#94A3B8',
     fillColor: '#94A3B8',
     strokeColor: '#64748B',
-    severity: 'Ferimentos por Vidro',
+    severity: 'Letalidade: 0.5% – 3%',
     effects:
-      'Sobrepressão moderada (1-2 psi).\nEstilhaça vidraças a quilômetros com velocidade letal.\nDeslocamento de telhados, portas e fragmentos.'
+      'Sobrepressão baixa (~ 1 a 2 psi). Quebra maciça de vidros, estilhaços voando e danos menores a estruturas leves.'
   }
 ];
 
 export interface ZoneCasualtyEstimate {
-  id: 'fireball' | 'vaporization' | 'carbonization' | 'heavy' | 'thermal' | 'light';
+  id: 'fireball' | 'vaporization' | 'carbonization' | 'heavy' | 'moderate' | 'thermal' | 'light';
   name: string;
   radiusM: number;
   innerRadiusM: number;
@@ -1730,13 +1766,18 @@ export interface BombCasualtySummary {
   totalAffectedPop: number;
   mortalityPercentage: number;
   carbonizationDeaths: number;
+  heavyBlastDeaths?: number;
+  moderateBlastDeaths?: number;
   thermalDeaths: number;
   lightBlastDeaths: number;
   confidenceLevel: 'high' | 'moderate' | 'low' | 'uninhabited';
   confidenceLabel: string;
   estimationNotes: string;
   isUninhabitedOrWater: boolean;
-  zoneEstimates: Record<'fireball' | 'vaporization' | 'carbonization' | 'heavy' | 'thermal' | 'light', ZoneCasualtyEstimate>;
+  zoneEstimates: Record<
+    'fireball' | 'vaporization' | 'carbonization' | 'heavy' | 'moderate' | 'thermal' | 'light',
+    ZoneCasualtyEstimate
+  >;
   orderedZones: ZoneCasualtyEstimate[];
 }
 
@@ -1751,153 +1792,235 @@ export function formatCasualtyRange(min: number, max: number): string {
 }
 
 /**
- * Tabela Oficial de Zonas de Destruição e Escalonamento Nuclear solicitada pelo usuário.
- * Valores em metros de Raio (R) para cada uma das 12 potências nucleares de referência.
+ * Tabela de Métricas Físicas e Relação de Escala de Zonas de Destruição Nucleares
+ * (Castle Bravo com Diâmetro de Bola de Fogo de 7,0 km):
+ * Valores em metros de Raio (R) para cada uma das 12 potências nucleares de referência:
+ * - Davy Crockett (0,02 kt): R: 20m, 40m, 60m, 60m, 130m, 210m (3º grau), 340m (1 psi)
+ * - Little Boy (15 kt): R: 200m, 780m, 1,10km, 1,02km, 2,20km, 1,91km (3º grau), 5,79km (1 psi)
+ * - Fat Man (21 kt): R: 230m, 870m, 1,23km, 1,14km, 2,46km, 2,22km (3º grau), 6,48km (1 psi)
+ * - Minuteman III (340 kt): R: 690m, 2,21km, 3,12km, 2,89km, 6,23km, 7,84km (3º grau), 16,40km (1 psi)
+ * - RDS-6 (400 kt): R: 730m, 2,33km, 3,30km, 3,05km, 6,58km, 8,45km (3º grau), 17,32km (1 psi)
+ * - Ivy King (500 kt): R: 810m, 2,51km, 3,55km, 3,29km, 7,09km, 9,28km (3º grau), 18,66km (1 psi)
+ * - RDS-37 (1,6 Mt): R: 1,30km, 3,72km, 5,25km, 4,87km, 10,50km, 15,50km (3º grau), 27,65km (1 psi)
+ * - Ivy Mike (10,4 Mt): R: 2,75km, 6,97km, 9,84km, 9,13km, 19,68km, 34,40km (3º grau), 51,83km (1 psi)
+ * - Castle Bravo (15 Mt): R: 3,50km (Ø 7,0km), 7,86km, 11,10km, 10,30km, 22,21km, 40,09km (3º grau), 58,47km (1 psi)
+ * - B41 (25 Mt): R: 4,29km, 9,32km, 13,16km, 12,21km, 26,33km, 49,61km (3º grau), 69,33km (1 psi)
+ * - Tsar Bomba (50 Mt): R: 5,30km, 11,75km, 16,58km, 15,38km, 33,18km, 66,00km (3º grau), 87,35km (1 psi)
+ * - Tsar Bomba (100 Mt): R: 6,70km, 14,80km, 20,89km, 19,38km, 41,80km, 87,83km (3º grau), 110,05km (1 psi)
  */
 export const DESTRUCTION_ZONE_BENCHMARKS: Record<
   number,
   {
     fireballRadiusM: number;
     vaporizationRadiusM: number;
-    heavyBlastRadiusM: number;
     carbonizationRadiusM: number;
+    heavyBlastRadiusM: number;
+    moderateBlastRadiusM: number;
     thermalRadiusM: number;
     lightBlastRadiusM: number;
   }
 > = {
   0.02: {
-    fireballRadiusM: 40,
-    vaporizationRadiusM: 70,
-    heavyBlastRadiusM: 110,
-    carbonizationRadiusM: 300,
-    thermalRadiusM: 630,
-    lightBlastRadiusM: 790
+    fireballRadiusM: 20,
+    vaporizationRadiusM: 40,
+    carbonizationRadiusM: 60,
+    heavyBlastRadiusM: 60,
+    moderateBlastRadiusM: 130,
+    thermalRadiusM: 210,
+    lightBlastRadiusM: 340
   },
   15: {
-    fireballRadiusM: 380,
-    vaporizationRadiusM: 660,
-    heavyBlastRadiusM: 1030,
-    carbonizationRadiusM: 2900,
-    thermalRadiusM: 6030,
-    lightBlastRadiusM: 7520
+    fireballRadiusM: 200,
+    vaporizationRadiusM: 780,
+    carbonizationRadiusM: 1100,
+    heavyBlastRadiusM: 1020,
+    moderateBlastRadiusM: 2200,
+    thermalRadiusM: 1910,
+    lightBlastRadiusM: 5790
   },
   21: {
-    fireballRadiusM: 430,
-    vaporizationRadiusM: 740,
-    heavyBlastRadiusM: 1160,
-    carbonizationRadiusM: 3330,
-    thermalRadiusM: 6920,
-    lightBlastRadiusM: 8420
+    fireballRadiusM: 230,
+    vaporizationRadiusM: 870,
+    carbonizationRadiusM: 1230,
+    heavyBlastRadiusM: 1140,
+    moderateBlastRadiusM: 2460,
+    thermalRadiusM: 2220,
+    lightBlastRadiusM: 6480
   },
   340: {
-    fireballRadiusM: 1080,
-    vaporizationRadiusM: 1870,
-    heavyBlastRadiusM: 2930,
-    carbonizationRadiusM: 8220,
-    thermalRadiusM: 17120,
-    lightBlastRadiusM: 21340
+    fireballRadiusM: 690,
+    vaporizationRadiusM: 2210,
+    carbonizationRadiusM: 3120,
+    heavyBlastRadiusM: 2890,
+    moderateBlastRadiusM: 6230,
+    thermalRadiusM: 7840,
+    lightBlastRadiusM: 16400
   },
   400: {
-    fireballRadiusM: 1140,
-    vaporizationRadiusM: 1970,
-    heavyBlastRadiusM: 3090,
-    carbonizationRadiusM: 8680,
-    thermalRadiusM: 18080,
-    lightBlastRadiusM: 22530
+    fireballRadiusM: 730,
+    vaporizationRadiusM: 2330,
+    carbonizationRadiusM: 3300,
+    heavyBlastRadiusM: 3050,
+    moderateBlastRadiusM: 6580,
+    thermalRadiusM: 8450,
+    lightBlastRadiusM: 17320
   },
   500: {
-    fireballRadiusM: 1230,
-    vaporizationRadiusM: 2130,
-    heavyBlastRadiusM: 3330,
-    carbonizationRadiusM: 9350,
-    thermalRadiusM: 19480,
-    lightBlastRadiusM: 24280
+    fireballRadiusM: 810,
+    vaporizationRadiusM: 2510,
+    carbonizationRadiusM: 3550,
+    heavyBlastRadiusM: 3290,
+    moderateBlastRadiusM: 7090,
+    thermalRadiusM: 9280,
+    lightBlastRadiusM: 18660
   },
   1600: {
-    fireballRadiusM: 1810,
-    vaporizationRadiusM: 3140,
-    heavyBlastRadiusM: 4910,
-    carbonizationRadiusM: 13780,
-    thermalRadiusM: 28710,
-    lightBlastRadiusM: 35780
+    fireballRadiusM: 1300,
+    vaporizationRadiusM: 3720,
+    carbonizationRadiusM: 5250,
+    heavyBlastRadiusM: 4870,
+    moderateBlastRadiusM: 10500,
+    thermalRadiusM: 15500,
+    lightBlastRadiusM: 27650
+  },
+  10000: {
+    fireballRadiusM: 2750,
+    vaporizationRadiusM: 6970,
+    carbonizationRadiusM: 9840,
+    heavyBlastRadiusM: 9130,
+    moderateBlastRadiusM: 19680,
+    thermalRadiusM: 34400,
+    lightBlastRadiusM: 51830
   },
   10400: {
-    fireballRadiusM: 3370,
-    vaporizationRadiusM: 5840,
-    heavyBlastRadiusM: 9160,
-    carbonizationRadiusM: 25670,
-    thermalRadiusM: 53490,
-    lightBlastRadiusM: 66680
+    fireballRadiusM: 2750,
+    vaporizationRadiusM: 6970,
+    carbonizationRadiusM: 9840,
+    heavyBlastRadiusM: 9130,
+    moderateBlastRadiusM: 19680,
+    thermalRadiusM: 34400,
+    lightBlastRadiusM: 51830
   },
   15000: {
-    fireballRadiusM: 3810,
-    vaporizationRadiusM: 6600,
-    heavyBlastRadiusM: 10350,
-    carbonizationRadiusM: 29010,
-    thermalRadiusM: 60450,
-    lightBlastRadiusM: 75340
+    fireballRadiusM: 3500,
+    vaporizationRadiusM: 7860,
+    carbonizationRadiusM: 11100,
+    heavyBlastRadiusM: 10300,
+    moderateBlastRadiusM: 22210,
+    thermalRadiusM: 40090,
+    lightBlastRadiusM: 58470
   },
   25000: {
-    fireballRadiusM: 4510,
-    vaporizationRadiusM: 7810,
-    heavyBlastRadiusM: 12250,
-    carbonizationRadiusM: 34340,
-    thermalRadiusM: 71560,
-    lightBlastRadiusM: 89190
+    fireballRadiusM: 4290,
+    vaporizationRadiusM: 9320,
+    carbonizationRadiusM: 13160,
+    heavyBlastRadiusM: 12210,
+    moderateBlastRadiusM: 26330,
+    thermalRadiusM: 49610,
+    lightBlastRadiusM: 69330
   },
   50000: {
-    fireballRadiusM: 5680,
-    vaporizationRadiusM: 9840,
-    heavyBlastRadiusM: 15440,
-    carbonizationRadiusM: 43260,
-    thermalRadiusM: 90150,
-    lightBlastRadiusM: 112370
+    fireballRadiusM: 5300,
+    vaporizationRadiusM: 11750,
+    carbonizationRadiusM: 16580,
+    heavyBlastRadiusM: 15380,
+    moderateBlastRadiusM: 33180,
+    thermalRadiusM: 66000,
+    lightBlastRadiusM: 87350
   },
   100000: {
     fireballRadiusM: 6700,
-    vaporizationRadiusM: 11600,
-    heavyBlastRadiusM: 18200,
-    carbonizationRadiusM: 51000,
-    thermalRadiusM: 106300,
-    lightBlastRadiusM: 132500
+    vaporizationRadiusM: 14800,
+    carbonizationRadiusM: 20890,
+    heavyBlastRadiusM: 19380,
+    moderateBlastRadiusM: 41800,
+    thermalRadiusM: 87830,
+    lightBlastRadiusM: 110050
   }
 };
 
 export function calculateRealNuclearRadiiM(yieldKt: number, burstType: 'air' | 'surface' = 'surface') {
   const isAir = burstType === 'air';
 
-  // Se a potência coincide com um dos 12 patamares de referência, emprega os dados exatos fornecidos
+  // Se a potência coincide exatamente com um dos patamares de referência, emprega os dados exatos calibrados
   const benchmark = DESTRUCTION_ZONE_BENCHMARKS[yieldKt];
   if (benchmark) {
     if (!isAir) {
       return { ...benchmark };
     }
-    // Modificadores físicos de onda Mach para explosão aérea (air burst)
     return {
       fireballRadiusM: Math.round(benchmark.fireballRadiusM * 0.95),
       vaporizationRadiusM: Math.round(benchmark.vaporizationRadiusM * 1.05),
-      heavyBlastRadiusM: Math.round(benchmark.heavyBlastRadiusM * 1.15),
       carbonizationRadiusM: Math.round(benchmark.carbonizationRadiusM * 1.08),
+      heavyBlastRadiusM: Math.round(benchmark.heavyBlastRadiusM * 1.15),
+      moderateBlastRadiusM: Math.round(benchmark.moderateBlastRadiusM * 1.15),
       thermalRadiusM: Math.round(benchmark.thermalRadiusM * 1.1),
       lightBlastRadiusM: Math.round(benchmark.lightBlastRadiusM * 1.18)
     };
   }
 
-  // Interpolação/extrapolação física calibrada no benchmark Tsar Bomba 100 Mt
-  const scale = Math.pow(Math.max(0.001, yieldKt) / 100000, 1 / 3);
-  const baseFireball = Math.max(15, Math.round(6700 * scale));
-  const baseVaporization = Math.max(baseFireball + 10, Math.round(11600 * scale));
-  const baseHeavyBlast = Math.max(baseFireball + 20, Math.round(18200 * scale));
-  const baseCarbonization = Math.max(baseVaporization + 30, Math.round(51000 * scale));
-  const baseThermal = Math.max(baseCarbonization + 50, Math.round(106300 * scale));
-  const baseLightBlast = Math.max(baseHeavyBlast + 50, Math.round(132500 * scale));
+  // Interpolação contínua e escalonamento rigoroso baseado na tabela oficial de 12 armas
+  const sortedYields = [0.02, 15, 21, 340, 400, 500, 1600, 10400, 15000, 25000, 50000, 100000];
+
+  let baseFireball: number;
+  let baseVaporization: number;
+  let baseCarbonization: number;
+  let baseHeavyBlast: number;
+  let baseModerateBlast: number;
+  let baseThermal: number;
+  let baseLightBlast: number;
+
+  if (yieldKt <= 0.02) {
+    const factor = Math.pow(Math.max(0.0001, yieldKt) / 0.02, 1 / 3);
+    const b = DESTRUCTION_ZONE_BENCHMARKS[0.02];
+    baseFireball = Math.max(3, Math.round(b.fireballRadiusM * factor));
+    baseVaporization = Math.max(5, Math.round(b.vaporizationRadiusM * factor));
+    baseCarbonization = Math.max(8, Math.round(b.carbonizationRadiusM * factor));
+    baseHeavyBlast = Math.max(10, Math.round(b.heavyBlastRadiusM * factor));
+    baseModerateBlast = Math.max(15, Math.round(b.moderateBlastRadiusM * factor));
+    baseThermal = Math.max(20, Math.round(b.thermalRadiusM * factor));
+    baseLightBlast = Math.max(30, Math.round(b.lightBlastRadiusM * factor));
+  } else if (yieldKt >= 100000) {
+    const factor = Math.pow(yieldKt / 100000, 1 / 3);
+    const b = DESTRUCTION_ZONE_BENCHMARKS[100000];
+    baseFireball = Math.round(b.fireballRadiusM * factor);
+    baseVaporization = Math.round(b.vaporizationRadiusM * factor);
+    baseCarbonization = Math.round(b.carbonizationRadiusM * factor);
+    baseHeavyBlast = Math.round(b.heavyBlastRadiusM * factor);
+    baseModerateBlast = Math.round(b.moderateBlastRadiusM * factor);
+    baseThermal = Math.round(b.thermalRadiusM * factor);
+    baseLightBlast = Math.round(b.lightBlastRadiusM * factor);
+  } else {
+    let lowerY = sortedYields[0];
+    let upperY = sortedYields[sortedYields.length - 1];
+    for (let i = 0; i < sortedYields.length - 1; i++) {
+      if (yieldKt >= sortedYields[i] && yieldKt <= sortedYields[i + 1]) {
+        lowerY = sortedYields[i];
+        upperY = sortedYields[i + 1];
+        break;
+      }
+    }
+    const bLow = DESTRUCTION_ZONE_BENCHMARKS[lowerY];
+    const bHigh = DESTRUCTION_ZONE_BENCHMARKS[upperY];
+    const t = (Math.log(yieldKt) - Math.log(lowerY)) / (Math.log(upperY) - Math.log(lowerY));
+    const interp = (v1: number, v2: number) => Math.round(Math.exp((1 - t) * Math.log(v1) + t * Math.log(v2)));
+
+    baseFireball = interp(bLow.fireballRadiusM, bHigh.fireballRadiusM);
+    baseVaporization = interp(bLow.vaporizationRadiusM, bHigh.vaporizationRadiusM);
+    baseCarbonization = interp(bLow.carbonizationRadiusM, bHigh.carbonizationRadiusM);
+    baseHeavyBlast = interp(bLow.heavyBlastRadiusM, bHigh.heavyBlastRadiusM);
+    baseModerateBlast = interp(bLow.moderateBlastRadiusM, bHigh.moderateBlastRadiusM);
+    baseThermal = interp(bLow.thermalRadiusM, bHigh.thermalRadiusM);
+    baseLightBlast = interp(bLow.lightBlastRadiusM, bHigh.lightBlastRadiusM);
+  }
 
   if (!isAir) {
     return {
       fireballRadiusM: baseFireball,
       vaporizationRadiusM: baseVaporization,
-      heavyBlastRadiusM: baseHeavyBlast,
       carbonizationRadiusM: baseCarbonization,
+      heavyBlastRadiusM: baseHeavyBlast,
+      moderateBlastRadiusM: baseModerateBlast,
       thermalRadiusM: baseThermal,
       lightBlastRadiusM: baseLightBlast
     };
@@ -1906,8 +2029,9 @@ export function calculateRealNuclearRadiiM(yieldKt: number, burstType: 'air' | '
   return {
     fireballRadiusM: Math.round(baseFireball * 0.95),
     vaporizationRadiusM: Math.round(baseVaporization * 1.05),
-    heavyBlastRadiusM: Math.round(baseHeavyBlast * 1.15),
     carbonizationRadiusM: Math.round(baseCarbonization * 1.08),
+    heavyBlastRadiusM: Math.round(baseHeavyBlast * 1.15),
+    moderateBlastRadiusM: Math.round(baseModerateBlast * 1.15),
     thermalRadiusM: Math.round(baseThermal * 1.1),
     lightBlastRadiusM: Math.round(baseLightBlast * 1.18)
   };
@@ -2153,13 +2277,14 @@ export function detectLocationDemographics(
  * 
  * COMO O CÁLCULO FOI CORRIGIDO:
  * ----------------------------------------------------------------------------
- * 1. CALIBRAÇÃO DAS TAXAS FÍSICAS DE LETALIDADE E FERIMENTOS (Glasstone & Dolan, OTA, FEMA):
+ * 1. CALIBRAÇÃO DAS TAXAS FÍSICAS DE LETALIDADE E FERIMENTOS:
  *    - Bola de Fogo (Plasma): 100% de letalidade (min 100%, max 100%), 0% feridos.
- *    - Vaporização (Fluxo > 100 cal/cm²): 98% letalidade (95% – 100%), 2% feridos.
- *    - Choque Pesado (20 psi / colapso concreto): 75% letalidade (60% – 85%), 20% feridos graves.
- *    - Carbonização / Choque Moderado (5-10 psi): 40% letalidade (25% – 55%), 45% feridos.
- *    - Raio Térmico (Queimaduras 3º grau / linha de visada): 12% letalidade (5% – 20%), 45% feridos.
- *    - Choque Leve (1-2 psi / estilhaçamento de vidros): 1.0% letalidade (0.2% – 2.5%), 22% feridos.
+ *    - Vaporização (Fluxo > 100 cal/cm²): 100% letalidade (min 100%, max 100%), 0% feridos.
+ *    - Carbonização Total: 100% letalidade (min 100%, max 100%), 0% feridos.
+ *    - Choque Pesado (> 20 psi / colapso concreto): 98% letalidade (95% – 100%), 2% feridos.
+ *    - Choque Moderado (~ 5 psi): 45% letalidade (30% – 55%), 40% feridos.
+ *    - Raio Térmico (Queimaduras 3º grau / linha de visada): 15% letalidade (8% – 22%), 50% feridos.
+ *    - Choque Leve (1-2 psi / estilhaçamento de vidros): 1.5% letalidade (0.5% – 3%), 25% feridos.
  * 
  * 2. MODELO DE DENSIDADE RADIAL COM TETO POPULACIONAL RIGOROSO:
  *    - As coroas circulares r_inner a r_outer calculam a área exata em km²: Math.PI * (r_outer² - r_inner²).
@@ -2185,12 +2310,15 @@ export function calculateBombCityCasualties(
   // 1. Obter raios físicos em metros (m) calculados para a potência e tipo de explosão
   const realRadii = calculateRealNuclearRadiiM(bomb.yieldKt, burstType);
 
-  // 2. Configuração física das 6 zonas com faixas calibradas pela literatura técnica
-  // (Glasstone & Dolan, OTA - Office of Technology Assessment, FEMA e dados históricos)
+  // 2. Configuração física das 7 zonas com faixas calibradas pelas especificações solicitadas:
+  // - Bola de Fogo: 100% de letalidade
+  // - Vaporização Imediata: 100% de letalidade
+  // - Carbonização Total: 100% de letalidade
+  // - Onda de Choque Pesada (> 20 psi): 95% – 100% de letalidade
   const zoneConfigs = [
     {
       id: 'fireball' as const,
-      name: 'Bola de Fogo (Plasma)',
+      name: '1º Bola de Fogo Nuclear (Plasma)',
       rM: realRadii.fireballRadiusM,
       fatalityRate: 1.0,
       fatalityMin: 1.0,
@@ -2198,70 +2326,79 @@ export function calculateBombCityCasualties(
       injuryRate: 0.0,
       injuryMin: 0.0,
       injuryMax: 0.0,
-      severityLabel: 'Letalidade: 100% (Plasma Instantâneo)'
+      severityLabel: 'Temperatura do Sol (~100 milhões °C). Vaporização instantânea (100%)'
     },
     {
       id: 'vaporization' as const,
-      name: 'Zona de Vaporização Total',
+      name: '2º Vaporização Imediata',
       rM: realRadii.vaporizationRadiusM,
+      fatalityRate: 1.0,
+      fatalityMin: 1.0,
+      fatalityMax: 1.0,
+      injuryRate: 0.0,
+      injuryMin: 0.0,
+      injuryMax: 0.0,
+      severityLabel: 'Radiação térmica extrema; aço e rochas vaporizados. Letalidade imediata 100%'
+    },
+    {
+      id: 'carbonization' as const,
+      name: '3º Carbonização Total',
+      rM: realRadii.carbonizationRadiusM,
+      fatalityRate: 1.0,
+      fatalityMin: 1.0,
+      fatalityMax: 1.0,
+      injuryRate: 0.0,
+      injuryMin: 0.0,
+      injuryMax: 0.0,
+      severityLabel: 'Ignição instantânea; combustíveis e corpos viram cinzas antes da onda mecânica. Letalidade 100%'
+    },
+    {
+      id: 'heavy' as const,
+      name: '4º Onda de Choque Pesada (> 20 psi)',
+      rM: realRadii.heavyBlastRadiusM,
       fatalityRate: 0.98,
       fatalityMin: 0.95,
       fatalityMax: 1.0,
       injuryRate: 0.02,
       injuryMin: 0.0,
       injuryMax: 0.05,
-      severityLabel: 'Letalidade: 95% – 100% (Pirólise Térmica)'
+      severityLabel: 'Sobrepressão >20 psi e ventos >1.000 km/h; demolição total (95% – 100%)'
     },
     {
-      id: 'heavy' as const,
-      name: 'Choque Pesado (20 psi)',
-      rM: realRadii.heavyBlastRadiusM,
-      fatalityRate: 0.75,
-      fatalityMin: 0.60,
-      fatalityMax: 0.85,
-      injuryRate: 0.20,
-      injuryMin: 0.12,
-      injuryMax: 0.28,
-      severityLabel: 'Mortalidade Estrutural: 60% – 85% (Colapso Severo)'
-    },
-    {
-      id: 'carbonization' as const,
-      name: 'Zona de Carbonização / Choque Moderado (5-10 psi)',
-      rM: realRadii.carbonizationRadiusM,
-      // Corrigido de 0.92 para 0.40: pessoas dentro de casas têm proteção do flash térmico
-      fatalityRate: 0.40,
-      fatalityMin: 0.25,
+      id: 'moderate' as const,
+      name: '5º Onda de Choque Moderada (~ 5 psi)',
+      rM: realRadii.moderateBlastRadiusM,
+      fatalityRate: 0.45,
+      fatalityMin: 0.30,
       fatalityMax: 0.55,
-      injuryRate: 0.45,
-      injuryMin: 0.35,
-      injuryMax: 0.55,
-      severityLabel: 'Mortalidade por Incêndio/Colapso: 25% – 55%'
+      injuryRate: 0.40,
+      injuryMin: 0.30,
+      injuryMax: 0.50,
+      severityLabel: 'Sobrepressão ~5 psi; colapso de edifícios residenciais (30% – 55%)'
     },
     {
       id: 'thermal' as const,
-      name: 'Raio Térmico (Queimaduras 3º Grau)',
+      name: '6º Raio Térmico (Queimadura de 3º Grau)',
       rM: realRadii.thermalRadiusM,
-      // Corrigido de 0.28 para 0.12: visada direta ao ar livre é de ~15-25% em centros urbanos
-      fatalityRate: 0.12,
-      fatalityMin: 0.05,
-      fatalityMax: 0.20,
-      injuryRate: 0.45,
-      injuryMin: 0.35,
-      injuryMax: 0.55,
-      severityLabel: 'Mortalidade Térmica (Visada Direta): 5% – 20%'
+      fatalityRate: 0.15,
+      fatalityMin: 0.08,
+      fatalityMax: 0.22,
+      injuryRate: 0.50,
+      injuryMin: 0.38,
+      injuryMax: 0.60,
+      severityLabel: 'Pulso térmico; queimaduras de 3º grau na pele (8% – 22%)'
     },
     {
       id: 'light' as const,
-      name: 'Choque Leve (1-2 psi)',
+      name: '7º Onda de Choque Leve (1-2 psi)',
       rM: realRadii.lightBlastRadiusM,
-      // Danos por estilhaçamento de janelas e vidros projetados
-      fatalityRate: 0.01,
-      fatalityMin: 0.002,
-      fatalityMax: 0.025,
-      injuryRate: 0.22,
-      injuryMin: 0.14,
-      injuryMax: 0.32,
-      severityLabel: 'Mortalidade por Vidros/Fragmentos: 0.2% – 2.5%'
+      fatalityRate: 0.015,
+      fatalityMin: 0.005,
+      fatalityMax: 0.03,
+      injuryRate: 0.25,
+      injuryMin: 0.15,
+      injuryMax: 0.35,
+      severityLabel: 'Sobrepressão 1-2 psi; quebra maciça de vidros e estilhaços (0.5% – 3%)'
     },
   ];
 
@@ -2313,7 +2450,10 @@ export function calculateBombCityCasualties(
   let totalInjuriesMin = 0;
   let totalInjuriesMax = 0;
 
-  const zoneMap = {} as Record<'fireball' | 'vaporization' | 'carbonization' | 'heavy' | 'thermal' | 'light', ZoneCasualtyEstimate>;
+  const zoneMap = {} as Record<
+    'fireball' | 'vaporization' | 'carbonization' | 'heavy' | 'moderate' | 'thermal' | 'light',
+    ZoneCasualtyEstimate
+  >;
   const orderedZones: ZoneCasualtyEstimate[] = [];
 
   for (const z of sorted) {
@@ -2437,6 +2577,8 @@ export function calculateBombCityCasualties(
     totalAffectedPop: accumulatedPop,
     mortalityPercentage: accumulatedPop > 0 ? (totalDeaths / accumulatedPop) * 100 : 0,
     carbonizationDeaths: zoneMap.carbonization?.fatalities ?? 0,
+    heavyBlastDeaths: zoneMap.heavy?.fatalities ?? 0,
+    moderateBlastDeaths: zoneMap.moderate?.fatalities ?? 0,
     thermalDeaths: zoneMap.thermal?.fatalities ?? 0,
     lightBlastDeaths: zoneMap.light?.fatalities ?? 0,
     confidenceLevel,
@@ -2665,8 +2807,9 @@ export function createCustomNuclearBomb(yieldKt: number): NuclearBombRanking {
     description: `Detonação nuclear física com rendimento calibrado de ${yieldDisplay}.`,
     fireballRadiusM: radii.fireballRadiusM,
     vaporizationRadiusM: radii.vaporizationRadiusM,
-    heavyBlastRadiusM: radii.heavyBlastRadiusM,
     carbonizationRadiusM: radii.carbonizationRadiusM,
+    heavyBlastRadiusM: radii.heavyBlastRadiusM,
+    moderateBlastRadiusM: radii.moderateBlastRadiusM,
     thermalRadiusM: radii.thermalRadiusM,
     lightBlastRadiusM: radii.lightBlastRadiusM,
     mushroomCloudHeightKm,

@@ -61,6 +61,26 @@ export const caseStudies: CaseStudy[] = [
     lessonsLearned: 'Revelou os riscos extremos do fallout troposférico e estratosférico e as incertezas inerentes à física de reações termonucleares de grande escala.'
   },
   {
+    id: 'tsar-bomba-1961',
+    title: 'Teste da Tsar Bomba — RDS-220 (1961)',
+    year: '1961',
+    location: 'Baía de Mityushikha, Arquipélago de Novaya Zemlya (Ártico Soviético)',
+    category: 'teste',
+    categoryLabel: 'Teste Nuclear (50 Mt)',
+    shortSummary: 'A maior detonação nuclear e o artefato mais poderoso já construído e detonado na história da humanidade, atingindo 50 megatons de potência.',
+    context: 'No auge da Guerra Fria e das tensões em torno do Muro de Berlim em 1961, o líder soviético Nikita Khrushchev ordenou ao grupo de físicos liderado por Andrei Sakharov (em Arzamas-16) a construção de uma superbomba termonuclear de 100 megatons para demonstrar a capacidade estratégica da União Soviética.',
+    whatHappened: 'Para evitar precipitação radioativa (fallout) catastrófica sobre o território soviético e permitir que a tripulação do bombardeiro Tu-95V sobrevivesse, Sakharov substituiu o revestimento do terceiro estágio de Urânio-238 por chumbo inerte, reduzindo a potência projetada de 100 Mt para 50 Mt (ainda assim ~3.333 vezes a bomba de Hiroshima). Em 30 de outubro de 1961, às 11h32 (horário de Moscou), a bomba de 27 toneladas e 8 metros de comprimento foi lançada com paraquedas retardador e detonou a 4.000 metros de altitude sobre Novaya Zemlya.',
+    consequences: [
+      'Formação de uma bola de fogo colossal com cerca de 8 a 10 km de diâmetro, visível a quase 1.000 km de distância mesmo sob céu nublado.',
+      'A nuvem em formato de cogumelo atingiu 64 a 67 km de altitude (chegando à mesosfera), com uma base de 40 km e chapéu de 95 km de largura.',
+      'Destruição absoluta de todas as construções na vila abandonada de Severny (a 55 km do marco zero) e quebra de janelas na Noruega e Finlândia a mais de 900 km.',
+      'A onda de choque atmosférica deu três voltas completas ao redor do planeta Terra.',
+      'Graças ao revestimento de chumbo, 97% da energia proveio de fusão limpa, tornando-a proporcionalmente uma das detonações com menor fallout por megaton da história.'
+    ],
+    historicalSignificance: 'Representou o limite físico e militar absoluto da corrida pelas bombas de multi-megatonelagem. Conscientizou o próprio Andrei Sakharov sobre os perigos dos testes atmosféricos e impulsionou a assinatura do Tratado de Proibição Parcial de Testes Nucleares (PTBT) em 1963.',
+    lessonsLearned: 'Demonstrou que artefatos de 50 a 100 megatons eram militarmente impraticáveis (grande parte da energia irradiava para o espaço superior), levando as superpotências a priorizarem mísseis balísticos mais precisos e ogivas múltiplas (MIRVs).'
+  },
+  {
     id: 'crise-dos-misseis-1962',
     title: 'A Crise dos Mísseis de Cuba (1962)',
     year: '1962',

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PageId } from '../types';
 import { weaponCategories, nuclearTreaties } from '../data/weaponsData';
-import gunTypeDiagramImg from '../assets/images/gun_type_fission_diagram_real.png';
+import gunTypeDiagramImg from '../assets/images/little_boy_gun_type_diagram_pt.svg';
 import implosionTypeDiagramImg from '../assets/images/implosion_type_fission_diagram_1787680148801.jpg';
 import tellerUlamDiagramImg from '../assets/images/BombH_explosion.svg';
 import {
