@@ -119,85 +119,31 @@
   border-right-color: #000000 !important;
 }
 
-.leaflet-container,
+.leaflet-container {
+  background-color: #0b1322 !important;
+  font-family: inherit !important;
+}
+
 .leaflet-tile-pane,
 .leaflet-tile-container,
 .leaflet-pane,
 .leaflet-layer,
 .leaflet-map-pane {
-  background-color: #000000 !important;
+  background-color: transparent !important;
   font-family: inherit !important;
-  image-rendering: -webkit-optimize-contrast;
 }
 
 /* Tactical Pure Black Mode Map Tiles - Clean Minimalist Tactical Basemap (Esri Dark Canvas) */
 .tactical-dark-tiles,
 .tactical-black-tiles {
-  background-color: #05070a !important;
+  filter: brightness(0.78) contrast(1.25) saturate(0.85) !important;
+  -webkit-filter: brightness(0.78) contrast(1.25) saturate(0.85) !important;
 }
 
-.tactical-dark-tiles .leaflet-tile,
-.tactical-dark-tiles img,
-.tactical-black-tiles .leaflet-tile,
-.tactical-black-tiles img {
-  filter: brightness(0.72) contrast(1.4) saturate(0.8) !important;
-  -webkit-filter: brightness(0.72) contrast(1.4) saturate(0.8) !important;
-}
-
-/* Tactical Reference Layer (Thin subtle grey dashed borders & labels) */
-.tactical-reference-tiles {
-  pointer-events: none !important;
-}
-
-.tactical-reference-tiles .leaflet-tile,
-.tactical-reference-tiles img {
-  filter: brightness(1.08) contrast(1.18) !important;
-  -webkit-filter: brightness(1.08) contrast(1.18) !important;
-  opacity: 0.92 !important;
-}
-
-/* Satellite Hybrid Mode (Rich Deep-Navy Ocean & Forest Green Landmass + Thin Subtle Dashed Borders) */
+/* Satellite Mode (Rich Deep-Navy Ocean & Forest Green Landmass) */
 .satellite-tiles {
-  background-color: #0b1322 !important;
-}
-
-.satellite-tiles .leaflet-tile,
-.satellite-tiles img {
-  filter: brightness(0.92) contrast(1.1) saturate(1.06) !important;
-  -webkit-filter: brightness(0.92) contrast(1.1) saturate(1.06) !important;
-}
-
-.satellite-reference-tiles {
-  pointer-events: none !important;
-}
-
-.satellite-reference-tiles .leaflet-tile,
-.satellite-reference-tiles img {
-  filter: brightness(1.15) contrast(1.2) drop-shadow(0 1px 1.2px rgba(0, 0, 0, 0.75)) !important;
-  -webkit-filter: brightness(1.15) contrast(1.2) drop-shadow(0 1px 1.2px rgba(0, 0, 0, 0.75)) !important;
-  opacity: 0.94 !important;
-}
-
-.satellite-transportation-tiles {
-  pointer-events: none !important;
-}
-
-.satellite-transportation-tiles .leaflet-tile,
-.satellite-transportation-tiles img {
-  filter: brightness(0.92) contrast(1.08) saturate(0.35) !important;
-  -webkit-filter: brightness(0.92) contrast(1.08) saturate(0.35) !important;
-  opacity: 0.58 !important;
-}
-
-.satellite-ocean-reference-tiles {
-  pointer-events: none !important;
-}
-
-.satellite-ocean-reference-tiles .leaflet-tile,
-.satellite-ocean-reference-tiles img {
-  filter: brightness(0.95) contrast(1.12) saturate(1.15) !important;
-  -webkit-filter: brightness(0.95) contrast(1.12) saturate(1.15) !important;
-  opacity: 0.78 !important;
+  filter: brightness(0.95) contrast(1.06) saturate(1.05) !important;
+  -webkit-filter: brightness(0.95) contrast(1.06) saturate(1.05) !important;
 }
 
 .ground-zero-targeting-reticle {
@@ -206,12 +152,21 @@
   outline: none !important;
 }
 
-.leaflet-tile {
+/* Eliminate all 1px square tile grid lines / seams across all browsers and DPIs */
+.leaflet-container img.leaflet-tile {
   border: none !important;
   outline: none !important;
-  image-rendering: auto;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+  max-height: none !important;
+  image-rendering: auto !important;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+  width: 257px !important;
+  height: 257px !important;
+  mix-blend-mode: normal !important;
 }
 
 /* Remove default browser focus bounding box / square when clicking blast circles, polygons, or SVG paths */

@@ -890,9 +890,6 @@ export const NuclearRankingMapTab: React.FC = () => {
         if (theme === 'tactical') {
           return {
             url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
-            referenceUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
-            oceanReferenceUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Reference/MapServer/tile/{z}/{y}/{x}',
-            referenceClassName: 'tactical-reference-tiles',
             className: 'tactical-dark-tiles',
             subdomains: ['a', 'b', 'c'],
             maxZoom: 19,
@@ -903,9 +900,6 @@ export const NuclearRankingMapTab: React.FC = () => {
         if (theme === 'satellite') {
           return {
             url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-            referenceUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
-            oceanReferenceUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Reference/MapServer/tile/{z}/{y}/{x}',
-            referenceClassName: 'satellite-reference-tiles',
             className: 'satellite-tiles',
             subdomains: ['a', 'b', 'c'],
             maxZoom: 19,
@@ -1057,9 +1051,6 @@ export const NuclearRankingMapTab: React.FC = () => {
       if (mapTheme === 'tactical') {
         return {
           url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
-          referenceUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
-          oceanReferenceUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Reference/MapServer/tile/{z}/{y}/{x}',
-          referenceClassName: 'tactical-reference-tiles',
           className: 'tactical-dark-tiles',
           subdomains: ['a', 'b', 'c'],
           maxZoom: 19,
@@ -1070,9 +1061,6 @@ export const NuclearRankingMapTab: React.FC = () => {
       if (mapTheme === 'satellite') {
         return {
           url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-          referenceUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
-          oceanReferenceUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Reference/MapServer/tile/{z}/{y}/{x}',
-          referenceClassName: 'satellite-reference-tiles',
           className: 'satellite-tiles',
           subdomains: ['a', 'b', 'c'],
           maxZoom: 19,
@@ -1100,34 +1088,6 @@ export const NuclearRankingMapTab: React.FC = () => {
       attribution: tileConfig.attribution,
       noWrap: false
     }).addTo(mapInstanceRef.current);
-
-    if (tileConfig.oceanReferenceUrl) {
-      const oceanRefLayer = L.tileLayer(tileConfig.oceanReferenceUrl, {
-        minZoom: 1,
-        maxZoom: tileConfig.maxZoom,
-        maxNativeZoom: 10,
-        detectRetina: false,
-        subdomains: tileConfig.subdomains,
-        className: 'satellite-ocean-reference-tiles',
-        noWrap: false,
-        zIndex: 385
-      }).addTo(mapInstanceRef.current);
-      oceanReferenceLayerRef.current = oceanRefLayer;
-    }
-
-    if (tileConfig.referenceUrl) {
-      const refLayer = L.tileLayer(tileConfig.referenceUrl, {
-        minZoom: 1,
-        maxZoom: tileConfig.maxZoom,
-        maxNativeZoom: 16,
-        detectRetina: false,
-        subdomains: tileConfig.subdomains,
-        className: tileConfig.referenceClassName || 'tactical-reference-tiles',
-        noWrap: false,
-        zIndex: 400
-      }).addTo(mapInstanceRef.current);
-      referenceLayerRef.current = refLayer;
-    }
 
     newTileLayer.on('tileerror', (e) => {
       const coords = (e as unknown as { coords?: { z: number; x: number; y: number } }).coords;
@@ -1435,10 +1395,10 @@ export const NuclearRankingMapTab: React.FC = () => {
       {
         id: 'heavy',
         radius: effectiveBomb.heavyBlastRadiusM,
-        color: '#EC4899',
-        fillColor: '#F472B6',
-        fillOpacity: 0.30,
-        weight: 2.2,
+        color: '#E11D48',
+        fillColor: '#EC4899',
+        fillOpacity: 0.34,
+        weight: 2.4,
         name: '4º Onda de Choque Pesada (20 psi - Colapso Estrutural)'
       },
       {
@@ -1759,7 +1719,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                   onClick={() => handleSelectCity(city)}
                   className={`px-2 py-1 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1 border ${
                     isSelected
-                      ? 'bg-rose-600 text-white border-rose-400 shadow-sm shadow-rose-950/40'
+                      ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white border-pink-400 shadow-sm shadow-rose-950/40'
                       : 'bg-[#222222] text-neutral-200 hover:text-white hover:bg-[#282828] border-white/15'
                   }`}
                   title={`${city.name} (${city.country}) - ${city.highlightTag || 'Alvo'}`}
@@ -1944,7 +1904,7 @@ export const NuclearRankingMapTab: React.FC = () => {
               <button
                 onClick={() => setMapHeightMode('compact')}
                 className={`px-3 py-1 rounded font-bold transition-all ${
-                  mapHeightMode === 'compact' ? 'bg-rose-600 text-white shadow-sm' : 'text-neutral-300 hover:text-white'
+                  mapHeightMode === 'compact' ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white shadow-sm' : 'text-neutral-300 hover:text-white'
                 }`}
                 title="Altura compacta (520px) - Visão sem rolagem vertical"
               >
@@ -1953,7 +1913,7 @@ export const NuclearRankingMapTab: React.FC = () => {
               <button
                 onClick={() => setMapHeightMode('standard')}
                 className={`px-3 py-1 rounded font-bold transition-all ${
-                  mapHeightMode === 'standard' ? 'bg-rose-600 text-white shadow-sm' : 'text-neutral-300 hover:text-white'
+                  mapHeightMode === 'standard' ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white shadow-sm' : 'text-neutral-300 hover:text-white'
                 }`}
                 title="Altura padrão (640px)"
               >
@@ -1962,7 +1922,7 @@ export const NuclearRankingMapTab: React.FC = () => {
               <button
                 onClick={() => setMapHeightMode('large')}
                 className={`px-3 py-1 rounded font-bold transition-all ${
-                  mapHeightMode === 'large' ? 'bg-rose-600 text-white shadow-sm' : 'text-neutral-300 hover:text-white'
+                  mapHeightMode === 'large' ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white shadow-sm' : 'text-neutral-300 hover:text-white'
                 }`}
                 title="Altura grande (780px) - Ampla Visão"
               >
@@ -1975,7 +1935,7 @@ export const NuclearRankingMapTab: React.FC = () => {
               onClick={handleToggleOptions}
               className={`px-3 py-1.5 rounded-lg border text-[11px] font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
                 isOptionsPanelOpen
-                  ? 'bg-rose-600 text-white border-rose-500 shadow-sm ring-1 ring-rose-400'
+                  ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white border-pink-400 shadow-sm ring-1 ring-pink-400'
                   : 'bg-[#222222] text-neutral-200 hover:text-white hover:bg-[#282828] border-white/15'
               }`}
               title={isOptionsPanelOpen ? 'Fechar painel de opções e métricas' : 'Abrir opções e métricas sobre o mapa'}
@@ -2111,7 +2071,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                     onClick={() => handleUnitChange('Mt')}
                     className={`px-1.5 py-0.5 text-[10px] font-mono font-bold rounded transition-all cursor-pointer ${
                       yieldUnit === 'Mt'
-                        ? 'bg-rose-600 text-white font-extrabold shadow-xs'
+                        ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white font-extrabold shadow-xs'
                         : 'text-neutral-400 hover:text-white'
                     }`}
                     title="Definir unidade em Megatons (0,00002 Mt a 100 Mt)"
@@ -2152,31 +2112,14 @@ export const NuclearRankingMapTab: React.FC = () => {
                     <span className="font-extrabold tracking-wide">DETONAR BOMBA</span>
                   </button>
                 ) : (
-                  <div className="flex items-center gap-2 bg-[#121212]/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-red-500/50 shadow-2xl text-xs font-mono">
-                    <div className="flex items-center gap-1.5 text-red-300 font-bold">
-                      <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
-                      <span>{selectedCity.name}</span>
-                    </div>
-                    <div className="w-px h-4 bg-white/20 mx-0.5" />
-                    <div className="flex items-center gap-2 font-bold">
-                      <span className="text-red-400" title={`Estimativa central: ~${formatCasualtyNumber(casualties.totalDeaths)} mortos`}>
-                        💀 {casualties.deathsRangeDisplay} mortos
-                      </span>
-                      <span className="text-white/30">•</span>
-                      <span className="text-amber-300" title={`Estimativa central: ~${formatCasualtyNumber(casualties.totalInjuries)} feridos`}>
-                        🩹 {casualties.injuriesRangeDisplay} feridos
-                      </span>
-                    </div>
-                    <div className="w-px h-4 bg-white/20 mx-0.5" />
-                    <button
-                      onClick={handleResetDetonation}
-                      className="px-2 py-0.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-amber-300 hover:text-white border border-white/10 font-sans font-bold text-[11px] flex items-center gap-1 transition-all cursor-pointer"
-                      title="Ocultar zonas e rearmar novo alvo"
-                    >
-                      <RotateCcw className="w-3 h-3 text-amber-400" />
-                      <span>Rearmar</span>
-                    </button>
-                  </div>
+                  <button
+                    onClick={handleResetDetonation}
+                    className="px-3.5 py-2 rounded-xl bg-[#121212]/95 hover:bg-[#1e1e1e] backdrop-blur-md text-amber-300 hover:text-white border border-amber-500/40 shadow-2xl font-sans font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer"
+                    title="Ocultar zonas e rearmar novo alvo"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Rearmar</span>
+                  </button>
                 )}
               </div>
 
@@ -2188,7 +2131,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                     onClick={() => setMapTheme('tactical')}
                     className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                       mapTheme === 'tactical'
-                        ? 'bg-rose-600 text-white shadow-md'
+                        ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white shadow-md'
                         : 'text-neutral-400 hover:text-white hover:bg-white/10'
                     }`}
                     title="Modo Tático Militar (Mapa Escuro de Alto Contraste)"
@@ -2229,7 +2172,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                     onClick={handleViewWorldMap}
                     className={`px-2.5 py-1.5 rounded-xl border text-xs font-bold transition-all flex items-center space-x-1.5 backdrop-blur-md shadow-xl cursor-pointer ${
                       isWorldView
-                        ? 'bg-rose-600 text-white border-rose-400 shadow-rose-950/50 ring-2 ring-rose-400'
+                        ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white border-pink-400 shadow-rose-950/50 ring-2 ring-pink-400'
                         : 'bg-[#161616]/95 text-neutral-200 hover:text-white hover:bg-[#252525] border-white/20'
                     }`}
                     title="Ver todo o Mapa Mundi (Planisfério Global 100%)"
@@ -2268,7 +2211,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                   <div className="bg-[#161616]/95 backdrop-blur-md border border-white/20 rounded-xl p-0.5 shadow-xl flex items-center space-x-0.5">
                     <button
                       onClick={handleZoomIn}
-                      className="w-7 h-7 rounded-lg bg-[#222222] hover:bg-rose-600 text-white flex items-center justify-center transition-all shadow cursor-pointer"
+                      className="w-7 h-7 rounded-lg bg-[#222222] hover:bg-gradient-to-r hover:from-rose-600 hover:to-pink-500 text-white flex items-center justify-center transition-all shadow cursor-pointer"
                       title="Ampliar visão (+ Zoom)"
                       aria-label="Ampliar visão"
                     >
@@ -2276,7 +2219,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                     </button>
                     <button
                       onClick={handleZoomOut}
-                      className="w-7 h-7 rounded-lg bg-[#222222] hover:bg-rose-600 text-white flex items-center justify-center transition-all shadow cursor-pointer"
+                      className="w-7 h-7 rounded-lg bg-[#222222] hover:bg-gradient-to-r hover:from-rose-600 hover:to-pink-500 text-white flex items-center justify-center transition-all shadow cursor-pointer"
                       title="Diminuir visão (- Zoom)"
                       aria-label="Diminuir visão"
                     >
@@ -2285,21 +2228,6 @@ export const NuclearRankingMapTab: React.FC = () => {
                   </div>
                 </div>
               </div>
-
-              {/* Global World Map Active Minimal Indicator */}
-              {isWorldView && (
-                <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 pointer-events-auto px-3.5 py-1.5 rounded-full bg-[#161616]/95 backdrop-blur-md border border-white/20 text-neutral-200 shadow-2xl flex items-center gap-2 text-xs">
-                  <Globe className="w-3.5 h-3.5 text-emerald-400 animate-spin-slow" />
-                  <span className="font-bold text-white text-[11px]">Planisfério Global</span>
-                  <button
-                    onClick={handleRecenter}
-                    className="ml-1 px-2.5 py-0.5 rounded-md bg-rose-600 hover:bg-rose-500 text-white font-bold text-[10px] flex items-center gap-1 transition-all"
-                  >
-                    <Crosshair className="w-3 h-3" />
-                    <span>Focar</span>
-                  </button>
-                </div>
-              )}
 
               {/* Tactical Esri Dark Canvas Status Indicator */}
               {mapTheme === 'tactical' && (
@@ -2335,20 +2263,26 @@ export const NuclearRankingMapTab: React.FC = () => {
           >
             {/* Header do Painel Lateral */}
             <div className="flex items-center justify-between pb-3 border-b border-white/10">
-              <div className="flex items-center space-x-2">
-                <div className="p-1.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400">
+              <div className="flex items-center space-x-2 min-w-0">
+                <div className="p-1.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 shrink-0">
                   <Layers className="w-4 h-4" />
                 </div>
-                <div>
-                  <h4 className="text-xs font-bold text-white uppercase tracking-wider">
-                    Opções & Métricas
-                  </h4>
-                  <p className="text-[10px] text-neutral-400">
-                    Controles e dados físicos de {selectedBomb.name}
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <h4 className="text-xs font-bold text-white uppercase tracking-wider">
+                      Opções & Métricas
+                    </h4>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-rose-500/15 text-rose-300 border border-rose-500/30 flex items-center gap-1 truncate">
+                      <MapPin className="w-2.5 h-2.5 text-rose-400 shrink-0" />
+                      <span className="truncate">{selectedCity.name}</span>
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-neutral-400 truncate mt-0.5">
+                    Alvo: <strong className="text-neutral-200">{selectedCity.name}</strong> • {selectedBomb.name}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 shrink-0">
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#222222] text-red-300 border border-white/15 font-bold">
                   {selectedBomb.yieldDisplay}
                 </span>
@@ -2368,7 +2302,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                 onClick={() => setOptionsActiveTab('layers')}
                 className={`py-1.5 px-2 text-[11px] font-bold rounded-lg transition-all flex items-center justify-center space-x-1 ${
                   optionsActiveTab === 'layers'
-                    ? 'bg-rose-600 text-white shadow-sm'
+                    ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white shadow-sm'
                     : 'text-neutral-400 hover:text-white'
                 }`}
               >
@@ -2419,7 +2353,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                       onClick={() => setDimensionMode('radius')}
                       className={`py-1.5 text-[11px] font-bold rounded transition-all flex items-center justify-center ${
                         dimensionMode === 'radius'
-                          ? 'bg-rose-600 text-white shadow'
+                          ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white shadow'
                           : 'text-neutral-400 hover:text-white'
                       }`}
                     >
@@ -2429,7 +2363,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                       onClick={() => setDimensionMode('diameter')}
                       className={`py-1.5 text-[11px] font-bold rounded transition-all flex items-center justify-center ${
                         dimensionMode === 'diameter'
-                          ? 'bg-rose-600 text-white shadow'
+                          ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white shadow'
                           : 'text-neutral-400 hover:text-white'
                       }`}
                     >
@@ -2462,23 +2396,27 @@ export const NuclearRankingMapTab: React.FC = () => {
                   {/* Status do Alvo (Detonação Exclusiva Dentro do Mapa) */}
                   {!isDetonated ? (
                     <div className="p-2.5 rounded-xl bg-black border border-white/10 flex items-center justify-between text-[11px]">
-                      <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-                        <span className="text-neutral-300 font-medium">Alvo armado no mapa</span>
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0" />
+                        <span className="text-neutral-300 font-medium truncate">
+                          Cidade Alvo: <strong className="text-white">{selectedCity.name}</strong>
+                        </span>
                       </div>
-                      <span className="text-[10px] font-mono text-amber-300 font-bold px-2 py-0.5 rounded bg-amber-950/40 border border-amber-500/30">
+                      <span className="text-[10px] font-mono text-amber-300 font-bold px-2 py-0.5 rounded bg-amber-950/40 border border-amber-500/30 shrink-0">
                         {selectedBomb.yieldDisplay}
                       </span>
                     </div>
                   ) : (
                     <div className="p-2 rounded-xl bg-black border border-rose-500/50 flex items-center justify-between text-[11px]">
-                      <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
-                        <span className="text-rose-300 font-bold font-mono text-[10px]">BOMBA DETONADA — ZONAS ATIVAS</span>
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping shrink-0" />
+                        <span className="text-rose-300 font-bold font-mono text-[10px] truncate">
+                          ALVO: {selectedCity.name.toUpperCase()} — DETONADA
+                        </span>
                       </div>
                       <button
                         onClick={handleResetDetonation}
-                        className="px-2 py-0.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-amber-300 hover:text-white border border-white/20 text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer"
+                        className="px-2 py-0.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-amber-300 hover:text-white border border-white/20 text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer shrink-0"
                       >
                         <RotateCcw className="w-3 h-3 text-amber-400" />
                         <span>Rearmar</span>
@@ -2834,22 +2772,22 @@ export const NuclearRankingMapTab: React.FC = () => {
                   <div
                     onMouseEnter={() => setHoveredZoneId('heavy')}
                     onMouseLeave={() => setHoveredZoneId(null)}
-                    style={hoveredZoneId === 'heavy' ? { '--zone-glow-color': 'rgba(244, 114, 182, 0.9)' } as React.CSSProperties : undefined}
+                    style={hoveredZoneId === 'heavy' ? { '--zone-glow-color': 'rgba(225, 29, 72, 0.9)' } as React.CSSProperties : undefined}
                     className={`p-3 rounded-xl border space-y-2 shadow-md transition-all duration-300 ${
                       hoveredZoneId === 'heavy'
-                        ? 'border-pink-300 ring-2 ring-pink-300 shadow-[0_0_30px_rgba(244,114,182,0.8)] bg-pink-950/60 zone-card-glowing'
+                        ? 'border-pink-400 ring-2 ring-rose-500 shadow-[0_0_30px_rgba(225,29,72,0.85)] bg-rose-950/60 zone-card-glowing'
                         : visibleLayers.heavy
-                        ? 'bg-black border-pink-500/50'
+                        ? 'bg-black border-rose-500/60'
                         : 'border-white/10 opacity-60 bg-black/60'
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <span className={`w-2.5 h-2.5 rounded-full ${visibleLayers.heavy ? 'bg-pink-500 shadow-sm' : 'bg-neutral-600'}`} />
-                        <span className={`text-xs font-bold ${visibleLayers.heavy ? 'text-pink-300' : 'text-neutral-400'}`}>4. Onda de Choque Pesada (&gt; 20 psi)</span>
+                        <span className={`w-2.5 h-2.5 rounded-full ${visibleLayers.heavy ? 'bg-gradient-to-r from-rose-600 to-pink-500 shadow-sm shadow-rose-500/50' : 'bg-neutral-600'}`} />
+                        <span className={`text-xs font-bold ${visibleLayers.heavy ? 'text-rose-300' : 'text-neutral-400'}`}>4. Onda de Choque Pesada (&gt; 20 psi)</span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <span className="text-[10px] font-mono font-bold text-pink-300">
+                        <span className="text-[10px] font-mono font-bold text-rose-300">
                           {calculateAreaKm2(effectiveBomb.heavyBlastRadiusM)}
                         </span>
                         <button
@@ -2857,7 +2795,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                           onClick={() => toggleLayer('heavy')}
                           className={`px-2 py-0.5 rounded-lg border text-[10px] font-mono font-bold flex items-center space-x-1 transition-all cursor-pointer ${
                             visibleLayers.heavy
-                              ? 'bg-pink-500/20 border-pink-500/60 text-pink-300 hover:bg-pink-500/30'
+                              ? 'bg-gradient-to-r from-rose-600 to-pink-500 border-pink-400/60 text-white shadow-sm hover:opacity-95'
                               : 'bg-neutral-900 border-white/15 text-neutral-500 hover:text-neutral-300'
                           }`}
                           title={visibleLayers.heavy ? 'Ocultar zona no mapa' : 'Exibir zona no mapa'}
@@ -2865,7 +2803,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                         >
                           {visibleLayers.heavy ? (
                             <>
-                              <Eye className="w-3.5 h-3.5 text-pink-400" />
+                              <Eye className="w-3.5 h-3.5 text-white" />
                               <span>Visível</span>
                             </>
                           ) : (
@@ -2879,25 +2817,25 @@ export const NuclearRankingMapTab: React.FC = () => {
                     </div>
                     <div className="text-[11px] text-neutral-200 space-y-1 font-mono">
                       <div className="flex justify-between">
-                        <span className="text-pink-200/70">Raio / Diâmetro Real:</span>
-                        <span className="text-pink-100 font-bold">
+                        <span className="text-rose-200/70">Raio / Diâmetro Real:</span>
+                        <span className="text-rose-100 font-bold">
                           {formatRadius(effectiveBomb.heavyBlastRadiusM)} / {formatDiameter(effectiveBomb.heavyBlastRadiusM)}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-pink-200/70">Sobrepressão e Vento:</span>
-                        <span className="text-pink-300 font-bold">&gt; 20 psi • &gt; 1.000 km/h</span>
+                        <span className="text-rose-200/70">Sobrepressão e Vento:</span>
+                        <span className="text-rose-300 font-bold">&gt; 20 psi • &gt; 1.000 km/h</span>
                       </div>
                     </div>
-                    <div className="text-[10px] text-pink-100/90 leading-snug space-y-0.5">
+                    <div className="text-[10px] text-rose-100/90 leading-snug space-y-0.5">
                       <div>Sobrepressão extrema (&gt; 20 psi). Destruição total de edifícios reforçados</div>
                       <div>e estruturas de concreto armado. Ventos superiores a 1.000 km/h.</div>
                       <div>Letalidade severa: 95% – 100% por colapso estrutural massivo.</div>
                     </div>
-                    <div className="p-2 rounded-lg bg-[#0c0c0c] border border-pink-500/30 space-y-1 font-mono text-[11px]">
-                      <div className="flex justify-between items-center text-pink-200 font-bold">
+                    <div className="p-2 rounded-lg bg-[#0c0c0c] border border-rose-500/40 space-y-1 font-mono text-[11px]">
+                      <div className="flex justify-between items-center text-rose-200 font-bold">
                         <span className="flex items-center gap-1">
-                          <Skull className="w-3 h-3 text-pink-400" />
+                          <Skull className="w-3 h-3 text-rose-400" />
                           Mortes Estimadas:
                         </span>
                         <span>{isDetonated ? `${casualties.zoneEstimates.heavy.fatalitiesRangeDisplay} pessoas` : '—'}</span>
@@ -2912,7 +2850,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                       <div className="flex justify-between text-[10px] text-neutral-300">
                         <span>Letalidade Física Calibrada:</span>
-                        <span className="text-pink-400 font-bold">~98% (95% – 100%)</span>
+                        <span className="text-rose-400 font-bold">~98% (95% – 100%)</span>
                       </div>
                     </div>
                   </div>
@@ -3876,7 +3814,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                   </div>
                   <div className="bg-[#222222] p-2.5 rounded-lg border border-white/15 text-center">
                     <span className="text-[10px] text-white font-bold block">4º Choque Pesado</span>
-                    <span className="text-xs text-pink-400 font-mono font-black">R: 10,30 km</span>
+                    <span className="text-xs text-rose-400 font-mono font-black">R: 10,30 km</span>
                     <span className="text-[10px] text-neutral-400 font-mono block">Ø: 20,60 km (20 psi)</span>
                   </div>
                   <div className="bg-[#222222] p-2.5 rounded-lg border border-white/15 text-center">
