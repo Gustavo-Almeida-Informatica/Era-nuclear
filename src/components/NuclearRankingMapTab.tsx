@@ -1,6 +1,17 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import tsarMushroomImg from '../assets/images/tsar_bomba_documentary_real.jpg';
+import hiroshimaExplosionImg from '../assets/images/hiroshima_explosion.jpg';
+import nagasakiExplosionImg from '../assets/images/nagasaki_explosion.jpg';
+import rds1Img from '../assets/images/rds_1_soviet_test.jpg';
+import rds6sImg from '../assets/images/rds_6s_soviet_test.jpg';
+import ivyKingImg from '../assets/images/ivy_king_001.jpg';
+import rds37Img from '../assets/images/rds_37_thermonuclear.jpg';
+import ivyMikeImg from '../assets/images/ivy_mike_blast_1787763915443.jpg';
+import castleRomeoImg from '../assets/images/castle_romeo.jpg';
+import castleBravoImg from '../assets/images/castle_bravo_005.jpg';
+import castleUnionImg from '../assets/images/p27-castle-union.webp';
 import {
   NUCLEAR_RANKING_BOMBS,
   TARGET_CITIES,
@@ -1952,7 +1963,7 @@ export const NuclearRankingMapTab: React.FC = () => {
             </button>
           </div>
 
-          {/* Escolher Bomba & Escolher Potência (0,02 kt a 100 Mt) posicionados na frente do mapa */}
+          {/* Escolher Bomba posicionado na frente do mapa */}
           <div className="relative z-30 bg-[#161616] border-b border-white/10 px-2.5 sm:px-3 py-1.5 flex flex-wrap items-center justify-start gap-2.5 sm:gap-3.5 overflow-visible">
             {/* Escolher Bomba */}
             <div className="flex items-center gap-2 shrink-0">
@@ -2020,65 +2031,6 @@ export const NuclearRankingMapTab: React.FC = () => {
                     })}
                   </div>
                 )}
-              </div>
-            </div>
-
-            {/* Separador vertical */}
-            <div className="hidden sm:block h-5 w-px bg-white/15 shrink-0" />
-
-            {/* Escolher Potência das Bombas (0,02 kt até 100 Mt - Usuário digita) */}
-            <div className="flex items-center gap-2 shrink-0">
-              <div className="flex items-center gap-1.5 text-xs font-black text-amber-400 uppercase tracking-wider shrink-0">
-                <Zap className="w-4 h-4 text-amber-400 animate-pulse" />
-                <span className="whitespace-nowrap">Potência:</span>
-              </div>
-
-              {/* Campo para o usuário digitar com seletor de unidade kt / Mt */}
-              <div className="flex items-center bg-[#222222] border border-white/15 hover:border-white/30 focus-within:border-rose-400 focus-within:ring-1 focus-within:ring-rose-400/40 rounded-lg p-0.5 shadow-sm transition-all">
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  value={yieldInputValue}
-                  onChange={(e) => handleDirectInputChange(e.target.value)}
-                  onBlur={handleInputBlurOrEnter}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleInputBlurOrEnter();
-                      (e.target as HTMLInputElement).blur();
-                    }
-                  }}
-                  placeholder="0,02 a 100"
-                  className="w-16 sm:w-20 px-2 py-1 bg-transparent text-white font-mono font-bold text-xs focus:outline-none placeholder-neutral-500 text-center"
-                  title="Digite a potência desejada (de 0,02 kt até 100 Mt)"
-                />
-
-                {/* Seletor de Unidades kt / Mt */}
-                <div className="flex items-center bg-[#141414] rounded-md p-0.5 border border-white/10">
-                  <button
-                    type="button"
-                    onClick={() => handleUnitChange('kt')}
-                    className={`px-1.5 py-0.5 text-[10px] font-mono font-bold rounded transition-all cursor-pointer ${
-                      yieldUnit === 'kt'
-                        ? 'bg-amber-500 text-black font-extrabold shadow-xs'
-                        : 'text-neutral-400 hover:text-white'
-                    }`}
-                    title="Definir unidade em Quilotons (0,02 kt a 100.000 kt)"
-                  >
-                    kt
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleUnitChange('Mt')}
-                    className={`px-1.5 py-0.5 text-[10px] font-mono font-bold rounded transition-all cursor-pointer ${
-                      yieldUnit === 'Mt'
-                        ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white font-extrabold shadow-xs'
-                        : 'text-neutral-400 hover:text-white'
-                    }`}
-                    title="Definir unidade em Megatons (0,00002 Mt a 100 Mt)"
-                  >
-                    Mt
-                  </button>
-                </div>
               </div>
             </div>
           </div>
@@ -3681,6 +3633,103 @@ export const NuclearRankingMapTab: React.FC = () => {
                       ? ' penetrando a Estratosfera, onde as partículas de fissão são dispersas globalmente.'
                       : ' contida dentro da Troposfera, com precipitação radiológica local imediata.'}
                   </div>
+
+                  {/* Imagem da Nuvem de Cogumelo Dinâmica (Aba de Imagens ou Castle Union como fallback) */}
+                  {(() => {
+                    const getMushroomCloudInfo = (bomb: NuclearBombRanking) => {
+                      const y = bomb.yieldKt;
+                      if (bomb.id === 'little-boy' || Math.abs(y - 15) < 0.001) {
+                        return {
+                          img: hiroshimaExplosionImg,
+                          label: 'Nuvem de Cogumelo • Little Boy (15 kt • Hiroshima)'
+                        };
+                      }
+                      if (bomb.id === 'fat-man' || Math.abs(y - 21) < 0.001) {
+                        return {
+                          img: nagasakiExplosionImg,
+                          label: 'Nuvem de Cogumelo • Fat Man (21 kt • Nagasaki)'
+                        };
+                      }
+                      if (Math.abs(y - 22) < 0.001) {
+                        return {
+                          img: rds1Img,
+                          label: 'Nuvem de Cogumelo • RDS-1 (22 kt)'
+                        };
+                      }
+                      if (bomb.id === 'rds-6s' || Math.abs(y - 400) < 0.001) {
+                        return {
+                          img: rds6sImg,
+                          label: 'Nuvem de Cogumelo • RDS-6s Sloika (400 kt)'
+                        };
+                      }
+                      if (bomb.id === 'ivy-king' || Math.abs(y - 500) < 0.001) {
+                        return {
+                          img: ivyKingImg,
+                          label: 'Nuvem de Cogumelo • Ivy King (500 kt)'
+                        };
+                      }
+                      if (bomb.id === 'rds-37' || Math.abs(y - 1600) < 0.001) {
+                        return {
+                          img: rds37Img,
+                          label: 'Nuvem de Cogumelo • RDS-37 (1,6 Mt)'
+                        };
+                      }
+                      if (bomb.id === 'ivy-mike' || Math.abs(y - 10400) < 0.001) {
+                        return {
+                          img: ivyMikeImg,
+                          label: 'Nuvem de Cogumelo • Ivy Mike (10,4 Mt)'
+                        };
+                      }
+                      if (Math.abs(y - 11000) < 0.001) {
+                        return {
+                          img: castleRomeoImg,
+                          label: 'Nuvem de Cogumelo • Castle Romeo (11 Mt)'
+                        };
+                      }
+                      if (bomb.id === 'castle-bravo' || Math.abs(y - 15000) < 0.001) {
+                        return {
+                          img: castleBravoImg,
+                          label: 'Nuvem de Cogumelo • Castle Bravo (15 Mt)'
+                        };
+                      }
+                      if (
+                        bomb.id === 'tsar-bomba' ||
+                        bomb.id === 'tsar-bomba-100mt' ||
+                        Math.abs(y - 50000) < 0.001 ||
+                        Math.abs(y - 100000) < 0.001
+                      ) {
+                        const is100Mt = bomb.id === 'tsar-bomba-100mt' || Math.abs(y - 100000) < 0.001;
+                        return {
+                          img: tsarMushroomImg,
+                          label: is100Mt
+                            ? 'Nuvem de Cogumelo • Tsar Bomba (100 Mt • 75 km)'
+                            : 'Nuvem de Cogumelo • Tsar Bomba (50 Mt • 67 km)'
+                        };
+                      }
+                      return {
+                        img: castleUnionImg,
+                        label: `Cogumelo Atômico • Castle Union (${bomb.name})`
+                      };
+                    };
+
+                    const cloudInfo = getMushroomCloudInfo(selectedBomb);
+                    return (
+                      <div className="relative rounded-lg overflow-hidden border border-purple-500/30 bg-black">
+                        <img
+                          src={cloudInfo.img}
+                          alt={cloudInfo.label}
+                          referrerPolicy="no-referrer"
+                          className="w-full h-36 object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+                        <div className="absolute bottom-1.5 left-2 right-2 flex items-center justify-between text-[9px] font-mono text-purple-200">
+                          <span className="bg-black/75 px-1.5 py-0.5 rounded border border-purple-500/30 truncate">
+                            {cloudInfo.label}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 {/* Tabela Comparativa de Todas as 12 Armas Atômicas em ${selectedCity.name} */}
