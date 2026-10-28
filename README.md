@@ -8,6 +8,8 @@
 [![Vite](https://img.shields.io/badge/Vite-6.2-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Licença: Apache 2.0](https://img.shields.io/badge/Licen%C3%A7a-Apache_2.0-blue.svg?style=flat-square)](LICENSE)
 
+> 🌐 **Acesse a plataforma online:** [**https://era-nuclear.vercel.app/**](https://era-nuclear.vercel.app/)
+
 ---
 
 ## 📌 Visão Geral
@@ -125,40 +127,11 @@ Páginas dedicadas e ricamente documentadas sobre eventos cruciais:
 
 ---
 
-## 🚀 Como Executar Localmente
+## 🌐 Acesso ao Projeto
 
-### Pré-requisitos
-- **Node.js** (versão 18 ou superior)
-- Gerenciador de pacotes: **npm**, **yarn** ou **bun**
+Acesse a plataforma diretamente através do link oficial no ar:
 
-### Instalação passo a passo
-
-1. **Clone o repositório:**
-   ```bash
-   git clone https://github.com/<seu-usuario>/<nome-do-repositorio>.git
-   cd <nome-do-repositorio>
-   ```
-
-2. **Instale as dependências:**
-   ```bash
-   npm install
-   ```
-
-3. **Inicie o servidor de desenvolvimento:**
-   ```bash
-   npm run dev
-   ```
-   Acesse a aplicação no navegador em `http://localhost:3000`.
-
-4. **Gerar build de produção otimizada:**
-   ```bash
-   npm run build
-   ```
-
-5. **Checagem de tipos (Type-check):**
-   ```bash
-   npm run lint
-   ```
+🔗 **[https://era-nuclear.vercel.app/](https://era-nuclear.vercel.app/)**
 
 ---
 
