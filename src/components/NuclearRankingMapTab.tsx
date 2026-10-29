@@ -1616,22 +1616,34 @@ export const NuclearRankingMapTab: React.FC = () => {
     window.addEventListener('resize', handleResize);
 
     if (mapInstanceRef.current) {
-      const timer = setTimeout(() => {
+      const timer1 = setTimeout(() => {
         if (mapInstanceRef.current) {
           mapInstanceRef.current.invalidateSize();
         }
-      }, 200);
+      }, 80);
+      const timer2 = setTimeout(() => {
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.invalidateSize();
+        }
+      }, 250);
+      const timer3 = setTimeout(() => {
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.invalidateSize();
+        }
+      }, 450);
       return () => {
-        clearTimeout(timer);
+        clearTimeout(timer1);
+        clearTimeout(timer2);
+        clearTimeout(timer3);
         window.removeEventListener('resize', handleResize);
       };
     }
     return () => window.removeEventListener('resize', handleResize);
   }, [mapHeightMode, isOptionsPanelOpen]);
 
-  // Options toggle handler ensuring instant Leaflet invalidateSize
+  // Options toggle handler ensuring instant and smooth Leaflet invalidateSize during vertical expansion
   const handleToggleOptions = () => {
-    setIsOptionsPanelOpen(!isOptionsPanelOpen);
+    setIsOptionsPanelOpen((prev) => !prev);
     setTimeout(() => {
       if (mapInstanceRef.current) {
         mapInstanceRef.current.invalidateSize();
@@ -1641,7 +1653,17 @@ export const NuclearRankingMapTab: React.FC = () => {
       if (mapInstanceRef.current) {
         mapInstanceRef.current.invalidateSize();
       }
-    }, 220);
+    }, 180);
+    setTimeout(() => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.invalidateSize();
+      }
+    }, 350);
+    setTimeout(() => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.invalidateSize();
+      }
+    }, 500);
   };
 
   // Center on Ground Zero helper
@@ -1693,12 +1715,21 @@ export const NuclearRankingMapTab: React.FC = () => {
     }
   };
 
-  // Dynamic height class ensuring all controls and map fit inside screen viewport
+  // Dynamic height class: significantly expands vertically when the options and metrics panel is closed
   const getContainerHeightClass = () => {
-    if (mapHeightMode === 'immersive') return 'h-[82vh] max-h-[82vh] min-h-[520px]';
-    if (mapHeightMode === 'large') return 'h-[760px] max-h-[760px] min-h-[500px]';
-    if (mapHeightMode === 'standard') return 'h-[640px] max-h-[640px] min-h-[460px]';
-    return 'h-[520px] max-h-[520px] min-h-[420px]'; // compact zero-scroll default
+    if (!isOptionsPanelOpen) {
+      // Vista ampliada verticalmente quando o painel de opções e métricas é retirado
+      if (mapHeightMode === 'immersive') return 'h-[92vh] min-h-[850px] transition-[height] duration-300';
+      if (mapHeightMode === 'large') return 'h-[960px] sm:h-[1020px] lg:h-[90vh] min-h-[820px] transition-[height] duration-300';
+      if (mapHeightMode === 'standard') return 'h-[820px] sm:h-[880px] lg:h-[84vh] min-h-[720px] transition-[height] duration-300';
+      return 'h-[680px] sm:h-[720px] min-h-[600px] transition-[height] duration-300'; // compacto ampliado
+    }
+
+    // Altura padrão quando o painel lateral de opções está aberto ao lado do mapa
+    if (mapHeightMode === 'immersive') return 'h-[82vh] max-h-[82vh] min-h-[520px] transition-[height] duration-300';
+    if (mapHeightMode === 'large') return 'h-[760px] max-h-[760px] min-h-[500px] transition-[height] duration-300';
+    if (mapHeightMode === 'standard') return 'h-[640px] max-h-[640px] min-h-[460px] transition-[height] duration-300';
+    return 'h-[520px] max-h-[520px] min-h-[420px] transition-[height] duration-300'; // compacto padrão
   };
 
   return (
@@ -1921,7 +1952,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                 className={`px-3 py-1 rounded font-bold transition-all ${
                   mapHeightMode === 'compact' ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white shadow-sm' : 'text-neutral-300 hover:text-white'
                 }`}
-                title="Altura compacta (520px) - Visão sem rolagem vertical"
+                title={!isOptionsPanelOpen ? 'Compacto Expandido (720px)' : 'Altura compacta (520px)'}
               >
                 Compacto
               </button>
@@ -1930,7 +1961,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                 className={`px-3 py-1 rounded font-bold transition-all ${
                   mapHeightMode === 'standard' ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white shadow-sm' : 'text-neutral-300 hover:text-white'
                 }`}
-                title="Altura padrão (640px)"
+                title={!isOptionsPanelOpen ? 'Médio Expandido (880px / 84vh)' : 'Altura padrão (640px)'}
               >
                 Médio
               </button>
@@ -1939,7 +1970,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                 className={`px-3 py-1 rounded font-bold transition-all ${
                   mapHeightMode === 'large' ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white shadow-sm' : 'text-neutral-300 hover:text-white'
                 }`}
-                title="Altura grande (780px) - Ampla Visão"
+                title={!isOptionsPanelOpen ? 'Grande Expandido (1020px / 90vh)' : 'Altura grande (760px)'}
               >
                 Grande
               </button>
@@ -1953,7 +1984,11 @@ export const NuclearRankingMapTab: React.FC = () => {
                   ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white border-pink-400 shadow-sm ring-1 ring-pink-400'
                   : 'bg-[#222222] text-neutral-200 hover:text-white hover:bg-[#282828] border-white/15'
               }`}
-              title={isOptionsPanelOpen ? 'Fechar painel de opções e métricas' : 'Abrir opções e métricas sobre o mapa'}
+              title={
+                isOptionsPanelOpen
+                  ? 'Fechar painel de opções e métricas (aumenta o mapa verticalmente e horizontalmente)'
+                  : 'Abrir opções e métricas ao lado do mapa'
+              }
             >
               <Layers className="w-3.5 h-3.5" />
               <span>Opções & Métricas</span>
@@ -1964,6 +1999,11 @@ export const NuclearRankingMapTab: React.FC = () => {
               >
                 {isOptionsPanelOpen ? 'ABERTO' : 'FECHADO'}
               </span>
+              {!isOptionsPanelOpen && (
+                <span className="hidden sm:inline-flex items-center text-[9px] font-semibold text-emerald-400 ml-0.5">
+                  • Mapa Verticalmente Expandido
+                </span>
+              )}
             </button>
           </div>
 
@@ -2040,7 +2080,7 @@ export const NuclearRankingMapTab: React.FC = () => {
           </div>
 
           {/* Leaflet Map Canvas Container */}
-          <div className={`relative z-0 w-full ${getContainerHeightClass()} bg-[#0D0D0D] overflow-hidden flex-1 min-h-[500px]`}>
+          <div className={`relative z-0 w-full ${getContainerHeightClass()} bg-[#0D0D0D] overflow-hidden flex-1 ${!isOptionsPanelOpen ? 'min-h-[600px]' : 'min-h-[460px]'}`}>
             {/* Inner Leaflet Mount */}
             <div className="relative w-full h-full bg-[#080808]">
               <div ref={mapContainerRef} className="absolute inset-0 w-full h-full z-0" />
@@ -2243,9 +2283,9 @@ export const NuclearRankingMapTab: React.FC = () => {
                   {selectedBomb.yieldDisplay}
                 </span>
                 <button
-                  onClick={() => setIsOptionsPanelOpen(false)}
-                  className="p-1 rounded-lg text-neutral-400 hover:text-white hover:bg-[#222222] transition-colors"
-                  title="Fechar opções e estender o mapa até a borda direita"
+                  onClick={handleToggleOptions}
+                  className="p-1 rounded-lg text-neutral-400 hover:text-white hover:bg-[#222222] transition-colors cursor-pointer"
+                  title="Fechar opções e expandir o mapa na vertical e horizontal"
                 >
                   <X className="w-4 h-4" />
                 </button>
