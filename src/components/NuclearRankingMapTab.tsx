@@ -1473,6 +1473,10 @@ export const NuclearRankingMapTab: React.FC = () => {
         setHoveredZoneId((prev) => (prev === layer.id ? null : prev));
       });
 
+      circle.on('click', () => {
+        setHoveredZoneId(layer.id);
+      });
+
       zoneCirclesRef.current[layer.id] = {
         circle,
         baseStyle,
@@ -1482,21 +1486,21 @@ export const NuclearRankingMapTab: React.FC = () => {
       group.addLayer(circle);
     });
 
-    // Custom tactical marker at Ground Zero (draggable to any position)
+    // Marcador tático central no Marco Zero (arrastável, mais compacto preservando o mesmo design)
     const groundZeroIcon = L.divIcon({
       className: 'ground-zero-marker',
       html: `
         <div class="relative flex flex-col items-center justify-center cursor-grab active:cursor-grabbing select-none">
-          <div class="relative flex items-center justify-center w-8 h-8">
-            <div class="absolute w-8 h-8 rounded-full bg-red-500/40 animate-ping"></div>
-            <div class="absolute w-5 h-5 rounded-full border-2 border-red-400"></div>
-            <div class="absolute w-3.5 h-3.5 rounded-full bg-red-500 border-2 border-white shadow-lg"></div>
-            <div class="w-1.5 h-1.5 rounded-full bg-white"></div>
+          <div class="relative flex items-center justify-center w-5 h-5">
+            <div class="absolute w-5 h-5 rounded-full bg-red-500/40 animate-ping"></div>
+            <div class="absolute w-3.5 h-3.5 rounded-full border border-red-400"></div>
+            <div class="absolute w-2.5 h-2.5 rounded-full bg-red-500 border border-white shadow-md"></div>
+            <div class="w-1 h-1 rounded-full bg-white"></div>
           </div>
         </div>
       `,
-      iconSize: [32, 32],
-      iconAnchor: [16, 16]
+      iconSize: [20, 20],
+      iconAnchor: [10, 10]
     });
 
     const marker = L.marker(center, { icon: groundZeroIcon, draggable: true });

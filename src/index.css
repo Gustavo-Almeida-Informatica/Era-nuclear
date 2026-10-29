@@ -146,7 +146,8 @@
   -webkit-filter: brightness(0.95) contrast(1.06) saturate(1.05) !important;
 }
 
-.ground-zero-targeting-reticle {
+.ground-zero-targeting-reticle,
+.ground-zero-marker {
   background: transparent !important;
   border: none !important;
   outline: none !important;
