@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERA NUCLEAR - Fusão Nuclear (Deutério + Trítio)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050714;
+            color: #e2e8f0;
+            overflow: hidden;
+            user-select: none;
+        }
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        /* Custom Glowing & Glassmorphism UI */
+        .glass-panel {
+            background: rgba(12, 10, 28, 0.78);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(155, 140, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+        }
+        .glow-text-violet {
+            text-shadow: 0 0 14px rgba(155, 140, 255, 0.75);
+        }
+        .glow-text-cyan {
+            text-shadow: 0 0 14px rgba(115, 202, 229, 0.75);
+        }
+        .glow-text-amber {
+            text-shadow: 0 0 14px rgba(251, 191, 36, 0.8);
+        }
+        .glow-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glow-btn:hover {
+            box-shadow: 0 0 20px rgba(155, 140, 255, 0.5);
+            border-color: rgba(155, 140, 255, 0.7);
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(5, 7, 20, 0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #9b8cff;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="w-screen h-screen relative flex flex-col justify-between">
+
+    <!-- 3D Canvas Container -->
+    <div id="webgl-container" class="absolute inset-0 z-0"></div>
+
+    <!-- HEADER / HUD TOP BAR -->
+    <header class="relative z-10 w-full p-4 md:p-6 flex justify-between items-center glass-panel border-b border-indigo-900/40">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 via-indigo-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-purple-500/30">
+                <i class="fa-solid font-bold text-white text-xl">⚛</i>
+            </div>
+            <div>
+                <h1 class="text-xl md:text-2xl font-extrabold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-violet-400 via-purple-300 to-cyan-300">
+                    ERA NUCLEAR
+                </h1>
+                <p class="text-xs text-slate-400 mono">SIMULADOR DE FUSÃO NUCLEAR (²H + ³H)</p>
+            </div>
+        </div>
+
+        <!-- Legend & Nuclear Equation Overlay -->
+        <div class="hidden lg:flex items-center gap-6 text-xs glass-panel px-4 py-2.5 rounded-xl border border-indigo-500/30">
+            <div class="flex items-center gap-2">
+                <span class="w-3.5 h-3.5 rounded-full inline-block" style="background-color: #9b8cff; box-shadow: 0 0 10px #9b8cff;"></span>
+                <span class="text-slate-300 font-medium">Próton (p⁺) : <b>2</b></span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="w-3.5 h-3.5 rounded-full inline-block" style="background-color: #73cae5; box-shadow: 0 0 10px #73cae5;"></span>
+                <span class="text-slate-300 font-medium">Nêutron (n⁰) : <b>3</b></span>
+            </div>
+            <div class="flex items-center gap-2 border-l border-indigo-800/60 pl-4">
+                <span class="text-amber-300 font-bold mono glow-text-amber text-xs">²H + ³H ➔ ⁴He (3,5 MeV) + n⁰ (14,1 MeV) + 17,6 MeV</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- CENTER HUD: STEP INFOGRAPHIC DISPLAY -->
+    <div class="relative z-10 self-center max-w-2xl w-[92%] md:w-full mt-2">
+        <div class="glass-panel rounded-2xl p-4 md:p-5 border border-purple-500/30 text-center transition-all duration-500">
+            <div class="flex items-center justify-between mb-2">
+                <span id="step-badge" class="px-3 py-1 rounded-full text-xs font-bold mono bg-purple-950/80 text-purple-300 border border-purple-500/40">
+                    PASSO 01 / 04
+                </span>
+                <span id="energy-badge" class="text-xs font-mono text-amber-400 font-bold bg-amber-950/40 px-2.5 py-1 rounded-md border border-amber-500/30">
+                    PLASMA ~ 100 MILHÕES °C
+                </span>
+            </div>
+
+            <h2 id="step-title" class="text-lg md:text-xl font-bold text-slate-100 mb-1.5 glow-text-violet">
+                Núcleos Leves: Deutério (²H) e Trítio (³H)
+            </h2>
+            <p id="step-description" class="text-xs md:text-sm text-slate-300 leading-relaxed min-h-[48px] flex items-center justify-center">
+                O núcleo de Deutério (1 próton violeta + 1 nêutron ciano) e o núcleo de Trítio (1 próton violeta + 2 nêutrons cianos) aproximam-se a velocidades extremas em um meio de plasma hiper-energético.
+            </p>
+        </div>
+    </div>
+
+    <!-- FOOTER CONTROLS & PROGRESS -->
+    <footer class="relative z-10 w-full p-4 md:p-6 flex flex-col gap-4 glass-panel border-t border-indigo-900/40">
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-950/80 h-2.5 rounded-full overflow-hidden border border-purple-900/50 relative">
+            <div id="progress-bar" class="h-full bg-gradient-to-r from-violet-500 via-indigo-400 to-cyan-400 w-0 transition-all duration-300 rounded-full"></div>
+        </div>
+
+        <!-- Control Buttons & Step Selectors -->
+        <div class="flex flex-wrap items-center justify-between gap-4">
+            
+            <!-- Main Actions -->
+            <div class="flex items-center gap-2 md:gap-3">
+                <button id="btn-prev" class="glow-btn px-3.5 py-2 rounded-xl bg-slate-900/80 border border-purple-500/30 hover:bg-purple-900/40 text-purple-200 text-xs md:text-sm font-semibold flex items-center gap-1.5">
+                    <i class="fa-solid fa-backward-step"></i>
+                    <span class="hidden sm:inline">Anterior</span>
+                </button>
+                <button id="btn-play-pause" class="glow-btn px-4 py-2 rounded-xl bg-purple-600/30 border border-purple-400/50 hover:bg-purple-500/40 text-purple-100 font-semibold text-xs md:text-sm flex items-center gap-2">
+                    <i id="icon-play-pause" class="fa-solid fa-pause"></i>
+                    <span id="text-play-pause">Pausar</span>
+                </button>
+                <button id="btn-next" class="glow-btn px-3.5 py-2 rounded-xl bg-slate-900/80 border border-purple-500/30 hover:bg-purple-900/40 text-purple-200 text-xs md:text-sm font-semibold flex items-center gap-1.5">
+                    <span class="hidden sm:inline">Próximo</span>
+                    <i class="fa-solid fa-forward-step"></i>
+                </button>
+                <button id="btn-restart" class="glow-btn px-3.5 py-2 rounded-xl bg-slate-900/80 border border-slate-700/60 hover:bg-slate-800 text-slate-300 font-semibold text-xs md:text-sm flex items-center gap-1.5 ml-1">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>Reiniciar</span>
+                </button>
+            </div>
+
+            <!-- Step Direct Navigation -->
+            <div class="flex items-center gap-1.5 overflow-x-auto py-1">
+                <button onclick="jumpToStep(0)" class="step-btn px-3 py-1.5 rounded-lg text-xs font-mono font-medium border border-slate-800 hover:border-purple-500/50 bg-slate-950/60 transition">Passo 1</button>
+                <button onclick="jumpToStep(1)" class="step-btn px-3 py-1.5 rounded-lg text-xs font-mono font-medium border border-slate-800 hover:border-purple-500/50 bg-slate-950/60 transition">Passo 2</button>
+                <button onclick="jumpToStep(2)" class="step-btn px-3 py-1.5 rounded-lg text-xs font-mono font-medium border border-slate-800 hover:border-purple-500/50 bg-slate-950/60 transition">Passo 3</button>
+                <button onclick="jumpToStep(3)" class="step-btn px-3 py-1.5 rounded-lg text-xs font-mono font-medium border border-slate-800 hover:border-purple-500/50 bg-slate-950/60 transition">Passo 4</button>
+            </div>
+
+            <!-- Orbit Hint -->
+            <div class="hidden sm:flex items-center gap-2 text-xs text-slate-400">
+                <i class="fa-solid fa-cube text-purple-400"></i>
+                <span>Arraste para girar a câmera 3D</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- THREE.JS LOGIC -->
+    <script>
+        // --- CONSTANTS & CONFIGURATION ---
+        const COLOR_PROTON = 0x9b8cff;   // Radiant Violet/Magenta
+        const COLOR_NEUTRON = 0x73cae5;  // Cyan
+        const NUCLEON_RADIUS = 0.55;
+
+        const STEPS_DATA = [
+            {
+                id: 1,
+                badge: "PASSO 01 / 04",
+                energy: "PLASMA ~ 100 MILHÕES °C",
+                title: "PASSO 01: Núcleos Leves: Deutério (²H) e Trítio (³H)",
+                desc: "Núcleos de Deutério (1 próton violeta + 1 nêutron ciano) e Trítio (1 próton violeta + 2 nêutrons cianos) viajam a velocidades colossais em estado de plasma."
+            },
+            {
+                id: 2,
+                badge: "PASSO 02 / 04",
+                energy: "REPELIMENTO & TUNELAMENTO",
+                title: "PASSO 02: Barreira Coulombiana e Tunelamento Quântico",
+                desc: "A força de repulsão eletrostática cria um campo intenso de tensão. A alta energia térmica permite o tunelamento quântico vencer a barreira Coulombiana."
+            },
+            {
+                id: 3,
+                badge: "PASSO 03 / 04",
+                energy: "ESTADO EXCITADO [⁵He]*",
+                title: "PASSO 03: Coalescência Nuclear e Composto [⁵He]*",
+                desc: "Os dois núcleos fundem-se em um núcleo composto altamente instável de Hélio-5 (*[⁵He]*), sofrendo vibração extrema e emissão luminosa de plasma radiante."
+            },
+            {
+                id: 4,
+                badge: "PASSO 04 / 04",
+                energy: "LIBERAÇÃO DE 17,6 MeV",
+                title: "PASSO 04: Ejeção: Núcleo Hélio-4 (Alfa) + Nêutron (17,6 MeV)",
+                desc: "O composto desintegra-se violentamente: ejetando uma partícula Alfa ultra-estável (²H+²n) com 3.5 MeV e um nêutron livre de altíssima energia a 14.1 MeV na direção oposta."
+            }
+        ];
+
+        // --- THREE.JS GLOBALS ---
+        let scene, camera, renderer;
+        let isPlaying = true;
+        let animationTime = 0;
+        const TOTAL_DURATION = 20; // 5 seconds per step
+
+        // Meshes and groups
+        let deuteriumGroup, tritiumGroup;
+        let coulombFieldMesh, tunnelWaveMesh, fusionFlashMesh;
+        let plasmaParticlesGroup;
+        let freeNeutronTrail;
+
+        // Individual nucleons references
+        // Deutério: p1, n1
+        // Trítio: p2, n2, n3
+        let nucleons = {
+            deutP: null, deutN: null,
+            tritP: null, tritN1: null, tritN2: null
+        };
+
+        // Camera control
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+        let cameraTargetAngleX = 0;
+        let cameraTargetAngleY = 0;
+        let cameraDistance = 16;
+
+        // Geometries & Materials
+        const sphereGeo = new THREE.SphereGeometry(NUCLEON_RADIUS, 32, 32);
+
+        const protonMat = new THREE.MeshPhongMaterial({
+            color: COLOR_PROTON,
+            emissive: 0x4a1b84,
+            shininess: 90,
+            specular: 0xffffff
+        });
+
+        const neutronMat = new THREE.MeshPhongMaterial({
+            color: COLOR_NEUTRON,
+            emissive: 0x124255,
+            shininess: 90,
+            specular: 0xffffff
+        });
+
+        // --- INITIALIZATION ---
+        function init() {
+            const container = document.getElementById('webgl-container');
+
+            // 1. Scene
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x050714, 0.02);
+
+            // 2. Camera
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 0, cameraDistance);
+
+            // 3. Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            container.appendChild(renderer.domElement);
+
+            // 4. Lights
+            const ambientLight = new THREE.AmbientLight(0xdcd6ff, 0.6);
+            scene.add(ambientLight);
+
+            const mainDirLight = new THREE.DirectionalLight(0xffffff, 1.3);
+            mainDirLight.position.set(15, 20, 15);
+            scene.add(mainDirLight);
+
+            const violetLight = new THREE.PointLight(0x9b8cff, 2, 40);
+            violetLight.position.set(-6, 0, 5);
+            scene.add(violetLight);
+
+            const cyanLight = new THREE.PointLight(0x73cae5, 2, 40);
+            cyanLight.position.set(6, 0, 5);
+            scene.add(cyanLight);
+
+            // 5. Ambient Environment & Plasma Field
+            createStarfieldAndPlasma();
+
+            // 6. Build Nuclei (Deuterium & Tritium)
+            buildNuclei();
+
+            // 7. Create Coulomb Field & Fusion Shockwave Effects
+            createEffects();
+
+            // 8. Listeners
+            window.addEventListener('resize', onWindowResize);
+            setupInteractions();
+
+            // 9. Start Loop
+            animate();
+        }
+
+        // --- CREATION FUNCTIONS ---
+        function createStarfieldAndPlasma() {
+            // Starfield
+            const starsGeo = new THREE.BufferGeometry();
+            const count = 700;
+            const positions = new Float32Array(count * 3);
+            const colors = new Float32Array(count * 3);
+
+            for (let i = 0; i < count * 3; i += 3) {
+                positions[i] = (Math.random() - 0.5) * 100;
+                positions[i + 1] = (Math.random() - 0.5) * 100;
+                positions[i + 2] = (Math.random() - 0.5) * 100;
+
+                const isViolet = Math.random() > 0.5;
+                colors[i] = isViolet ? 0.61 : 0.45;
+                colors[i + 1] = isViolet ? 0.55 : 0.79;
+                colors[i + 2] = isViolet ? 1.0 : 0.9;
+            }
+
+            starsGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            starsGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const starsMat = new THREE.PointsMaterial({
+                size: 0.22,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.6
+            });
+            scene.add(new THREE.Points(starsGeo, starsMat));
+
+            // Ambient High Temp Plasma particles around fusion center
+            plasmaParticlesGroup = new THREE.Group();
+            const pCount = 120;
+            const pGeo = new THREE.BufferGeometry();
+            const pPos = new Float32Array(pCount * 3);
+
+            for (let i = 0; i < pCount * 3; i += 3) {
+                pPos[i] = (Math.random() - 0.5) * 16;
+                pPos[i + 1] = (Math.random() - 0.5) * 12;
+                pPos[i + 2] = (Math.random() - 0.5) * 12;
+            }
+            pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+            const pMat = new THREE.PointsMaterial({
+                size: 0.15,
+                color: 0xfbbf24,
+                transparent: true,
+                opacity: 0.4
+            });
+            plasmaParticlesGroup.add(new THREE.Points(pGeo, pMat));
+            scene.add(plasmaParticlesGroup);
+        }
+
+        function createGlowOverlay(mesh, colorHex) {
+            const glowGeo = new THREE.SphereGeometry(NUCLEON_RADIUS * 1.3, 16, 16);
+            const glowMat = new THREE.MeshBasicMaterial({
+                color: colorHex,
+                transparent: true,
+                opacity: 0.35
+            });
+            const glow = new THREE.Mesh(glowGeo, glowMat);
+            mesh.add(glow);
+        }
+
+        function buildNuclei() {
+            // Group 1: Deutério (²H) -> 1 Próton + 1 Nêutron
+            deuteriumGroup = new THREE.Group();
+            nucleons.deutP = new THREE.Mesh(sphereGeo, protonMat);
+            nucleons.deutN = new THREE.Mesh(sphereGeo, neutronMat);
+
+            createGlowOverlay(nucleons.deutP, COLOR_PROTON);
+            createGlowOverlay(nucleons.deutN, COLOR_NEUTRON);
+
+            nucleons.deutP.position.set(-NUCLEON_RADIUS * 0.9, 0, 0);
+            nucleons.deutN.position.set(NUCLEON_RADIUS * 0.9, 0, 0);
+
+            deuteriumGroup.add(nucleons.deutP);
+            deuteriumGroup.add(nucleons.deutN);
+            scene.add(deuteriumGroup);
+
+            // Group 2: Trítio (³H) -> 1 Próton + 2 Nêutrons
+            tritiumGroup = new THREE.Group();
+            nucleons.tritP = new THREE.Mesh(sphereGeo, protonMat);
+            nucleons.tritN1 = new THREE.Mesh(sphereGeo, neutronMat);
+            nucleons.tritN2 = new THREE.Mesh(sphereGeo, neutronMat);
+
+            createGlowOverlay(nucleons.tritP, COLOR_PROTON);
+            createGlowOverlay(nucleons.tritN1, COLOR_NEUTRON);
+            createGlowOverlay(nucleons.tritN2, COLOR_NEUTRON);
+
+            // Triangular geometry arrangement for Tritium
+            nucleons.tritP.position.set(0, NUCLEON_RADIUS * 1.0, 0);
+            nucleons.tritN1.position.set(-NUCLEON_RADIUS * 0.95, -NUCLEON_RADIUS * 0.7, 0);
+            nucleons.tritN2.position.set(NUCLEON_RADIUS * 0.95, -NUCLEON_RADIUS * 0.7, 0);
+
+            tritiumGroup.add(nucleons.tritP);
+            tritiumGroup.add(nucleons.tritN1);
+            tritiumGroup.add(nucleons.tritN2);
+            scene.add(tritiumGroup);
+
+            // Set initial starting positions (Left & Right)
+            deuteriumGroup.position.set(-8, 0, 0);
+            tritiumGroup.position.set(8, 0, 0);
+        }
+
+        function createEffects() {
+            // Coulomb Barrier Repulsion Shield Mesh
+            const barrierGeo = new THREE.SphereGeometry(2.4, 32, 32);
+            const barrierMat = new THREE.MeshBasicMaterial({
+                color: 0x9b8cff,
+                wireframe: true,
+                transparent: true,
+                opacity: 0
+            });
+            coulombFieldMesh = new THREE.Mesh(barrierGeo, barrierMat);
+            scene.add(coulombFieldMesh);
+
+            // Quantum Tunneling Wave rings
+            const ringGeo = new THREE.TorusGeometry(2.2, 0.05, 16, 64);
+            const ringMat = new THREE.MeshBasicMaterial({
+                color: 0x73cae5,
+                transparent: true,
+                opacity: 0
+            });
+            tunnelWaveMesh = new THREE.Mesh(ringGeo, ringMat);
+            scene.add(tunnelWaveMesh);
+
+            // Fusion Radiant Flash (17.6 MeV Burst)
+            const flashGeo = new THREE.SphereGeometry(1, 32, 32);
+            const flashMat = new THREE.MeshBasicMaterial({
+                color: 0xfff6cf,
+                transparent: true,
+                opacity: 0
+            });
+            fusionFlashMesh = new THREE.Mesh(flashGeo, flashMat);
+            scene.add(fusionFlashMesh);
+        }
+
+        // --- ANIMATION TIMELINE LOOP ---
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (isPlaying) {
+                animationTime += 0.016;
+                if (animationTime > TOTAL_DURATION) {
+                    animationTime = 0; // Loop back
+                }
+            }
+
+            updateSimulationState(animationTime);
+
+            // Smooth Camera Orbit Position
+            camera.position.x += (cameraDistance * Math.sin(cameraTargetAngleY) * Math.cos(cameraTargetAngleX) - camera.position.x) * 0.05;
+            camera.position.y += (cameraDistance * Math.sin(cameraTargetAngleX) - camera.position.y) * 0.05;
+            camera.position.z += (cameraDistance * Math.cos(cameraTargetAngleY) * Math.cos(cameraTargetAngleX) - camera.position.z) * 0.05;
+            camera.lookAt(0, 0, 0);
+
+            // Rotate background plasma particles
+            if (plasmaParticlesGroup) {
+                plasmaParticlesGroup.rotation.y += 0.003;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        function updateSimulationState(t) {
+            updateUI(t);
+
+            // STEP 01: 0s to 5s - Approach of Deuterium and Tritium in Plasma
+            if (t < 5) {
+                const progress = t / 5; // 0 -> 1
+
+                // Reset visibility & opacity of effects
+                coulombFieldMesh.material.opacity = 0;
+                tunnelWaveMesh.material.opacity = 0;
+                fusionFlashMesh.material.opacity = 0;
+
+                // Position nuclei coming from left (-8) and right (+8) towards (-1.8) and (+1.8)
+                deuteriumGroup.position.x = -8 + (progress * 6.2);
+                tritiumGroup.position.x = 8 - (progress * 6.2);
+
+                deuteriumGroup.position.y = Math.sin(t * 6) * 0.2;
+                tritiumGroup.position.y = Math.cos(t * 6) * 0.2;
+
+                // Spin individual nuclei around their centers
+                deuteriumGroup.rotation.z = t * 3;
+                tritiumGroup.rotation.z = -t * 2.5;
+
+                // Reset default intra-nucleon relative positions
+                resetNucleonsPositions();
+            }
+            // STEP 02: 5s to 10s - Coulomb Barrier & Quantum Tunneling
+            else if (t >= 5 && t < 10) {
+                const stepTime = t - 5;
+                const progress = stepTime / 5;
+
+                // Nuclei arrive at close proximity (~ -1.4 and +1.4) and experience repulsive deceleration & jitter
+                const jitter = Math.sin(stepTime * 35) * 0.08;
+                deuteriumGroup.position.x = -1.8 + (progress * 0.5) + jitter;
+                tritiumGroup.position.x = 1.8 - (progress * 0.5) - jitter;
+
+                deuteriumGroup.rotation.z = 15 + stepTime * 4;
+                tritiumGroup.rotation.z = -15 - stepTime * 4;
+
+                // Coulomb Repulsion Electric Field Shell pulsing
+                coulombFieldMesh.position.set(0, 0, 0);
+                coulombFieldMesh.scale.setScalar(1 + Math.sin(stepTime * 12) * 0.15);
+                coulombFieldMesh.material.opacity = 0.4 + Math.sin(stepTime * 20) * 0.3;
+
+                // Quantum Tunneling Wave Rings Effect
+                tunnelWaveMesh.rotation.y = stepTime * 4;
+                tunnelWaveMesh.rotation.x = stepTime * 2;
+                tunnelWaveMesh.material.opacity = 0.5 + Math.cos(stepTime * 15) * 0.3;
+                tunnelWaveMesh.scale.setScalar(0.8 + Math.sin(stepTime * 8) * 0.3);
+
+                fusionFlashMesh.material.opacity = 0;
+            }
+            // STEP 03: 10s to 15s - Coalescence & Instable [5He]* Compound
+            else if (t >= 10 && t < 15) {
+                const stepTime = t - 10;
+                const progress = stepTime / 5;
+
+                // Hide barrier rings
+                coulombFieldMesh.material.opacity = 0;
+                tunnelWaveMesh.material.opacity = 0;
+
+                // Merge groups towards origin (0,0,0)
+                deuteriumGroup.position.set(-0.6 * (1 - progress), 0, 0);
+                tritiumGroup.position.set(0.6 * (1 - progress), 0, 0);
+
+                // Nucleons vibrate intensely in [5He]* state
+                const exciter = Math.sin(stepTime * 40) * 0.15;
+                nucleons.deutP.position.set(-NUCLEON_RADIUS * 0.9 + exciter, exciter, exciter);
+                nucleons.deutN.position.set(NUCLEON_RADIUS * 0.9 - exciter, -exciter, exciter);
+
+                nucleons.tritP.position.set(exciter, NUCLEON_RADIUS * 1.0 + exciter, -exciter);
+                nucleons.tritN1.position.set(-NUCLEON_RADIUS * 0.95 - exciter, -NUCLEON_RADIUS * 0.7, exciter);
+                nucleons.tritN2.position.set(NUCLEON_RADIUS * 0.95 + exciter, -NUCLEON_RADIUS * 0.7 - exciter, 0);
+
+                // Plasma radiant aura glowing around [5He]* compound
+                fusionFlashMesh.position.set(0, 0, 0);
+                fusionFlashMesh.scale.setScalar(2.2 + Math.sin(stepTime * 18) * 0.4);
+                fusionFlashMesh.material.opacity = 0.35 + Math.sin(stepTime * 25) * 0.25;
+            }
+            // STEP 04: 15s to 20s - 17.6 MeV Burst & Ejection (Alpha Particle + Free Neutron)
+            else if (t >= 15) {
+                const stepTime = t - 15;
+
+                // Step 4 Explosion Shockwave Flash
+                if (stepTime < 1.8) {
+                    fusionFlashMesh.scale.setScalar(stepTime * 16);
+                    fusionFlashMesh.material.opacity = Math.max(0, 1 - (stepTime / 1.8));
+                } else {
+                    fusionFlashMesh.material.opacity = 0;
+                }
+
+                // EJECTION SEPARATION:
+                // 1. Alpha Particle (Helium-4: 2 Prótons + 2 Nêutrons) flies Left/Down (-X, -Y)
+                // 2. Free Neutron (1 Nêutron) flies Right/Up (+X, +Y) with 14.1 MeV speed
+
+                // Form stable tetrahedral Alpha particle inside deuteriumGroup
+                deuteriumGroup.position.set(-stepTime * 3.2, -stepTime * 1.2, 0);
+                deuteriumGroup.rotation.z = stepTime * 3;
+
+                // Assemble Helium-4 inside deuteriumGroup by pulling 1 neutron from tritium
+                nucleons.deutP.position.set(-NUCLEON_RADIUS * 0.7, NUCLEON_RADIUS * 0.7, 0);
+                nucleons.deutN.position.set(NUCLEON_RADIUS * 0.7, NUCLEON_RADIUS * 0.7, 0);
+                
+                // Reposition Tritium components into Alpha (He-4) and Free Neutron
+                // Move Tritium group to contain the 2nd Proton & 2nd Neutron of He-4
+                tritiumGroup.position.set(-stepTime * 3.2, -stepTime * 1.2, 0);
+                tritiumGroup.rotation.z = stepTime * 3;
+
+                nucleons.tritP.position.set(-NUCLEON_RADIUS * 0.7, -NUCLEON_RADIUS * 0.7, 0);
+                nucleons.tritN1.position.set(NUCLEON_RADIUS * 0.7, -NUCLEON_RADIUS * 0.7, 0);
+
+                // Free Ejected High-Energy Neutron (tritN2) flies in opposite direction
+                // Transfer world-like motion for ejected free neutron
+                const freeNPos = new THREE.Vector3(stepTime * 7.5, stepTime * 2.8, 0);
+                nucleons.tritN2.position.copy(freeNPos);
+            }
+        }
+
+        function resetNucleonsPositions() {
+            nucleons.deutP.position.set(-NUCLEON_RADIUS * 0.9, 0, 0);
+            nucleons.deutN.position.set(NUCLEON_RADIUS * 0.9, 0, 0);
+
+            nucleons.tritP.position.set(0, NUCLEON_RADIUS * 1.0, 0);
+            nucleons.tritN1.position.set(-NUCLEON_RADIUS * 0.95, -NUCLEON_RADIUS * 0.7, 0);
+            nucleons.tritN2.position.set(NUCLEON_RADIUS * 0.95, -NUCLEON_RADIUS * 0.7, 0);
+        }
+
+        // --- UI & INTERACTION HELPERS ---
+        function updateUI(t) {
+            let currentStepIdx = 0;
+            if (t >= 5 && t < 10) currentStepIdx = 1;
+            else if (t >= 10 && t < 15) currentStepIdx = 2;
+            else if (t >= 15) currentStepIdx = 3;
+
+            const data = STEPS_DATA[currentStepIdx];
+            document.getElementById('step-badge').innerText = data.badge;
+            document.getElementById('energy-badge').innerText = data.energy;
+            document.getElementById('step-title').innerText = data.title;
+            document.getElementById('step-description').innerText = data.desc;
+
+            // Progress bar
+            const pct = (t / TOTAL_DURATION) * 100;
+            document.getElementById('progress-bar').style.width = `${pct}%`;
+
+            // Step button highlights
+            const buttons = document.querySelectorAll('.step-btn');
+            buttons.forEach((btn, idx) => {
+                if (idx === currentStepIdx) {
+                    btn.classList.add('border-purple-400', 'text-purple-300', 'bg-purple-950/80');
+                    btn.classList.remove('border-slate-800', 'bg-slate-950/60');
+                } else {
+                    btn.classList.remove('border-purple-400', 'text-purple-300', 'bg-purple-950/80');
+                    btn.classList.add('border-slate-800', 'bg-slate-950/60');
+                }
+            });
+        }
+
+        function jumpToStep(stepIdx) {
+            const stepTimes = [0, 5.1, 10.1, 15.1];
+            animationTime = stepTimes[stepIdx];
+            isPlaying = true;
+            updatePlayPauseUI();
+        }
+
+        function setupInteractions() {
+            // Step Buttons
+            document.getElementById('btn-prev').addEventListener('click', () => {
+                let currentStep = Math.floor(animationTime / 5);
+                let prevStep = (currentStep - 1 + 4) % 4;
+                jumpToStep(prevStep);
+            });
+
+            document.getElementById('btn-next').addEventListener('click', () => {
+                let currentStep = Math.floor(animationTime / 5);
+                let nextStep = (currentStep + 1) % 4;
+                jumpToStep(nextStep);
+            });
+
+            // Play / Pause Button
+            document.getElementById('btn-play-pause').addEventListener('click', () => {
+                isPlaying = !isPlaying;
+                updatePlayPauseUI();
+            });
+
+            // Restart Button
+            document.getElementById('btn-restart').addEventListener('click', () => {
+                animationTime = 0;
+                isPlaying = true;
+                updatePlayPauseUI();
+            });
+
+            // Mouse Drag Controls for Camera Orbiting
+            window.addEventListener('mousedown', (e) => {
+                if (e.target.tagName !== 'CANVAS') return;
+                isDragging = true;
+                previousMousePosition = { x: e.clientX, y: e.clientY };
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const deltaX = e.clientX - previousMousePosition.x;
+                const deltaY = e.clientY - previousMousePosition.y;
+
+                cameraTargetAngleY += deltaX * 0.005;
+                cameraTargetAngleX = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, cameraTargetAngleX + deltaY * 0.005));
+
+                previousMousePosition = { x: e.clientX, y: e.clientY };
+            });
+
+            window.addEventListener('mouseup', () => { isDragging = false; });
+
+            // Touch Drag Support for Mobile
+            window.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    isDragging = true;
+                    previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                }
+            });
+
+            window.addEventListener('touchmove', (e) => {
+                if (!isDragging || e.touches.length !== 1) return;
+                const deltaX = e.touches[0].clientX - previousMousePosition.x;
+                const deltaY = e.touches[0].clientY - previousMousePosition.y;
+
+                cameraTargetAngleY += deltaX * 0.005;
+                cameraTargetAngleX = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, cameraTargetAngleX + deltaY * 0.005));
+
+                previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            });
+
+            window.addEventListener('touchend', () => { isDragging = false; });
+
+            // Mouse Wheel Zoom
+            window.addEventListener('wheel', (e) => {
+                cameraDistance = Math.max(8, Math.min(35, cameraDistance + e.deltaY * 0.015));
+            }, { passive: true });
+        }
+
+        function updatePlayPauseUI() {
+            const icon = document.getElementById('icon-play-pause');
+            const text = document.getElementById('text-play-pause');
+            if (isPlaying) {
+                icon.className = 'fa-solid fa-pause';
+                text.innerText = 'Pausar';
+            } else {
+                icon.className = 'fa-solid fa-play';
+                text.innerText = 'Continuar';
+            }
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // --- WINDOW LOAD TRIGGER ---
+        window.onload = function() {
+            init();
+        };
+    </script>
+</body>
+</html>

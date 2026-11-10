@@ -33,45 +33,50 @@ import { ManhattanProjectPage } from './pages/ManhattanProjectPage';
 import { B41Page } from './pages/B41Page';
 import { ChernobylPage } from './pages/ChernobylPage';
 
+const VALID_PAGES: PageId[] = [
+  'home',
+  'history',
+  'physics',
+  'fission-fusion',
+  'weapons',
+  'operation-castle',
+  'tsar-bomba',
+  'ivy-king',
+  'ivy-mike',
+  'manhattan-project',
+  'b41',
+  'chernobyl',
+  'impacts',
+  'nuclear-ranking',
+  'map',
+  'energy',
+  'cases',
+  'gallery',
+  'glossary',
+  'about',
+  'sources',
+  'contact'
+];
+
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<PageId>('home');
+  const [currentPage, setCurrentPage] = useState<PageId>(() => {
+    if (typeof window !== 'undefined' && window.location.hash) {
+      const hash = window.location.hash.replace('#', '') as PageId;
+      if (VALID_PAGES.includes(hash)) {
+        return hash;
+      }
+    }
+    return 'home';
+  });
 
   // Listen for hash changes for deep linking / bookmarking
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '') as PageId;
-      const validPages: PageId[] = [
-        'home',
-        'history',
-        'physics',
-        'fission-fusion',
-        'weapons',
-        'operation-castle',
-        'tsar-bomba',
-        'ivy-king',
-        'ivy-mike',
-        'manhattan-project',
-        'b41',
-        'chernobyl',
-        'impacts',
-        'nuclear-ranking',
-        'map',
-        'energy',
-        'cases',
-        'gallery',
-        'glossary',
-        'about',
-        'sources',
-        'contact'
-      ];
-      if (validPages.includes(hash)) {
+      if (VALID_PAGES.includes(hash)) {
         setCurrentPage(hash);
       }
     };
-
-    if (window.location.hash) {
-      handleHashChange();
-    }
 
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
