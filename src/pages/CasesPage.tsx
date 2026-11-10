@@ -97,9 +97,9 @@ export const CasesPage: React.FC<CasesPageProps> = ({ onNavigate }) => {
                 {cs.title}
               </h3>
 
-              <div className="flex items-start lg:items-center space-x-1.5 text-xs text-[#B7B7B7] min-w-0">
-                <MapPin className="w-3.5 h-3.5 text-[#73CAE5] shrink-0 mt-0.5 lg:mt-0" />
-                <span className="max-lg:whitespace-normal break-words lg:truncate">{cs.location}</span>
+              <div className="flex items-start xl:items-center space-x-1.5 text-xs text-[#B7B7B7] min-w-0">
+                <MapPin className="w-3.5 h-3.5 text-[#73CAE5] shrink-0 mt-0.5 xl:mt-0" />
+                <span className="max-xl:whitespace-normal break-words xl:truncate">{cs.location}</span>
               </div>
 
               <p className="text-xs text-[#B7B7B7] leading-relaxed pt-1">

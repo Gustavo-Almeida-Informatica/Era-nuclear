@@ -1106,7 +1106,7 @@ export const FissionFusionSimulator: React.FC = () => {
                 <span className="font-mono font-bold text-[10px] text-white/70">PASSO 0{idx + 1}</span>
                 {stage > idx && <CheckCircle2 className="w-3 h-3 text-emerald-400" />}
               </div>
-              <p className="font-medium max-lg:whitespace-normal break-words lg:truncate leading-snug">{step.title.split('. ')[1]}</p>
+              <p className="font-medium whitespace-normal break-words leading-snug">{step.title.split('. ')[1]}</p>
             </button>
           ))}
         </div>

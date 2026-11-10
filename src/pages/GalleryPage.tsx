@@ -116,9 +116,9 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ onNavigate }) => {
                 {item.title}
               </h3>
 
-              <div className="text-xs text-[#8F83FF] flex items-start lg:items-center space-x-1.5 font-mono min-w-0">
-                <MapPin className="w-3.5 h-3.5 shrink-0 mt-0.5 lg:mt-0" />
-                <span className="max-lg:whitespace-normal break-words lg:truncate">{item.location}</span>
+              <div className="text-xs text-[#8F83FF] flex items-start xl:items-center space-x-1.5 font-mono min-w-0">
+                <MapPin className="w-3.5 h-3.5 shrink-0 mt-0.5 xl:mt-0" />
+                <span className="max-xl:whitespace-normal break-words xl:truncate">{item.location}</span>
               </div>
 
               <p className="text-xs text-[#B7B7B7] line-clamp-3 leading-relaxed">
@@ -126,7 +126,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ onNavigate }) => {
               </p>
 
               <div className="pt-3 border-t border-white/5 space-y-1 text-[10px] text-[#B7B7B7]/70 min-w-0">
-                <p className="max-lg:whitespace-normal break-words lg:truncate"><strong>Fonte:</strong> {item.source}</p>
+                <p className="max-xl:whitespace-normal break-words xl:truncate"><strong>Fonte:</strong> {item.source}</p>
                 <p className="text-emerald-400 font-mono"><strong>Licença:</strong> {item.license}</p>
               </div>
             </div>

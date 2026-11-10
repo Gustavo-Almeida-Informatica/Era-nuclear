@@ -167,7 +167,7 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
                     <Maximize2 className="w-3.5 h-3.5" />
                   </div>
                   <div className="absolute bottom-2 left-2 right-2 bg-black/80 px-2.5 py-1 rounded text-[10px] text-white flex justify-between items-center gap-2">
-                    <span className="font-mono truncate">Maquete PWR Naval / Civil</span>
+                    <span className="font-mono min-w-0 flex-1 whitespace-normal break-words leading-tight">Maquete PWR Naval / Civil</span>
                     <span className="text-amber-400 font-semibold shrink-0">Ampliar</span>
                   </div>
                 </div>
@@ -218,7 +218,7 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
                     <Maximize2 className="w-3.5 h-3.5" />
                   </div>
                   <div className="absolute bottom-2 left-2 right-2 bg-black/80 px-2 py-1 rounded text-[10px] text-white flex justify-between items-center gap-2">
-                    <span className="font-mono truncate">ITER Tokamak • Cadarache</span>
+                    <span className="font-mono min-w-0 flex-1 whitespace-normal break-words leading-tight">ITER Tokamak • Cadarache</span>
                     <span className="text-[#8F83FF] font-semibold shrink-0">Ampliar</span>
                   </div>
                 </div>
@@ -319,7 +319,7 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
                     <Maximize2 className="w-3.5 h-3.5" />
                   </div>
                   <div className="absolute bottom-2 left-2 right-2 bg-black/80 px-2 py-1 rounded text-[10px] text-white flex justify-between items-center gap-2">
-                    <span className="truncate">Reator PWR</span>
+                    <span className="min-w-0 flex-1 whitespace-normal break-words leading-tight">Reator PWR</span>
                     <span className="text-amber-400 font-semibold shrink-0">Ampliar</span>
                   </div>
                 </div>
@@ -416,7 +416,7 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
                     <Maximize2 className="w-3.5 h-3.5" />
                   </div>
                   <div className="absolute bottom-2 left-2 right-2 bg-black/80 px-2 py-1 rounded text-[10px] text-white flex justify-between items-center gap-2">
-                    <span className="truncate">Tokamak ITER</span>
+                    <span className="min-w-0 flex-1 whitespace-normal break-words leading-tight">Tokamak ITER</span>
                     <span className="text-[#8F83FF] font-semibold shrink-0">Ampliar</span>
                   </div>
                 </div>

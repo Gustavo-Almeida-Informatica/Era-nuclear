@@ -93,34 +93,34 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
           : 'bg-[#0D0D0D]/80 backdrop-blur-sm border-b border-white/5'
       }`}
     >
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 xl:px-6 h-16 sm:h-20 flex items-center justify-between gap-2 xl:gap-3">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 xl:px-5 2xl:px-6 h-16 sm:h-20 flex items-center justify-between gap-2 xl:gap-4 min-[1420px]:gap-6">
         {/* Zone 1: Brand Title & Logo */}
         <button
           onClick={() => handleNavClick('home')}
           className="group flex items-center space-x-2 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#73CAE5] min-h-[44px] -ml-1 pl-1 shrink-0"
           aria-label="Era Nuclear - Página Inicial"
         >
-          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-[#73CAE5] to-[#8F83FF] flex items-center justify-center p-0.5 shadow-sm shadow-[#73CAE5]/20 group-hover:scale-105 transition-transform shrink-0">
+          <div className="w-7 h-7 sm:w-8 sm:h-8 xl:w-7 xl:h-7 min-[1420px]:w-8 min-[1420px]:h-8 rounded-lg bg-gradient-to-br from-[#73CAE5] to-[#8F83FF] flex items-center justify-center p-0.5 shadow-sm shadow-[#73CAE5]/20 group-hover:scale-105 transition-transform shrink-0">
             <div className="w-full h-full bg-[#0D0D0D] rounded-[6px] flex items-center justify-center">
               <span className="text-transparent bg-clip-text bg-gradient-to-br from-[#73CAE5] to-[#8F83FF] font-black text-xs sm:text-sm tracking-tighter">
                 EN
               </span>
             </div>
           </div>
-          <span className="text-base min-[360px]:text-lg sm:text-2xl xl:text-xl 2xl:text-2xl font-extrabold tracking-tight text-white font-display whitespace-nowrap">
+          <span className="text-base min-[360px]:text-lg sm:text-2xl xl:text-lg min-[1420px]:text-2xl font-extrabold tracking-tight text-white font-display whitespace-nowrap">
             ERA NUCLEAR
           </span>
         </button>
 
         {/* Zone 2: Primary Nav Links (Desktop) */}
-        <nav className="hidden xl:flex items-center space-x-0.5 2xl:space-x-1.5 min-w-0">
+        <nav className="hidden xl:flex items-center space-x-0.5 min-[1420px]:space-x-1 2xl:space-x-1.5 shrink-0">
           {navLinks.map((link) => {
             const isActive = currentPage === link.id || (link.id === 'map' && currentPage === 'nuclear-ranking');
             return (
               <button
                 key={link.id}
                 onClick={() => handleNavClick(link.id)}
-                className={`px-2 py-2 2xl:px-3 text-[12.5px] 2xl:text-sm font-medium transition-all rounded-md whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-[#73CAE5] ${
+                className={`px-1.5 py-1.5 min-[1420px]:px-2.5 min-[1420px]:py-2 2xl:px-3 text-[11.5px] min-[1420px]:text-[13px] 2xl:text-sm font-medium transition-all rounded-md whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-[#73CAE5] ${
                   isActive
                     ? 'text-[#73CAE5] bg-white/5 border border-[#73CAE5]/30 font-semibold'
                     : 'text-[#B7B7B7] hover:text-white hover:bg-white/5'
@@ -136,7 +136,7 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
             <button
               onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
               onBlur={() => setTimeout(() => setMoreDropdownOpen(false), 250)}
-              className={`px-2 py-2 2xl:px-3 text-[12.5px] 2xl:text-sm font-medium rounded-md flex items-center space-x-1 whitespace-nowrap transition-colors ${
+              className={`px-1.5 py-1.5 min-[1420px]:px-2.5 min-[1420px]:py-2 2xl:px-3 text-[11.5px] min-[1420px]:text-[13px] 2xl:text-sm font-medium rounded-md flex items-center space-x-1 whitespace-nowrap transition-colors ${
                 ['cases', 'operation-castle', 'tsar-bomba', 'ivy-mike', 'manhattan-project', 'ivy-king', 'b41', 'chernobyl', 'fission-fusion', 'impacts', 'glossary', 'sources', 'about', 'contact'].includes(currentPage)
                   ? 'text-[#8F83FF] bg-white/5 border border-[#8F83FF]/30'
                   : 'text-[#B7B7B7] hover:text-white hover:bg-white/5'
@@ -192,59 +192,62 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
         </nav>
 
         {/* Zone 3: Destaques Desktop & Touch Hamburger Toggle */}
-        <div className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
-          {/* Destaque Pair 1: Operação Castle & Projeto Manhattan */}
-          <div className="hidden sm:flex flex-col gap-1">
-            <button
-              onClick={() => handleNavClick('operation-castle')}
-              className={`inline-flex items-center space-x-1.5 px-2 2xl:px-2.5 py-1 rounded-md text-[10.5px] 2xl:text-[11px] font-semibold transition-all active:scale-95 whitespace-nowrap ${
-                currentPage === 'operation-castle'
-                  ? 'bg-[#73CAE5]/25 border border-[#73CAE5] text-white shadow-md shadow-[#73CAE5]/20'
-                  : 'bg-[#73CAE5]/10 border border-[#73CAE5]/30 text-white hover:border-[#73CAE5] hover:bg-[#73CAE5]/20'
-              }`}
-            >
-              <Zap className="w-3 h-3 text-[#73CAE5] shrink-0" />
-              <span>Operação Castle</span>
-            </button>
+        <div className="flex items-center space-x-2 shrink-0">
+          {/* Testes em Destaque (Separados com margem e divisória sutil para nunca encostar nas abas) */}
+          <div className="hidden md:flex items-center gap-1.5 xl:gap-2 xl:ml-4 xl:pl-4 min-[1420px]:ml-6 min-[1420px]:pl-6 xl:border-l xl:border-white/10 shrink-0">
+            {/* Destaque Pair 1: Operação Castle & Projeto Manhattan */}
+            <div className="flex flex-col gap-1">
+              <button
+                onClick={() => handleNavClick('operation-castle')}
+                className={`inline-flex items-center space-x-1.5 px-2 min-[1420px]:px-2.5 py-1 rounded-md text-[10px] min-[1420px]:text-[11px] font-semibold transition-all active:scale-95 whitespace-nowrap ${
+                  currentPage === 'operation-castle'
+                    ? 'bg-[#73CAE5]/25 border border-[#73CAE5] text-white shadow-md shadow-[#73CAE5]/20'
+                    : 'bg-[#73CAE5]/10 border border-[#73CAE5]/30 text-white hover:border-[#73CAE5] hover:bg-[#73CAE5]/20'
+                }`}
+              >
+                <Zap className="w-3 h-3 text-[#73CAE5] shrink-0" />
+                <span>Operação Castle</span>
+              </button>
 
-            <button
-              onClick={() => handleNavClick('manhattan-project')}
-              className={`inline-flex items-center space-x-1.5 px-2 2xl:px-2.5 py-1 rounded-md text-[10.5px] 2xl:text-[11px] font-semibold transition-all active:scale-95 whitespace-nowrap ${
-                currentPage === 'manhattan-project'
-                  ? 'bg-[#73CAE5]/25 border border-[#73CAE5] text-white shadow-md shadow-[#73CAE5]/20'
-                  : 'bg-[#73CAE5]/10 border border-[#73CAE5]/30 text-white hover:border-[#73CAE5] hover:bg-[#73CAE5]/20'
-              }`}
-            >
-              <Atom className="w-3 h-3 text-[#73CAE5] shrink-0" />
-              <span>Projeto Manhattan</span>
-            </button>
-          </div>
+              <button
+                onClick={() => handleNavClick('manhattan-project')}
+                className={`inline-flex items-center space-x-1.5 px-2 min-[1420px]:px-2.5 py-1 rounded-md text-[10px] min-[1420px]:text-[11px] font-semibold transition-all active:scale-95 whitespace-nowrap ${
+                  currentPage === 'manhattan-project'
+                    ? 'bg-[#73CAE5]/25 border border-[#73CAE5] text-white shadow-md shadow-[#73CAE5]/20'
+                    : 'bg-[#73CAE5]/10 border border-[#73CAE5]/30 text-white hover:border-[#73CAE5] hover:bg-[#73CAE5]/20'
+                }`}
+              >
+                <Atom className="w-3 h-3 text-[#73CAE5] shrink-0" />
+                <span>Projeto Manhattan</span>
+              </button>
+            </div>
 
-          {/* Destaque Pair 2: Tsar Bomba & Ivy Mike */}
-          <div className="hidden sm:flex flex-col gap-1">
-            <button
-              onClick={() => handleNavClick('tsar-bomba')}
-              className={`inline-flex items-center space-x-1.5 px-2 2xl:px-2.5 py-1 rounded-md text-[10.5px] 2xl:text-[11px] font-semibold transition-all active:scale-95 whitespace-nowrap ${
-                currentPage === 'tsar-bomba'
-                  ? 'bg-[#8F83FF]/30 border border-[#8F83FF] text-white shadow-md shadow-[#8F83FF]/25'
-                  : 'bg-[#8F83FF]/10 border border-[#8F83FF]/30 text-white hover:border-[#8F83FF] hover:bg-[#8F83FF]/20'
-              }`}
-            >
-              <Flame className="w-3 h-3 text-[#8F83FF] shrink-0" />
-              <span>Tsar Bomba (50 Mt)</span>
-            </button>
+            {/* Destaque Pair 2: Tsar Bomba & Ivy Mike */}
+            <div className="flex flex-col gap-1">
+              <button
+                onClick={() => handleNavClick('tsar-bomba')}
+                className={`inline-flex items-center space-x-1.5 px-2 min-[1420px]:px-2.5 py-1 rounded-md text-[10px] min-[1420px]:text-[11px] font-semibold transition-all active:scale-95 whitespace-nowrap ${
+                  currentPage === 'tsar-bomba'
+                    ? 'bg-[#8F83FF]/30 border border-[#8F83FF] text-white shadow-md shadow-[#8F83FF]/25'
+                    : 'bg-[#8F83FF]/10 border border-[#8F83FF]/30 text-white hover:border-[#8F83FF] hover:bg-[#8F83FF]/20'
+                }`}
+              >
+                <Flame className="w-3 h-3 text-[#8F83FF] shrink-0" />
+                <span>Tsar Bomba (50 Mt)</span>
+              </button>
 
-            <button
-              onClick={() => handleNavClick('ivy-mike')}
-              className={`inline-flex items-center space-x-1.5 px-2 2xl:px-2.5 py-1 rounded-md text-[10.5px] 2xl:text-[11px] font-semibold transition-all active:scale-95 whitespace-nowrap ${
-                currentPage === 'ivy-mike'
-                  ? 'bg-[#8F83FF]/30 border border-[#8F83FF] text-white shadow-md shadow-[#8F83FF]/25'
-                  : 'bg-[#8F83FF]/10 border border-[#8F83FF]/30 text-white hover:border-[#8F83FF] hover:bg-[#8F83FF]/20'
-              }`}
-            >
-              <Zap className="w-3 h-3 text-[#8F83FF] shrink-0" />
-              <span>Ivy Mike (10,4 Mt)</span>
-            </button>
+              <button
+                onClick={() => handleNavClick('ivy-mike')}
+                className={`inline-flex items-center space-x-1.5 px-2 min-[1420px]:px-2.5 py-1 rounded-md text-[10px] min-[1420px]:text-[11px] font-semibold transition-all active:scale-95 whitespace-nowrap ${
+                  currentPage === 'ivy-mike'
+                    ? 'bg-[#8F83FF]/30 border border-[#8F83FF] text-white shadow-md shadow-[#8F83FF]/25'
+                    : 'bg-[#8F83FF]/10 border border-[#8F83FF]/30 text-white hover:border-[#8F83FF] hover:bg-[#8F83FF]/20'
+                }`}
+              >
+                <Zap className="w-3 h-3 text-[#8F83FF] shrink-0" />
+                <span>Ivy Mike (10,4 Mt)</span>
+              </button>
+            </div>
           </div>
 
           {/* Mobile/Tablet Menu Hamburger Button with 44px minimum touch target */}

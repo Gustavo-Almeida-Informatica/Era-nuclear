@@ -846,6 +846,9 @@ export const NuclearRankingMapTab: React.FC = () => {
   // Initialize Map
   useEffect(() => {
     if (!mapContainerRef.current) return;
+    let isMounted = true;
+    let initTimer1: ReturnType<typeof setTimeout> | undefined;
+    let initTimer2: ReturnType<typeof setTimeout> | undefined;
 
     if (!mapInstanceRef.current) {
       const map = L.map(mapContainerRef.current, {
@@ -1015,30 +1018,67 @@ export const NuclearRankingMapTab: React.FC = () => {
       mapInstanceRef.current = map;
 
       // Invalidação imediata para carregar todos os blocos do mapa sem tela preta
-      setTimeout(() => {
-        map.invalidateSize();
+      initTimer1 = setTimeout(() => {
+        if (isMounted && mapInstanceRef.current && (mapInstanceRef.current as any)._container) {
+          mapInstanceRef.current.invalidateSize();
+        }
       }, 50);
-      setTimeout(() => {
-        map.invalidateSize();
+      initTimer2 = setTimeout(() => {
+        if (isMounted && mapInstanceRef.current && (mapInstanceRef.current as any)._container) {
+          mapInstanceRef.current.invalidateSize();
+        }
       }, 250);
     }
 
     return () => {
-      if (mapInstanceRef.current) {
-        if (referenceLayerRef.current) {
-          mapInstanceRef.current.removeLayer(referenceLayerRef.current);
-          referenceLayerRef.current = null;
-        }
-        if (oceanReferenceLayerRef.current) {
-          mapInstanceRef.current.removeLayer(oceanReferenceLayerRef.current);
-          oceanReferenceLayerRef.current = null;
-        }
-        if (transportationReferenceLayerRef.current) {
-          mapInstanceRef.current.removeLayer(transportationReferenceLayerRef.current);
-          transportationReferenceLayerRef.current = null;
-        }
-        mapInstanceRef.current.remove();
+      isMounted = false;
+      if (initTimer1) clearTimeout(initTimer1);
+      if (initTimer2) clearTimeout(initTimer2);
+      const map = mapInstanceRef.current;
+      if (map) {
         mapInstanceRef.current = null;
+        try {
+          // Disable animations first so internal stop/teardown never schedules a new _tryAnimatedZoom frame
+          (map as any).options.zoomAnimation = false;
+          (map as any).options.fadeAnimation = false;
+          (map as any).options.markerZoomAnimation = false;
+          (map as any)._animatingZoom = false;
+          (map as any)._animateZoom = () => map;
+          (map as any)._onZoomTransitionEnd = () => {};
+          if ((map as any)._flyToFrame) {
+            L.Util.cancelAnimFrame((map as any)._flyToFrame);
+            (map as any)._flyToFrame = null;
+          }
+          if ((map as any)._panAnim && typeof (map as any)._panAnim.stop === 'function') {
+            (map as any)._panAnim.stop();
+          }
+          if (typeof (map as any)._stop === 'function') {
+            (map as any)._stop();
+          }
+        } catch {}
+        try {
+          if (circlesLayerGroupRef.current) {
+            circlesLayerGroupRef.current.clearLayers();
+            circlesLayerGroupRef.current = null;
+          }
+          if (testSitesLayerGroupRef.current) {
+            testSitesLayerGroupRef.current.clearLayers();
+            testSitesLayerGroupRef.current = null;
+          }
+          if (referenceLayerRef.current) {
+            map.removeLayer(referenceLayerRef.current);
+            referenceLayerRef.current = null;
+          }
+          if (oceanReferenceLayerRef.current) {
+            map.removeLayer(oceanReferenceLayerRef.current);
+            oceanReferenceLayerRef.current = null;
+          }
+          if (transportationReferenceLayerRef.current) {
+            map.removeLayer(transportationReferenceLayerRef.current);
+            transportationReferenceLayerRef.current = null;
+          }
+          map.remove();
+        } catch {}
       }
     };
   }, []);
@@ -1117,11 +1157,13 @@ export const NuclearRankingMapTab: React.FC = () => {
     });
 
     tileLayerRef.current = newTileLayer;
-    setTimeout(() => {
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.invalidateSize();
+    const themeTimer = setTimeout(() => {
+      const m = mapInstanceRef.current;
+      if (m && (m as any)._container) {
+        m.invalidateSize();
       }
     }, 50);
+    return () => clearTimeout(themeTimer);
   }, [mapTheme]);
 
   // Render Historic Nuclear Test Sites on the Map (Bikini, Novaya Zemlya, Nevada, Semipalatinsk)
@@ -1601,8 +1643,9 @@ export const NuclearRankingMapTab: React.FC = () => {
   useEffect(() => {
     if (activeTabMobile === 'map' && mapInstanceRef.current) {
       const timer = setTimeout(() => {
-        if (mapInstanceRef.current) {
-          mapInstanceRef.current.invalidateSize();
+        const m = mapInstanceRef.current;
+        if (m && (m as any)._container) {
+          m.invalidateSize();
         }
       }, 150);
       return () => clearTimeout(timer);
@@ -1611,62 +1654,41 @@ export const NuclearRankingMapTab: React.FC = () => {
 
   // Invalidate Leaflet map size whenever layout, height or panel state changes or window resizes
   useEffect(() => {
-    const handleResize = () => {
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.invalidateSize();
+    const safeInvalidate = () => {
+      const m = mapInstanceRef.current;
+      if (m && (m as any)._container) {
+        m.invalidateSize();
       }
     };
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', safeInvalidate);
 
     if (mapInstanceRef.current) {
-      const timer1 = setTimeout(() => {
-        if (mapInstanceRef.current) {
-          mapInstanceRef.current.invalidateSize();
-        }
-      }, 80);
-      const timer2 = setTimeout(() => {
-        if (mapInstanceRef.current) {
-          mapInstanceRef.current.invalidateSize();
-        }
-      }, 250);
-      const timer3 = setTimeout(() => {
-        if (mapInstanceRef.current) {
-          mapInstanceRef.current.invalidateSize();
-        }
-      }, 450);
+      const timer1 = setTimeout(safeInvalidate, 80);
+      const timer2 = setTimeout(safeInvalidate, 250);
+      const timer3 = setTimeout(safeInvalidate, 450);
       return () => {
         clearTimeout(timer1);
         clearTimeout(timer2);
         clearTimeout(timer3);
-        window.removeEventListener('resize', handleResize);
+        window.removeEventListener('resize', safeInvalidate);
       };
     }
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', safeInvalidate);
   }, [mapHeightMode, isOptionsPanelOpen]);
 
   // Options toggle handler ensuring instant and smooth Leaflet invalidateSize during vertical expansion
   const handleToggleOptions = () => {
     setIsOptionsPanelOpen((prev) => !prev);
-    setTimeout(() => {
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.invalidateSize();
+    const safeInvalidate = () => {
+      const m = mapInstanceRef.current;
+      if (m && (m as any)._container) {
+        m.invalidateSize();
       }
-    }, 50);
-    setTimeout(() => {
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.invalidateSize();
-      }
-    }, 180);
-    setTimeout(() => {
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.invalidateSize();
-      }
-    }, 350);
-    setTimeout(() => {
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.invalidateSize();
-      }
-    }, 500);
+    };
+    setTimeout(safeInvalidate, 50);
+    setTimeout(safeInvalidate, 180);
+    setTimeout(safeInvalidate, 350);
+    setTimeout(safeInvalidate, 500);
   };
 
   // Center on Ground Zero helper
@@ -2010,7 +2032,7 @@ export const NuclearRankingMapTab: React.FC = () => {
               }
             >
               <Layers className="w-3.5 h-3.5 shrink-0" />
-              <span className="truncate">Opções & Métricas</span>
+              <span className="max-sm:whitespace-normal break-words sm:truncate">Opções & Métricas</span>
               <span
                 className={`hidden lg:inline-block text-[9px] px-1.5 py-0.5 rounded font-mono font-black shrink-0 ${
                   isOptionsPanelOpen ? 'bg-white text-rose-600' : 'bg-[#333333] text-neutral-300'
@@ -2446,12 +2468,12 @@ export const NuclearRankingMapTab: React.FC = () => {
                     <h4 className="text-xs font-bold text-white uppercase tracking-wider">
                       Opções & Métricas
                     </h4>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-rose-500/15 text-rose-300 border border-rose-500/30 inline-flex items-center gap-1 max-w-full sm:truncate">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-rose-500/15 text-rose-300 border border-rose-500/30 inline-flex items-center gap-1 max-w-full xl:truncate">
                       <MapPin className="w-2.5 h-2.5 text-rose-400 shrink-0" />
-                      <span className="max-sm:whitespace-normal break-words sm:truncate">{selectedCity.name}</span>
+                      <span className="whitespace-normal break-words">{selectedCity.name}</span>
                     </span>
                   </div>
-                  <p className="text-[10px] text-neutral-400 max-sm:whitespace-normal break-words sm:truncate mt-0.5">
+                  <p className="text-[10px] text-neutral-400 whitespace-normal break-words mt-0.5">
                     Alvo: <strong className="text-neutral-200">{selectedCity.name}</strong> • {selectedBomb.name}
                   </p>
                 </div>
@@ -2570,10 +2592,10 @@ export const NuclearRankingMapTab: React.FC = () => {
 
                   {/* Status do Alvo (Detonação Exclusiva Dentro do Mapa) */}
                   {!isDetonated ? (
-                    <div className="p-2.5 rounded-xl bg-black border border-white/10 flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 text-[11px]">
+                    <div className="p-2.5 rounded-xl bg-black border border-white/10 flex flex-wrap xl:flex-nowrap items-center justify-between gap-2 text-[11px]">
                       <div className="flex items-center gap-2 min-w-0 flex-1">
                         <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0" />
-                        <span className="text-neutral-300 font-medium max-sm:whitespace-normal break-words sm:truncate">
+                        <span className="text-neutral-300 font-medium max-xl:whitespace-normal break-words xl:truncate">
                           Cidade Alvo: <strong className="text-white">{selectedCity.name}</strong>
                         </span>
                       </div>
@@ -2582,10 +2604,10 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </span>
                     </div>
                   ) : (
-                    <div className="p-2 rounded-xl bg-black border border-rose-500/50 flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 text-[11px]">
+                    <div className="p-2 rounded-xl bg-black border border-rose-500/50 flex flex-wrap xl:flex-nowrap items-center justify-between gap-2 text-[11px]">
                       <div className="flex items-center gap-2 min-w-0 flex-1">
                         <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping shrink-0" />
-                        <span className="text-rose-300 font-bold font-mono text-[10px] max-sm:whitespace-normal break-words sm:truncate">
+                        <span className="text-rose-300 font-bold font-mono text-[10px] max-xl:whitespace-normal break-words xl:truncate">
                           ALVO: {selectedCity.name.toUpperCase()} — DETONADA
                         </span>
                       </div>
@@ -2601,7 +2623,7 @@ export const NuclearRankingMapTab: React.FC = () => {
 
                   {/* Card de Balanço Geral de Vítimas & Mortes em Tempo Real */}
                   <div className="bg-black p-3.5 rounded-2xl border border-rose-500/40 shadow-lg space-y-2.5">
-                    <div className="flex flex-wrap sm:flex-nowrap items-start sm:items-center justify-between gap-2">
+                    <div className="flex flex-wrap xl:flex-nowrap items-start xl:items-center justify-between gap-2">
                       <div className="flex items-center gap-2 min-w-0 flex-1">
                         <div className="w-7 h-7 rounded-xl bg-rose-500/20 border border-rose-500/50 flex items-center justify-center text-rose-400 shrink-0">
                           <Skull className="w-4 h-4" />
@@ -2610,7 +2632,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                           <span className="text-[10px] uppercase font-mono tracking-wider text-rose-400 font-extrabold block">
                             Balanço Geral de Vítimas
                           </span>
-                          <span className="text-xs font-bold text-white block max-sm:whitespace-normal break-words sm:truncate">
+                          <span className="text-xs font-bold text-white block whitespace-normal break-words leading-snug">
                             {selectedBomb.name} sobre {selectedCity.name}
                           </span>
                         </div>
@@ -2623,7 +2645,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                     <div className="grid grid-cols-1 min-[360px]:grid-cols-2 gap-2">
                       <div className="p-2.5 rounded-xl bg-neutral-950 border border-rose-500/40 min-w-0">
                         <span className="text-[10px] text-rose-300/90 block font-semibold">💀 Mortes Estimadas</span>
-                        <span className="text-sm sm:text-base font-black text-rose-200 font-mono tracking-tight block max-sm:whitespace-normal break-words sm:truncate" title={`Faixa de estimativa: ${casualties.deathsRangeDisplay}`}>
+                        <span className="text-sm sm:text-base font-black text-rose-200 font-mono tracking-tight block whitespace-normal break-words" title={`Faixa de estimativa: ${casualties.deathsRangeDisplay}`}>
                           {isDetonated ? casualties.deathsRangeDisplay : '—'}
                         </span>
                         <span className="text-[9px] text-neutral-400 block font-mono mt-0.5">
@@ -2632,7 +2654,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                       <div className="p-2.5 rounded-xl bg-neutral-950 border border-amber-500/40 min-w-0">
                         <span className="text-[10px] text-amber-300/90 block font-semibold">🩹 Feridos Graves</span>
-                        <span className="text-sm sm:text-base font-black text-amber-200 font-mono tracking-tight block max-sm:whitespace-normal break-words sm:truncate" title={`Faixa de feridos: ${casualties.injuriesRangeDisplay}`}>
+                        <span className="text-sm sm:text-base font-black text-amber-200 font-mono tracking-tight block whitespace-normal break-words" title={`Faixa de feridos: ${casualties.injuriesRangeDisplay}`}>
                           {isDetonated ? casualties.injuriesRangeDisplay : '—'}
                         </span>
                         <span className="text-[9px] text-neutral-400 block font-mono mt-0.5">
@@ -3379,7 +3401,8 @@ export const NuclearRankingMapTab: React.FC = () => {
                         step="5"
                         value={windDirectionDeg}
                         onChange={(e) => setWindDirectionDeg(Number(e.target.value))}
-                        className="w-full accent-purple-400 h-2 sm:h-1.5 bg-[#1a1a1a] rounded-lg cursor-pointer"
+                        aria-label="Rumo do vento em graus"
+                        className="tactical-range w-full text-purple-400 min-h-[36px] sm:min-h-[20px] cursor-pointer"
                       />
                       <div className="flex flex-wrap gap-1 pt-0.5">
                         {WIND_COMPASS_PRESETS.map((p) => (
@@ -3416,7 +3439,8 @@ export const NuclearRankingMapTab: React.FC = () => {
                         step="5"
                         value={windSpeedKmh}
                         onChange={(e) => setWindSpeedKmh(Number(e.target.value))}
-                        className="w-full accent-amber-400 h-2 sm:h-1.5 bg-[#1a1a1a] rounded-lg cursor-pointer"
+                        aria-label="Velocidade do vento em km/h"
+                        className="tactical-range w-full text-amber-400 min-h-[36px] sm:min-h-[20px] cursor-pointer"
                       />
                       <div className="flex flex-wrap gap-1 pt-0.5">
                         {WIND_SPEED_PRESETS.map((s) => (
@@ -3473,13 +3497,13 @@ export const NuclearRankingMapTab: React.FC = () => {
                                   : 'bg-black/60 border-white/10 text-neutral-500 opacity-60 hover:opacity-100'
                               }`}
                             >
-                              <div className="min-w-0 flex-1 pr-1 sm:truncate">
+                              <div className="min-w-0 flex-1 pr-1 xl:truncate">
                                 <div className="flex items-center space-x-1.5 min-w-0">
                                   <span
                                     className="w-2.5 h-2.5 rounded-full shrink-0 shadow-sm"
                                     style={{ backgroundColor: zone.color }}
                                   />
-                                  <span className={`text-[11px] font-bold max-sm:whitespace-normal break-words sm:truncate ${isVis ? zc.text : 'text-neutral-400'}`}>
+                                  <span className={`text-[11px] font-bold whitespace-normal break-words leading-tight ${isVis ? zc.text : 'text-neutral-400'}`}>
                                     {zone.doseDisplay}
                                   </span>
                                 </div>
@@ -3741,7 +3765,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center space-x-1.5 min-w-0 flex-1">
                       <MapPin className="w-3.5 h-3.5 text-rose-400 shrink-0" />
-                      <span className="text-xs font-extrabold text-white max-sm:whitespace-normal break-words sm:truncate">{selectedCity.name}</span>
+                      <span className="text-xs font-extrabold text-white whitespace-normal break-words">{selectedCity.name}</span>
                     </div>
                     {selectedCity.isHighlighted && (
                       <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/50 flex items-center gap-1 shrink-0">
