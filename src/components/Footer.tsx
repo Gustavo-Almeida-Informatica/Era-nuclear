@@ -51,11 +51,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <h4 className="text-xs font-semibold text-white uppercase tracking-wider font-display">
               Educação & Ciência
             </h4>
-            <ul className="space-y-2 text-xs">
+            <ul className="space-y-0.5 sm:space-y-2 text-xs">
               <li>
                 <button
                   onClick={() => onNavigate('physics')}
-                  className="hover:text-[#73CAE5] transition-colors focus:outline-none"
+                  className="hover:text-[#73CAE5] transition-colors focus:outline-none py-2 sm:py-0 min-h-[40px] sm:min-h-0 inline-flex items-center text-left"
                 >
                   Física do Átomo
                 </button>
@@ -63,7 +63,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('fission-fusion')}
-                  className="hover:text-[#73CAE5] transition-colors focus:outline-none"
+                  className="hover:text-[#73CAE5] transition-colors focus:outline-none py-2 sm:py-0 min-h-[40px] sm:min-h-0 inline-flex items-center text-left"
                 >
                   Fissão × Fusão
                 </button>
@@ -71,7 +71,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('energy')}
-                  className="hover:text-[#73CAE5] transition-colors focus:outline-none"
+                  className="hover:text-[#73CAE5] transition-colors focus:outline-none py-2 sm:py-0 min-h-[40px] sm:min-h-0 inline-flex items-center text-left"
                 >
                   Energia Nuclear Civil
                 </button>
@@ -79,7 +79,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('gallery')}
-                  className="hover:text-[#73CAE5] transition-colors focus:outline-none"
+                  className="hover:text-[#73CAE5] transition-colors focus:outline-none py-2 sm:py-0 min-h-[40px] sm:min-h-0 inline-flex items-center text-left"
                 >
                   Imagens da Era Nuclear
                 </button>
@@ -87,7 +87,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('glossary')}
-                  className="hover:text-[#73CAE5] transition-colors focus:outline-none"
+                  className="hover:text-[#73CAE5] transition-colors focus:outline-none py-2 sm:py-0 min-h-[40px] sm:min-h-0 inline-flex items-center text-left"
                 >
                   Glossário Científico
                 </button>
@@ -100,11 +100,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <h4 className="text-xs font-semibold text-white uppercase tracking-wider font-display">
               Especiais Históricos
             </h4>
-            <ul className="space-y-2 text-xs">
+            <ul className="space-y-0.5 sm:space-y-2 text-xs">
               <li>
                 <button
                   onClick={() => onNavigate('map')}
-                  className="hover:text-rose-400 transition-colors focus:outline-none text-left flex items-center gap-1.5 font-medium text-rose-300"
+                  className="hover:text-rose-400 transition-colors focus:outline-none text-left flex items-center gap-1.5 font-medium text-rose-300 py-2 sm:py-0 min-h-[40px] sm:min-h-0"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
                   <span>Mapa Nuclear & Simulador</span>
@@ -113,7 +113,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('operation-castle')}
-                  className="hover:text-[#73CAE5] transition-colors focus:outline-none text-left"
+                  className="hover:text-[#73CAE5] transition-colors focus:outline-none text-left py-2 sm:py-0 min-h-[40px] sm:min-h-0 inline-flex items-center"
                 >
                   Operação Castle (1954)
                 </button>
@@ -121,7 +121,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('tsar-bomba')}
-                  className="hover:text-[#8F83FF] transition-colors focus:outline-none text-left"
+                  className="hover:text-[#8F83FF] transition-colors focus:outline-none text-left py-2 sm:py-0 min-h-[40px] sm:min-h-0 inline-flex items-center"
                 >
                   Tsar Bomba (50 Mt)
                 </button>
@@ -129,7 +129,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('ivy-mike')}
-                  className="hover:text-[#73CAE5] transition-colors focus:outline-none text-left"
+                  className="hover:text-[#73CAE5] transition-colors focus:outline-none text-left py-2 sm:py-0 min-h-[40px] sm:min-h-0 inline-flex items-center"
                 >
                   Ivy Mike (10,4 Mt)
                 </button>
@@ -137,7 +137,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('manhattan-project')}
-                  className="hover:text-[#8F83FF] transition-colors focus:outline-none text-left"
+                  className="hover:text-[#8F83FF] transition-colors focus:outline-none text-left py-2 sm:py-0 min-h-[40px] sm:min-h-0 inline-flex items-center"
                 >
                   Projeto Manhattan (1942–1945)
                 </button>
@@ -145,7 +145,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('ivy-king')}
-                  className="hover:text-[#73CAE5] transition-colors focus:outline-none text-left"
+                  className="hover:text-[#73CAE5] transition-colors focus:outline-none text-left py-2 sm:py-0 min-h-[40px] sm:min-h-0 inline-flex items-center"
                 >
                   Ivy King (500 kt)
                 </button>
@@ -153,7 +153,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('b41')}
-                  className="hover:text-[#8F83FF] transition-colors focus:outline-none text-left"
+                  className="hover:text-[#8F83FF] transition-colors focus:outline-none text-left py-2 sm:py-0 min-h-[40px] sm:min-h-0 inline-flex items-center"
                 >
                   Bomba B41 (25 Mt)
                 </button>
@@ -161,7 +161,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('chernobyl')}
-                  className="hover:text-rose-400 transition-colors focus:outline-none text-left"
+                  className="hover:text-rose-400 transition-colors focus:outline-none text-left py-2 sm:py-0 min-h-[40px] sm:min-h-0 inline-flex items-center"
                 >
                   Chernobyl (1986)
                 </button>
@@ -174,11 +174,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <h4 className="text-xs font-semibold text-white uppercase tracking-wider font-display">
               História & Plataforma
             </h4>
-            <ul className="space-y-2 text-xs">
+            <ul className="space-y-0.5 sm:space-y-2 text-xs">
               <li>
                 <button
                   onClick={() => onNavigate('history')}
-                  className="hover:text-white transition-colors focus:outline-none"
+                  className="hover:text-white transition-colors focus:outline-none py-2 sm:py-0 min-h-[40px] sm:min-h-0 inline-flex items-center text-left"
                 >
                   Cronologia (1896–Hoje)
                 </button>
@@ -186,7 +186,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('weapons')}
-                  className="hover:text-white transition-colors focus:outline-none"
+                  className="hover:text-white transition-colors focus:outline-none py-2 sm:py-0 min-h-[40px] sm:min-h-0 inline-flex items-center text-left"
                 >
                   Armas & Tratados
                 </button>
@@ -194,7 +194,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('about')}
-                  className="hover:text-white transition-colors focus:outline-none"
+                  className="hover:text-white transition-colors focus:outline-none py-2 sm:py-0 min-h-[40px] sm:min-h-0 inline-flex items-center text-left"
                 >
                   Sobre o Projeto
                 </button>
@@ -202,7 +202,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('sources')}
-                  className="hover:text-white transition-colors focus:outline-none"
+                  className="hover:text-white transition-colors focus:outline-none py-2 sm:py-0 min-h-[40px] sm:min-h-0 inline-flex items-center text-left"
                 >
                   Fontes & Referências
                 </button>
@@ -212,7 +212,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   href="https://www.iaea.org"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center space-x-1 text-[#73CAE5] hover:underline"
+                  className="inline-flex items-center space-x-1 text-[#73CAE5] hover:underline py-2 sm:py-0 min-h-[40px] sm:min-h-0"
                 >
                   <span>Portal Oficial AIEA</span>
                   <ExternalLink className="w-3 h-3" />
@@ -224,11 +224,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
         {/* Bottom copyright row */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#B7B7B7]/60">
-          <p>© {new Date().getFullYear()} ERA NUCLEAR. Plataforma aberta de divulgação científica e histórica.</p>
+          <p className="text-center sm:text-left">© {new Date().getFullYear()} ERA NUCLEAR. Plataforma aberta de divulgação científica e histórica.</p>
           
           <button
             onClick={scrollToTop}
-            className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-[#73CAE5]/50 hover:text-white transition-all text-xs focus:outline-none"
+            className="min-h-[42px] flex items-center space-x-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 hover:border-[#73CAE5]/50 hover:text-white transition-all text-xs focus:outline-none cursor-pointer"
           >
             <span>Voltar ao topo</span>
             <ArrowUp className="w-3.5 h-3.5" />

@@ -107,7 +107,7 @@ export const FusionReactorsSection: React.FC = () => {
 
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
           <div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-display tracking-tight">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-white font-display tracking-tight leading-tight">
               Reatores de Fusão: A Energia das Estrelas na Terra
             </h2>
             <p className="text-sm sm:text-base text-[#B7B7B7] max-w-3xl mt-2 leading-relaxed">
@@ -115,50 +115,50 @@ export const FusionReactorsSection: React.FC = () => {
             </p>
           </div>
 
-          {/* View mode toggle */}
-          <div className="flex rounded-xl bg-white/5 p-1 border border-white/10 self-start lg:self-auto shrink-0">
+          {/* View mode toggle: 2x2 grid on mobile, flex row on sm+ */}
+          <div className="grid grid-cols-2 sm:flex sm:flex-row gap-1.5 p-1 bg-white/5 rounded-xl border border-white/10 w-full lg:w-auto shrink-0">
             <button
               onClick={() => setActiveTab('reactors')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 ${
+              className={`min-h-[42px] px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center space-x-1.5 cursor-pointer ${
                 activeTab === 'reactors'
                   ? 'bg-gradient-to-r from-[#8F83FF] to-[#73CAE5] text-[#0D0D0D] font-bold shadow-md'
-                  : 'text-[#B7B7B7] hover:text-white'
+                  : 'text-[#B7B7B7] hover:text-white hover:bg-white/5'
               }`}
             >
-              <Atom className="w-3.5 h-3.5" />
+              <Atom className="w-3.5 h-3.5 shrink-0" />
               <span>Grandes Reatores</span>
             </button>
             <button
               onClick={() => setActiveTab('how-it-works')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 ${
+              className={`min-h-[42px] px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center space-x-1.5 cursor-pointer ${
                 activeTab === 'how-it-works'
                   ? 'bg-gradient-to-r from-[#8F83FF] to-[#73CAE5] text-[#0D0D0D] font-bold shadow-md'
-                  : 'text-[#B7B7B7] hover:text-white'
+                  : 'text-[#B7B7B7] hover:text-white hover:bg-white/5'
               }`}
             >
-              <Zap className="w-3.5 h-3.5" />
-              <span>Como Funciona a Usina</span>
+              <Zap className="w-3.5 h-3.5 shrink-0" />
+              <span>Como Funciona</span>
             </button>
             <button
               onClick={() => setActiveTab('comparison')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 ${
+              className={`min-h-[42px] px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center space-x-1.5 cursor-pointer ${
                 activeTab === 'comparison'
                   ? 'bg-gradient-to-r from-[#8F83FF] to-[#73CAE5] text-[#0D0D0D] font-bold shadow-md'
-                  : 'text-[#B7B7B7] hover:text-white'
+                  : 'text-[#B7B7B7] hover:text-white hover:bg-white/5'
               }`}
             >
-              <ShieldCheck className="w-3.5 h-3.5" />
+              <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
               <span>Fissão vs. Fusão</span>
             </button>
             <button
               onClick={() => setActiveTab('risks-benefits')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 ${
+              className={`min-h-[42px] px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center space-x-1.5 cursor-pointer ${
                 activeTab === 'risks-benefits'
                   ? 'bg-gradient-to-r from-[#8F83FF] to-[#73CAE5] text-[#0D0D0D] font-bold shadow-md'
-                  : 'text-[#B7B7B7] hover:text-white'
+                  : 'text-[#B7B7B7] hover:text-white hover:bg-white/5'
               }`}
             >
-              <Scale className="w-3.5 h-3.5" />
+              <Scale className="w-3.5 h-3.5 shrink-0" />
               <span>Riscos & Benefícios</span>
             </button>
           </div>
@@ -169,21 +169,21 @@ export const FusionReactorsSection: React.FC = () => {
       {activeTab === 'reactors' && (
         <div className="space-y-6">
           {/* Reactor Selector Pills */}
-          <div className="flex flex-wrap gap-2.5">
+          <div className="flex flex-wrap gap-2 sm:gap-2.5">
             {FUSION_REACTORS.map((reactor) => {
               const isSelected = reactor.id === selectedReactorId;
               return (
                 <button
                   key={reactor.id}
                   onClick={() => setSelectedReactorId(reactor.id)}
-                  className={`px-4 py-2.5 rounded-xl text-xs font-semibold transition-all border flex items-center space-x-2 ${
+                  className={`min-h-[42px] sm:min-h-0 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-semibold transition-all border flex flex-wrap items-center gap-x-2 gap-y-0.5 text-left ${
                     isSelected
                       ? 'bg-gradient-to-r from-[#8F83FF]/20 to-[#73CAE5]/20 border-[#8F83FF] text-white shadow-lg shadow-[#8F83FF]/15 font-bold'
                       : 'bg-white/5 border-white/5 text-[#B7B7B7] hover:border-white/20 hover:text-white'
                   }`}
                 >
                   <span
-                    className={`w-2 h-2 rounded-full ${
+                    className={`w-2 h-2 rounded-full shrink-0 ${
                       reactor.status === 'Em Construção'
                         ? 'bg-amber-400'
                         : reactor.status === 'Protótipo Comercial'
@@ -201,7 +201,7 @@ export const FusionReactorsSection: React.FC = () => {
           </div>
 
           {/* Selected Reactor Detailed Dossier */}
-          <div className="bg-[#111111] border border-white/10 rounded-2xl p-6 sm:p-8 lg:p-10 shadow-2xl space-y-8">
+          <div className="bg-[#111111] border border-white/10 rounded-2xl p-4 sm:p-8 lg:p-10 shadow-2xl space-y-6 sm:space-y-8">
             {/* Header info */}
             <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4 pb-6 border-b border-white/10">
               <div className="space-y-2">
@@ -286,7 +286,7 @@ export const FusionReactorsSection: React.FC = () => {
             </div>
 
             {/* Visual Photographic Banner for Tokamak Fusion Reactor */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center p-5 rounded-2xl bg-white/[0.02] border border-white/10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-center p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/10">
               <div className="lg:col-span-7 space-y-2">
                 <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded bg-[#8F83FF]/15 text-[#8F83FF] text-[11px] font-mono font-bold">
                   <span>REGISTRO FOTOGRÁFICO DA GALERIA</span>
@@ -326,9 +326,9 @@ export const FusionReactorsSection: React.FC = () => {
                   <div className="absolute top-2.5 right-2.5 p-1.5 rounded-full bg-black/70 text-white opacity-0 group-hover:opacity-100 transition-opacity">
                     <Maximize2 className="w-3.5 h-3.5" />
                   </div>
-                  <div className="absolute bottom-2 left-2.5 right-2.5 flex justify-between items-center text-[10px] text-white/90">
-                    <span className="font-mono truncate">ITER Tokamak • Cadarache</span>
-                    <span className="text-[#8F83FF] font-semibold shrink-0 ml-2">Ampliar</span>
+                  <div className="absolute bottom-2 left-2.5 right-2.5 flex flex-wrap sm:flex-nowrap justify-between items-center gap-x-2 gap-y-0.5 text-[10px] text-white/90">
+                    <span className="font-mono max-sm:whitespace-normal break-words sm:truncate">ITER Tokamak • Cadarache</span>
+                    <span className="text-[#8F83FF] font-semibold shrink-0">Ampliar</span>
                   </div>
                 </div>
               </div>
@@ -412,9 +412,9 @@ export const FusionReactorsSection: React.FC = () => {
 
       {/* TAB 2: COMO FUNCIONA UMA USINA DE FUSÃO */}
       {activeTab === 'how-it-works' && (
-        <div className="bg-[#111111] border border-white/10 rounded-2xl p-6 sm:p-10 shadow-2xl space-y-8">
+        <div className="bg-[#111111] border border-white/10 rounded-2xl p-4 sm:p-10 shadow-2xl space-y-6 sm:space-y-8">
           <div className="max-w-2xl space-y-2">
-            <h3 className="text-2xl font-bold text-white font-display">
+            <h3 className="text-xl sm:text-2xl font-bold text-white font-display">
               Ciclo Energético de uma Usina Termonuclear de Fusão
             </h3>
             <p className="text-xs sm:text-sm text-[#B7B7B7]">
@@ -491,9 +491,9 @@ export const FusionReactorsSection: React.FC = () => {
 
       {/* TAB 3: COMPARAÇÃO FISSÃO VS. FUSÃO */}
       {activeTab === 'comparison' && (
-        <div className="bg-[#111111] border border-white/10 rounded-2xl p-6 sm:p-10 shadow-2xl space-y-8">
+        <div className="bg-[#111111] border border-white/10 rounded-2xl p-4 sm:p-10 shadow-2xl space-y-6 sm:space-y-8">
           <div className="max-w-2xl space-y-2">
-            <h3 className="text-2xl font-bold text-white font-display">
+            <h3 className="text-xl sm:text-2xl font-bold text-white font-display">
               Comparação Direta: Reatores de Fissão vs. Fusão
             </h3>
             <p className="text-xs sm:text-sm text-[#B7B7B7]">
@@ -525,11 +525,11 @@ export const FusionReactorsSection: React.FC = () => {
                 <div className="absolute top-2.5 right-2.5 p-1.5 rounded-full bg-black/70 text-white opacity-0 group-hover:opacity-100 transition-opacity">
                   <Maximize2 className="w-3.5 h-3.5" />
                 </div>
-                <div className="absolute bottom-2.5 left-3 right-3 flex justify-between items-center text-xs">
+                <div className="absolute bottom-2.5 left-3 right-3 flex flex-wrap justify-between items-center gap-1.5 text-xs">
                   <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[10px] font-bold border border-amber-500/30">
                     FISSÃO NUCLEAR (MAQUETE REAL PWR)
                   </span>
-                  <span className="text-amber-400 font-semibold text-[11px]">Ampliar</span>
+                  <span className="text-amber-400 font-semibold text-[11px] shrink-0">Ampliar</span>
                 </div>
               </div>
               <div className="p-4 space-y-1.5 text-xs text-[#B7B7B7] bg-white/[0.01]">
@@ -565,11 +565,11 @@ export const FusionReactorsSection: React.FC = () => {
                 <div className="absolute top-2.5 right-2.5 p-1.5 rounded-full bg-black/70 text-white opacity-0 group-hover:opacity-100 transition-opacity">
                   <Maximize2 className="w-3.5 h-3.5" />
                 </div>
-                <div className="absolute bottom-2.5 left-3 right-3 flex justify-between items-center text-xs">
+                <div className="absolute bottom-2.5 left-3 right-3 flex flex-wrap justify-between items-center gap-1.5 text-xs">
                   <span className="px-2 py-0.5 rounded bg-[#8F83FF]/20 text-[#8F83FF] font-mono text-[10px] font-bold border border-[#8F83FF]/30">
                     FUSÃO NUCLEAR (TOKAMAK)
                   </span>
-                  <span className="text-[#8F83FF] font-semibold text-[11px]">Ampliar</span>
+                  <span className="text-[#8F83FF] font-semibold text-[11px] shrink-0">Ampliar</span>
                 </div>
               </div>
               <div className="p-4 space-y-1.5 text-xs text-[#B7B7B7] bg-white/[0.01]">
@@ -584,7 +584,55 @@ export const FusionReactorsSection: React.FC = () => {
             </div>
           </div>
 
-          <div className="overflow-x-auto">
+          {/* Versão Mobile em Cards Comparativos */}
+          <div className="md:hidden space-y-3">
+            {FISSION_VS_FUSION_COMPARISON.map((row, idx) => (
+              <div
+                key={idx}
+                className="rounded-xl border border-white/10 bg-black/40 p-4 space-y-3 min-w-0 max-w-full"
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-white/10">
+                  <h4 className="font-bold text-white font-mono text-sm break-words">
+                    {row.parameter}
+                  </h4>
+                  <span
+                    className={`inline-block px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase font-mono shrink-0 ${
+                      row.advantage === 'Fusão'
+                        ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                        : row.advantage === 'Fissão'
+                        ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
+                        : 'bg-white/5 text-white/70 border border-white/10'
+                    }`}
+                  >
+                    Vantagem: {row.advantage}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 gap-2.5 text-xs">
+                  <div className="p-3 rounded-lg bg-amber-950/15 border border-amber-500/20 space-y-1 min-w-0">
+                    <span className="text-[10px] font-mono uppercase font-bold text-amber-400 block">
+                      Reator de Fissão (PWR / BWR)
+                    </span>
+                    <p className="text-[#B7B7B7] leading-relaxed break-words">
+                      {row.fission}
+                    </p>
+                  </div>
+
+                  <div className="p-3 rounded-lg bg-[#8F83FF]/10 border border-[#8F83FF]/25 space-y-1 min-w-0">
+                    <span className="text-[10px] font-mono uppercase font-bold text-[#8F83FF] block">
+                      Reator de Fusão (Tokamak / ICF)
+                    </span>
+                    <p className="text-[#B7B7B7] leading-relaxed break-words">
+                      {row.fusion}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Versão Desktop Original Preservada Integralmente */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[650px]">
               <thead>
                 <tr className="border-b border-white/10 text-xs font-mono uppercase tracking-wider text-[#B7B7B7]">
@@ -630,11 +678,11 @@ export const FusionReactorsSection: React.FC = () => {
       {/* TAB 4: RISCOS & BENEFÍCIOS DA FUSÃO */}
       {activeTab === 'risks-benefits' && (
         <div className="space-y-6">
-          <div className="bg-[#111111] border border-white/10 rounded-2xl p-6 sm:p-8 space-y-4">
+          <div className="bg-[#111111] border border-white/10 rounded-2xl p-4 sm:p-8 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
               <div>
-                <h3 className="text-xl sm:text-2xl font-bold text-white font-display flex items-center space-x-2">
-                  <Scale className="w-5 h-5 text-[#73CAE5]" />
+                <h3 className="text-lg sm:text-2xl font-bold text-white font-display flex items-center space-x-2">
+                  <Scale className="w-5 h-5 text-[#73CAE5] shrink-0" />
                   <span>Riscos e Benefícios da Fusão Nuclear: Análise Completa</span>
                 </h3>
                 <p className="text-xs sm:text-sm text-[#B7B7B7] mt-1 max-w-3xl leading-relaxed">
@@ -650,57 +698,57 @@ export const FusionReactorsSection: React.FC = () => {
               {FUSION_RISKS_AND_BENEFITS.map((item) => (
                 <div
                   key={item.id}
-                  className="bg-[#0A0A0A] border border-white/10 rounded-xl p-5 sm:p-6 space-y-4 shadow-lg hover:border-white/20 transition-all"
+                  className="bg-[#0A0A0A] border border-white/10 rounded-xl p-4 sm:p-6 space-y-4 shadow-lg hover:border-white/20 transition-all min-w-0 max-w-full"
                 >
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/5 pb-3">
-                    <div>
-                      <h4 className="text-base sm:text-lg font-bold text-white font-display">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 border-b border-white/5 pb-3 min-w-0">
+                    <div className="min-w-0 flex-1">
+                      <h4 className="text-base sm:text-lg font-bold text-white font-display break-words">
                         {item.domain}
                       </h4>
-                      <p className="text-xs text-[#B7B7B7] mt-0.5">{item.summary}</p>
+                      <p className="text-xs text-[#B7B7B7] mt-1 leading-relaxed break-words">{item.summary}</p>
                     </div>
-                    <span className="text-[11px] font-mono px-2.5 py-1 rounded bg-white/5 border border-white/10 text-[#73CAE5] font-semibold whitespace-nowrap self-start sm:self-auto">
+                    <span className="text-[11px] font-mono px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[#73CAE5] font-semibold break-words max-w-full self-start shrink-0 sm:max-w-xs text-left leading-snug">
                       {item.keyMetric}
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 min-w-0">
                     {/* Benefícios */}
-                    <div className="p-4 rounded-lg bg-emerald-950/20 border border-emerald-500/20 space-y-2.5">
+                    <div className="p-4 rounded-xl bg-emerald-950/20 border border-emerald-500/20 space-y-2.5 min-w-0">
                       <div className="flex items-center space-x-2 text-emerald-400 font-bold text-xs uppercase tracking-wider">
-                        <CheckCircle2 className="w-4 h-4" />
+                        <CheckCircle2 className="w-4 h-4 shrink-0" />
                         <span>Vantagens & Benefícios Comprovados</span>
                       </div>
-                      <ul className="space-y-2 text-xs text-[#B7B7B7]">
+                      <ul className="space-y-2 text-xs text-[#B7B7B7] min-w-0">
                         {item.benefits.map((benefit, i) => (
-                          <li key={i} className="flex items-start space-x-2 leading-relaxed">
-                            <span className="text-emerald-400 font-bold mt-0.5">•</span>
-                            <span>{benefit}</span>
+                          <li key={i} className="flex items-start space-x-2 leading-relaxed min-w-0">
+                            <span className="text-emerald-400 font-bold mt-0.5 shrink-0">•</span>
+                            <span className="min-w-0 flex-1 break-words">{benefit}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
 
                     {/* Riscos e Desafios */}
-                    <div className="p-4 rounded-lg bg-amber-950/20 border border-amber-500/20 space-y-2.5">
+                    <div className="p-4 rounded-xl bg-amber-950/20 border border-amber-500/20 space-y-2.5 min-w-0">
                       <div className="flex items-center space-x-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
-                        <AlertTriangle className="w-4 h-4" />
+                        <AlertTriangle className="w-4 h-4 shrink-0" />
                         <span>Riscos Tecnológicos & Desafios Críticos</span>
                       </div>
-                      <ul className="space-y-2 text-xs text-[#B7B7B7]">
+                      <ul className="space-y-2 text-xs text-[#B7B7B7] min-w-0">
                         {item.risksAndChallenges.map((risk, i) => (
-                          <li key={i} className="flex items-start space-x-2 leading-relaxed">
-                            <span className="text-amber-400 font-bold mt-0.5">•</span>
-                            <span>{risk}</span>
+                          <li key={i} className="flex items-start space-x-2 leading-relaxed min-w-0">
+                            <span className="text-amber-400 font-bold mt-0.5 shrink-0">•</span>
+                            <span className="min-w-0 flex-1 break-words">{risk}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
                   </div>
 
-                  <div className="pt-2 flex items-center justify-between text-xs border-t border-white/5">
-                    <span className="text-[#B7B7B7]">Veredito Científico:</span>
-                    <span className="font-semibold text-white font-mono text-[11px] bg-white/5 px-2 py-0.5 rounded border border-white/10">
+                  <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs border-t border-white/5 min-w-0">
+                    <span className="text-[#B7B7B7] shrink-0 font-medium">Veredito Científico:</span>
+                    <span className="font-semibold text-white font-mono text-[11px] bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/10 break-words max-w-full text-left leading-relaxed">
                       {item.verdict}
                     </span>
                   </div>
@@ -713,16 +761,17 @@ export const FusionReactorsSection: React.FC = () => {
       {/* Lightbox Modal */}
       {lightboxImg && (
         <div
-          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-200"
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-200"
           onClick={() => setLightboxImg(null)}
         >
           <div
-            className="max-w-4xl w-full bg-[#141414] border border-white/15 rounded-2xl overflow-hidden shadow-2xl relative space-y-4 p-5"
+            className="max-w-4xl w-full max-h-[90dvh] overflow-y-auto bg-[#141414] border border-white/15 rounded-2xl shadow-2xl relative space-y-4 p-4 sm:p-5"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setLightboxImg(null)}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/70 text-white hover:bg-black transition-colors"
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 w-11 h-11 flex items-center justify-center rounded-full bg-black/80 text-white hover:bg-black transition-colors cursor-pointer"
+              aria-label="Fechar imagem ampliada"
             >
               <X className="w-5 h-5" />
             </button>

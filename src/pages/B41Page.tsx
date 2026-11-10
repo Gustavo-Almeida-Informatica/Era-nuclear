@@ -27,17 +27,17 @@ export const B41Page: React.FC<B41PageProps> = ({ onNavigate }) => {
   const [selectedPhotoView, setSelectedPhotoView] = useState<'museum_exhibit' | 'historical_archive'>('museum_exhibit');
 
   return (
-    <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
+    <div className="pt-24 sm:pt-28 pb-16 sm:pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-20">
       {/* Header */}
       <div className="max-w-4xl space-y-4">
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#8F83FF]/10 border border-[#8F83FF]/30 text-xs font-semibold text-[#8F83FF]">
-          <Archive className="w-3.5 h-3.5" />
-          <span>Arsenal Estratégico da Guerra Fria (1960–1976)</span>
+        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#8F83FF]/10 border border-[#8F83FF]/30 text-xs font-semibold text-[#8F83FF] max-w-full">
+          <Archive className="w-3.5 h-3.5 shrink-0" />
+          <span className="max-sm:whitespace-normal break-words">Arsenal Estratégico da Guerra Fria (1960–1976)</span>
         </div>
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display tracking-tight uppercase">
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display tracking-tight uppercase break-words">
           B41 (Mark 41)
         </h1>
-        <p className="text-lg sm:text-xl text-transparent bg-clip-text bg-gradient-to-r from-white via-[#B7B7B7] to-[#8F83FF] font-medium font-display">
+        <p className="text-base sm:text-xl text-transparent bg-clip-text bg-gradient-to-r from-white via-[#B7B7B7] to-[#8F83FF] font-medium font-display">
           A maior e mais potente arma termonuclear produzida em série e estocada pelos Estados Unidos.
         </p>
         <p className="text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
@@ -46,18 +46,18 @@ export const B41Page: React.FC<B41PageProps> = ({ onNavigate }) => {
       </div>
 
       {/* Highlights Banner */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-6 rounded-2xl bg-[#111111] border border-white/10 shadow-xl">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-[#111111] border border-white/10 shadow-xl">
         <div className="space-y-1">
           <span className="text-xs text-[#B7B7B7] uppercase font-mono">Potência Máxima</span>
-          <p className="text-xl sm:text-2xl font-bold text-[#8F83FF] font-mono">25 Megatons</p>
+          <p className="text-lg sm:text-2xl font-bold text-[#8F83FF] font-mono">25 Megatons</p>
         </div>
         <div className="space-y-1">
           <span className="text-xs text-[#B7B7B7] uppercase font-mono">Período de Serviço</span>
-          <p className="text-xl sm:text-2xl font-bold text-white font-mono">1960 – 1976</p>
+          <p className="text-lg sm:text-2xl font-bold text-white font-mono">1960 – 1976</p>
         </div>
         <div className="space-y-1">
           <span className="text-xs text-[#B7B7B7] uppercase font-mono">Produção em Série</span>
-          <p className="text-xl sm:text-2xl font-bold text-[#73CAE5] font-mono">~500 Unidades</p>
+          <p className="text-lg sm:text-2xl font-bold text-[#73CAE5] font-mono">~500 Unidades</p>
         </div>
         <div className="space-y-1">
           <span className="text-xs text-[#B7B7B7] uppercase font-mono">Plataforma Principal</span>
@@ -66,11 +66,12 @@ export const B41Page: React.FC<B41PageProps> = ({ onNavigate }) => {
       </div>
 
       {/* Grid: Context & Real Photo */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        <div className="lg:col-span-7 space-y-6 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
-          <div className="p-6 rounded-2xl bg-[#111111] border border-white/10 space-y-3">
+      <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 items-start">
+        {/* Left: Historical Context (order-2 on mobile, order-1 on desktop) */}
+        <div className="order-2 lg:order-1 lg:col-span-7 w-full space-y-6 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
+          <div className="p-4 sm:p-6 rounded-2xl bg-[#111111] border border-white/10 space-y-3">
             <h3 className="text-base sm:text-lg font-bold text-white font-display flex items-center space-x-2">
-              <Calendar className="w-4 h-4 text-[#73CAE5]" />
+              <Calendar className="w-4 h-4 text-[#73CAE5] shrink-0" />
               <span>Desenvolvimento & Finalidade Estratégica</span>
             </h3>
             <p>
@@ -81,9 +82,9 @@ export const B41Page: React.FC<B41PageProps> = ({ onNavigate }) => {
             </p>
           </div>
 
-          <div className="p-6 rounded-2xl bg-[#111111] border border-white/10 space-y-3">
+          <div className="p-4 sm:p-6 rounded-2xl bg-[#111111] border border-white/10 space-y-3">
             <h3 className="text-base sm:text-lg font-bold text-white font-display flex items-center space-x-2">
-              <Clock className="w-4 h-4 text-[#8F83FF]" />
+              <Clock className="w-4 h-4 text-[#8F83FF] shrink-0" />
               <span>Aposentadoria em 1976 & A Evolução para Ogivas Precisas</span>
             </h3>
             <p>
@@ -95,30 +96,30 @@ export const B41Page: React.FC<B41PageProps> = ({ onNavigate }) => {
           </div>
         </div>
 
-        {/* Right Photo & Exhibit Gallery */}
-        <div className="lg:col-span-5 space-y-4">
+        {/* Right Photo & Exhibit Gallery (order-1 on mobile, order-2 on desktop) */}
+        <div className="order-1 lg:order-2 lg:col-span-5 w-full space-y-4">
           {/* Photo View Selector Tabs */}
-          <div className="flex items-center space-x-1.5 p-1 rounded-xl bg-white/[0.04] border border-white/10 text-xs">
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-1.5 p-1 rounded-xl bg-white/[0.04] border border-white/10 text-xs">
             <button
               onClick={() => setSelectedPhotoView('museum_exhibit')}
-              className={`flex-1 py-1.5 px-2.5 rounded-lg font-medium transition-all flex items-center justify-center space-x-1.5 ${
+              className={`flex-1 min-w-[130px] py-2 sm:py-1.5 px-2.5 min-h-[40px] sm:min-h-0 rounded-lg font-medium transition-all flex items-center justify-center space-x-1.5 ${
                 selectedPhotoView === 'museum_exhibit'
                   ? 'bg-[#8F83FF] text-white font-bold shadow-md'
                   : 'text-[#B7B7B7] hover:text-white'
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5" />
+              <Sparkles className="w-3.5 h-3.5 shrink-0" />
               <span>Exposição Museológica</span>
             </button>
             <button
               onClick={() => setSelectedPhotoView('historical_archive')}
-              className={`flex-1 py-1.5 px-2.5 rounded-lg font-medium transition-all flex items-center justify-center space-x-1.5 ${
+              className={`flex-1 min-w-[130px] py-2 sm:py-1.5 px-2.5 min-h-[40px] sm:min-h-0 rounded-lg font-medium transition-all flex items-center justify-center space-x-1.5 ${
                 selectedPhotoView === 'historical_archive'
                   ? 'bg-[#8F83FF] text-white font-bold shadow-md'
                   : 'text-[#B7B7B7] hover:text-white'
               }`}
             >
-              <Camera className="w-3.5 h-3.5" />
+              <Camera className="w-3.5 h-3.5 shrink-0" />
               <span>Acervo Histórico Real</span>
             </button>
           </div>
@@ -202,15 +203,15 @@ export const B41Page: React.FC<B41PageProps> = ({ onNavigate }) => {
       </div>
 
       {/* Historical Context Card */}
-      <section className="bg-[#111111] border border-white/10 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-6">
+      <section className="bg-[#111111] border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-10 shadow-2xl space-y-6">
         <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-[#73CAE5] font-mono">
-          <Award className="w-4 h-4" />
+          <Award className="w-4 h-4 shrink-0" />
           <span>Importância Histórica & Doutrina Nuclear</span>
         </div>
         <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-display">
           O Fim da Era das Megabombas
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
           <p>
             A bomba <strong>B41</strong> encerrou o período dos anos 1950 e 1960 em que o poderio nuclear era medido em Megatons brutos de destruição em massa. O custo logístico, o peso sobre os bombardeiros e o risco de precipitação radioativa maciça sobre territórios aliados tornaram as megabombas obsoletas perante a estratégia moderna de dissuasão focada em vetores múltiplos de lançamento de alta precisão.
           </p>
@@ -223,17 +224,18 @@ export const B41Page: React.FC<B41PageProps> = ({ onNavigate }) => {
       {/* Lightbox */}
       {lightboxImg && (
         <div
-          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-150"
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-150"
           onClick={() => setLightboxImg(null)}
         >
-          <div className="max-w-4xl w-full bg-[#141414] border border-white/15 rounded-2xl overflow-hidden shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
+          <div className="max-w-4xl w-full max-h-[90dvh] overflow-y-auto bg-[#141414] border border-white/15 rounded-2xl shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => setLightboxImg(null)}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/70 text-white hover:bg-black"
+              aria-label="Fechar imagem"
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 w-11 h-11 flex items-center justify-center rounded-full bg-black/80 text-white hover:bg-black"
             >
               <X className="w-5 h-5" />
             </button>
-            <img src={lightboxImg.src} alt={lightboxImg.caption} referrerPolicy="no-referrer" className="w-full max-h-[80vh] object-contain bg-black" />
+            <img src={lightboxImg.src} alt={lightboxImg.caption} referrerPolicy="no-referrer" className="w-full max-h-[65vh] sm:max-h-[80vh] object-contain bg-black" />
             <div className="p-4 text-xs font-bold text-white font-display">
               {lightboxImg.caption}
             </div>

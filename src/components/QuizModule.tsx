@@ -15,24 +15,39 @@ import {
 } from 'lucide-react';
 
 /**
+ * Fisher-Yates in-place copy shuffle
+ */
+function shuffleArray<T>(items: T[]): T[] {
+  const copy = [...items];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+/**
  * Shuffles the options of a question and updates the correctIndex accordingly
  */
 function shuffleOptions(q: QuizQuestion): QuizQuestion {
   const originalCorrectText = q.options[q.correctIndex];
-  const shuffledOptions = [...q.options];
-
-  // Fisher-Yates shuffle
-  for (let i = shuffledOptions.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffledOptions[i], shuffledOptions[j]] = [shuffledOptions[j], shuffledOptions[i]];
-  }
-
+  const shuffledOptions = shuffleArray(q.options);
   const newCorrectIndex = shuffledOptions.indexOf(originalCorrectText);
   return {
     ...q,
     options: shuffledOptions,
     correctIndex: newCorrectIndex
   };
+}
+
+/**
+ * Builds a fresh randomized quiz: shuffles all 50 questions order first
+ * (so any question, including #50, can appear first), slices to limit,
+ * and shuffles the answer options for each question.
+ */
+function buildShuffledQuiz(limit: number): QuizQuestion[] {
+  const shuffledPool = shuffleArray(quizQuestions);
+  return shuffledPool.slice(0, limit).map((q) => shuffleOptions(q));
 }
 
 export const QuizModule: React.FC = () => {
@@ -46,21 +61,12 @@ export const QuizModule: React.FC = () => {
     Array<{ questionId: number; chosenIndex: number; isCorrect: boolean }>
   >([]);
 
-  // Initialize questions with shuffled options for every question
-  const [questions, setQuestions] = useState<QuizQuestion[]>(() => {
-    return quizQuestions.slice(0, 50).map((q) => shuffleOptions(q));
-  });
+  // Initialize quiz with both question order AND options freshly shuffled every session
+  const [questions, setQuestions] = useState<QuizQuestion[]>(() => buildShuffledQuiz(50));
 
-  // Re-generate questions when length limit changes or reset is called
-  const initQuiz = (limit: number, shuffleQuestionsOrder = false) => {
-    let base = [...quizQuestions];
-    if (shuffleQuestionsOrder) {
-      for (let i = base.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [base[i], base[j]] = [base[j], base[i]];
-      }
-    }
-    const selected = base.slice(0, limit).map((q) => shuffleOptions(q));
+  // Re-generate randomized question order + shuffled options whenever starting/restarting
+  const initQuiz = (limit: number) => {
+    const selected = buildShuffledQuiz(limit);
     setQuestions(selected);
     setCurrentIdx(0);
     setSelectedOption(null);
@@ -98,16 +104,12 @@ export const QuizModule: React.FC = () => {
   };
 
   const handleRestart = () => {
-    initQuiz(questionCountLimit, false);
-  };
-
-  const handleRestartWithQuestionShuffle = () => {
-    initQuiz(questionCountLimit, true);
+    initQuiz(questionCountLimit);
   };
 
   const handleModeChange = (limit: number) => {
     setQuestionCountLimit(limit);
-    initQuiz(limit, false);
+    initQuiz(limit);
   };
 
   // Performance category calculations
@@ -129,66 +131,78 @@ export const QuizModule: React.FC = () => {
   const percentage = Math.round((score / questions.length) * 100);
 
   return (
-    <div className="bg-[#121212] border border-white/10 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
+    <div className="bg-[#121212] border border-white/10 rounded-2xl p-4 sm:p-8 shadow-2xl space-y-6">
       {!completed ? (
         <>
           {/* Header Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/10">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-lg bg-[#73CAE5]/10 border border-[#73CAE5]/20 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-[#73CAE5]/10 border border-[#73CAE5]/20 flex items-center justify-center shrink-0">
                 <HelpCircle className="w-4 h-4 text-[#73CAE5]" />
               </div>
-              <div>
-                <h3 className="text-base sm:text-lg font-bold text-white font-display leading-none">
+              <div className="min-w-0">
+                <h3 className="text-base sm:text-lg font-bold text-white font-display leading-tight">
                   Grande Quiz da Era Nuclear
                 </h3>
                 <span className="text-[11px] text-[#B7B7B7] flex items-center space-x-1.5 mt-0.5">
-                  <Shuffle className="w-3 h-3 text-emerald-400" />
-                  <span className="text-emerald-400 font-medium">Respostas e Alternativas Embaralhadas</span>
+                  <Shuffle className="w-3 h-3 text-emerald-400 shrink-0" />
+                  <span className="text-emerald-400 font-medium">Questões e Alternativas Embaralhadas a Cada Tentativa</span>
                 </span>
               </div>
             </div>
 
             {/* Mode selection pills (10, 25 or 50 questions) */}
-            <div className="flex items-center space-x-2">
-              <div className="flex rounded-lg bg-white/5 p-1 border border-white/10 text-xs font-mono">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 w-full sm:w-auto">
+              <div className="grid grid-cols-3 sm:flex w-full sm:w-auto rounded-lg bg-white/5 p-1 border border-white/10 text-xs font-mono gap-1 sm:gap-0">
                 <button
                   onClick={() => handleModeChange(10)}
-                  className={`px-2.5 py-1 rounded-md transition-all ${
+                  className={`px-2 py-1.5 sm:px-2.5 sm:py-1 rounded-md transition-all cursor-pointer min-h-[40px] sm:min-h-0 flex items-center justify-center ${
                     questionCountLimit === 10
                       ? 'bg-[#73CAE5] text-[#0D0D0D] font-bold'
                       : 'text-[#B7B7B7] hover:text-white'
                   }`}
-                  title="10 Questões rápidas"
+                  title="10 Questões sorteadas aleatoriamente"
                 >
                   10 Q
                 </button>
                 <button
                   onClick={() => handleModeChange(25)}
-                  className={`px-2.5 py-1 rounded-md transition-all ${
+                  className={`px-2 py-1.5 sm:px-2.5 sm:py-1 rounded-md transition-all cursor-pointer min-h-[40px] sm:min-h-0 flex items-center justify-center ${
                     questionCountLimit === 25
                       ? 'bg-[#73CAE5] text-[#0D0D0D] font-bold'
                       : 'text-[#B7B7B7] hover:text-white'
                   }`}
-                  title="25 Questões intermediárias"
+                  title="25 Questões sorteadas aleatoriamente"
                 >
                   25 Q
                 </button>
                 <button
                   onClick={() => handleModeChange(50)}
-                  className={`px-2.5 py-1 rounded-md transition-all ${
+                  className={`px-2 py-1.5 sm:px-2.5 sm:py-1 rounded-md transition-all cursor-pointer min-h-[40px] sm:min-h-0 flex items-center justify-center text-center leading-tight ${
                     questionCountLimit === 50
                       ? 'bg-gradient-to-r from-[#73CAE5] to-[#8F83FF] text-[#0D0D0D] font-bold shadow-sm'
                       : 'text-[#B7B7B7] hover:text-white'
                   }`}
-                  title="Desafio Completo: Todas as 50 Questões"
+                  title="Desafio Completo: Todas as 50 Questões em ordem aleatória"
                 >
-                  50 Q (Completo)
+                  <span className="max-[400px]:hidden">50 Q (Completo)</span>
+                  <span className="min-[401px]:hidden">50 Q</span>
                 </button>
               </div>
 
-              <div className="text-xs font-mono font-bold text-[#73CAE5] bg-[#73CAE5]/10 px-3 py-1.5 rounded-full border border-[#73CAE5]/30 shrink-0">
-                Questão {currentIdx + 1} / {questions.length}
+              <div className="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-1.5">
+                <div className="text-xs font-mono font-bold text-[#73CAE5] bg-[#73CAE5]/10 px-3 py-1.5 rounded-full border border-[#73CAE5]/30 shrink-0">
+                  Questão {currentIdx + 1} / {questions.length}
+                </div>
+                <button
+                  type="button"
+                  onClick={handleRestart}
+                  className="p-1.5 rounded-lg bg-white/5 border border-white/10 text-[#B7B7B7] hover:text-white hover:bg-white/10 transition-colors cursor-pointer min-w-[42px] min-h-[42px] sm:min-w-0 sm:min-h-0 flex items-center justify-center"
+                  title="Sortear nova ordem das questões agora"
+                  aria-label="Embaralhar e reiniciar quiz"
+                >
+                  <Shuffle className="w-4 h-4 text-[#73CAE5]" />
+                </button>
               </div>
             </div>
           </div>
@@ -249,7 +263,7 @@ export const QuizModule: React.FC = () => {
                   key={`${currentQ.id}-${option}`}
                   onClick={() => handleSelectOption(idx)}
                   disabled={isAnswered}
-                  className={`w-full p-3.5 sm:p-4 rounded-xl text-left text-xs sm:text-sm border transition-all flex items-start space-x-3 group ${optionStyle}`}
+                  className={`w-full min-w-0 p-3.5 sm:p-4 rounded-xl text-left text-xs sm:text-sm border transition-all flex items-start space-x-3 group ${optionStyle}`}
                 >
                   <span
                     className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 font-mono transition-colors ${
@@ -262,7 +276,7 @@ export const QuizModule: React.FC = () => {
                   >
                     {String.fromCharCode(65 + idx)}
                   </span>
-                  <span className="flex-1 leading-relaxed">{option}</span>
+                  <span className="flex-1 min-w-0 break-words leading-relaxed">{option}</span>
                   {isAnswered && isCorrect && (
                     <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
                   )}
@@ -276,7 +290,7 @@ export const QuizModule: React.FC = () => {
 
           {/* Scientific Explanation when answered */}
           {isAnswered && (
-            <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 space-y-3 animate-in fade-in duration-200">
+            <div className="p-3.5 sm:p-4 rounded-xl bg-white/[0.03] border border-white/10 space-y-3 animate-in fade-in duration-200">
               <div className="flex items-center space-x-2 text-xs font-bold text-[#73CAE5] font-mono">
                 <BookOpen className="w-4 h-4" />
                 <span>Fundamentação Científica & Histórica:</span>
@@ -284,7 +298,7 @@ export const QuizModule: React.FC = () => {
               <p className="text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
                 {currentQ.explanation}
               </p>
-              <div className="pt-2 flex justify-between items-center">
+              <div className="pt-2 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
                 <span className="text-[11px] font-mono text-[#B7B7B7]">
                   {selectedOption === currentQ.correctIndex ? (
                     <span className="text-emerald-400 font-bold">✓ Resposta Correta (+1 ponto)</span>
@@ -297,7 +311,7 @@ export const QuizModule: React.FC = () => {
 
                 <button
                   onClick={handleNext}
-                  className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#73CAE5] to-[#8F83FF] text-[#0D0D0D] font-bold text-xs flex items-center space-x-1.5 shadow-lg shadow-[#73CAE5]/20 hover:scale-105 active:scale-95 transition-transform"
+                  className="w-full sm:w-auto justify-center px-4 py-2.5 sm:py-2 rounded-lg bg-gradient-to-r from-[#73CAE5] to-[#8F83FF] text-[#0D0D0D] font-bold text-xs flex items-center space-x-1.5 shadow-lg shadow-[#73CAE5]/20 hover:scale-105 active:scale-95 transition-transform cursor-pointer min-h-[42px] sm:min-h-0"
                 >
                   <span>
                     {currentIdx + 1 < questions.length
@@ -334,7 +348,7 @@ export const QuizModule: React.FC = () => {
           {/* Performance Badge */}
           <div className="max-w-md mx-auto p-4 rounded-xl bg-white/[0.03] border border-white/10 space-y-2">
             <div className="flex items-center justify-center space-x-2 text-xs font-bold font-mono">
-              <Sparkles className="w-4 h-4 text-amber-400" />
+              <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
               <span className="text-white">
                 {percentage >= 90
                   ? 'Classificação: Físico Nuclear Sênior (Distinção Máxima)'
@@ -367,8 +381,8 @@ export const QuizModule: React.FC = () => {
                       key={cat}
                       className="p-3 rounded-lg bg-white/[0.02] border border-white/5 flex items-center justify-between text-xs"
                     >
-                      <span className="text-white/80 font-medium truncate mr-2">{cat}</span>
-                      <span className="font-mono font-bold text-[#73CAE5]">
+                      <span className="text-white/80 font-medium max-sm:whitespace-normal break-words sm:truncate mr-2">{cat}</span>
+                      <span className="font-mono font-bold text-[#73CAE5] shrink-0">
                         {stat.correct}/{stat.total} ({catPerc}%)
                       </span>
                     </div>
@@ -382,18 +396,10 @@ export const QuizModule: React.FC = () => {
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <button
               onClick={handleRestart}
-              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#73CAE5] to-[#8F83FF] text-[#0D0D0D] text-xs font-bold hover:scale-105 active:scale-95 transition-all flex items-center space-x-2 shadow-lg shadow-[#73CAE5]/20"
+              className="w-full sm:w-auto justify-center px-6 py-3 rounded-xl bg-gradient-to-r from-[#73CAE5] to-[#8F83FF] text-[#0D0D0D] text-xs font-bold hover:scale-105 active:scale-95 transition-all flex items-center space-x-2 shadow-lg shadow-[#73CAE5]/20 cursor-pointer min-h-[44px]"
             >
-              <RotateCcw className="w-4 h-4" />
-              <span>Refazer Quiz (Novas Respostas Embaralhadas)</span>
-            </button>
-
-            <button
-              onClick={handleRestartWithQuestionShuffle}
-              className="px-5 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white text-xs font-bold hover:bg-white/20 transition-all flex items-center space-x-2"
-            >
-              <Shuffle className="w-4 h-4 text-[#73CAE5]" />
-              <span>Embaralhar Questões e Respostas</span>
+              <Shuffle className="w-4 h-4 shrink-0" />
+              <span>Refazer Quiz (Nova Ordem Embaralhada)</span>
             </button>
           </div>
         </div>

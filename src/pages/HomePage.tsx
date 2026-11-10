@@ -44,13 +44,15 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
 
     window.addEventListener('resize', handleResize);
 
-    // Particle nodes for abstract nuclear lattice / orbital field
-    const particles = Array.from({ length: 45 }, () => ({
+    // Particle nodes for abstract nuclear lattice / orbital field - optimized count for mobile performance
+    const isMobile = window.innerWidth < 640;
+    const particleCount = isMobile ? 22 : 45;
+    const particles = Array.from({ length: particleCount }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.4,
-      vy: (Math.random() - 0.5) * 0.4,
-      radius: Math.random() * 2 + 1,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: (Math.random() - 0.5) * 0.35,
+      radius: Math.random() * 1.8 + 1,
       color: Math.random() > 0.5 ? '#73CAE5' : '#8F83FF'
     }));
 
@@ -66,8 +68,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
           const dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 130) {
-            ctx.strokeStyle = `rgba(115, 202, 229, ${0.12 * (1 - dist / 130)})`;
+          if (dist < 120) {
+            ctx.strokeStyle = `rgba(115, 202, 229, ${0.12 * (1 - dist / 120)})`;
             ctx.lineWidth = 0.8;
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
@@ -153,43 +155,43 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   ];
 
   return (
-    <div className="space-y-24 sm:space-y-32 pb-16">
-      {/* HERO SECTION - Inspired by modern editorial design */}
-      <section className="relative min-h-[90vh] flex items-center justify-center pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <div className="space-y-16 sm:space-y-28 lg:space-y-32 pb-16">
+      {/* HERO SECTION - Refined mobile-first responsive design */}
+      <section className="relative min-h-[85vh] sm:min-h-[90vh] flex items-center justify-center pt-20 sm:pt-28 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
         {/* Background Canvas Particles */}
         <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none opacity-40" />
 
-        {/* Ambient Radial Gradient Glows */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#73CAE5]/10 rounded-full blur-[140px] pointer-events-none" />
-        <div className="absolute bottom-1/4 right-1/4 w-[450px] h-[450px] bg-[#8F83FF]/10 rounded-full blur-[120px] pointer-events-none" />
+        {/* Ambient Radial Gradient Glows (contained to prevent overflow) */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] sm:w-[550px] h-[320px] sm:h-[550px] bg-[#73CAE5]/10 rounded-full blur-[100px] sm:blur-[140px] pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 w-[280px] sm:w-[450px] h-[280px] sm:h-[450px] bg-[#8F83FF]/10 rounded-full blur-[90px] sm:blur-[120px] pointer-events-none" />
 
-        <div className="relative z-10 max-w-5xl mx-auto text-center space-y-8">
-          {/* Subtle Pill Tag */}
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-xs font-medium text-[#73CAE5]">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Plataforma de Divulgação Científica e Histórica</span>
+        <div className="relative z-10 max-w-5xl mx-auto text-center space-y-6 sm:space-y-8">
+          {/* Subtle Tag */}
+          <div className="inline-flex items-center space-x-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-[11px] sm:text-xs font-medium text-[#73CAE5] max-w-full">
+            <Sparkles className="w-3.5 h-3.5 shrink-0" />
+            <span className="max-sm:whitespace-normal text-center sm:truncate">Plataforma de Divulgação Científica e Histórica</span>
           </div>
 
-          {/* Massive Display Title */}
-          <div className="space-y-3">
-            <h1 className="text-5xl sm:text-7xl lg:text-8xl font-extrabold tracking-tight text-white font-display uppercase">
+          {/* Fully Responsive Display Title without overflow */}
+          <div className="space-y-2 sm:space-y-3">
+            <h1 className="text-3xl min-[360px]:text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-white font-display uppercase break-words leading-none">
               ERA NUCLEAR
             </h1>
-            <p className="text-xl sm:text-2xl lg:text-3xl font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#FFFFFF] via-[#B7B7B7] to-[#73CAE5] max-w-3xl mx-auto font-display">
+            <p className="text-base sm:text-2xl lg:text-3xl font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#FFFFFF] via-[#B7B7B7] to-[#73CAE5] max-w-3xl mx-auto font-display leading-snug px-2">
               A história, a ciência e as consequências da era que mudou o mundo.
             </p>
           </div>
 
           {/* Editorial Paragraph */}
-          <p className="text-base sm:text-lg text-[#B7B7B7] max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xs sm:text-base text-[#B7B7B7] max-w-2xl mx-auto leading-relaxed px-2">
             Explore a física por trás do átomo, descubra como a energia nuclear transformou a sociedade e conheça a história das armas nucleares e seus impactos no planeta.
           </p>
 
-          {/* Dual Action CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+          {/* Dual Action CTA Buttons - Stacked on Mobile, Row on Desktop */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 pt-2 sm:pt-4 max-w-md sm:max-w-none mx-auto w-full">
             <button
               onClick={() => onNavigate('history')}
-              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white text-[#0D0D0D] font-extrabold text-sm tracking-wide uppercase shadow-2xl hover:bg-[#73CAE5] transition-all duration-200 active:scale-95 flex items-center justify-center space-x-2"
+              className="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl bg-white text-[#0D0D0D] font-extrabold text-xs sm:text-sm tracking-wide uppercase shadow-2xl hover:bg-[#73CAE5] transition-all duration-200 active:scale-95 flex items-center justify-center space-x-2 min-h-[48px]"
             >
               <span>EXPLORAR A HISTÓRIA</span>
               <ArrowRight className="w-4 h-4" />
@@ -197,7 +199,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
 
             <button
               onClick={() => onNavigate('physics')}
-              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-transparent border-2 border-white/20 text-white font-extrabold text-sm tracking-wide uppercase hover:border-[#8F83FF] hover:text-[#8F83FF] hover:bg-white/5 transition-all duration-200 active:scale-95 flex items-center justify-center space-x-2"
+              className="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl bg-transparent border-2 border-white/20 text-white font-extrabold text-xs sm:text-sm tracking-wide uppercase hover:border-[#8F83FF] hover:text-[#8F83FF] hover:bg-white/5 transition-all duration-200 active:scale-95 flex items-center justify-center space-x-2 min-h-[48px]"
             >
               <span>ENTENDER A FÍSICA</span>
               <Atom className="w-4 h-4" />
@@ -205,22 +207,22 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
           </div>
 
           {/* Quick Metrics Strip */}
-          <div className="pt-12 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto border-t border-white/10 text-left">
-            <div className="p-3">
-              <span className="text-2xl sm:text-3xl font-extrabold text-white font-mono">1896</span>
-              <p className="text-xs text-[#B7B7B7] mt-0.5">Descoberta da radioatividade natural</p>
+          <div className="pt-8 sm:pt-12 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 max-w-4xl mx-auto border-t border-white/10 text-left">
+            <div className="p-2.5 sm:p-3 rounded-xl bg-white/[0.01]">
+              <span className="text-xl sm:text-3xl font-extrabold text-white font-mono block">1896</span>
+              <p className="text-[11px] sm:text-xs text-[#B7B7B7] mt-0.5">Descoberta da radioatividade natural</p>
             </div>
-            <div className="p-3">
-              <span className="text-2xl sm:text-3xl font-extrabold text-[#73CAE5] font-mono">~200 MeV</span>
-              <p className="text-xs text-[#B7B7B7] mt-0.5">Energia por fissão de Urânio-235</p>
+            <div className="p-2.5 sm:p-3 rounded-xl bg-white/[0.01]">
+              <span className="text-xl sm:text-3xl font-extrabold text-[#73CAE5] font-mono block">~200 MeV</span>
+              <p className="text-[11px] sm:text-xs text-[#B7B7B7] mt-0.5">Energia por fissão de Urânio-235</p>
             </div>
-            <div className="p-3">
-              <span className="text-2xl sm:text-3xl font-extrabold text-[#8F83FF] font-mono">191</span>
-              <p className="text-xs text-[#B7B7B7] mt-0.5">Países signatários do Tratado TNP</p>
+            <div className="p-2.5 sm:p-3 rounded-xl bg-white/[0.01]">
+              <span className="text-xl sm:text-3xl font-extrabold text-[#8F83FF] font-mono block">191</span>
+              <p className="text-[11px] sm:text-xs text-[#B7B7B7] mt-0.5">Países signatários do Tratado TNP</p>
             </div>
-            <div className="p-3">
-              <span className="text-2xl sm:text-3xl font-extrabold text-white font-mono">~10%</span>
-              <p className="text-xs text-[#B7B7B7] mt-0.5">Da eletricidade global gerada sem CO₂</p>
+            <div className="p-2.5 sm:p-3 rounded-xl bg-white/[0.01]">
+              <span className="text-xl sm:text-3xl font-extrabold text-white font-mono block">~10%</span>
+              <p className="text-[11px] sm:text-xs text-[#B7B7B7] mt-0.5">Da eletricidade global sem emissões</p>
             </div>
           </div>
         </div>
@@ -228,16 +230,16 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
 
       {/* SECTION: O QUE É A ERA NUCLEAR? */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-[#111111] border border-white/10 rounded-3xl p-8 sm:p-12 lg:p-16 shadow-2xl relative overflow-hidden">
+        <div className="bg-[#111111] border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-10 lg:p-16 shadow-2xl relative overflow-hidden">
           {/* Subtle decorative line */}
-          <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-[#73CAE5] to-[#8F83FF]" />
+          <div className="absolute top-0 left-0 w-1.5 sm:w-2 h-full bg-gradient-to-b from-[#73CAE5] to-[#8F83FF]" />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            <div className="lg:col-span-5 space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-center">
+            <div className="lg:col-span-5 space-y-5 sm:space-y-6">
               <span className="text-xs font-bold uppercase tracking-wider text-[#73CAE5] font-mono">
                 Contexto Histórico & Científico
               </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-display tracking-tight leading-tight">
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-white font-display tracking-tight leading-tight">
                 O que é a Era Nuclear?
               </h2>
               <p className="text-sm sm:text-base text-[#B7B7B7] leading-relaxed">
@@ -246,10 +248,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               <div className="pt-2">
                 <button
                   onClick={() => onNavigate('history')}
-                  className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#73CAE5] to-[#8F83FF] text-[#0D0D0D] font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity flex items-center space-x-2 shadow-lg shadow-[#73CAE5]/20"
+                  className="w-full sm:w-auto justify-center px-5 sm:px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#73CAE5] to-[#8F83FF] text-[#0D0D0D] font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity flex items-center space-x-2 shadow-lg shadow-[#73CAE5]/20 min-h-[44px] sm:min-h-0"
                 >
                   <span>VER LINHA DO TEMPO COMPLETA</span>
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-4 h-4 shrink-0" />
                 </button>
               </div>
             </div>
@@ -258,7 +260,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               {whatIsNuclearEra.map((item) => (
                 <div
                   key={item.title}
-                  className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-white/20 transition-all group"
+                  className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-white/20 transition-all group"
                 >
                   <span className="inline-block px-2.5 py-1 rounded-md bg-[#73CAE5]/10 text-[#73CAE5] text-[11px] font-mono font-bold mb-3">
                     {item.badge}
@@ -283,7 +285,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             <span className="text-xs font-bold uppercase tracking-wider text-[#73CAE5] font-mono">
               Páginas Históricas em Destaque
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-display">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-white font-display">
               Grandes Marcos da Era Atômica
             </h2>
             <p className="text-sm text-[#B7B7B7] max-w-2xl leading-relaxed">
@@ -298,18 +300,18 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             {/* 1. Operação Castle */}
             <div
               onClick={() => onNavigate('operation-castle')}
-              className="p-6 sm:p-7 rounded-3xl bg-[#111111] border border-[#73CAE5]/30 hover:border-[#73CAE5] transition-all cursor-pointer group shadow-xl hover:-translate-y-1 space-y-4"
+              className="p-4 sm:p-7 rounded-3xl bg-[#111111] border border-[#73CAE5]/30 hover:border-[#73CAE5] transition-all cursor-pointer group shadow-xl hover:-translate-y-1 space-y-4"
             >
-              <div className="flex items-center justify-between">
-                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#73CAE5]/15 text-xs font-bold text-[#73CAE5] font-mono">
-                  <Zap className="w-3.5 h-3.5" />
-                  <span>1954 • 6 TESTES TERMONUCLEARES</span>
+              <div className="flex items-start sm:items-center justify-between gap-2">
+                <div className="inline-flex items-center space-x-2 px-2.5 sm:px-3 py-1 rounded-full bg-[#73CAE5]/15 text-[11px] sm:text-xs font-bold text-[#73CAE5] font-mono max-w-full">
+                  <Zap className="w-3.5 h-3.5 shrink-0" />
+                  <span className="break-words">1954 • 6 TESTES TERMONUCLEARES</span>
                 </div>
-                <ChevronRight className="w-5 h-5 text-[#73CAE5] group-hover:translate-x-1 transition-transform" />
+                <ChevronRight className="w-5 h-5 text-[#73CAE5] group-hover:translate-x-1 transition-transform shrink-0" />
               </div>
 
               <div>
-                <h3 className="text-2xl font-extrabold text-white font-display group-hover:text-[#73CAE5] transition-colors">
+                <h3 className="text-xl sm:text-2xl font-extrabold text-white font-display group-hover:text-[#73CAE5] transition-colors">
                   Operação Castle
                 </h3>
                 <p className="text-xs text-[#73CAE5] font-mono font-semibold mt-0.5">
@@ -323,25 +325,25 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
 
               <div className="pt-2 border-t border-white/5 flex items-center justify-between text-xs font-semibold text-[#73CAE5]">
                 <span>Acessar monografia de Castle</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform shrink-0" />
               </div>
             </div>
 
             {/* 2. Projeto Manhattan (em baixo da Operação Castle) */}
             <div
               onClick={() => onNavigate('manhattan-project')}
-              className="p-6 sm:p-7 rounded-3xl bg-[#111111] border border-[#73CAE5]/30 hover:border-[#73CAE5] transition-all cursor-pointer group shadow-xl hover:-translate-y-1 space-y-4"
+              className="p-4 sm:p-7 rounded-3xl bg-[#111111] border border-[#73CAE5]/30 hover:border-[#73CAE5] transition-all cursor-pointer group shadow-xl hover:-translate-y-1 space-y-4"
             >
-              <div className="flex items-center justify-between">
-                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#73CAE5]/15 text-xs font-bold text-[#73CAE5] font-mono">
-                  <Atom className="w-3.5 h-3.5" />
-                  <span>1942–1945 • O BERÇO DO ÁTOMO</span>
+              <div className="flex items-start sm:items-center justify-between gap-2">
+                <div className="inline-flex items-center space-x-2 px-2.5 sm:px-3 py-1 rounded-full bg-[#73CAE5]/15 text-[11px] sm:text-xs font-bold text-[#73CAE5] font-mono max-w-full">
+                  <Atom className="w-3.5 h-3.5 shrink-0" />
+                  <span className="break-words">1942–1945 • O BERÇO DO ÁTOMO</span>
                 </div>
-                <ChevronRight className="w-5 h-5 text-[#73CAE5] group-hover:translate-x-1 transition-transform" />
+                <ChevronRight className="w-5 h-5 text-[#73CAE5] group-hover:translate-x-1 transition-transform shrink-0" />
               </div>
 
               <div>
-                <h3 className="text-2xl font-extrabold text-white font-display group-hover:text-[#73CAE5] transition-colors">
+                <h3 className="text-xl sm:text-2xl font-extrabold text-white font-display group-hover:text-[#73CAE5] transition-colors">
                   Projeto Manhattan
                 </h3>
                 <p className="text-xs text-[#73CAE5] font-mono font-semibold mt-0.5">
@@ -355,7 +357,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
 
               <div className="pt-2 border-t border-white/5 flex items-center justify-between text-xs font-semibold text-[#73CAE5]">
                 <span>Acessar monografia do Manhattan</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform shrink-0" />
               </div>
             </div>
           </div>
@@ -365,18 +367,18 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             {/* 1. Tsar Bomba */}
             <div
               onClick={() => onNavigate('tsar-bomba')}
-              className="p-6 sm:p-7 rounded-3xl bg-[#111111] border border-[#8F83FF]/30 hover:border-[#8F83FF] transition-all cursor-pointer group shadow-xl hover:-translate-y-1 space-y-4"
+              className="p-4 sm:p-7 rounded-3xl bg-[#111111] border border-[#8F83FF]/30 hover:border-[#8F83FF] transition-all cursor-pointer group shadow-xl hover:-translate-y-1 space-y-4"
             >
-              <div className="flex items-center justify-between">
-                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#8F83FF]/15 text-xs font-bold text-[#8F83FF] font-mono">
-                  <Flame className="w-3.5 h-3.5" />
-                  <span>1961 • 50 MEGATONS</span>
+              <div className="flex items-start sm:items-center justify-between gap-2">
+                <div className="inline-flex items-center space-x-2 px-2.5 sm:px-3 py-1 rounded-full bg-[#8F83FF]/15 text-[11px] sm:text-xs font-bold text-[#8F83FF] font-mono max-w-full">
+                  <Flame className="w-3.5 h-3.5 shrink-0" />
+                  <span className="break-words">1961 • 50 MEGATONS</span>
                 </div>
-                <ChevronRight className="w-5 h-5 text-[#8F83FF] group-hover:translate-x-1 transition-transform" />
+                <ChevronRight className="w-5 h-5 text-[#8F83FF] group-hover:translate-x-1 transition-transform shrink-0" />
               </div>
 
               <div>
-                <h3 className="text-2xl font-extrabold text-white font-display group-hover:text-[#8F83FF] transition-colors">
+                <h3 className="text-xl sm:text-2xl font-extrabold text-white font-display group-hover:text-[#8F83FF] transition-colors">
                   Tsar Bomba
                 </h3>
                 <p className="text-xs text-[#8F83FF] font-mono font-semibold mt-0.5">
@@ -390,25 +392,25 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
 
               <div className="pt-2 border-t border-white/5 flex items-center justify-between text-xs font-semibold text-[#8F83FF]">
                 <span>Acessar monografia da Tsar Bomba</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform shrink-0" />
               </div>
             </div>
 
             {/* 2. Ivy Mike (em baixo da Tsar Bomba) */}
             <div
               onClick={() => onNavigate('ivy-mike')}
-              className="p-6 sm:p-7 rounded-3xl bg-[#111111] border border-[#8F83FF]/30 hover:border-[#8F83FF] transition-all cursor-pointer group shadow-xl hover:-translate-y-1 space-y-4"
+              className="p-4 sm:p-7 rounded-3xl bg-[#111111] border border-[#8F83FF]/30 hover:border-[#8F83FF] transition-all cursor-pointer group shadow-xl hover:-translate-y-1 space-y-4"
             >
-              <div className="flex items-center justify-between">
-                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#8F83FF]/15 text-xs font-bold text-[#8F83FF] font-mono">
-                  <Zap className="w-3.5 h-3.5" />
-                  <span>1952 • 10,4 MEGATONS</span>
+              <div className="flex items-start sm:items-center justify-between gap-2">
+                <div className="inline-flex items-center space-x-2 px-2.5 sm:px-3 py-1 rounded-full bg-[#8F83FF]/15 text-[11px] sm:text-xs font-bold text-[#8F83FF] font-mono max-w-full">
+                  <Zap className="w-3.5 h-3.5 shrink-0" />
+                  <span className="break-words">1952 • 10,4 MEGATONS</span>
                 </div>
-                <ChevronRight className="w-5 h-5 text-[#8F83FF] group-hover:translate-x-1 transition-transform" />
+                <ChevronRight className="w-5 h-5 text-[#8F83FF] group-hover:translate-x-1 transition-transform shrink-0" />
               </div>
 
               <div>
-                <h3 className="text-2xl font-extrabold text-white font-display group-hover:text-[#8F83FF] transition-colors">
+                <h3 className="text-xl sm:text-2xl font-extrabold text-white font-display group-hover:text-[#8F83FF] transition-colors">
                   Ivy Mike
                 </h3>
                 <p className="text-xs text-[#8F83FF] font-mono font-semibold mt-0.5">
@@ -435,7 +437,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
           <span className="text-xs font-bold uppercase tracking-wider text-[#8F83FF] font-mono">
             Pilares Educativos
           </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-display">
+          <h2 className="text-2xl sm:text-4xl font-extrabold text-white font-display">
             Aprenda a Ciência sem Mistérios
           </h2>
           <p className="text-sm text-[#B7B7B7]">
@@ -448,7 +450,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             <div
               key={pillar.title}
               onClick={() => onNavigate(pillar.page)}
-              className="p-6 rounded-2xl bg-[#111111] border border-white/10 hover:border-[#73CAE5]/50 transition-all duration-300 group cursor-pointer flex flex-col justify-between hover:-translate-y-1 shadow-lg"
+              className="p-4 sm:p-6 rounded-2xl bg-[#111111] border border-white/10 hover:border-[#73CAE5]/50 transition-all duration-300 group cursor-pointer flex flex-col justify-between hover:-translate-y-1 shadow-lg"
             >
               <div className="space-y-4">
                 <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-[#73CAE5]/50 group-hover:scale-110 transition-all">
@@ -478,7 +480,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             <span className="text-xs font-bold uppercase tracking-wider text-[#73CAE5] font-mono">
               Interatividade
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-display">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-white font-display">
               Laboratório Virtual do Átomo
             </h2>
             <p className="text-sm text-[#B7B7B7] max-w-xl">
@@ -487,10 +489,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
           </div>
           <button
             onClick={() => onNavigate('physics')}
-            className="self-start md:self-auto px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:border-[#73CAE5] text-xs font-bold text-white transition-all flex items-center space-x-1.5"
+            className="w-full sm:w-auto self-start md:self-auto justify-center px-4 py-2.5 sm:py-2 rounded-lg bg-white/5 border border-white/10 hover:border-[#73CAE5] text-xs font-bold text-white transition-all flex items-center space-x-1.5 min-h-[44px] sm:min-h-0"
           >
             <span>Ver Seção de Física Completa</span>
-            <ChevronRight className="w-3.5 h-3.5 text-[#73CAE5]" />
+            <ChevronRight className="w-3.5 h-3.5 text-[#73CAE5] shrink-0" />
           </button>
         </div>
 
@@ -504,7 +506,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             <span className="text-xs font-bold uppercase tracking-wider text-[#8F83FF] font-mono">
               Comparativo Teórico
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-display">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-white font-display">
               Fissão × Fusão Nuclear
             </h2>
             <p className="text-sm text-[#B7B7B7] max-w-xl">
@@ -513,10 +515,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
           </div>
           <button
             onClick={() => onNavigate('fission-fusion')}
-            className="self-start md:self-auto px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:border-[#8F83FF] text-xs font-bold text-white transition-all flex items-center space-x-1.5"
+            className="w-full sm:w-auto self-start md:self-auto justify-center px-4 py-2.5 sm:py-2 rounded-lg bg-white/5 border border-white/10 hover:border-[#8F83FF] text-xs font-bold text-white transition-all flex items-center space-x-1.5 min-h-[44px] sm:min-h-0"
           >
             <span>Comparador Detalhado</span>
-            <ChevronRight className="w-3.5 h-3.5 text-[#8F83FF]" />
+            <ChevronRight className="w-3.5 h-3.5 text-[#8F83FF] shrink-0" />
           </button>
         </div>
 
@@ -532,7 +534,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
           <span className="text-xs font-bold uppercase tracking-wider text-[#73CAE5] font-mono">
             Autoavaliação
           </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-display">
+          <h2 className="text-2xl sm:text-4xl font-extrabold text-white font-display">
             Teste seu Conhecimento
           </h2>
           <p className="text-sm text-[#B7B7B7]">

@@ -103,17 +103,17 @@ export const IvyMikeManhattanSection: React.FC<IvyMikeManhattanSectionProps> = (
       {/* Section Header */}
       <div className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-[#73CAE5]/20 via-[#8F83FF]/20 to-rose-500/20 border border-white/20 text-xs font-bold text-white uppercase tracking-wider font-mono shadow-sm">
-            <Atom className="w-3.5 h-3.5 text-[#73CAE5]" />
-            <span>A Antecedência Histórica: Da Fissão à Megatonelagem Termonuclear (1942–1952)</span>
+          <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-[#73CAE5]/20 via-[#8F83FF]/20 to-rose-500/20 border border-white/20 text-[11px] sm:text-xs font-bold text-white uppercase tracking-wider font-mono shadow-sm max-w-full">
+            <Atom className="w-3.5 h-3.5 text-[#73CAE5] shrink-0" />
+            <span className="whitespace-normal leading-snug">A Antecedência Histórica: Da Fissão à Megatonelagem Termonuclear (1942–1952)</span>
           </div>
 
           {/* Tab Selector & Standalone Page Links */}
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="inline-flex items-center bg-[#151515] border border-white/15 rounded-xl p-1 text-xs font-semibold">
+          <div className="flex flex-wrap items-center gap-2 max-sm:w-full">
+            <div className="w-full sm:w-auto flex flex-wrap sm:inline-flex items-center gap-1 sm:gap-0 bg-[#151515] border border-white/15 rounded-xl p-1 text-xs font-semibold">
               <button
                 onClick={() => setActiveTab('both')}
-                className={`px-3 py-1.5 rounded-lg transition-all ${
+                className={`flex-1 sm:flex-none min-h-[40px] sm:min-h-0 px-3 py-1.5 rounded-lg transition-all flex items-center justify-center ${
                   activeTab === 'both'
                     ? 'bg-white/15 text-white shadow font-bold'
                     : 'text-neutral-400 hover:text-white'
@@ -123,44 +123,44 @@ export const IvyMikeManhattanSection: React.FC<IvyMikeManhattanSectionProps> = (
               </button>
               <button
                 onClick={() => setActiveTab('ivy-mike')}
-                className={`px-3 py-1.5 rounded-lg transition-all flex items-center space-x-1.5 ${
+                className={`flex-1 sm:flex-none min-h-[40px] sm:min-h-0 px-3 py-1.5 rounded-lg transition-all flex items-center justify-center space-x-1.5 ${
                   activeTab === 'ivy-mike'
                     ? 'bg-[#73CAE5]/20 text-[#73CAE5] border border-[#73CAE5]/40 shadow font-bold'
                     : 'text-neutral-400 hover:text-white'
                 }`}
               >
-                <Zap className="w-3 h-3 text-[#73CAE5]" />
+                <Zap className="w-3 h-3 text-[#73CAE5] shrink-0" />
                 <span>Ivy Mike</span>
               </button>
               <button
                 onClick={() => setActiveTab('manhattan')}
-                className={`px-3 py-1.5 rounded-lg transition-all flex items-center space-x-1.5 ${
+                className={`flex-1 sm:flex-none min-h-[40px] sm:min-h-0 px-3 py-1.5 rounded-lg transition-all flex items-center justify-center space-x-1.5 ${
                   activeTab === 'manhattan'
                     ? 'bg-[#8F83FF]/20 text-[#8F83FF] border border-[#8F83FF]/40 shadow font-bold'
                     : 'text-neutral-400 hover:text-white'
                 }`}
               >
-                <Atom className="w-3 h-3 text-[#8F83FF]" />
+                <Atom className="w-3 h-3 text-[#8F83FF] shrink-0" />
                 <span>Projeto Manhattan</span>
               </button>
             </div>
 
             {onNavigate && (
-              <div className="hidden sm:flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                 <button
                   onClick={() => onNavigate('ivy-mike')}
-                  className="px-2.5 py-1.5 rounded-xl bg-[#73CAE5]/10 hover:bg-[#73CAE5]/20 border border-[#73CAE5]/30 text-[#73CAE5] text-xs font-medium flex items-center space-x-1.5 transition-colors"
+                  className="flex-1 sm:flex-none justify-center min-h-[40px] sm:min-h-0 px-2.5 py-1.5 rounded-xl bg-[#73CAE5]/10 hover:bg-[#73CAE5]/20 border border-[#73CAE5]/30 text-[#73CAE5] text-xs font-medium flex items-center space-x-1.5 transition-colors cursor-pointer"
                   title="Abrir página dedicada exclusiva de Ivy Mike"
                 >
-                  <Zap className="w-3.5 h-3.5" />
+                  <Zap className="w-3.5 h-3.5 shrink-0" />
                   <span>Aba Ivy Mike</span>
                 </button>
                 <button
                   onClick={() => onNavigate('manhattan-project')}
-                  className="px-2.5 py-1.5 rounded-xl bg-[#8F83FF]/10 hover:bg-[#8F83FF]/20 border border-[#8F83FF]/30 text-[#8F83FF] text-xs font-medium flex items-center space-x-1.5 transition-colors"
+                  className="flex-1 sm:flex-none justify-center min-h-[40px] sm:min-h-0 px-2.5 py-1.5 rounded-xl bg-[#8F83FF]/10 hover:bg-[#8F83FF]/20 border border-[#8F83FF]/30 text-[#8F83FF] text-xs font-medium flex items-center space-x-1.5 transition-colors cursor-pointer"
                   title="Abrir página dedicada exclusiva do Projeto Manhattan"
                 >
-                  <Atom className="w-3.5 h-3.5" />
+                  <Atom className="w-3.5 h-3.5 shrink-0" />
                   <span>Aba Manhattan</span>
                 </button>
               </div>
@@ -169,7 +169,7 @@ export const IvyMikeManhattanSection: React.FC<IvyMikeManhattanSectionProps> = (
         </div>
 
         <div className="max-w-4xl space-y-2">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white font-display uppercase tracking-tight">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white font-display uppercase tracking-tight leading-tight">
             Ivy Mike & O Projeto Manhattan
           </h2>
           <p className="text-sm sm:text-base text-neutral-300 leading-relaxed font-medium">
@@ -185,11 +185,11 @@ export const IvyMikeManhattanSection: React.FC<IvyMikeManhattanSectionProps> = (
         {/* LEFT COLUMN: IVY MIKE (1952) — TODA A HISTÓRIA DETALHADA */}
         {/* ======================================================== */}
         {(activeTab === 'both' || activeTab === 'ivy-mike') && (
-          <div className="bg-[#111111] border border-[#73CAE5]/30 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative overflow-hidden">
+          <div className="bg-[#111111] border border-[#73CAE5]/30 rounded-3xl p-4 sm:p-8 space-y-6 shadow-2xl relative overflow-hidden">
             {/* Top Badge */}
             <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-white/10">
               <div className="inline-flex items-center space-x-2 text-xs font-mono font-bold text-[#73CAE5] uppercase tracking-wider bg-[#73CAE5]/10 px-3 py-1 rounded-full border border-[#73CAE5]/30">
-                <Zap className="w-3.5 h-3.5" />
+                <Zap className="w-3.5 h-3.5 shrink-0" />
                 <span>O 1º Teste Termonuclear da História • 1952</span>
               </div>
               <span className="text-xs font-mono text-neutral-400 font-bold bg-white/5 px-2.5 py-1 rounded-lg border border-white/10">
@@ -199,7 +199,7 @@ export const IvyMikeManhattanSection: React.FC<IvyMikeManhattanSectionProps> = (
 
             {/* Title & Introduction */}
             <div className="space-y-2">
-              <h3 className="text-2xl sm:text-3xl font-black text-white font-display">
+              <h3 className="text-xl sm:text-3xl font-black text-white font-display">
                 O Teste Ivy Mike (1º de Novembro de 1952)
               </h3>
               <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
@@ -233,7 +233,7 @@ export const IvyMikeManhattanSection: React.FC<IvyMikeManhattanSectionProps> = (
                   <span className="text-[10px] font-mono text-[#73CAE5] font-bold block uppercase">
                     Foto Histórica Oficial • Acervo Los Alamos / DOE
                   </span>
-                  <p className="font-semibold truncate">Nuvem cogumelo de Ivy Mike atingindo 41 km de altitude</p>
+                  <p className="font-semibold max-sm:whitespace-normal break-words sm:truncate">Nuvem cogumelo de Ivy Mike atingindo 41 km de altitude</p>
                 </div>
 
                 <div className="absolute top-3 right-3 p-2 rounded-full bg-black/70 text-white backdrop-blur-md opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all">
@@ -326,11 +326,11 @@ export const IvyMikeManhattanSection: React.FC<IvyMikeManhattanSectionProps> = (
         {/* RIGHT COLUMN: PROJETO MANHATTAN (1942–1945) — COMPLETO    */}
         {/* ======================================================== */}
         {(activeTab === 'both' || activeTab === 'manhattan') && (
-          <div className="bg-[#111111] border border-[#8F83FF]/30 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative overflow-hidden">
+          <div className="bg-[#111111] border border-[#8F83FF]/30 rounded-3xl p-4 sm:p-8 space-y-6 shadow-2xl relative overflow-hidden">
             {/* Top Badge */}
             <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-white/10">
               <div className="inline-flex items-center space-x-2 text-xs font-mono font-bold text-[#8F83FF] uppercase tracking-wider bg-[#8F83FF]/10 px-3 py-1 rounded-full border border-[#8F83FF]/30">
-                <Atom className="w-3.5 h-3.5" />
+                <Atom className="w-3.5 h-3.5 shrink-0" />
                 <span>A Gênese Nuclear • 1942 a 1945</span>
               </div>
               <span className="text-xs font-mono text-neutral-400 font-bold bg-white/5 px-2.5 py-1 rounded-lg border border-white/10">
@@ -340,7 +340,7 @@ export const IvyMikeManhattanSection: React.FC<IvyMikeManhattanSectionProps> = (
 
             {/* Title & Introduction */}
             <div className="space-y-2">
-              <h3 className="text-2xl sm:text-3xl font-black text-white font-display">
+              <h3 className="text-xl sm:text-3xl font-black text-white font-display">
                 O Projeto Manhattan & Os Pioneiros
               </h3>
               <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
@@ -374,7 +374,7 @@ export const IvyMikeManhattanSection: React.FC<IvyMikeManhattanSectionProps> = (
                   <span className="text-[10px] font-mono text-[#8F83FF] font-bold block uppercase">
                     Foto Histórica Oficial • Trinity Site, Jornada del Muerto (EUA)
                   </span>
-                  <p className="font-semibold truncate">Teste Trinity: Bola de fogo de 21 kt que inaugurou a Era Atômica</p>
+                  <p className="font-semibold max-sm:whitespace-normal break-words sm:truncate">Teste Trinity: Bola de fogo de 21 kt que inaugurou a Era Atômica</p>
                 </div>
 
                 <div className="absolute top-3 right-3 p-2 rounded-full bg-black/70 text-white backdrop-blur-md opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all">
@@ -399,9 +399,9 @@ export const IvyMikeManhattanSection: React.FC<IvyMikeManhattanSectionProps> = (
                     key={idx}
                     className="p-3 rounded-xl bg-white/[0.02] border border-white/10 hover:border-[#8F83FF]/50 transition-colors space-y-1"
                   >
-                    <div className="flex items-center justify-between gap-1">
-                      <span className="text-xs font-bold text-white truncate">{p.name}</span>
-                      <span className="text-[9px] font-mono font-bold text-[#8F83FF] bg-[#8F83FF]/15 px-1.5 py-0.5 rounded shrink-0">
+                    <div className="flex flex-wrap items-center justify-between gap-1.5 min-w-0">
+                      <span className="text-xs font-bold text-white max-sm:whitespace-normal break-words sm:truncate">{p.name}</span>
+                      <span className="text-[9px] font-mono font-bold text-[#8F83FF] bg-[#8F83FF]/15 px-1.5 py-0.5 rounded max-sm:whitespace-normal sm:shrink-0">
                         {p.tag}
                       </span>
                     </div>
@@ -551,16 +551,16 @@ export const IvyMikeManhattanSection: React.FC<IvyMikeManhattanSectionProps> = (
               </div>
 
               {/* Memorials & Peace Legacy */}
-              <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/10 flex items-center justify-between gap-3 text-xs">
-                <div className="space-y-0.5">
+              <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                <div className="space-y-0.5 min-w-0">
                   <span className="text-[10px] font-mono text-neutral-400 uppercase font-semibold">
                     Memoriais Históricos de Paz
                   </span>
-                  <p className="text-neutral-300 text-[11px]">
+                  <p className="text-neutral-300 text-[11px] leading-relaxed">
                     O Genbaku Dome em Hiroshima e a Estátua da Paz em Nagasaki permanecem como símbolos eternos da busca global pela não-proliferação e paz mundial.
                   </p>
                 </div>
-                <div className="flex items-center gap-1.5 shrink-0">
+                <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
                   <button
                     onClick={() =>
                       onOpenLightbox({
@@ -570,10 +570,11 @@ export const IvyMikeManhattanSection: React.FC<IvyMikeManhattanSectionProps> = (
                         details: 'Tombado como Patrimônio Mundial da UNESCO, o monumento serve como memorial perpétuo pela paz e pela eliminação definitiva das armas nucleares.'
                       })
                     }
-                    className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-white transition-colors"
+                    className="min-w-[42px] min-h-[42px] sm:min-w-0 sm:min-h-0 flex items-center justify-center p-2 sm:p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-white transition-colors cursor-pointer"
                     title="Ver Cúpula Genbaku"
+                    aria-label="Ver Cúpula Genbaku"
                   >
-                    <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
+                    <Maximize2 className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-amber-400" />
                   </button>
                   <button
                     onClick={() =>
@@ -584,10 +585,11 @@ export const IvyMikeManhattanSection: React.FC<IvyMikeManhattanSectionProps> = (
                         details: 'A mão direita aponta para o perigo das armas nucleares e a esquerda estende-se em sinal de paz eterna e esperança para as futuras gerações.'
                       })
                     }
-                    className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-white transition-colors"
+                    className="min-w-[42px] min-h-[42px] sm:min-w-0 sm:min-h-0 flex items-center justify-center p-2 sm:p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-white transition-colors cursor-pointer"
                     title="Ver Memorial de Nagasaki"
+                    aria-label="Ver Memorial de Nagasaki"
                   >
-                    <Maximize2 className="w-3.5 h-3.5 text-rose-400" />
+                    <Maximize2 className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-rose-400" />
                   </button>
                 </div>
               </div>

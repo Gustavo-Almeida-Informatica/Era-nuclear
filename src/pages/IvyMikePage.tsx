@@ -88,27 +88,27 @@ export const IvyMikePage: React.FC<IvyMikePageProps> = ({ onNavigate }) => {
   ];
 
   return (
-    <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 lg:space-y-20">
+    <div className="pt-24 sm:pt-28 pb-16 sm:pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-16 lg:space-y-20">
       {/* Header */}
       <div className="space-y-4 max-w-4xl">
         <div className="flex flex-wrap items-center gap-3">
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#73CAE5]/15 border border-[#73CAE5]/35 text-xs font-bold text-[#73CAE5] uppercase tracking-wider font-mono">
-            <Zap className="w-3.5 h-3.5" />
-            <span>O 1º Teste Termonuclear da História • Operação Ivy (1952)</span>
+          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#73CAE5]/15 border border-[#73CAE5]/35 text-xs font-bold text-[#73CAE5] uppercase tracking-wider font-mono max-w-full">
+            <Zap className="w-3.5 h-3.5 shrink-0" />
+            <span className="max-sm:whitespace-normal break-words">O 1º Teste Termonuclear da História • Operação Ivy (1952)</span>
           </div>
           <button
             onClick={() => onNavigate('operation-castle')}
-            className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-[#B7B7B7] hover:text-white hover:border-[#73CAE5]/40 transition-colors"
+            className="inline-flex items-center space-x-1.5 px-3 py-1.5 sm:py-1 min-h-[38px] sm:min-h-0 rounded-full bg-white/5 border border-white/10 text-xs text-[#B7B7B7] hover:text-white hover:border-[#73CAE5]/40 transition-colors text-left"
           >
-            <Zap className="w-3 h-3 text-[#73CAE5]" />
+            <Zap className="w-3 h-3 text-[#73CAE5] shrink-0" />
             <span>Ver Sucessora: Operação Castle (1954)</span>
           </button>
         </div>
 
-        <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white font-display tracking-tight uppercase leading-none">
+        <h1 className="text-3xl sm:text-5xl lg:text-7xl font-extrabold text-white font-display tracking-tight uppercase leading-none break-words">
           Ivy Mike <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#73CAE5] via-teal-300 to-[#8F83FF] font-mono">(10,4 Mt)</span>
         </h1>
-        <p className="text-lg sm:text-xl text-transparent bg-clip-text bg-gradient-to-r from-white via-[#B7B7B7] to-[#73CAE5] font-medium font-display">
+        <p className="text-base sm:text-xl text-transparent bg-clip-text bg-gradient-to-r from-white via-[#B7B7B7] to-[#73CAE5] font-medium font-display">
           A primeira detonação termonuclear de fusão da humanidade, que vaporizou uma ilha do Pacífico e provou o conceito Teller-Ulam de implosão por radiação.
         </p>
         <p className="text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
@@ -117,7 +117,7 @@ export const IvyMikePage: React.FC<IvyMikePageProps> = ({ onNavigate }) => {
       </div>
 
       {/* Quick Specs Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-6 rounded-2xl bg-[#111111] border border-white/10 shadow-xl">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-[#111111] border border-white/10 shadow-xl">
         <div className="space-y-1">
           <span className="text-xs text-[#B7B7B7] uppercase font-mono">Data & Horário</span>
           <p className="text-lg sm:text-2xl font-bold text-white font-mono">01 Nov 1952 • 07:15</p>
@@ -137,9 +137,10 @@ export const IvyMikePage: React.FC<IvyMikePageProps> = ({ onNavigate }) => {
       </div>
 
       {/* Hero Image Section */}
-      <section className="bg-[#111111] border border-white/10 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-7 space-y-4">
+      <section className="bg-[#111111] border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-10 shadow-2xl space-y-8">
+        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 items-center">
+          {/* Text narrative (order-2 on mobile, order-1 on desktop) */}
+          <div className="order-2 lg:order-1 lg:col-span-7 w-full space-y-4">
             <div className="inline-flex items-center space-x-2 text-xs font-mono font-bold text-[#73CAE5] uppercase tracking-wider bg-[#73CAE5]/10 px-3 py-1 rounded-full border border-[#73CAE5]/30">
               <Zap className="w-3.5 h-3.5" />
               <span>Fotografia Histórica Documental</span>
@@ -153,7 +154,7 @@ export const IvyMikePage: React.FC<IvyMikePageProps> = ({ onNavigate }) => {
             <p className="text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
               O topo da nuvem espalhou-se horizontalmente criando uma abóbada com mais de <strong>160 km de diâmetro</strong>, bloqueando a luz solar sobre todo o atol.
             </p>
-            <div className="grid grid-cols-2 gap-3 text-xs pt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-2">
               <div className="p-3 rounded-xl bg-white/[0.03] border border-white/10">
                 <span className="text-neutral-400 block font-mono text-[10px] uppercase">Bola de Fogo</span>
                 <span className="text-amber-400 font-bold text-sm">5,2 km de diâmetro</span>
@@ -165,7 +166,8 @@ export const IvyMikePage: React.FC<IvyMikePageProps> = ({ onNavigate }) => {
             </div>
           </div>
 
-          <div className="lg:col-span-5 space-y-2">
+          {/* Historical Photograph (order-1 on mobile, order-2 on desktop) */}
+          <div className="order-1 lg:order-2 lg:col-span-5 w-full space-y-2">
             <div
               onClick={() =>
                 setLightboxImg({
@@ -186,7 +188,7 @@ export const IvyMikePage: React.FC<IvyMikePageProps> = ({ onNavigate }) => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
               <div className="absolute bottom-3 left-3 right-3 text-xs text-white">
-                <p className="font-semibold truncate">Nuvem do disparo Ivy Mike (10,4 Mt)</p>
+                <p className="font-semibold whitespace-normal break-words leading-snug">Nuvem do disparo Ivy Mike (10,4 Mt)</p>
               </div>
               <div className="absolute top-3 right-3 p-2 rounded-full bg-black/70 text-white opacity-90 group-hover:opacity-100 transition-opacity">
                 <Maximize2 className="w-4 h-4 text-[#73CAE5]" />
@@ -201,7 +203,7 @@ export const IvyMikePage: React.FC<IvyMikePageProps> = ({ onNavigate }) => {
 
       {/* Deep Dive 3-Column Technical Breakdown */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="p-6 rounded-2xl bg-[#111111] border border-white/10 space-y-3">
+        <div className="p-4 sm:p-6 rounded-2xl bg-[#111111] border border-white/10 space-y-3">
           <div className="w-10 h-10 rounded-xl bg-[#73CAE5]/10 border border-[#73CAE5]/30 flex items-center justify-center text-[#73CAE5]">
             <Layers className="w-5 h-5" />
           </div>
@@ -211,7 +213,7 @@ export const IvyMikePage: React.FC<IvyMikePageProps> = ({ onNavigate }) => {
           </p>
         </div>
 
-        <div className="p-6 rounded-2xl bg-[#111111] border border-rose-500/20 space-y-3">
+        <div className="p-4 sm:p-6 rounded-2xl bg-[#111111] border border-rose-500/20 space-y-3">
           <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400">
             <AlertTriangle className="w-5 h-5" />
           </div>
@@ -221,7 +223,7 @@ export const IvyMikePage: React.FC<IvyMikePageProps> = ({ onNavigate }) => {
           </p>
         </div>
 
-        <div className="p-6 rounded-2xl bg-[#111111] border border-amber-500/20 space-y-3">
+        <div className="p-4 sm:p-6 rounded-2xl bg-[#111111] border border-amber-500/20 space-y-3">
           <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
             <Sparkles className="w-5 h-5" />
           </div>
@@ -251,19 +253,19 @@ export const IvyMikePage: React.FC<IvyMikePageProps> = ({ onNavigate }) => {
           {ivyMikePhysicists.map((p, idx) => (
             <div
               key={idx}
-              className={`p-5 rounded-2xl bg-[#111111] border transition-all space-y-3 flex flex-col justify-between ${
+              className={`p-4 sm:p-5 rounded-2xl bg-[#111111] border transition-all space-y-3 flex flex-col justify-between ${
                 p.highlight
                   ? 'border-[#73CAE5]/60 bg-gradient-to-br from-[#73CAE5]/10 via-[#111111] to-[#111111] shadow-xl shadow-[#73CAE5]/10'
                   : 'border-white/10 hover:border-[#73CAE5]/40'
               }`}
             >
               <div className="space-y-2">
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <h3 className="font-bold text-white text-base font-display">{p.name}</h3>
-                    <span className="text-xs text-[#73CAE5] block font-medium mt-0.5 leading-tight">{p.role}</span>
+                <div className="flex flex-wrap items-start justify-between gap-2 min-w-0">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-bold text-white text-base font-display break-words">{p.name}</h3>
+                    <span className="text-xs text-[#73CAE5] block font-medium mt-0.5 leading-tight break-words">{p.role}</span>
                   </div>
-                  <span className="text-[10px] font-mono font-bold text-[#73CAE5] bg-[#73CAE5]/15 border border-[#73CAE5]/30 px-2 py-0.5 rounded-full shrink-0">
+                  <span className="text-[10px] font-mono font-bold text-[#73CAE5] bg-[#73CAE5]/15 border border-[#73CAE5]/30 px-2 py-0.5 rounded-full max-w-full whitespace-normal sm:whitespace-nowrap sm:shrink-0">
                     {p.tag}
                   </span>
                 </div>
@@ -275,34 +277,34 @@ export const IvyMikePage: React.FC<IvyMikePageProps> = ({ onNavigate }) => {
       </section>
 
       {/* Cross-Roads Navigation Banner */}
-      <section className="p-6 sm:p-10 rounded-3xl bg-gradient-to-br from-[#121212] via-[#121b22] to-[#0D0D0D] border border-[#73CAE5]/30 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 shadow-2xl">
+      <section className="p-4 sm:p-10 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-[#121212] via-[#121b22] to-[#0D0D0D] border border-[#73CAE5]/30 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 shadow-2xl">
         <div className="space-y-2 max-w-2xl">
           <div className="inline-flex items-center space-x-2 text-xs font-bold text-[#73CAE5] uppercase font-mono px-3 py-1 rounded-full bg-[#73CAE5]/15 border border-[#73CAE5]/30">
-            <Atom className="w-3.5 h-3.5" />
+            <Atom className="w-3.5 h-3.5 shrink-0" />
             <span>Continuidade Histórica</span>
           </div>
-          <h3 className="text-2xl sm:text-3xl font-extrabold text-white font-display">
+          <h3 className="text-xl sm:text-3xl font-extrabold text-white font-display">
             Da Fusão Criogênica ao Combustível Sólido (Castle Bravo)
           </h3>
           <p className="text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
             Ivy Mike provou a fusão termonuclear, mas o deutério líquido era impraticável em combate. Em 1954, os EUA testaram o deutereto de lítio sólido na Operação Castle, atingindo 15 Mt com Castle Bravo.
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-3 shrink-0">
+        <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 w-full lg:w-auto shrink-0">
           <button
             onClick={() => onNavigate('manhattan-project')}
-            className="inline-flex items-center space-x-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs transition-colors"
+            className="w-full sm:w-auto justify-center inline-flex items-center space-x-2 px-5 py-3 min-h-[44px] sm:min-h-0 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs transition-colors"
           >
-            <Atom className="w-4 h-4 text-[#8F83FF]" />
+            <Atom className="w-4 h-4 text-[#8F83FF] shrink-0" />
             <span>Ver Projeto Manhattan (1942–1945)</span>
           </button>
           <button
             onClick={() => onNavigate('operation-castle')}
-            className="inline-flex items-center space-x-2 px-5 py-3 rounded-xl bg-gradient-to-r from-[#73CAE5] to-teal-500 text-black font-bold text-xs hover:shadow-lg hover:shadow-[#73CAE5]/20 active:scale-95 transition-all"
+            className="w-full sm:w-auto justify-center inline-flex items-center space-x-2 px-5 py-3 min-h-[44px] sm:min-h-0 rounded-xl bg-gradient-to-r from-[#73CAE5] to-teal-500 text-black font-bold text-xs hover:shadow-lg hover:shadow-[#73CAE5]/20 active:scale-95 transition-all"
           >
-            <Zap className="w-4 h-4 text-black" />
+            <Zap className="w-4 h-4 text-black shrink-0" />
             <span>Acessar Operação Castle</span>
-            <ChevronRight className="w-4 h-4 text-black/80" />
+            <ChevronRight className="w-4 h-4 text-black/80 shrink-0" />
           </button>
         </div>
       </section>
@@ -310,21 +312,22 @@ export const IvyMikePage: React.FC<IvyMikePageProps> = ({ onNavigate }) => {
       {/* Lightbox Modal */}
       {lightboxImg && (
         <div
-          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-150"
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-150"
           onClick={() => setLightboxImg(null)}
         >
-          <div className="max-w-4xl w-full bg-[#141414] border border-white/15 rounded-2xl overflow-hidden shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
+          <div className="max-w-4xl w-full max-h-[90dvh] overflow-y-auto bg-[#141414] border border-white/15 rounded-2xl shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => setLightboxImg(null)}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/70 text-white hover:bg-black transition-colors"
+              aria-label="Fechar imagem"
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 w-11 h-11 flex items-center justify-center rounded-full bg-black/80 text-white hover:bg-black transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
-            <div className="max-h-[68vh] flex items-center justify-center bg-black overflow-hidden">
+            <div className="max-h-[60vh] sm:max-h-[68vh] flex items-center justify-center bg-black overflow-hidden">
               <img src={lightboxImg.url} alt={lightboxImg.title} referrerPolicy="no-referrer" className="max-h-full max-w-full object-contain" />
             </div>
             <div className="p-4 sm:p-5 space-y-1 bg-[#111111] border-t border-white/10 text-xs">
-              <h4 className="font-bold text-white font-display text-base">{lightboxImg.title}</h4>
+              <h4 className="font-bold text-white font-display text-sm sm:text-base">{lightboxImg.title}</h4>
               {lightboxImg.caption && <p className="text-[#B7B7B7] leading-relaxed">{lightboxImg.caption}</p>}
               {lightboxImg.details && <p className="text-white/80 font-mono text-[11px] pt-1">{lightboxImg.details}</p>}
             </div>

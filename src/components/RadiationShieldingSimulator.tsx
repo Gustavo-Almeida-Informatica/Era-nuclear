@@ -42,7 +42,7 @@ export const RadiationShieldingSimulator: React.FC = () => {
   };
 
   return (
-    <div className="bg-[#121212] border border-white/10 rounded-2xl p-6 shadow-2xl space-y-6">
+    <div className="bg-[#121212] border border-white/10 rounded-2xl p-4 sm:p-6 shadow-2xl space-y-6">
       <div>
         <div className="flex items-center space-x-2">
           <Shield className="w-5 h-5 text-[#73CAE5]" />
@@ -56,18 +56,18 @@ export const RadiationShieldingSimulator: React.FC = () => {
       </div>
 
       {/* Radiation selection chips */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+      <div className="grid grid-cols-1 min-[360px]:grid-cols-2 sm:grid-cols-4 gap-2.5">
         {radiationTypes.map((rad, idx) => (
           <button
             key={rad.name}
             onClick={() => setSelectedRadiation(idx)}
-            className={`p-3 rounded-xl text-left border transition-all ${
+            className={`min-h-[44px] p-3 rounded-xl text-left border transition-all cursor-pointer ${
               selectedRadiation === idx
                 ? 'bg-gradient-to-br from-[#73CAE5]/20 to-[#8F83FF]/20 border-[#73CAE5] text-white shadow-lg shadow-[#73CAE5]/10'
                 : 'bg-white/[0.03] border-white/10 text-[#B7B7B7] hover:border-white/25 hover:text-white'
             }`}
           >
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-1">
               <span className="font-bold text-sm font-mono text-[#73CAE5]">{rad.symbol.split(' ')[0]}</span>
               <span className="text-[10px] uppercase font-semibold text-white/50">{rad.charge}</span>
             </div>
@@ -109,7 +109,7 @@ export const RadiationShieldingSimulator: React.FC = () => {
                 </p>
               </div>
 
-              <div className="pt-2 border-t border-white/10 text-[10px] flex items-center justify-between text-[#B7B7B7]">
+              <div className="pt-2 border-t border-white/10 text-[10px] flex flex-wrap items-center justify-between gap-1 text-[#B7B7B7]">
                 <span>Atenuação:</span>
                 <span className="font-mono font-bold text-white">{result.percentageBlocked}%</span>
               </div>

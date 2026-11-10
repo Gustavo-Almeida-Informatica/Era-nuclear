@@ -33,32 +33,32 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
   const activeApp = energyApplications.find((a) => a.id === selectedAppId) || energyApplications[0];
 
   return (
-    <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
+    <div className="pt-24 sm:pt-28 pb-16 sm:pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-20">
       {/* Header */}
       <div className="max-w-3xl space-y-4">
         <div className="flex flex-wrap items-center gap-2">
           <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-xs font-semibold text-emerald-400">
-            <Zap className="w-3.5 h-3.5" />
+            <Zap className="w-3.5 h-3.5 shrink-0" />
             <span>Aplicações Pacíficas & Transição Energética</span>
           </div>
           <a
             href="#fusion-reactors"
-            className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-[#8F83FF]/15 border border-[#8F83FF]/30 text-xs font-semibold text-[#8F83FF] hover:bg-[#8F83FF]/25 transition-colors"
+            className="inline-flex items-center space-x-1.5 px-3 py-1.5 sm:py-1 rounded-full bg-[#8F83FF]/15 border border-[#8F83FF]/30 text-xs font-semibold text-[#8F83FF] hover:bg-[#8F83FF]/25 transition-colors min-h-[38px] sm:min-h-0 max-w-full"
           >
             <span>Ver Reatores de Fusão (ITER, SPARC, W7-X)</span>
-            <ChevronRight className="w-3.5 h-3.5" />
+            <ChevronRight className="w-3.5 h-3.5 shrink-0" />
           </a>
         </div>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-white font-display tracking-tight">
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-white font-display tracking-tight">
           Energia Nuclear Civil
         </h1>
-        <p className="text-base text-[#B7B7B7] leading-relaxed">
+        <p className="text-sm sm:text-base text-[#B7B7B7] leading-relaxed">
           Muito além dos arsenais bélicos, a física do átomo impulsiona a medicina oncológica moderna, a segurança alimentar contra pragas, a exploração do espaço profundo, centenas de usinas de fissão comercial e a promissora fronteira dos <strong>reatores de fusão termonuclear</strong>.
         </p>
       </div>
 
       {/* Peaceful Applications Interactive Hub */}
-      <section className="space-y-8">
+      <section className="space-y-6 sm:space-y-8">
         <div className="space-y-2">
           <span className="text-xs font-bold uppercase tracking-wider text-[#73CAE5] font-mono">
             Setores de Aplicação Civil
@@ -69,12 +69,12 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
         </div>
 
         {/* Application Selector Buttons */}
-        <div className="flex flex-wrap gap-2.5">
+        <div className="grid grid-cols-1 sm:flex sm:flex-wrap gap-2 sm:gap-2.5">
           {energyApplications.map((app) => (
             <button
               key={app.id}
               onClick={() => setSelectedAppId(app.id)}
-              className={`px-4 py-2.5 rounded-xl text-xs font-semibold transition-all border ${
+              className={`w-full sm:w-auto min-h-[44px] sm:min-h-0 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all border text-left sm:text-center cursor-pointer ${
                 selectedAppId === app.id
                   ? 'bg-gradient-to-r from-[#73CAE5]/20 to-[#8F83FF]/20 border-[#73CAE5] text-white shadow-lg shadow-[#73CAE5]/10 font-bold'
                   : 'bg-white/5 border-white/5 text-[#B7B7B7] hover:border-white/20 hover:text-white'
@@ -86,13 +86,13 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
         </div>
 
         {/* Selected Application Card */}
-        <div className="bg-[#111111] border border-white/10 rounded-2xl p-6 sm:p-10 shadow-2xl space-y-6">
+        <div className="bg-[#111111] border border-white/10 rounded-2xl p-4 sm:p-10 shadow-2xl space-y-6 min-w-0 max-w-full">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-white/10">
-            <div>
+            <div className="min-w-0">
               <span className="text-xs font-mono uppercase tracking-wider text-[#8F83FF]">
                 {activeApp.category}
               </span>
-              <h3 className="text-2xl font-bold text-white font-display mt-0.5">
+              <h3 className="text-xl sm:text-2xl font-bold text-white font-display mt-0.5 break-words">
                 {activeApp.title}
               </h3>
             </div>
@@ -144,7 +144,7 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
 
           {/* Fission Reactor Scale Model Visual Showcase */}
           {activeApp.id === 'geracao-eletricidade' && (
-            <div className="pt-4 border-t border-white/10 grid grid-cols-1 md:grid-cols-12 gap-6 items-center bg-white/[0.02] p-5 rounded-xl">
+            <div className="pt-4 border-t border-white/10 grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-6 items-center bg-white/[0.02] p-3.5 sm:p-5 rounded-xl">
               <div className="md:col-span-4 flex justify-center">
                 <div
                   onClick={() =>
@@ -160,20 +160,20 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
                     src={fissionReactorModelImg}
                     alt="Maquete em corte de reator nuclear de fissão PWR"
                     referrerPolicy="no-referrer"
-                    className="h-72 w-auto object-contain p-2 group-hover:scale-105 transition-transform duration-500"
+                    className="h-72 w-auto max-w-full object-contain p-2 group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-40 group-hover:opacity-20 transition-opacity" />
                   <div className="absolute top-2.5 right-2.5 p-1.5 rounded-full bg-black/70 text-white opacity-0 group-hover:opacity-100 transition-opacity">
                     <Maximize2 className="w-3.5 h-3.5" />
                   </div>
-                  <div className="absolute bottom-2 left-2 right-2 bg-black/80 px-2.5 py-1 rounded text-[10px] text-white flex justify-between items-center">
-                    <span className="font-mono">Maquete PWR Naval / Civil</span>
-                    <span className="text-amber-400 font-semibold">Ampliar</span>
+                  <div className="absolute bottom-2 left-2 right-2 bg-black/80 px-2.5 py-1 rounded text-[10px] text-white flex justify-between items-center gap-2">
+                    <span className="font-mono truncate">Maquete PWR Naval / Civil</span>
+                    <span className="text-amber-400 font-semibold shrink-0">Ampliar</span>
                   </div>
                 </div>
               </div>
-              <div className="md:col-span-8 space-y-3 text-xs text-[#B7B7B7] leading-relaxed">
-                <div className="inline-flex items-center space-x-2 px-2.5 py-0.5 rounded bg-amber-500/10 text-amber-300 text-[11px] font-mono font-bold border border-amber-500/20">
+              <div className="md:col-span-8 space-y-3 text-xs text-[#B7B7B7] leading-relaxed min-w-0">
+                <div className="inline-flex flex-wrap items-center gap-x-2 gap-y-0.5 px-2.5 py-0.5 rounded bg-amber-500/10 text-amber-300 text-[11px] font-mono font-bold border border-amber-500/20 max-w-full">
                   <span>FOTO REAL DA MAQUETE EM CORTE</span>
                   <span>•</span>
                   <span>REATOR DE FISSÃO PWR</span>
@@ -195,7 +195,7 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
 
           {/* Fusion Reactor Showcase */}
           {activeApp.id === 'reatores-fusao' && (
-            <div className="pt-4 border-t border-white/10 grid grid-cols-1 md:grid-cols-12 gap-6 items-center bg-white/[0.02] p-5 rounded-xl">
+            <div className="pt-4 border-t border-white/10 grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-6 items-center bg-white/[0.02] p-3.5 sm:p-5 rounded-xl">
               <div className="md:col-span-5">
                 <div
                   onClick={() =>
@@ -217,14 +217,14 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
                   <div className="absolute top-2.5 right-2.5 p-1.5 rounded-full bg-black/70 text-white opacity-0 group-hover:opacity-100 transition-opacity">
                     <Maximize2 className="w-3.5 h-3.5" />
                   </div>
-                  <div className="absolute bottom-2 left-2 right-2 bg-black/80 px-2 py-1 rounded text-[10px] text-white flex justify-between items-center">
-                    <span className="font-mono">ITER Tokamak • Cadarache</span>
-                    <span className="text-[#8F83FF] font-semibold">Ampliar</span>
+                  <div className="absolute bottom-2 left-2 right-2 bg-black/80 px-2 py-1 rounded text-[10px] text-white flex justify-between items-center gap-2">
+                    <span className="font-mono truncate">ITER Tokamak • Cadarache</span>
+                    <span className="text-[#8F83FF] font-semibold shrink-0">Ampliar</span>
                   </div>
                 </div>
               </div>
-              <div className="md:col-span-7 space-y-3 text-xs text-[#B7B7B7] leading-relaxed">
-                <div className="inline-flex items-center space-x-2 px-2.5 py-0.5 rounded bg-[#8F83FF]/15 text-[#8F83FF] text-[11px] font-mono font-bold border border-[#8F83FF]/30">
+              <div className="md:col-span-7 space-y-3 text-xs text-[#B7B7B7] leading-relaxed min-w-0">
+                <div className="inline-flex flex-wrap items-center gap-x-2 gap-y-0.5 px-2.5 py-0.5 rounded bg-[#8F83FF]/15 text-[#8F83FF] text-[11px] font-mono font-bold border border-[#8F83FF]/30 max-w-full">
                   <span>IMAGEM DOCUMENTAL DA GALERIA</span>
                   <span>•</span>
                   <span>FUSÃO MAGNÉTICA ITER</span>
@@ -257,7 +257,7 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
               <Scale className="w-3.5 h-3.5 text-[#73CAE5]" />
               <span>Debate Equilibrado & Transparência</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-display">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-white font-display">
               Nuclear: Risco e Benefício
             </h2>
             <p className="text-xs sm:text-sm text-[#B7B7B7]">
@@ -266,28 +266,28 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
           </div>
 
           {/* Fission vs Fusion Toggle */}
-          <div className="flex rounded-xl bg-white/5 p-1 border border-white/10 shrink-0 self-start md:self-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 rounded-xl bg-white/5 p-1 border border-white/10 w-full sm:w-auto shrink-0 self-start md:self-auto gap-1">
             <button
               onClick={() => setRiskDomainTab('fission')}
-              className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-2 ${
+              className={`px-4 py-2.5 rounded-lg text-xs font-semibold transition-all flex items-center justify-center space-x-2 min-h-[44px] cursor-pointer ${
                 riskDomainTab === 'fission'
                   ? 'bg-gradient-to-r from-amber-500 to-amber-400 text-black font-bold shadow-md'
                   : 'text-[#B7B7B7] hover:text-white'
               }`}
             >
-              <Atom className="w-3.5 h-3.5" />
-              <span>Fissão Comercial (PWR/BWR)</span>
+              <Atom className="w-4 h-4 shrink-0" />
+              <span className="text-center">Fissão Comercial (PWR/BWR)</span>
             </button>
             <button
               onClick={() => setRiskDomainTab('fusion')}
-              className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-2 ${
+              className={`px-4 py-2.5 rounded-lg text-xs font-semibold transition-all flex items-center justify-center space-x-2 min-h-[44px] cursor-pointer ${
                 riskDomainTab === 'fusion'
                   ? 'bg-gradient-to-r from-[#8F83FF] to-[#73CAE5] text-black font-bold shadow-md'
                   : 'text-[#B7B7B7] hover:text-white'
               }`}
             >
-              <Flame className="w-3.5 h-3.5" />
-              <span>Fusão Nuclear (Nova Fronteira)</span>
+              <Flame className="w-4 h-4 shrink-0" />
+              <span className="text-center">Fusão Nuclear (Nova Fronteira)</span>
             </button>
           </div>
         </div>
@@ -296,7 +296,7 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
         {riskDomainTab === 'fission' && (
           <div className="grid grid-cols-1 gap-6">
             {/* Fission Engineering Showcase Card */}
-            <div className="bg-[#111111] border border-amber-500/30 rounded-2xl p-6 sm:p-8 shadow-xl flex flex-col md:flex-row items-center gap-6">
+            <div className="bg-[#111111] border border-amber-500/30 rounded-2xl p-4 sm:p-8 shadow-xl flex flex-col md:flex-row items-center gap-6">
               <div className="w-full md:w-56 shrink-0 flex justify-center">
                 <div
                   onClick={() =>
@@ -312,20 +312,20 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
                     src={fissionReactorModelImg}
                     alt="Maquete em corte de reator nuclear de fissão PWR"
                     referrerPolicy="no-referrer"
-                    className="h-full w-auto object-contain p-2 group-hover:scale-105 transition-transform duration-500"
+                    className="h-full w-auto max-w-full object-contain p-2 group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-40" />
                   <div className="absolute top-2 right-2 p-1.5 rounded-full bg-black/70 text-white opacity-0 group-hover:opacity-100 transition-opacity">
                     <Maximize2 className="w-3.5 h-3.5" />
                   </div>
-                  <div className="absolute bottom-2 left-2 right-2 bg-black/80 px-2 py-1 rounded text-[10px] text-white flex justify-between items-center">
-                    <span>Reator PWR</span>
-                    <span className="text-amber-400 font-semibold">Ampliar</span>
+                  <div className="absolute bottom-2 left-2 right-2 bg-black/80 px-2 py-1 rounded text-[10px] text-white flex justify-between items-center gap-2">
+                    <span className="truncate">Reator PWR</span>
+                    <span className="text-amber-400 font-semibold shrink-0">Ampliar</span>
                   </div>
                 </div>
               </div>
-              <div className="space-y-2 text-xs text-[#B7B7B7] leading-relaxed">
-                <div className="inline-flex items-center space-x-2 px-2.5 py-0.5 rounded bg-amber-500/15 text-amber-400 text-[11px] font-mono font-bold">
+              <div className="space-y-2 text-xs text-[#B7B7B7] leading-relaxed min-w-0">
+                <div className="inline-flex flex-wrap items-center gap-x-2 gap-y-0.5 px-2.5 py-0.5 rounded bg-amber-500/15 text-amber-400 text-[11px] font-mono font-bold max-w-full">
                   <span>ENGENHARIA NUCLEAR CONTEMPORÂNEA</span>
                   <span>•</span>
                   <span>FISSÃO CIVIL</span>
@@ -345,40 +345,40 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
             {risksAndBenefitsMatrix.map((item, idx) => (
               <div
                 key={idx}
-                className="bg-[#111111] border border-white/10 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6"
+                className="bg-[#111111] border border-white/10 rounded-2xl p-4 sm:p-8 shadow-xl space-y-5 sm:space-y-6 min-w-0 max-w-full overflow-hidden"
               >
-                <h3 className="text-lg sm:text-xl font-bold text-white font-display border-b border-white/5 pb-3">
+                <h3 className="text-base sm:text-xl font-bold text-white font-display border-b border-white/5 pb-3 break-words">
                   {item.domain}
                 </h3>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 min-w-0">
                   {/* Benefits column */}
-                  <div className="p-5 rounded-xl bg-emerald-950/15 border border-emerald-500/20 space-y-3">
-                    <div className="flex items-center space-x-2 text-emerald-400 font-bold text-xs uppercase tracking-wider">
-                      <CheckCircle2 className="w-4 h-4" />
-                      <span>Vantagens & Benefícios Comprovados</span>
+                  <div className="p-4 sm:p-5 rounded-xl bg-emerald-950/15 border border-emerald-500/20 space-y-3 min-w-0">
+                    <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs uppercase tracking-wider">
+                      <CheckCircle2 className="w-4 h-4 shrink-0" />
+                      <span className="min-w-0 flex-1">Vantagens & Benefícios Comprovados</span>
                     </div>
                     <ul className="space-y-2 text-xs text-[#B7B7B7]">
                       {item.benefits.map((b, i) => (
-                        <li key={i} className="flex items-start space-x-2">
-                          <span className="text-emerald-400 font-bold">•</span>
-                          <span>{b}</span>
+                        <li key={i} className="flex items-start gap-2 min-w-0">
+                          <span className="text-emerald-400 font-bold shrink-0">•</span>
+                          <span className="min-w-0 flex-1 break-words leading-relaxed">{b}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
 
                   {/* Risks column */}
-                  <div className="p-5 rounded-xl bg-amber-950/15 border border-amber-500/20 space-y-3">
-                    <div className="flex items-center space-x-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
-                      <AlertTriangle className="w-4 h-4" />
-                      <span>Riscos, Desafios & Limitações</span>
+                  <div className="p-4 sm:p-5 rounded-xl bg-amber-950/15 border border-amber-500/20 space-y-3 min-w-0">
+                    <div className="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
+                      <AlertTriangle className="w-4 h-4 shrink-0" />
+                      <span className="min-w-0 flex-1">Riscos, Desafios & Limitações</span>
                     </div>
                     <ul className="space-y-2 text-xs text-[#B7B7B7]">
                       {item.risksAndChallenges.map((r, i) => (
-                        <li key={i} className="flex items-start space-x-2">
-                          <span className="text-amber-400 font-bold">•</span>
-                          <span>{r}</span>
+                        <li key={i} className="flex items-start gap-2 min-w-0">
+                          <span className="text-amber-400 font-bold shrink-0">•</span>
+                          <span className="min-w-0 flex-1 break-words leading-relaxed">{r}</span>
                         </li>
                       ))}
                     </ul>
@@ -393,7 +393,7 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
         {riskDomainTab === 'fusion' && (
           <div className="grid grid-cols-1 gap-6">
             {/* Fusion Tokamak Showcase Card */}
-            <div className="bg-[#111111] border border-[#8F83FF]/30 rounded-2xl p-6 sm:p-8 shadow-xl flex flex-col md:flex-row items-center gap-6">
+            <div className="bg-[#111111] border border-[#8F83FF]/30 rounded-2xl p-4 sm:p-8 shadow-xl flex flex-col md:flex-row items-center gap-6">
               <div className="w-full md:w-64 shrink-0">
                 <div
                   onClick={() =>
@@ -415,14 +415,14 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
                   <div className="absolute top-2 right-2 p-1.5 rounded-full bg-black/70 text-white opacity-0 group-hover:opacity-100 transition-opacity">
                     <Maximize2 className="w-3.5 h-3.5" />
                   </div>
-                  <div className="absolute bottom-2 left-2 right-2 bg-black/80 px-2 py-1 rounded text-[10px] text-white flex justify-between items-center">
-                    <span>Tokamak ITER</span>
-                    <span className="text-[#8F83FF] font-semibold">Ampliar</span>
+                  <div className="absolute bottom-2 left-2 right-2 bg-black/80 px-2 py-1 rounded text-[10px] text-white flex justify-between items-center gap-2">
+                    <span className="truncate">Tokamak ITER</span>
+                    <span className="text-[#8F83FF] font-semibold shrink-0">Ampliar</span>
                   </div>
                 </div>
               </div>
-              <div className="space-y-2 text-xs text-[#B7B7B7] leading-relaxed">
-                <div className="inline-flex items-center space-x-2 px-2.5 py-0.5 rounded bg-[#8F83FF]/15 text-[#8F83FF] text-[11px] font-mono font-bold">
+              <div className="space-y-2 text-xs text-[#B7B7B7] leading-relaxed min-w-0">
+                <div className="inline-flex flex-wrap items-center gap-x-2 gap-y-0.5 px-2.5 py-0.5 rounded bg-[#8F83FF]/15 text-[#8F83FF] text-[11px] font-mono font-bold max-w-full">
                   <span>FRONTEIRA DA FUSÃO TERMONUCLEAR</span>
                   <span>•</span>
                   <span>CONFINAMENTO MAGNÉTICO</span>
@@ -442,57 +442,57 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
             {FUSION_RISKS_AND_BENEFITS.map((item) => (
               <div
                 key={item.id}
-                className="bg-[#111111] border border-white/10 rounded-2xl p-6 sm:p-8 shadow-xl space-y-6 hover:border-white/20 transition-all"
+                className="bg-[#111111] border border-white/10 rounded-2xl p-4 sm:p-8 shadow-xl space-y-5 sm:space-y-6 hover:border-white/20 transition-all min-w-0 max-w-full overflow-hidden"
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/5 pb-3">
-                  <div>
-                    <h3 className="text-lg sm:text-xl font-bold text-white font-display">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/5 pb-3 min-w-0">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-base sm:text-xl font-bold text-white font-display break-words">
                       {item.domain}
                     </h3>
-                    <p className="text-xs text-[#B7B7B7] mt-0.5">{item.summary}</p>
+                    <p className="text-xs text-[#B7B7B7] mt-1 break-words">{item.summary}</p>
                   </div>
-                  <span className="px-3 py-1 rounded bg-white/5 border border-white/10 text-xs font-mono font-semibold text-[#73CAE5] self-start sm:self-auto">
+                  <span className="px-2.5 py-1.5 rounded bg-white/5 border border-white/10 text-[11px] sm:text-xs font-mono font-semibold text-[#73CAE5] self-start sm:self-auto max-w-full whitespace-normal break-words text-left">
                     {item.keyMetric}
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 min-w-0">
                   {/* Benefits column */}
-                  <div className="p-5 rounded-xl bg-emerald-950/15 border border-emerald-500/20 space-y-3">
-                    <div className="flex items-center space-x-2 text-emerald-400 font-bold text-xs uppercase tracking-wider">
-                      <CheckCircle2 className="w-4 h-4" />
-                      <span>Vantagens Físicas & Ambientais da Fusão</span>
+                  <div className="p-4 sm:p-5 rounded-xl bg-emerald-950/15 border border-emerald-500/20 space-y-3 min-w-0">
+                    <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs uppercase tracking-wider">
+                      <CheckCircle2 className="w-4 h-4 shrink-0" />
+                      <span className="min-w-0 flex-1">Vantagens Físicas & Ambientais da Fusão</span>
                     </div>
                     <ul className="space-y-2 text-xs text-[#B7B7B7]">
                       {item.benefits.map((b, i) => (
-                        <li key={i} className="flex items-start space-x-2">
-                          <span className="text-emerald-400 font-bold">•</span>
-                          <span>{b}</span>
+                        <li key={i} className="flex items-start gap-2 min-w-0">
+                          <span className="text-emerald-400 font-bold shrink-0">•</span>
+                          <span className="min-w-0 flex-1 break-words leading-relaxed">{b}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
 
                   {/* Risks column */}
-                  <div className="p-5 rounded-xl bg-amber-950/15 border border-amber-500/20 space-y-3">
-                    <div className="flex items-center space-x-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
-                      <AlertTriangle className="w-4 h-4" />
-                      <span>Desafios de Engenharia & Gargalos Críticos</span>
+                  <div className="p-4 sm:p-5 rounded-xl bg-amber-950/15 border border-amber-500/20 space-y-3 min-w-0">
+                    <div className="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
+                      <AlertTriangle className="w-4 h-4 shrink-0" />
+                      <span className="min-w-0 flex-1">Desafios de Engenharia & Gargalos Críticos</span>
                     </div>
                     <ul className="space-y-2 text-xs text-[#B7B7B7]">
                       {item.risksAndChallenges.map((r, i) => (
-                        <li key={i} className="flex items-start space-x-2">
-                          <span className="text-amber-400 font-bold">•</span>
-                          <span>{r}</span>
+                        <li key={i} className="flex items-start gap-2 min-w-0">
+                          <span className="text-amber-400 font-bold shrink-0">•</span>
+                          <span className="min-w-0 flex-1 break-words leading-relaxed">{r}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                 </div>
 
-                <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs border-t border-white/5">
-                  <span className="text-[#B7B7B7]">Veredito Científico Internacional:</span>
-                  <span className="font-semibold text-white font-mono text-[11px] bg-white/5 px-2.5 py-1 rounded border border-white/10">
+                <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs border-t border-white/5 min-w-0">
+                  <span className="text-[#B7B7B7] shrink-0">Veredito Científico Internacional:</span>
+                  <span className="font-semibold text-white font-mono text-[11px] sm:text-xs bg-white/5 px-2.5 py-1.5 rounded border border-white/10 max-w-full whitespace-normal break-words text-left">
                     {item.verdict}
                   </span>
                 </div>
@@ -504,30 +504,31 @@ export const EnergyPage: React.FC<EnergyPageProps> = ({ onNavigate }) => {
       {/* Lightbox Modal */}
       {lightboxImg && (
         <div
-          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-200"
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-2 sm:p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-200"
           onClick={() => setLightboxImg(null)}
         >
           <div
-            className="max-w-4xl w-full bg-[#141414] border border-white/15 rounded-2xl overflow-hidden shadow-2xl relative space-y-4 p-5"
+            className="max-w-4xl w-full max-h-[90dvh] overflow-y-auto bg-[#141414] border border-white/15 rounded-2xl shadow-2xl relative space-y-4 p-4 sm:p-5"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setLightboxImg(null)}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/70 text-white hover:bg-black transition-colors"
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 w-11 h-11 sm:w-9 sm:h-9 rounded-full bg-black/80 text-white hover:bg-black transition-colors flex items-center justify-center border border-white/15 cursor-pointer"
+              aria-label="Fechar"
             >
               <X className="w-5 h-5" />
             </button>
-            <div className="max-h-[72vh] overflow-hidden flex items-center justify-center bg-black/50 rounded-xl p-2">
+            <div className="max-h-[55vh] sm:max-h-[72vh] overflow-hidden flex items-center justify-center bg-black/50 rounded-xl p-2">
               <img
                 src={lightboxImg.src}
                 alt={lightboxImg.title}
                 referrerPolicy="no-referrer"
-                className="max-h-[70vh] w-auto max-w-full object-contain"
+                className="max-h-[50vh] sm:max-h-[70vh] w-auto max-w-full object-contain"
               />
             </div>
-            <div className="space-y-1 text-xs text-[#B7B7B7]">
-              <h4 className="text-base font-bold text-white font-display">{lightboxImg.title}</h4>
-              <p className="leading-relaxed">{lightboxImg.caption}</p>
+            <div className="space-y-1 text-xs text-[#B7B7B7] min-w-0">
+              <h4 className="text-sm sm:text-base font-bold text-white font-display break-words">{lightboxImg.title}</h4>
+              <p className="leading-relaxed break-words">{lightboxImg.caption}</p>
             </div>
           </div>
         </div>

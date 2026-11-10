@@ -48,17 +48,23 @@ export const AtomCanvasModel: React.FC<AtomCanvasModelProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let width = (canvas.width = canvas.parentElement?.clientWidth || 320);
-    canvas.height = height;
-
-    const handleResize = () => {
+    let width = 320;
+    const updateCanvasSize = () => {
       if (canvas && canvas.parentElement) {
-        width = canvas.width = canvas.parentElement.clientWidth;
+        width = canvas.width = canvas.parentElement.clientWidth || 320;
         canvas.height = height;
       }
     };
 
-    window.addEventListener('resize', handleResize);
+    updateCanvasSize();
+    const resizeObserver =
+      typeof ResizeObserver !== 'undefined' && canvas.parentElement
+        ? new ResizeObserver(updateCanvasSize)
+        : null;
+    if (resizeObserver && canvas.parentElement) {
+      resizeObserver.observe(canvas.parentElement);
+    }
+    window.addEventListener('resize', updateCanvasSize);
 
     const render = () => {
       ctx.clearRect(0, 0, width, height);
@@ -246,15 +252,16 @@ export const AtomCanvasModel: React.FC<AtomCanvasModelProps> = ({
     render();
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      resizeObserver?.disconnect();
+      window.removeEventListener('resize', updateCanvasSize);
       if (animFrameRef.current) {
         cancelAnimationFrame(animFrameRef.current);
       }
     };
-  }, [isotope, isPlaying, speed, height, angleOffset]);
+  }, [isotope, isPlaying, speed, height, angleOffset, showElectrons]);
 
   return (
-    <div className="relative w-full rounded-xl bg-[#090909] border border-white/5 overflow-hidden flex items-center justify-center">
+    <div className="relative w-full rounded-xl bg-[#090909] border border-white/5 overflow-hidden flex flex-col sm:block">
       <canvas
         ref={canvasRef}
         style={{ height: `${height}px` }}
@@ -280,7 +287,7 @@ export const AtomCanvasModel: React.FC<AtomCanvasModelProps> = ({
 
       {/* Particle Legend Overlay */}
       {showLegend && (
-        <div className="absolute bottom-2.5 left-2.5 bg-[#0D0D0D]/90 backdrop-blur-md border border-white/10 rounded-lg px-2.5 py-1.5 text-[10px] space-y-1 z-10 shadow-lg font-mono">
+        <div className="max-sm:static max-sm:w-full max-sm:rounded-none max-sm:border-x-0 max-sm:border-b-0 sm:rounded-lg sm:absolute sm:bottom-2.5 sm:left-2.5 bg-[#0D0D0D]/90 backdrop-blur-md border border-white/10 px-2.5 py-2 sm:py-1.5 text-[10px] space-y-1 z-10 shadow-lg font-mono">
           <div className="flex items-center space-x-1.5">
             <span className="w-2 h-2 rounded-full bg-[#8F83FF]" />
             <span className="text-white/90">Prótons (p⁺): <strong className="text-[#8F83FF]">{isotope.protons}</strong></span>

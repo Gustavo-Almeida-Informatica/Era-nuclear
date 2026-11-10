@@ -40,28 +40,28 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
   ];
 
   return (
-    <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
+    <div className="pt-24 sm:pt-28 pb-16 sm:pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-20">
       {/* Header */}
       <div className="max-w-3xl space-y-4">
         <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-[#73CAE5]">
-          <Atom className="w-3.5 h-3.5" />
+          <Atom className="w-3.5 h-3.5 shrink-0" />
           <span>Projeto Editorial Independente</span>
         </div>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-white font-display tracking-tight">
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-white font-display tracking-tight">
           Sobre o Era Nuclear
         </h1>
-        <p className="text-base sm:text-lg text-[#B7B7B7] leading-relaxed">
+        <p className="text-sm sm:text-lg text-[#B7B7B7] leading-relaxed">
           O projeto <strong>ERA NUCLEAR</strong> é uma plataforma educativa digital criada para transformar a complexidade da física nuclear e a história atômica em uma experiência de aprendizado clara, visual, imparcial e profundamente responsável.
         </p>
       </div>
 
       {/* Mission & Purpose Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="bg-[#111111] border border-white/10 rounded-2xl p-6 sm:p-10 shadow-xl space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+        <div className="bg-[#111111] border border-white/10 rounded-2xl p-5 sm:p-10 shadow-xl space-y-4">
           <span className="text-xs font-bold uppercase tracking-wider text-[#73CAE5] font-mono">
             Nossa Missão
           </span>
-          <h2 className="text-2xl font-bold text-white font-display">
+          <h2 className="text-xl sm:text-2xl font-bold text-white font-display">
             A Ciência como Instrumento de Transformação e Consciência
           </h2>
           <p className="text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
@@ -69,11 +69,11 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
           </p>
         </div>
 
-        <div className="bg-[#111111] border border-white/10 rounded-2xl p-6 sm:p-10 shadow-xl space-y-4">
+        <div className="bg-[#111111] border border-white/10 rounded-2xl p-5 sm:p-10 shadow-xl space-y-4">
           <span className="text-xs font-bold uppercase tracking-wider text-[#8F83FF] font-mono">
             Princípios Éticos
           </span>
-          <h2 className="text-2xl font-bold text-white font-display">
+          <h2 className="text-xl sm:text-2xl font-bold text-white font-display">
             Imparcialidade, Responsabilidade e Segurança
           </h2>
           <p className="text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
@@ -83,7 +83,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
       </div>
 
       {/* 4 Pillars of the Platform */}
-      <section className="space-y-8">
+      <section className="space-y-6 sm:space-y-8">
         <div className="space-y-2">
           <span className="text-xs font-bold uppercase tracking-wider text-[#73CAE5] font-mono">
             Objetivos Institucionais
@@ -93,11 +93,11 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {goals.map((g, idx) => (
             <div
               key={idx}
-              className="p-6 sm:p-8 rounded-2xl bg-[#111111] border border-white/10 hover:border-white/20 transition-all space-y-3"
+              className="p-5 sm:p-8 rounded-2xl bg-[#111111] border border-white/10 hover:border-white/20 transition-all space-y-3"
             >
               <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
                 {g.icon}
@@ -110,9 +110,9 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* Call to action card */}
-      <section className="bg-gradient-to-br from-[#111111] via-[#161616] to-[#121b22] border border-white/10 rounded-3xl p-8 sm:p-12 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+      <section className="bg-gradient-to-br from-[#111111] via-[#161616] to-[#121b22] border border-white/10 rounded-2xl sm:rounded-3xl p-5 sm:p-12 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="space-y-2 max-w-xl">
-          <h3 className="text-2xl sm:text-3xl font-extrabold text-white font-display">
+          <h3 className="text-xl sm:text-3xl font-extrabold text-white font-display">
             Conheça as Fontes Oficiais e Instituições
           </h3>
           <p className="text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
@@ -122,10 +122,10 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
 
         <button
           onClick={() => onNavigate('sources')}
-          className="px-6 py-3.5 rounded-xl bg-white text-[#0D0D0D] font-extrabold text-xs uppercase tracking-wider hover:bg-[#73CAE5] transition-colors flex items-center space-x-2 shrink-0 shadow-xl"
+          className="w-full md:w-auto justify-center min-h-[44px] sm:min-h-0 px-6 py-3.5 rounded-xl bg-white text-[#0D0D0D] font-extrabold text-xs uppercase tracking-wider hover:bg-[#73CAE5] transition-colors flex items-center space-x-2 shrink-0 shadow-xl cursor-pointer"
         >
           <span>VER FONTES & REFERÊNCIAS</span>
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRight className="w-4 h-4 shrink-0" />
         </button>
       </section>
     </div>

@@ -40,17 +40,17 @@ export const FissionFusionPage: React.FC<FissionFusionPageProps> = ({ onNavigate
   const coalTons = (fuelGrams * 2.8).toFixed(1);
 
   return (
-    <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
+    <div className="pt-24 sm:pt-28 pb-16 sm:pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-20">
       {/* Header */}
       <div className="max-w-3xl space-y-4">
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-gradient-to-r from-[#73CAE5]/20 to-[#8F83FF]/20 border border-[#73CAE5]/40 text-xs font-semibold text-white">
-          <Scale className="w-3.5 h-3.5 text-[#73CAE5]" />
-          <span>Comparativo Exclusivo • Duas Rotas Nucleares</span>
+        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-gradient-to-r from-[#73CAE5]/20 to-[#8F83FF]/20 border border-[#73CAE5]/40 text-xs font-semibold text-white max-w-full">
+          <Scale className="w-3.5 h-3.5 text-[#73CAE5] shrink-0" />
+          <span className="max-sm:whitespace-normal break-words">Comparativo Exclusivo • Duas Rotas Nucleares</span>
         </div>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-white font-display tracking-tight">
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-white font-display tracking-tight break-words">
           Fissão × Fusão Nuclear
         </h1>
-        <p className="text-base text-[#B7B7B7] leading-relaxed">
+        <p className="text-sm sm:text-base text-[#B7B7B7] leading-relaxed">
           Enquanto a <strong>fissão</strong> quebra núcleos atômicos pesados para liberar energia e já opera em centenas de usinas civis, a <strong>fusão</strong> combina núcleos ultraleves como o Sol e representa a maior fronteira tecnológica para a energia limpa e inesgotável do futuro.
         </p>
       </div>
@@ -83,16 +83,16 @@ export const FissionFusionPage: React.FC<FissionFusionPageProps> = ({ onNavigate
               <div className="absolute top-3 right-3 p-2 rounded-full bg-black/60 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
                 <Maximize2 className="w-4 h-4" />
               </div>
-              <div className="absolute bottom-3 left-4 right-4">
+              <div className="absolute bottom-3 left-3 right-3 sm:left-4 sm:right-4">
                 <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-[#73CAE5]/20 text-[#73CAE5] border border-[#73CAE5]/30">
                   Fissão Nuclear (Divisão)
                 </span>
-                <p className="text-sm font-bold text-white font-display mt-1">
+                <p className="text-xs sm:text-sm font-bold text-white font-display mt-1">
                   Núcleo Pesado → Cisão em Fragmentos + Nêutrons + Energia
                 </p>
               </div>
             </div>
-            <div className="p-5 space-y-2 text-xs text-[#B7B7B7] leading-relaxed">
+            <div className="p-4 sm:p-5 space-y-2 text-xs text-[#B7B7B7] leading-relaxed">
               <p>
                 <strong>Mecanismo:</strong> O nêutron térmico desestabiliza o núcleo pesado (U-235 ou Pu-239), vencendo a força nuclear forte e gerando fragmentos com altíssima energia cinética convertida em calor.
               </p>
@@ -122,16 +122,16 @@ export const FissionFusionPage: React.FC<FissionFusionPageProps> = ({ onNavigate
               <div className="absolute top-3 right-3 p-2 rounded-full bg-black/60 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
                 <Maximize2 className="w-4 h-4" />
               </div>
-              <div className="absolute bottom-3 left-4 right-4">
+              <div className="absolute bottom-3 left-3 right-3 sm:left-4 sm:right-4">
                 <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-[#8F83FF]/20 text-[#8F83FF] border border-[#8F83FF]/30">
                   Fusão Nuclear (União)
                 </span>
-                <p className="text-sm font-bold text-white font-display mt-1">
+                <p className="text-xs sm:text-sm font-bold text-white font-display mt-1">
                   Núcleos Leves (D + T) → Hélio-4 + Nêutron + 17,6 MeV
                 </p>
               </div>
             </div>
-            <div className="p-5 space-y-2 text-xs text-[#B7B7B7] leading-relaxed">
+            <div className="p-4 sm:p-5 space-y-2 text-xs text-[#B7B7B7] leading-relaxed">
               <p>
                 <strong>Mecanismo:</strong> A repulsão eletrostática de Coulomb entre os prótons positivos é superada por energia térmica extrema (150 milhões °C), permitindo que a força nuclear forte una os núcleos.
               </p>
@@ -173,14 +173,14 @@ export const FissionFusionPage: React.FC<FissionFusionPageProps> = ({ onNavigate
               <div className="absolute top-3 right-3 p-2 rounded-full bg-black/70 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
                 <Maximize2 className="w-4 h-4" />
               </div>
-              <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between">
+              <div className="absolute bottom-3 left-3 right-3 sm:left-4 sm:right-4 flex flex-wrap items-center justify-between gap-1.5">
                 <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
                   Fissão • Maquete Real em Corte
                 </span>
                 <span className="text-amber-400 font-semibold text-xs">Ampliar</span>
               </div>
             </div>
-            <div className="p-5 space-y-2 text-xs text-[#B7B7B7] leading-relaxed">
+            <div className="p-4 sm:p-5 space-y-2 text-xs text-[#B7B7B7] leading-relaxed">
               <h4 className="font-bold text-white text-sm">Vaso de Pressão do Reator PWR (Corte Técnico)</h4>
               <p>
                 Visualização física dos componentes estruturais de um reator de água pressurizada: cabeçote com mecanismos eletromecânicos de barras de controle para modulação da reação em cadeia e vaso forjado sob 155 bar de pressão de operação.
@@ -215,14 +215,14 @@ export const FissionFusionPage: React.FC<FissionFusionPageProps> = ({ onNavigate
               <div className="absolute top-3 right-3 p-2 rounded-full bg-black/70 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
                 <Maximize2 className="w-4 h-4" />
               </div>
-              <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between">
+              <div className="absolute bottom-3 left-3 right-3 sm:left-4 sm:right-4 flex flex-wrap items-center justify-between gap-1.5">
                 <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-[#8F83FF]/20 text-[#8F83FF] border border-[#8F83FF]/30">
                   Fusão • Tokamak ITER (Galeria)
                 </span>
                 <span className="text-[#8F83FF] font-semibold text-xs">Ampliar</span>
               </div>
             </div>
-            <div className="p-5 space-y-2 text-xs text-[#B7B7B7] leading-relaxed">
+            <div className="p-4 sm:p-5 space-y-2 text-xs text-[#B7B7B7] leading-relaxed">
               <h4 className="font-bold text-white text-sm">Câmara Toroidal de Confinamento Magnético</h4>
               <p>
                 A maior máquina de fusão do planeta: gaiola magnética toroidal com ímãs supercondutores criogênicos resfriados a -269 °C para confinar plasma solar a mais de 150 milhões de °C.
@@ -252,12 +252,12 @@ export const FissionFusionPage: React.FC<FissionFusionPageProps> = ({ onNavigate
       </section>
 
       {/* Interactive Energy Density Calculator */}
-      <section className="bg-[#111111] border border-white/10 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
+      <section className="bg-[#111111] border border-white/10 rounded-2xl p-4 sm:p-8 shadow-2xl space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
           <div>
             <div className="flex items-center space-x-2">
-              <Calculator className="w-5 h-5 text-[#8F83FF]" />
-              <h3 className="text-xl font-bold text-white font-display">
+              <Calculator className="w-5 h-5 text-[#8F83FF] shrink-0" />
+              <h3 className="text-lg sm:text-xl font-bold text-white font-display">
                 Calculadora de Equivalência Energética
               </h3>
             </div>
@@ -267,7 +267,7 @@ export const FissionFusionPage: React.FC<FissionFusionPageProps> = ({ onNavigate
           </div>
 
           {/* Mass input slider */}
-          <div className="flex items-center space-x-3 bg-white/5 px-4 py-2 rounded-xl border border-white/10">
+          <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 sm:gap-3 bg-white/5 px-3 sm:px-4 py-2.5 sm:py-2 rounded-xl border border-white/10 w-full sm:w-auto">
             <span className="text-xs text-[#B7B7B7]">Massa de Combustível:</span>
             <input
               type="range"
@@ -276,16 +276,16 @@ export const FissionFusionPage: React.FC<FissionFusionPageProps> = ({ onNavigate
               step="1"
               value={fuelGrams}
               onChange={(e) => setFuelGrams(Number(e.target.value))}
-              className="w-24 accent-[#73CAE5]"
+              className="flex-1 min-w-[90px] sm:flex-none sm:w-24 accent-[#73CAE5] min-h-[36px] sm:min-h-0"
             />
-            <span className="text-xs font-mono font-bold text-[#73CAE5]">{fuelGrams} grama(s)</span>
+            <span className="text-xs font-mono font-bold text-[#73CAE5] shrink-0">{fuelGrams} grama(s)</span>
           </div>
         </div>
 
         {/* 3 Columns Comparison */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
           {/* Coal Box */}
-          <div className="p-5 rounded-xl bg-white/[0.02] border border-white/5 space-y-3">
+          <div className="p-4 sm:p-5 rounded-xl bg-white/[0.02] border border-white/5 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-[#B7B7B7]">Combustível Fóssil (Carvão)</span>
               <span className="text-xl">🪨</span>
@@ -299,10 +299,10 @@ export const FissionFusionPage: React.FC<FissionFusionPageProps> = ({ onNavigate
           </div>
 
           {/* Fission Box */}
-          <div className="p-5 rounded-xl bg-[#73CAE5]/10 border border-[#73CAE5]/40 space-y-3 shadow-lg shadow-[#73CAE5]/5">
+          <div className="p-4 sm:p-5 rounded-xl bg-[#73CAE5]/10 border border-[#73CAE5]/40 space-y-3 shadow-lg shadow-[#73CAE5]/5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-[#73CAE5]">Fissão (Urânio-235)</span>
-              <Zap className="w-5 h-5 text-[#73CAE5]" />
+              <Zap className="w-5 h-5 text-[#73CAE5] shrink-0" />
             </div>
             <div className="text-2xl sm:text-3xl font-extrabold text-[#73CAE5] font-mono">
               {(fissionMJ / 1000).toFixed(0)} GJ
@@ -313,7 +313,7 @@ export const FissionFusionPage: React.FC<FissionFusionPageProps> = ({ onNavigate
           </div>
 
           {/* Fusion Box */}
-          <div className="p-5 rounded-xl bg-[#8F83FF]/10 border border-[#8F83FF]/40 space-y-3 shadow-lg shadow-[#8F83FF]/5">
+          <div className="p-4 sm:p-5 rounded-xl bg-[#8F83FF]/10 border border-[#8F83FF]/40 space-y-3 shadow-lg shadow-[#8F83FF]/5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-[#8F83FF]">Fusão (Deutério-Trítio)</span>
               <Flame className="w-5 h-5 text-[#8F83FF]" />
@@ -339,8 +339,48 @@ export const FissionFusionPage: React.FC<FissionFusionPageProps> = ({ onNavigate
           </h2>
         </div>
 
-        <div className="overflow-x-auto rounded-2xl border border-white/10 bg-[#111111] shadow-2xl">
-          <table className="w-full text-left text-xs border-collapse">
+        {/* Versão Mobile em Cards Comparativos */}
+        <div className="md:hidden space-y-3">
+          {fissionFusionComparison.map((item, idx) => (
+            <div
+              key={idx}
+              className="rounded-2xl border border-white/10 bg-[#111111] p-4 shadow-xl space-y-3 min-w-0 max-w-full"
+            >
+              <div className="pb-2 border-b border-white/10">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-white/60 block mb-0.5">
+                  Critério / Propriedade
+                </span>
+                <h3 className="text-sm font-bold text-white font-mono break-words">
+                  {item.attribute}
+                </h3>
+              </div>
+
+              <div className="grid grid-cols-1 gap-2.5 text-xs">
+                <div className="p-3 rounded-xl bg-[#73CAE5]/5 border border-[#73CAE5]/20 space-y-1 min-w-0">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#73CAE5] font-bold block">
+                    Fissão Nuclear (Divisão)
+                  </span>
+                  <p className="text-[#B7B7B7] leading-relaxed break-words">
+                    {item.fission}
+                  </p>
+                </div>
+
+                <div className="p-3 rounded-xl bg-[#8F83FF]/5 border border-[#8F83FF]/20 space-y-1 min-w-0">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#8F83FF] font-bold block">
+                    Fusão Nuclear (União)
+                  </span>
+                  <p className="text-[#B7B7B7] leading-relaxed break-words">
+                    {item.fusion}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Versão Desktop Original Preservada Integralmente */}
+        <div className="hidden md:block overflow-x-auto rounded-2xl border border-white/10 bg-[#111111] shadow-2xl">
+          <table className="w-full min-w-[620px] text-left text-xs border-collapse">
             <thead>
               <tr className="border-b border-white/10 bg-white/[0.03]">
                 <th className="p-4 sm:p-5 font-bold text-white uppercase tracking-wider font-display w-1/4">
@@ -374,15 +414,15 @@ export const FissionFusionPage: React.FC<FissionFusionPageProps> = ({ onNavigate
       </section>
 
       {/* The Frontier: Tokamak and Fusion Science */}
-      <section className="bg-gradient-to-br from-[#111111] to-[#151221] border border-white/10 rounded-2xl p-6 sm:p-10 shadow-2xl space-y-6">
+      <section className="bg-gradient-to-br from-[#111111] to-[#151221] border border-white/10 rounded-2xl p-4 sm:p-10 shadow-2xl space-y-6">
         <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-[#8F83FF] font-mono">
-          <Cpu className="w-4 h-4" />
+          <Cpu className="w-4 h-4 shrink-0" />
           <span>Fronteira Tecnológica • Projeto ITER e Tokamaks</span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           <div className="space-y-4">
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-white font-display">
+            <h3 className="text-xl sm:text-3xl font-extrabold text-white font-display">
               Criando uma Estrela em um Frasco Magnético
             </h3>
             <p className="text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
@@ -393,7 +433,7 @@ export const FissionFusionPage: React.FC<FissionFusionPageProps> = ({ onNavigate
             </p>
           </div>
 
-          <div className="p-5 rounded-xl bg-white/[0.03] border border-white/10 space-y-3 text-xs">
+          <div className="p-4 sm:p-5 rounded-xl bg-white/[0.03] border border-white/10 space-y-3 text-xs">
             <h4 className="font-bold text-white uppercase tracking-wider text-xs">
               Marcos Históricos Recentes:
             </h4>
@@ -418,17 +458,18 @@ export const FissionFusionPage: React.FC<FissionFusionPageProps> = ({ onNavigate
       {/* Lightbox */}
       {lightboxImg && (
         <div
-          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-150"
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-150"
           onClick={() => setLightboxImg(null)}
         >
-          <div className="max-w-4xl w-full bg-[#141414] border border-white/15 rounded-2xl overflow-hidden shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
+          <div className="max-w-4xl w-full max-h-[90dvh] overflow-y-auto bg-[#141414] border border-white/15 rounded-2xl shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => setLightboxImg(null)}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/70 text-white hover:bg-black"
+              aria-label="Fechar imagem"
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 w-11 h-11 flex items-center justify-center rounded-full bg-black/80 text-white hover:bg-black"
             >
               <X className="w-5 h-5" />
             </button>
-            <img src={lightboxImg.url} alt={lightboxImg.title} referrerPolicy="no-referrer" className="w-full max-h-[80vh] object-contain bg-black" />
+            <img src={lightboxImg.url} alt={lightboxImg.title} referrerPolicy="no-referrer" className="w-full max-h-[65vh] sm:max-h-[80vh] object-contain bg-black" />
             <div className="p-4 space-y-1">
               <h4 className="text-sm font-bold text-white font-display">
                 {lightboxImg.title}

@@ -21,17 +21,17 @@ export const IvyKingPage: React.FC<IvyKingPageProps> = ({ onNavigate }) => {
   const [lightboxImg, setLightboxImg] = useState<string | null>(null);
 
   return (
-    <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
+    <div className="pt-24 sm:pt-28 pb-16 sm:pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-20">
       {/* Header */}
       <div className="max-w-4xl space-y-4">
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#73CAE5]/10 border border-[#73CAE5]/30 text-xs font-semibold text-[#73CAE5]">
-          <Flame className="w-3.5 h-3.5" />
-          <span>Física de Fissão Pura • Operação Ivy (1952)</span>
+        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#73CAE5]/10 border border-[#73CAE5]/30 text-xs font-semibold text-[#73CAE5] max-w-full">
+          <Flame className="w-3.5 h-3.5 shrink-0" />
+          <span className="max-sm:whitespace-normal break-words">Física de Fissão Pura • Operação Ivy (1952)</span>
         </div>
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display tracking-tight uppercase">
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display tracking-tight uppercase break-words">
           Ivy King
         </h1>
-        <p className="text-lg sm:text-xl text-transparent bg-clip-text bg-gradient-to-r from-white via-[#B7B7B7] to-[#73CAE5] font-medium font-display">
+        <p className="text-base sm:text-xl text-transparent bg-clip-text bg-gradient-to-r from-white via-[#B7B7B7] to-[#73CAE5] font-medium font-display">
           A mais potente arma de fissão pura já testada pelos Estados Unidos.
         </p>
         <p className="text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
@@ -40,14 +40,14 @@ export const IvyKingPage: React.FC<IvyKingPageProps> = ({ onNavigate }) => {
       </div>
 
       {/* Highlights Banner */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-6 rounded-2xl bg-[#111111] border border-white/10 shadow-xl">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-[#111111] border border-white/10 shadow-xl">
         <div className="space-y-1">
           <span className="text-xs text-[#B7B7B7] uppercase font-mono">Data</span>
-          <p className="text-xl sm:text-2xl font-bold text-white font-mono">16 Nov 1952</p>
+          <p className="text-lg sm:text-2xl font-bold text-white font-mono">16 Nov 1952</p>
         </div>
         <div className="space-y-1">
           <span className="text-xs text-[#B7B7B7] uppercase font-mono">Potência</span>
-          <p className="text-xl sm:text-2xl font-bold text-[#73CAE5] font-mono">500 quilotons</p>
+          <p className="text-lg sm:text-2xl font-bold text-[#73CAE5] font-mono">500 quilotons</p>
         </div>
         <div className="space-y-1">
           <span className="text-xs text-[#B7B7B7] uppercase font-mono">Mecanismo</span>
@@ -62,9 +62,9 @@ export const IvyKingPage: React.FC<IvyKingPageProps> = ({ onNavigate }) => {
       {/* Grid: Context & Real Photo */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         <div className="lg:col-span-7 space-y-6 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
-          <div className="p-6 rounded-2xl bg-[#111111] border border-white/10 space-y-3">
+          <div className="p-4 sm:p-6 rounded-2xl bg-[#111111] border border-white/10 space-y-3">
             <h3 className="text-base sm:text-lg font-bold text-white font-display flex items-center space-x-2">
-              <Calendar className="w-4 h-4 text-[#73CAE5]" />
+              <Calendar className="w-4 h-4 text-[#73CAE5] shrink-0" />
               <span>Contexto da Guerra Fria & A Razão do Desenvolvimento</span>
             </h3>
             <p>
@@ -75,7 +75,7 @@ export const IvyKingPage: React.FC<IvyKingPageProps> = ({ onNavigate }) => {
             </p>
           </div>
 
-          <div className="p-6 rounded-2xl bg-[#111111] border border-white/10 space-y-3">
+          <div className="p-4 sm:p-6 rounded-2xl bg-[#111111] border border-white/10 space-y-3">
             <h3 className="text-base sm:text-lg font-bold text-white font-display flex items-center space-x-2">
               <Scale className="w-4 h-4 text-[#8F83FF]" />
               <span>Características Gerais & O Desafio da Criticalidade</span>
@@ -103,7 +103,7 @@ export const IvyKingPage: React.FC<IvyKingPageProps> = ({ onNavigate }) => {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
             <div className="absolute bottom-3 left-3 right-3 text-xs text-white/90">
-              <p className="font-medium truncate">A detonação aérea de 500 quilotons do teste Ivy King (1952)</p>
+              <p className="font-medium whitespace-normal break-words leading-snug">A detonação aérea de 500 quilotons do teste Ivy King (1952)</p>
             </div>
             <div className="absolute top-3 right-3 p-2 rounded-full bg-black/60 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
               <Maximize2 className="w-4 h-4" />
@@ -116,7 +116,7 @@ export const IvyKingPage: React.FC<IvyKingPageProps> = ({ onNavigate }) => {
 
           <div className="p-4 rounded-xl bg-white/[0.03] border border-white/5 space-y-2 text-xs">
             <div className="flex items-center space-x-1.5 text-[#73CAE5] font-bold">
-              <MapPin className="w-3.5 h-3.5" />
+              <MapPin className="w-3.5 h-3.5 shrink-0" />
               <span>Localização: 600 m ao norte da Ilha de Runit, Atol de Enewetak</span>
             </div>
             <p className="text-[#B7B7B7]">
@@ -127,15 +127,15 @@ export const IvyKingPage: React.FC<IvyKingPageProps> = ({ onNavigate }) => {
       </div>
 
       {/* Historical Importance */}
-      <section className="bg-[#111111] border border-white/10 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-6">
+      <section className="bg-[#111111] border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-10 shadow-2xl space-y-6">
         <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-[#8F83FF] font-mono">
-          <Award className="w-4 h-4" />
+          <Award className="w-4 h-4 shrink-0" />
           <span>Importância Histórica & Científica</span>
         </div>
         <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-display">
           O Limite Físico da Fissão Pura
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
           <p>
             O teste <strong>Ivy King</strong> marcou o teto prático da tecnologia de fissão nuclear pura. Embora tenha demonstrado que era possível construir bombas de meio megaton com urânio, o consumo de material físsil era excessivamente elevado e o risco de pré-detonação ou criticalidade acidental tornava a estocagem em grande escala perigosa e cara.
           </p>
@@ -148,17 +148,18 @@ export const IvyKingPage: React.FC<IvyKingPageProps> = ({ onNavigate }) => {
       {/* Lightbox */}
       {lightboxImg && (
         <div
-          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-150"
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-150"
           onClick={() => setLightboxImg(null)}
         >
-          <div className="max-w-4xl w-full bg-[#141414] border border-white/15 rounded-2xl overflow-hidden shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
+          <div className="max-w-4xl w-full max-h-[90dvh] overflow-y-auto bg-[#141414] border border-white/15 rounded-2xl shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => setLightboxImg(null)}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/70 text-white hover:bg-black"
+              aria-label="Fechar imagem"
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 w-11 h-11 flex items-center justify-center rounded-full bg-black/80 text-white hover:bg-black"
             >
               <X className="w-5 h-5" />
             </button>
-            <img src={lightboxImg} alt="Ivy King" referrerPolicy="no-referrer" className="w-full max-h-[80vh] object-contain bg-black" />
+            <img src={lightboxImg} alt="Ivy King" referrerPolicy="no-referrer" className="w-full max-h-[65vh] sm:max-h-[80vh] object-contain bg-black" />
             <div className="p-4 text-xs font-bold text-white font-display">
               Teste Ivy King (1952) — U.S. Air Force / Defense Threat Reduction Agency
             </div>

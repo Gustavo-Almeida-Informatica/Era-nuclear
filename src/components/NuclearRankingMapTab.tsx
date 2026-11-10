@@ -242,6 +242,7 @@ export const NuclearRankingMapTab: React.FC = () => {
   const [coordLat, setCoordLat] = useState('');
   const [coordLng, setCoordLng] = useState('');
   const [coordCityName, setCoordCityName] = useState('');
+  const [coordError, setCoordError] = useState<string | null>(null);
   const [isReverseGeocoding, setIsReverseGeocoding] = useState(false);
 
   // Estado e Controle de Potência Customizada (0.02 kt até 100 Mt)
@@ -811,9 +812,10 @@ export const NuclearRankingMapTab: React.FC = () => {
       parsedLng < -180 ||
       parsedLng > 180
     ) {
-      alert('Por favor, insira coordenadas válidas: Latitude entre -90 e 90, Longitude entre -180 e 180.');
+      setCoordError('Por favor, insira coordenadas válidas: Latitude entre -90 e 90, Longitude entre -180 e 180.');
       return;
     }
+    setCoordError(null);
     const demo = detectLocationDemographics(parsedLat, parsedLng);
     const customCity: TargetCity = {
       id: `coord-${Date.now()}`,
@@ -835,6 +837,7 @@ export const NuclearRankingMapTab: React.FC = () => {
     };
     handleSelectCity(customCity);
     setShowCoordModal(false);
+    setCoordError(null);
     setCoordLat('');
     setCoordLng('');
     setCoordCityName('');
@@ -1153,7 +1156,7 @@ export const NuclearRankingMapTab: React.FC = () => {
       const marker = L.marker([site.lat, site.lng], { icon: testSiteIcon, zIndexOffset: 500 });
 
       marker.bindTooltip(
-        `<div style="font-family: ui-sans-serif, system-ui, sans-serif; font-size: 11px; line-height: 1.4; color: #f8fafc; min-width: 220px; pointer-events: none;">
+        `<div style="font-family: ui-sans-serif, system-ui, sans-serif; font-size: 11px; line-height: 1.4; color: #f8fafc; width: min(220px, 76vw); max-width: 100%; pointer-events: none;">
           <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 3px;">
             <strong style="color: #fde047; font-size: 12px;">☢️ ${site.name}</strong>
             <span style="background: rgba(245,158,11,0.25); border: 1px solid #f59e0b; color: #fde047; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 4px;">TESTES NUCLEARES</span>
@@ -1166,7 +1169,7 @@ export const NuclearRankingMapTab: React.FC = () => {
       );
 
       marker.bindPopup(
-        `<div style="font-family: ui-sans-serif, system-ui, sans-serif; font-size: 12px; color: #f8fafc; line-height: 1.45; min-width: 270px;">
+        `<div style="font-family: ui-sans-serif, system-ui, sans-serif; font-size: 12px; color: #f8fafc; line-height: 1.45; width: min(270px, 76vw); max-width: 100%;">
           <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 4px;">
             <strong style="font-size: 13px; color: #fde047;">☢️ ${site.name}</strong>
             <span style="background: rgba(245,158,11,0.25); border: 1px solid #f59e0b; color: #fde047; font-size: 9px; font-weight: bold; padding: 1px 6px; border-radius: 4px;">LOCAL HISTÓRICO</span>
@@ -1253,7 +1256,7 @@ export const NuclearRankingMapTab: React.FC = () => {
         onMapClickRef.current(newPos.lat, newPos.lng);
       });
       marker.bindPopup(`
-        <div style="font-family: ui-sans-serif, system-ui, sans-serif; font-size: 12px; color: #f8fafc; line-height: 1.4; min-width: 260px;">
+        <div style="font-family: ui-sans-serif, system-ui, sans-serif; font-size: 12px; color: #f8fafc; line-height: 1.4; width: min(260px, 76vw); max-width: 100%;">
           <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 4px;">
             <strong style="font-size: 13px; color: #f87171;">🎯 ALVO ARMADO (CENTRO)</strong>
             <span style="background: rgba(239,68,68,0.25); border: 1px solid #f87171; color: #fca5a5; font-size: 10px; font-weight: bold; padding: 1px 6px; border-radius: 4px;">AGUARDANDO DETONAÇÃO</span>
@@ -1516,7 +1519,7 @@ export const NuclearRankingMapTab: React.FC = () => {
       onMapClickRef.current(newPos.lat, newPos.lng);
     });
     marker.bindPopup(`
-      <div style="font-family: ui-sans-serif, system-ui, sans-serif; font-size: 12px; color: #f8fafc; line-height: 1.4; min-width: 250px;">
+      <div style="font-family: ui-sans-serif, system-ui, sans-serif; font-size: 12px; color: #f8fafc; line-height: 1.4; width: min(250px, 76vw); max-width: 100%;">
         <strong style="font-size: 13px; color: #f87171;">🎯 MARCO ZERO (GROUND ZERO)</strong><br/>
         <span style="color: #fde047; font-weight: 700;">${selectedBomb.name}</span> <span style="color: #cbd5e1;">(${selectedBomb.yieldDisplay})</span><br/>
         <span style="color: #94a3b8;">Alvo:</span> <b style="color: #ffffff;">${selectedCity.name}</b> <span style="color: #94a3b8;">(${selectedCity.country})</span><br/>
@@ -1715,21 +1718,21 @@ export const NuclearRankingMapTab: React.FC = () => {
     }
   };
 
-  // Dynamic height class: significantly expands vertically when the options and metrics panel is closed
+  // Dynamic height class: mobile-comfortable heights below sm, exact original heights preserved on desktop
   const getContainerHeightClass = () => {
     if (!isOptionsPanelOpen) {
       // Vista ampliada verticalmente quando o painel de opções e métricas é retirado
-      if (mapHeightMode === 'immersive') return 'h-[92vh] min-h-[850px] transition-[height] duration-300';
-      if (mapHeightMode === 'large') return 'h-[960px] sm:h-[1020px] lg:h-[90vh] min-h-[820px] transition-[height] duration-300';
-      if (mapHeightMode === 'standard') return 'h-[820px] sm:h-[880px] lg:h-[84vh] min-h-[720px] transition-[height] duration-300';
-      return 'h-[680px] sm:h-[720px] min-h-[600px] transition-[height] duration-300'; // compacto ampliado
+      if (mapHeightMode === 'immersive') return 'h-[70vh] sm:h-[92vh] min-h-[460px] sm:min-h-[850px] transition-[height] duration-300';
+      if (mapHeightMode === 'large') return 'h-[540px] sm:h-[1020px] lg:h-[90vh] min-h-[460px] sm:min-h-[820px] transition-[height] duration-300';
+      if (mapHeightMode === 'standard') return 'h-[480px] sm:h-[880px] lg:h-[84vh] min-h-[420px] sm:min-h-[720px] transition-[height] duration-300';
+      return 'h-[420px] sm:h-[720px] min-h-[380px] sm:min-h-[600px] transition-[height] duration-300'; // compacto ampliado
     }
 
     // Altura padrão quando o painel lateral de opções está aberto ao lado do mapa
-    if (mapHeightMode === 'immersive') return 'h-[82vh] max-h-[82vh] min-h-[520px] transition-[height] duration-300';
-    if (mapHeightMode === 'large') return 'h-[760px] max-h-[760px] min-h-[500px] transition-[height] duration-300';
-    if (mapHeightMode === 'standard') return 'h-[640px] max-h-[640px] min-h-[460px] transition-[height] duration-300';
-    return 'h-[520px] max-h-[520px] min-h-[420px] transition-[height] duration-300'; // compacto padrão
+    if (mapHeightMode === 'immersive') return 'h-[65vh] sm:h-[82vh] max-h-[82vh] min-h-[420px] sm:min-h-[520px] transition-[height] duration-300';
+    if (mapHeightMode === 'large') return 'h-[520px] sm:h-[760px] sm:max-h-[760px] min-h-[420px] sm:min-h-[500px] transition-[height] duration-300';
+    if (mapHeightMode === 'standard') return 'h-[460px] sm:h-[640px] sm:max-h-[640px] min-h-[400px] sm:min-h-[460px] transition-[height] duration-300';
+    return 'h-[400px] sm:h-[520px] sm:max-h-[520px] min-h-[360px] sm:min-h-[420px] transition-[height] duration-300'; // compacto padrão
   };
 
   return (
@@ -1737,8 +1740,8 @@ export const NuclearRankingMapTab: React.FC = () => {
       {/* Sleek Compact Tactical Command Bar */}
       <div className="bg-[#141414] border-b border-white/10 px-3 py-2.5 sm:px-5 sm:py-3">
         <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3 xl:gap-8">
-          {/* Left: Tabela Técnica Completa das 12 Armas (Mesmo tom de preto bg-[#222222] das outras opções) */}
-          <div className="flex items-center shrink-0">
+          {/* Left: Tabela Técnica Completa das 12 Armas */}
+          <div className="flex items-center shrink-0 w-full xl:w-auto">
             <button
               onClick={() => {
                 setIsBombDropdownOpen(false);
@@ -1746,31 +1749,31 @@ export const NuclearRankingMapTab: React.FC = () => {
                 setIsSearchOpen(false);
                 setShowBenchmarkModal(true);
               }}
-              className="px-3.5 py-2 rounded-lg bg-[#222222] hover:bg-[#282828] border border-white/15 hover:border-white/30 text-white text-xs font-bold flex items-center space-x-2 transition-all shadow-md shrink-0 cursor-pointer"
+              className="w-full sm:w-auto justify-center sm:justify-start px-3.5 py-2 rounded-lg bg-[#222222] hover:bg-[#282828] border border-white/15 hover:border-white/30 text-white text-xs font-bold flex items-center space-x-2 transition-all shadow-md shrink-0 cursor-pointer min-h-[42px] sm:min-h-0"
               title="Visualizar a Tabela Técnica Completa das 12 Armas e todas as suas 6 Zonas de Destruição com Raio e Diâmetro"
             >
-              <Table className="w-4 h-4 text-rose-500" />
+              <Table className="w-4 h-4 text-rose-500 shrink-0" />
               <span className="text-white">Tabela Técnica (12 Armas)</span>
             </button>
           </div>
 
-          {/* Center/Right: Target City Chips (Cidades em Destaque) - Afastado para não ocupar o espaço da Tabela Técnica */}
-          <div className="flex flex-wrap items-center gap-1.5 xl:ml-auto xl:pl-6 xl:border-l xl:border-white/10 pt-2.5 xl:pt-0 border-t xl:border-t-0 border-white/10">
-            <span className="text-[10px] font-bold text-neutral-300 uppercase mr-1">Alvos em Destaque:</span>
+          {/* Center/Right: Target City Chips (Cidades em Destaque) */}
+          <div className="flex flex-wrap items-center gap-1.5 xl:ml-auto xl:pl-6 xl:border-l xl:border-white/10 pt-2.5 xl:pt-0 border-t xl:border-t-0 border-white/10 min-w-0">
+            <span className="text-[10px] font-bold text-neutral-300 uppercase mr-1 w-full sm:w-auto">Alvos em Destaque:</span>
             {TARGET_CITIES.map((city) => {
               const isSelected = selectedCity.id === city.id || selectedCity.name === city.name;
               return (
                 <button
                   key={city.id}
                   onClick={() => handleSelectCity(city)}
-                  className={`px-2 py-1 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1 border ${
+                  className={`px-2.5 py-1.5 sm:px-2 sm:py-1 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1 border min-h-[36px] sm:min-h-0 ${
                     isSelected
                       ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white border-pink-400 shadow-sm shadow-rose-950/40'
                       : 'bg-[#222222] text-neutral-200 hover:text-white hover:bg-[#282828] border-white/15'
                   }`}
                   title={`${city.name} (${city.country}) - ${city.highlightTag || 'Alvo'}`}
                 >
-                  <MapPin className={`w-3 h-3 ${isSelected ? 'text-white' : 'text-rose-400'}`} />
+                  <MapPin className={`w-3 h-3 shrink-0 ${isSelected ? 'text-white' : 'text-rose-400'}`} />
                   <span>{city.name}</span>
                 </button>
               );
@@ -1784,23 +1787,31 @@ export const NuclearRankingMapTab: React.FC = () => {
                   setIsSearchOpen(false);
                   setIsWorldDropdownOpen(!isWorldDropdownOpen);
                 }}
-                className="px-2 py-1 rounded-lg bg-[#222222] border border-white/15 hover:border-white/20 text-xs font-medium text-neutral-200 hover:text-white flex items-center space-x-1 transition-all"
+                className="px-2.5 py-1.5 sm:px-2 sm:py-1 rounded-lg bg-[#222222] border border-white/15 hover:border-white/20 text-xs font-medium text-neutral-200 hover:text-white flex items-center space-x-1 transition-all min-h-[36px] sm:min-h-0"
                 title="Lista de grandes capitais mundiais"
               >
-                <Globe className="w-3 h-3 text-cyan-400" />
-                <span className="hidden sm:inline">Metrópoles</span>
-                <ChevronDown className="w-3 h-3 text-neutral-300" />
+                <Globe className="w-3.5 h-3.5 sm:w-3 sm:h-3 text-cyan-400 shrink-0" />
+                <span>Metrópoles</span>
+                <ChevronDown className="w-3 h-3 text-neutral-300 shrink-0" />
               </button>
               {isWorldDropdownOpen && (
-                <div className="absolute right-0 top-full mt-1 w-56 bg-[#161616]/98 backdrop-blur-md border border-white/15 rounded-xl shadow-2xl z-50 max-h-72 overflow-y-auto p-1.5 space-y-1">
-                  <div className="px-2.5 py-1 text-[10px] uppercase font-bold text-neutral-300 border-b border-white/10">
-                    Grandes Cidades Mundiais
+                <div className="max-sm:fixed max-sm:inset-x-4 max-sm:bottom-4 max-sm:top-auto max-sm:w-auto sm:absolute sm:right-0 sm:top-full sm:mt-1 sm:w-56 bg-[#161616]/98 backdrop-blur-md border border-white/20 sm:border-white/15 rounded-xl shadow-2xl z-[9999] max-h-72 overflow-y-auto p-1.5 space-y-1">
+                  <div className="px-2.5 py-1.5 text-[10px] uppercase font-bold text-neutral-300 border-b border-white/10 flex items-center justify-between">
+                    <span>Grandes Cidades Mundiais</span>
+                    <button
+                      type="button"
+                      onClick={() => setIsWorldDropdownOpen(false)}
+                      className="sm:hidden p-1 text-neutral-400 hover:text-white"
+                      aria-label="Fechar"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
                   </div>
                   {WORLD_PRESET_CITIES.map((c) => (
                     <button
                       key={c.id}
                       onClick={() => handleSelectCity(c)}
-                      className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs flex items-center justify-between hover:bg-[#222222] transition-colors ${
+                      className={`w-full text-left px-2.5 py-2 sm:py-1.5 rounded-lg text-xs flex items-center justify-between hover:bg-[#222222] transition-colors ${
                         selectedCity.name === c.name
                           ? 'bg-rose-500/20 text-rose-300 font-bold'
                           : 'text-neutral-200'
@@ -1824,13 +1835,14 @@ export const NuclearRankingMapTab: React.FC = () => {
                 setIsBombDropdownOpen(false);
                 setIsWorldDropdownOpen(false);
                 setIsSearchOpen(false);
+                setCoordError(null);
                 setShowCoordModal(true);
               }}
-              className="px-2 py-1 rounded-lg bg-[#222222] border border-white/15 hover:border-white/20 text-xs font-medium text-neutral-200 hover:text-white flex items-center space-x-1 transition-all shrink-0"
+              className="px-2.5 py-1.5 sm:px-2 sm:py-1 rounded-lg bg-[#222222] border border-white/15 hover:border-white/20 text-xs font-medium text-neutral-200 hover:text-white flex items-center space-x-1 transition-all shrink-0 min-h-[36px] sm:min-h-0"
               title="Digitar Latitude e Longitude exatas"
             >
-              <Navigation className="w-3 h-3 text-emerald-400" />
-              <span className="hidden sm:inline">Coordenadas</span>
+              <Navigation className="w-3.5 h-3.5 sm:w-3 sm:h-3 text-emerald-400 shrink-0" />
+              <span>Coordenadas</span>
             </button>
           </div>
         </div>
@@ -1905,27 +1917,27 @@ export const NuclearRankingMapTab: React.FC = () => {
         </div>
 
         {/* Mobile Navigation Tabs (Mapa e Opções & Métricas) */}
-        <div className="flex lg:hidden mt-2 bg-[#222222] p-1 rounded-lg border border-white/15">
+        <div className="flex lg:hidden mt-2 bg-[#222222] p-1 rounded-xl border border-white/15">
           <button
             onClick={() => setActiveTabMobile('map')}
-            className={`flex-1 py-1.5 text-xs font-bold rounded-md transition-all flex items-center justify-center space-x-1.5 ${
+            className={`flex-1 min-h-[44px] py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center space-x-2 cursor-pointer ${
               activeTabMobile === 'map'
-                ? 'bg-red-500 text-white shadow-sm'
+                ? 'bg-red-500 text-white shadow-sm font-extrabold'
                 : 'text-neutral-300 hover:text-white'
             }`}
           >
-            <Target className="w-3.5 h-3.5" />
+            <Target className="w-4 h-4" />
             <span>1. Mapa</span>
           </button>
           <button
             onClick={() => setActiveTabMobile('options')}
-            className={`flex-1 py-1.5 text-xs font-bold rounded-md transition-all flex items-center justify-center space-x-1.5 ${
+            className={`flex-1 min-h-[44px] py-2 text-xs font-bold rounded-lg transition-all flex items-center justify-center space-x-2 cursor-pointer ${
               activeTabMobile === 'options'
-                ? 'bg-red-500 text-white shadow-sm'
+                ? 'bg-red-500 text-white shadow-sm font-extrabold'
                 : 'text-neutral-300 hover:text-white'
             }`}
           >
-            <Layers className="w-3.5 h-3.5" />
+            <Layers className="w-4 h-4" />
             <span>2. Opções & Métricas</span>
           </button>
         </div>
@@ -1944,12 +1956,12 @@ export const NuclearRankingMapTab: React.FC = () => {
           }`}
         >
           {/* Map Top Bar: Map Height Controls (Compacto / Médio / Grande) & Opções & Métricas Toggle */}
-          <div className="bg-[#161616]/95 border-b border-white/10 px-3 py-2 sm:px-4 sm:py-2.5 flex items-center justify-between gap-2 text-xs">
+          <div className="bg-[#161616]/95 border-b border-white/10 px-3 py-2 sm:px-4 sm:py-2.5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs min-w-0">
             {/* Map Height Size Toggle (Compacto / Médio / Grande) */}
-            <div className="flex items-center space-x-1 bg-[#222222] p-1 rounded-lg border border-white/15 text-[11px]">
+            <div className="grid grid-cols-3 w-full sm:w-auto sm:flex items-center sm:space-x-1 bg-[#222222] p-1 rounded-lg border border-white/15 text-[11px] gap-1 sm:gap-0">
               <button
                 onClick={() => setMapHeightMode('compact')}
-                className={`px-3 py-1 rounded font-bold transition-all ${
+                className={`px-2 sm:px-3 py-1.5 sm:py-1 rounded font-bold transition-all text-center min-h-[36px] sm:min-h-0 flex items-center justify-center ${
                   mapHeightMode === 'compact' ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white shadow-sm' : 'text-neutral-300 hover:text-white'
                 }`}
                 title={!isOptionsPanelOpen ? 'Compacto Expandido (720px)' : 'Altura compacta (520px)'}
@@ -1958,7 +1970,7 @@ export const NuclearRankingMapTab: React.FC = () => {
               </button>
               <button
                 onClick={() => setMapHeightMode('standard')}
-                className={`px-3 py-1 rounded font-bold transition-all ${
+                className={`px-2 sm:px-3 py-1.5 sm:py-1 rounded font-bold transition-all text-center min-h-[36px] sm:min-h-0 flex items-center justify-center ${
                   mapHeightMode === 'standard' ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white shadow-sm' : 'text-neutral-300 hover:text-white'
                 }`}
                 title={!isOptionsPanelOpen ? 'Médio Expandido (880px / 84vh)' : 'Altura padrão (640px)'}
@@ -1967,7 +1979,7 @@ export const NuclearRankingMapTab: React.FC = () => {
               </button>
               <button
                 onClick={() => setMapHeightMode('large')}
-                className={`px-3 py-1 rounded font-bold transition-all ${
+                className={`px-2 sm:px-3 py-1.5 sm:py-1 rounded font-bold transition-all text-center min-h-[36px] sm:min-h-0 flex items-center justify-center ${
                   mapHeightMode === 'large' ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white shadow-sm' : 'text-neutral-300 hover:text-white'
                 }`}
                 title={!isOptionsPanelOpen ? 'Grande Expandido (1020px / 90vh)' : 'Altura grande (760px)'}
@@ -1978,8 +1990,15 @@ export const NuclearRankingMapTab: React.FC = () => {
 
             {/* Toggle Options Overlay (Opções / Métricas) */}
             <button
-              onClick={handleToggleOptions}
-              className={`px-3 py-1.5 rounded-lg border text-[11px] font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
+              onClick={() => {
+                if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+                  setIsOptionsPanelOpen(true);
+                  setActiveTabMobile('options');
+                } else {
+                  handleToggleOptions();
+                }
+              }}
+              className={`w-full sm:w-auto justify-center sm:justify-start px-3 py-2 sm:py-1.5 rounded-lg border text-[11px] font-bold transition-all flex items-center space-x-1.5 cursor-pointer min-h-[40px] sm:min-h-0 ${
                 isOptionsPanelOpen
                   ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white border-pink-400 shadow-sm ring-1 ring-pink-400'
                   : 'bg-[#222222] text-neutral-200 hover:text-white hover:bg-[#282828] border-white/15'
@@ -1990,17 +2009,17 @@ export const NuclearRankingMapTab: React.FC = () => {
                   : 'Abrir opções e métricas ao lado do mapa'
               }
             >
-              <Layers className="w-3.5 h-3.5" />
-              <span>Opções & Métricas</span>
+              <Layers className="w-3.5 h-3.5 shrink-0" />
+              <span className="truncate">Opções & Métricas</span>
               <span
-                className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-black ${
+                className={`hidden lg:inline-block text-[9px] px-1.5 py-0.5 rounded font-mono font-black shrink-0 ${
                   isOptionsPanelOpen ? 'bg-white text-rose-600' : 'bg-[#333333] text-neutral-300'
                 }`}
               >
                 {isOptionsPanelOpen ? 'ABERTO' : 'FECHADO'}
               </span>
               {!isOptionsPanelOpen && (
-                <span className="hidden sm:inline-flex items-center text-[9px] font-semibold text-emerald-400 ml-0.5">
+                <span className="hidden xl:inline-flex items-center text-[9px] font-semibold text-emerald-400 ml-0.5">
                   • Mapa Verticalmente Expandido
                 </span>
               )}
@@ -2008,16 +2027,16 @@ export const NuclearRankingMapTab: React.FC = () => {
           </div>
 
           {/* Escolher Bomba posicionado na frente do mapa */}
-          <div className="relative z-30 bg-[#161616] border-b border-white/10 px-2.5 sm:px-3 py-1.5 flex flex-wrap items-center justify-start gap-2.5 sm:gap-3.5 overflow-visible">
+          <div className="relative z-30 bg-[#161616] border-b border-white/10 px-3 py-2 sm:py-1.5 flex flex-col sm:flex-row sm:flex-wrap sm:items-center justify-start gap-2 sm:gap-3.5 overflow-visible">
             {/* Escolher Bomba */}
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="w-full sm:w-auto flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2 min-w-0">
               <div className="flex items-center gap-1.5 text-xs font-black text-amber-400 uppercase tracking-wider shrink-0">
-                <Flame className="w-4 h-4 text-rose-500 animate-pulse" />
-                <span className="whitespace-nowrap text-rose-400">Escolher Bomba:</span>
+                <Flame className="w-4 h-4 text-rose-500 animate-pulse shrink-0" />
+                <span className="text-rose-400">Escolher Bomba:</span>
               </div>
 
               {/* Seletor Customizado com visual em destaque na frente do mapa */}
-              <div ref={bombDropdownRef} className="relative shrink-0 z-40">
+              <div ref={bombDropdownRef} className="relative w-full sm:w-auto sm:shrink-0 z-40 min-w-0">
                 <button
                   type="button"
                   onClick={() => {
@@ -2025,18 +2044,21 @@ export const NuclearRankingMapTab: React.FC = () => {
                     setIsSearchOpen(false);
                     setIsBombDropdownOpen(!isBombDropdownOpen);
                   }}
-                  className="bg-[#222222] hover:bg-[#282828] text-white text-xs font-bold px-2.5 py-1.5 rounded-lg border border-white/15 hover:border-white/30 focus:outline-none focus:border-rose-500 cursor-pointer flex items-center gap-2 transition-all max-w-[210px] sm:max-w-xs shadow-sm"
+                  className="w-full sm:w-auto sm:max-w-xs justify-between sm:justify-start bg-[#222222] hover:bg-[#282828] text-white text-xs font-bold px-3 sm:px-2.5 py-2 sm:py-1.5 rounded-lg border border-white/15 hover:border-white/30 focus:outline-none focus:border-rose-500 cursor-pointer flex items-center gap-2 transition-all shadow-sm min-h-[44px] sm:min-h-[34px]"
                   title="Clique para escolher uma arma atômica do ranking"
                 >
-                  <span className="truncate">{selectedBomb.name}</span>
-                  <span className="font-mono text-rose-300 font-extrabold text-[11px] shrink-0 bg-rose-950/60 border border-rose-500/30 px-1.5 py-0.5 rounded">
-                    {selectedBomb.yieldDisplay}
-                  </span>
-                  <ChevronDown className={`w-3.5 h-3.5 text-neutral-400 shrink-0 transition-transform duration-200 ${isBombDropdownOpen ? 'rotate-180 text-white' : ''}`} />
+                  <span className="max-sm:whitespace-normal break-words sm:truncate text-left flex-1 sm:flex-initial">{selectedBomb.name}</span>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <span className="font-mono text-rose-300 font-extrabold text-[11px] shrink-0 bg-rose-950/60 border border-rose-500/30 px-1.5 py-0.5 rounded">
+                      {selectedBomb.yieldDisplay}
+                    </span>
+                    <ChevronDown className={`w-3.5 h-3.5 text-neutral-400 shrink-0 transition-transform duration-200 ${isBombDropdownOpen ? 'rotate-180 text-white' : ''}`} />
+                  </div>
                 </button>
 
+                {/* Desktop Dropdown: preservado para telas sm em diante */}
                 {isBombDropdownOpen && (
-                  <div className="absolute left-0 top-full mt-1.5 w-80 sm:w-[440px] max-w-[95vw] bg-[#141414] border-2 border-rose-500/60 rounded-xl shadow-[0_25px_60px_rgba(0,0,0,0.98)] z-50 max-h-80 sm:max-h-96 overflow-y-auto p-1.5 space-y-1 pointer-events-auto backdrop-blur-md">
+                  <div className="hidden sm:block absolute left-0 top-full mt-1.5 w-80 sm:w-[440px] max-w-[95vw] bg-[#141414] border-2 border-rose-500/60 rounded-xl shadow-[0_25px_60px_rgba(0,0,0,0.98)] z-50 max-h-80 sm:max-h-96 overflow-y-auto p-1.5 space-y-1 pointer-events-auto backdrop-blur-md">
                     <div className="px-2.5 py-1.5 text-[10px] uppercase font-bold text-neutral-400 flex items-center justify-between border-b border-white/10">
                       <span className="tracking-wider">Armas Nucleares do Ranking</span>
                       <span className="text-rose-400 font-mono text-[9px]">0,02 kt a 100 Mt</span>
@@ -2075,12 +2097,94 @@ export const NuclearRankingMapTab: React.FC = () => {
                     })}
                   </div>
                 )}
+
+                {/* Mobile Dedicated Bottom Sheet Modal: Não sobrepõe o mapa permanentemente e tem toque confortável */}
+                {isBombDropdownOpen && (
+                  <div className="sm:hidden fixed inset-0 z-[99999] flex flex-col justify-end bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div
+                      className="absolute inset-0"
+                      onClick={() => setIsBombDropdownOpen(false)}
+                      aria-label="Fechar seletor"
+                    />
+                    <div
+                      className="relative z-10 bg-[#141414] border-t-2 border-rose-500 rounded-t-2xl max-h-[85vh] flex flex-col shadow-2xl p-4 space-y-3 pb-8"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {/* Barra de Arraste Superior */}
+                      <div className="w-12 h-1 bg-white/20 rounded-full mx-auto" />
+
+                      {/* Cabeçalho do Bottom Sheet */}
+                      <div className="flex items-center justify-between pb-2 border-b border-white/10">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <Flame className="w-4 h-4 text-rose-500 animate-pulse" />
+                            <h3 className="text-sm font-black text-white uppercase tracking-wider">
+                              Escolher Artefato Nuclear
+                            </h3>
+                          </div>
+                          <p className="text-[11px] text-neutral-400 mt-0.5">
+                            Selecione a bomba para simular os efeitos no mapa
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setIsBombDropdownOpen(false)}
+                          className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white min-w-[40px] min-h-[40px] flex items-center justify-center cursor-pointer"
+                          aria-label="Fechar"
+                        >
+                          <X className="w-5 h-5" />
+                        </button>
+                      </div>
+
+                      {/* Lista Vertical de Bombas com Rolagem Própria */}
+                      <div className="overflow-y-auto max-h-[62vh] space-y-2 pr-1 overscroll-contain">
+                        {NUCLEAR_RANKING_BOMBS.map((b) => {
+                          const isSelected = selectedBomb.id === b.id;
+                          const bCas = calculateBombCityCasualties(b, selectedCity);
+                          return (
+                            <button
+                              key={b.id}
+                              type="button"
+                              onClick={() => {
+                                handleSelectBomb(b);
+                                setIsBombDropdownOpen(false);
+                              }}
+                              className={`w-full text-left p-3 rounded-xl transition-all flex items-start justify-between gap-3 cursor-pointer min-h-[56px] ${
+                                isSelected
+                                  ? 'bg-rose-500/20 border-2 border-rose-500 text-white font-bold ring-1 ring-rose-500/40 shadow-lg'
+                                  : 'bg-[#1c1c1c] hover:bg-[#252525] text-neutral-200 hover:text-white border border-white/10'
+                              }`}
+                            >
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span className="text-sm font-bold text-white break-words">{b.name}</span>
+                                  <span className="text-xs font-mono text-rose-300 font-extrabold bg-rose-950/60 border border-rose-500/30 px-1.5 py-0.5 rounded">
+                                    {b.yieldDisplay}
+                                  </span>
+                                </div>
+                                <p className="text-xs text-neutral-300 mt-1 break-words">
+                                  {b.type} • {b.country} ({b.year})
+                                </p>
+                                <div className="text-[11px] font-mono text-rose-400 mt-1.5 flex items-center gap-1.5 font-semibold">
+                                  <span>💀 {bCas.deathsRangeDisplay} mortes estimadas em {selectedCity.name}</span>
+                                </div>
+                              </div>
+                              <span className="text-xs font-mono px-2 py-1 rounded bg-black/70 border border-white/15 text-neutral-200 shrink-0 mt-0.5">
+                                {b.yieldKt >= 1000 ? `${(b.yieldKt / 1000).toFixed(1)} Mt` : `${b.yieldKt} kt`}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
           {/* Leaflet Map Canvas Container */}
-          <div className={`relative z-0 w-full ${getContainerHeightClass()} bg-[#0D0D0D] overflow-hidden flex-1 ${!isOptionsPanelOpen ? 'min-h-[600px]' : 'min-h-[460px]'}`}>
+          <div className={`relative z-0 w-full ${getContainerHeightClass()} bg-[#0D0D0D] overflow-hidden flex-1 ${!isOptionsPanelOpen ? 'min-h-[380px] sm:min-h-[600px]' : 'min-h-[360px] sm:min-h-[460px]'}`}>
             {/* Inner Leaflet Mount */}
             <div className="relative w-full h-full bg-[#080808]">
               <div ref={mapContainerRef} className="absolute inset-0 w-full h-full z-0" />
@@ -2096,74 +2200,87 @@ export const NuclearRankingMapTab: React.FC = () => {
               )}
 
               {/* Floating Tactical Detonation HUD on Map */}
-              <div className="absolute top-3 left-3 z-20 pointer-events-auto flex items-center gap-2">
+              <div className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 z-20 pointer-events-auto flex items-center gap-1.5 sm:gap-2">
                 {!isDetonated ? (
                   <button
                     onClick={handleDetonate}
-                    className="group relative flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 via-red-600 to-amber-500 hover:from-red-500 hover:to-amber-400 text-white font-black text-xs uppercase tracking-wider shadow-2xl shadow-red-600/60 border-2 border-red-300 active:scale-95 transition-all cursor-pointer animate-pulse"
+                    className="group relative flex items-center gap-1.5 sm:gap-2 px-3 py-2 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-red-600 via-red-600 to-amber-500 hover:from-red-500 hover:to-amber-400 text-white font-black text-[11px] sm:text-xs uppercase tracking-wider shadow-2xl shadow-red-600/60 border-2 border-red-300 active:scale-95 transition-all cursor-pointer animate-pulse min-h-[38px] sm:min-h-0"
                     title="Clique para detonar a arma atômica e calcular as zonas de destruição reais"
                   >
-                    <div className="w-2.5 h-2.5 rounded-full bg-white animate-ping" />
-                    <Flame className="w-4 h-4 fill-amber-200 text-amber-200 group-hover:rotate-12 transition-transform" />
-                    <span className="font-extrabold tracking-wide">DETONAR BOMBA</span>
+                    <div className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-white animate-ping" />
+                    <Flame className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-amber-200 text-amber-200 group-hover:rotate-12 transition-transform" />
+                    <span className="font-extrabold tracking-wide">DETONAR</span>
                   </button>
                 ) : (
                   <button
                     onClick={handleResetDetonation}
-                    className="px-3.5 py-2 rounded-xl bg-[#121212]/95 hover:bg-[#1e1e1e] backdrop-blur-md text-amber-300 hover:text-white border border-amber-500/40 shadow-2xl font-sans font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer"
+                    className="px-3 py-2 sm:px-3.5 sm:py-2 rounded-xl bg-[#121212]/95 hover:bg-[#1e1e1e] backdrop-blur-md text-amber-300 hover:text-white border border-amber-500/40 shadow-2xl font-sans font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer min-h-[38px] sm:min-h-0"
                     title="Ocultar zonas e rearmar novo alvo"
                   >
                     <RotateCcw className="w-3.5 h-3.5 text-amber-400" />
                     <span>Rearmar</span>
                   </button>
                 )}
+
+                {/* Mobile Quick Options Shortcut button right on map */}
+                <button
+                  onClick={() => setActiveTabMobile('options')}
+                  className="lg:hidden flex items-center gap-1 px-2.5 py-2 rounded-xl bg-[#141414]/95 hover:bg-[#202020] text-rose-300 hover:text-white border border-rose-500/40 shadow-xl font-bold text-[11px] backdrop-blur-md active:scale-95 transition-all cursor-pointer min-h-[38px]"
+                  title="Ver Opções e Métricas de Danos"
+                >
+                  <Layers className="w-3.5 h-3.5 text-rose-400" />
+                  <span className="hidden min-[380px]:inline">Métricas</span>
+                </button>
               </div>
 
-              {/* Tactical Zoom, Style & Global View Floating Controls Inside The Map */}
-              <div className="absolute top-3 right-3 z-20 flex flex-col items-end space-y-2 pointer-events-auto">
+              {/* Tactical Map Layer Style Selector (Top-Right) */}
+              <div className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 z-20 flex flex-col items-end space-y-1.5 sm:space-y-2 pointer-events-auto">
                 {/* Tactical Theme Segmented Control Pod (Tático / Satélite / Rua) Inside Map */}
-                <div className="bg-[#141414]/95 backdrop-blur-md border border-white/20 rounded-xl p-1 shadow-2xl flex items-center gap-1">
+                <div className="bg-[#141414]/95 backdrop-blur-md border border-white/20 rounded-xl p-1 shadow-2xl flex items-center gap-1 text-[11px] sm:text-xs">
                   <button
                     onClick={() => setMapTheme('tactical')}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                    className={`px-2 py-1.5 sm:px-2.5 sm:py-1 rounded-lg font-bold transition-all flex items-center gap-1 cursor-pointer min-w-[38px] min-h-[38px] sm:min-w-0 sm:min-h-0 justify-center ${
                       mapTheme === 'tactical'
                         ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white shadow-md'
                         : 'text-neutral-400 hover:text-white hover:bg-white/10'
                     }`}
                     title="Modo Tático Militar (Mapa Escuro de Alto Contraste)"
+                    aria-label="Modo Tático"
                   >
                     <ShieldAlert className="w-3.5 h-3.5" />
-                    <span>Tático</span>
+                    <span className="hidden sm:inline">Tático</span>
                   </button>
                   <button
                     onClick={() => setMapTheme('satellite')}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                    className={`px-2 py-1.5 sm:px-2.5 sm:py-1 rounded-lg font-bold transition-all flex items-center gap-1 cursor-pointer min-w-[38px] min-h-[38px] sm:min-w-0 sm:min-h-0 justify-center ${
                       mapTheme === 'satellite'
                         ? 'bg-cyan-600 text-white shadow-md'
                         : 'text-neutral-400 hover:text-white hover:bg-white/10'
                     }`}
                     title="Modo Satélite"
+                    aria-label="Modo Satélite"
                   >
                     <Satellite className="w-3.5 h-3.5" />
-                    <span>Satélite</span>
+                    <span className="hidden sm:inline">Sat</span>
                   </button>
                   <button
                     onClick={() => setMapTheme('osm')}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                    className={`px-2 py-1.5 sm:px-2.5 sm:py-1 rounded-lg font-bold transition-all flex items-center gap-1 cursor-pointer min-w-[38px] min-h-[38px] sm:min-w-0 sm:min-h-0 justify-center ${
                       mapTheme === 'osm'
                         ? 'bg-neutral-200 text-neutral-950 shadow-md'
                         : 'text-neutral-400 hover:text-white hover:bg-white/10'
                     }`}
                     title="Modo Rua (OpenStreetMap Claro)"
+                    aria-label="Modo Rua"
                   >
                     <Layers className="w-3.5 h-3.5" />
-                    <span>Rua</span>
+                    <span className="hidden sm:inline">Rua</span>
                   </button>
                 </div>
 
-                {/* Secondary Tactical Map Controls Pod: Mundi, Focar, Historic Sites & Zoom Inside Map */}
-                <div className="flex items-center gap-1.5">
-                  {/* World Map Button (Mundi) inside map */}
+                {/* Secondary Tactical Map Controls Pod on Desktop & Mobile (Positioned at bottom-right on small phones < sm to never touch top-left buttons) */}
+                <div className="max-sm:fixed max-sm:hidden sm:flex items-center gap-1.5">
+                  {/* World Map Button (Mundi) */}
                   <button
                     onClick={handleViewWorldMap}
                     className={`px-2.5 py-1.5 rounded-xl border text-xs font-bold transition-all flex items-center space-x-1.5 backdrop-blur-md shadow-xl cursor-pointer ${
@@ -2178,7 +2295,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                     <span>Mundi</span>
                   </button>
 
-                  {/* Focus Target Button (Focar) inside map */}
+                  {/* Focus Target Button (Focar) */}
                   <button
                     onClick={handleRecenter}
                     className="px-2.5 py-1.5 rounded-xl bg-[#161616]/95 hover:bg-[#252525] text-neutral-200 hover:text-white border border-white/20 text-xs font-bold backdrop-blur-md shadow-xl transition-all flex items-center space-x-1.5 cursor-pointer"
@@ -2203,7 +2320,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                     <Radiation className="w-3.5 h-3.5" />
                   </button>
 
-                  {/* Zoom In & Out Pod inside map */}
+                  {/* Zoom In & Out Pod */}
                   <div className="bg-[#161616]/95 backdrop-blur-md border border-white/20 rounded-xl p-0.5 shadow-xl flex items-center space-x-0.5">
                     <button
                       onClick={handleZoomIn}
@@ -2225,13 +2342,67 @@ export const NuclearRankingMapTab: React.FC = () => {
                 </div>
               </div>
 
+              {/* Mobile Bottom-Right Compact Action & Zoom Dock (Exclusive to < sm viewports so top bar never overlaps) */}
+              <div className="sm:hidden absolute bottom-2.5 right-2.5 z-20 flex items-center gap-1.5 pointer-events-auto">
+                <button
+                  onClick={handleViewWorldMap}
+                  className={`w-10 h-10 rounded-xl border flex items-center justify-center backdrop-blur-md shadow-xl cursor-pointer transition-all ${
+                    isWorldView
+                      ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white border-pink-400'
+                      : 'bg-[#161616]/95 text-neutral-200 border-white/20'
+                  }`}
+                  title="Mapa Mundi"
+                  aria-label="Mapa Mundi"
+                >
+                  <Globe className={`w-4 h-4 ${isWorldView ? 'text-white' : 'text-emerald-400'}`} />
+                </button>
+                <button
+                  onClick={handleRecenter}
+                  className="w-10 h-10 rounded-xl bg-[#161616]/95 text-neutral-200 border border-white/20 flex items-center justify-center backdrop-blur-md shadow-xl cursor-pointer"
+                  title="Focar no Alvo"
+                  aria-label="Focar no Alvo"
+                >
+                  <Crosshair className="w-4 h-4 text-rose-500" />
+                </button>
+                <button
+                  onClick={() => setShowTestSites(!showTestSites)}
+                  className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-xl backdrop-blur-md cursor-pointer ${
+                    showTestSites
+                      ? 'bg-amber-500/25 text-amber-300 border border-amber-500/50'
+                      : 'bg-[#161616]/95 text-neutral-400 border border-white/20'
+                  }`}
+                  title="Locais Históricos de Testes"
+                  aria-label="Locais Históricos de Testes"
+                >
+                  <Radiation className="w-4 h-4" />
+                </button>
+                <div className="bg-[#161616]/95 backdrop-blur-md border border-white/20 rounded-xl p-0.5 shadow-xl flex items-center gap-0.5">
+                  <button
+                    onClick={handleZoomIn}
+                    className="w-9 h-9 rounded-lg bg-[#222222] text-white flex items-center justify-center cursor-pointer"
+                    title="Ampliar (+)"
+                    aria-label="Ampliar visão"
+                  >
+                    <ZoomIn className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={handleZoomOut}
+                    className="w-9 h-9 rounded-lg bg-[#222222] text-white flex items-center justify-center cursor-pointer"
+                    title="Diminuir (-)"
+                    aria-label="Diminuir visão"
+                  >
+                    <ZoomOut className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
               {/* Tactical Esri Dark Canvas Status Indicator */}
               {mapTheme === 'tactical' && (
-                <div className="absolute bottom-3 left-3 z-20 pointer-events-auto bg-[#121212]/90 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/15 text-[10px] font-mono text-neutral-300 flex items-center gap-2 shadow-xl">
-                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
-                  <span className="font-bold text-white">Tático Militar</span>
-                  <span className="text-white/20">|</span>
-                  <span className="text-emerald-400 font-semibold">Esri Canvas Dark (Alta Precisão • Online)</span>
+                <div className="absolute bottom-2.5 left-2.5 sm:bottom-3 sm:left-3 z-20 pointer-events-auto bg-[#121212]/90 backdrop-blur-md px-2.5 py-1.5 sm:py-1 rounded-lg border border-white/15 text-[10px] font-mono text-neutral-300 flex items-center gap-1.5 sm:gap-2 shadow-xl">
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse shrink-0" />
+                  <span className="font-bold text-white">Tático</span>
+                  <span className="hidden sm:inline text-white/20">|</span>
+                  <span className="hidden sm:inline text-emerald-400 font-semibold">Esri Canvas Dark (Alta Precisão • Online)</span>
                 </div>
               )}
 
@@ -2240,52 +2411,60 @@ export const NuclearRankingMapTab: React.FC = () => {
           </div>
         </div>
 
-        {/* Dedicated Map Options, Metrics & Physical Dimensions Column (Same size as before, perfectly matched height) */}
+        {/* Dedicated Map Options, Metrics & Physical Dimensions Column (Same size as before, perfectly matched height on desktop) */}
         {isOptionsPanelOpen && (
           <div
-            className={`lg:col-span-4 xl:col-span-4 2xl:col-span-3 border-l border-white/10 bg-[#121212] p-3 sm:p-4 flex flex-col space-y-3.5 overflow-y-auto min-h-0 h-full ${
+            className={`lg:col-span-4 xl:col-span-4 2xl:col-span-3 border-l border-white/10 bg-[#121212] p-3 sm:p-4 flex flex-col space-y-3.5 overflow-y-auto min-h-0 h-full max-lg:max-h-none max-lg:h-auto ${
+              mapHeightMode === 'immersive'
+                ? 'lg:max-h-[calc(82vh+95px)]'
+                : mapHeightMode === 'large'
+                ? 'lg:max-h-[855px]'
+                : mapHeightMode === 'standard'
+                ? 'lg:max-h-[735px]'
+                : 'lg:max-h-[615px]'
+            } ${
               activeTabMobile === 'options' ? 'block' : 'hidden lg:flex'
             }`}
-            style={{
-              maxHeight:
-                mapHeightMode === 'immersive'
-                  ? 'calc(82vh + 95px)'
-                  : mapHeightMode === 'large'
-                  ? '855px'
-                  : mapHeightMode === 'standard'
-                  ? '735px'
-                  : '615px',
-            }}
           >
+            {/* Botão Móvel Rápido: Voltar ao Mapa */}
+            <button
+              onClick={() => setActiveTabMobile('map')}
+              className="lg:hidden flex items-center justify-center gap-2 w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-pink-600 hover:from-red-500 hover:to-pink-500 text-white font-extrabold text-xs shadow-lg border border-red-400/40 active:scale-98 transition-all min-h-[44px]"
+            >
+              <Target className="w-4 h-4 shrink-0" />
+              <span>🗺️ Voltar ao Mapa Tático</span>
+            </button>
+
             {/* Header do Painel Lateral */}
-            <div className="flex items-center justify-between pb-3 border-b border-white/10">
-              <div className="flex items-center space-x-2 min-w-0">
+            <div className="flex items-start sm:items-center justify-between gap-2 pb-3 border-b border-white/10">
+              <div className="flex items-start sm:items-center space-x-2 min-w-0 flex-1">
                 <div className="p-1.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 shrink-0">
                   <Layers className="w-4 h-4" />
                 </div>
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <h4 className="text-xs font-bold text-white uppercase tracking-wider">
                       Opções & Métricas
                     </h4>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-rose-500/15 text-rose-300 border border-rose-500/30 flex items-center gap-1 truncate">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-rose-500/15 text-rose-300 border border-rose-500/30 inline-flex items-center gap-1 max-w-full sm:truncate">
                       <MapPin className="w-2.5 h-2.5 text-rose-400 shrink-0" />
-                      <span className="truncate">{selectedCity.name}</span>
+                      <span className="max-sm:whitespace-normal break-words sm:truncate">{selectedCity.name}</span>
                     </span>
                   </div>
-                  <p className="text-[10px] text-neutral-400 truncate mt-0.5">
+                  <p className="text-[10px] text-neutral-400 max-sm:whitespace-normal break-words sm:truncate mt-0.5">
                     Alvo: <strong className="text-neutral-200">{selectedCity.name}</strong> • {selectedBomb.name}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center space-x-2 shrink-0">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#222222] text-red-300 border border-white/15 font-bold">
+              <div className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#222222] text-red-300 border border-white/15 font-bold whitespace-nowrap">
                   {selectedBomb.yieldDisplay}
                 </span>
                 <button
                   onClick={handleToggleOptions}
-                  className="p-1 rounded-lg text-neutral-400 hover:text-white hover:bg-[#222222] transition-colors cursor-pointer"
+                  className="p-1.5 sm:p-1 min-w-[36px] min-h-[36px] sm:min-w-0 sm:min-h-0 rounded-lg text-neutral-400 hover:text-white hover:bg-[#222222] transition-colors cursor-pointer flex items-center justify-center"
                   title="Fechar opções e expandir o mapa na vertical e horizontal"
+                  aria-label="Fechar painel de opções"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -2296,35 +2475,35 @@ export const NuclearRankingMapTab: React.FC = () => {
             <div className="grid grid-cols-3 gap-1 p-1 bg-[#181818] rounded-xl border border-white/10">
               <button
                 onClick={() => setOptionsActiveTab('layers')}
-                className={`py-1.5 px-2 text-[11px] font-bold rounded-lg transition-all flex items-center justify-center space-x-1 ${
+                className={`min-h-[42px] sm:min-h-0 py-1.5 px-1.5 sm:px-2 text-[10.5px] sm:text-[11px] font-bold rounded-lg transition-all flex max-[380px]:flex-col items-center justify-center gap-0.5 sm:gap-1 leading-tight text-center ${
                   optionsActiveTab === 'layers'
                     ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white shadow-sm'
                     : 'text-neutral-400 hover:text-white'
                 }`}
               >
-                <Layers className="w-3 h-3" />
+                <Layers className="w-3 h-3 shrink-0" />
                 <span>Camadas</span>
               </button>
               <button
                 onClick={() => setOptionsActiveTab('fallout')}
-                className={`py-1.5 px-2 text-[11px] font-bold rounded-lg transition-all flex items-center justify-center space-x-1 ${
+                className={`min-h-[42px] sm:min-h-0 py-1.5 px-1.5 sm:px-2 text-[10.5px] sm:text-[11px] font-bold rounded-lg transition-all flex max-[380px]:flex-col items-center justify-center gap-0.5 sm:gap-1 leading-tight text-center ${
                   optionsActiveTab === 'fallout'
                     ? 'bg-amber-500 text-black shadow-sm font-extrabold'
                     : 'text-neutral-400 hover:text-white'
                 }`}
               >
-                <Radiation className="w-3 h-3" />
+                <Radiation className="w-3 h-3 shrink-0" />
                 <span>Fallout</span>
               </button>
               <button
                 onClick={() => setOptionsActiveTab('physics')}
-                className={`py-1.5 px-2 text-[11px] font-bold rounded-lg transition-all flex items-center justify-center space-x-1 ${
+                className={`min-h-[42px] sm:min-h-0 py-1.5 px-1.5 sm:px-2 text-[10.5px] sm:text-[11px] font-bold rounded-lg transition-all flex max-[380px]:flex-col items-center justify-center gap-0.5 sm:gap-1 leading-tight text-center ${
                   optionsActiveTab === 'physics'
                     ? 'bg-purple-600 text-white shadow-sm'
                     : 'text-neutral-400 hover:text-white'
                 }`}
               >
-                <Target className="w-3 h-3" />
+                <Target className="w-3 h-3 shrink-0" />
                 <span>Alvo & Física</span>
               </button>
             </div>
@@ -2335,9 +2514,9 @@ export const NuclearRankingMapTab: React.FC = () => {
 
                 {/* Seletor de Modo de Medição: Raio vs Diâmetro vs Ambos */}
                 <div className="bg-[#181818]/90 p-2.5 rounded-xl border border-white/10 space-y-2">
-                  <div className="flex items-center justify-between text-[11px] text-neutral-200 font-medium">
+                  <div className="flex flex-wrap items-center justify-between gap-1 text-[11px] text-neutral-200 font-medium">
                     <span className="flex items-center gap-1.5">
-                      <Maximize2 className="w-3.5 h-3.5 text-rose-400" />
+                      <Maximize2 className="w-3.5 h-3.5 text-rose-400 shrink-0" />
                       <span>Modo de Medição:</span>
                     </span>
                     <span className="font-mono text-[10px] text-neutral-400">
@@ -2347,7 +2526,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                   <div className="grid grid-cols-3 gap-1 p-1 bg-[#141414] rounded-lg border border-white/10">
                     <button
                       onClick={() => setDimensionMode('radius')}
-                      className={`py-1.5 text-[11px] font-bold rounded transition-all flex items-center justify-center ${
+                      className={`min-h-[40px] sm:min-h-0 py-1.5 px-1 text-[10.5px] sm:text-[11px] font-bold rounded transition-all flex items-center justify-center text-center leading-tight ${
                         dimensionMode === 'radius'
                           ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white shadow'
                           : 'text-neutral-400 hover:text-white'
@@ -2357,7 +2536,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                     </button>
                     <button
                       onClick={() => setDimensionMode('diameter')}
-                      className={`py-1.5 text-[11px] font-bold rounded transition-all flex items-center justify-center ${
+                      className={`min-h-[40px] sm:min-h-0 py-1.5 px-1 text-[10.5px] sm:text-[11px] font-bold rounded transition-all flex items-center justify-center text-center leading-tight ${
                         dimensionMode === 'diameter'
                           ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white shadow'
                           : 'text-neutral-400 hover:text-white'
@@ -2367,7 +2546,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                     </button>
                     <button
                       onClick={() => setDimensionMode('both')}
-                      className={`py-1.5 text-[11px] font-bold rounded transition-all flex items-center justify-center ${
+                      className={`min-h-[40px] sm:min-h-0 py-1.5 px-1 text-[10.5px] sm:text-[11px] font-bold rounded transition-all flex items-center justify-center text-center leading-tight ${
                         dimensionMode === 'both'
                           ? 'bg-gradient-to-r from-rose-600 to-pink-500 text-white shadow'
                           : 'text-neutral-400 hover:text-white'
@@ -2391,10 +2570,10 @@ export const NuclearRankingMapTab: React.FC = () => {
 
                   {/* Status do Alvo (Detonação Exclusiva Dentro do Mapa) */}
                   {!isDetonated ? (
-                    <div className="p-2.5 rounded-xl bg-black border border-white/10 flex items-center justify-between text-[11px]">
-                      <div className="flex items-center gap-2 min-w-0">
+                    <div className="p-2.5 rounded-xl bg-black border border-white/10 flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 text-[11px]">
+                      <div className="flex items-center gap-2 min-w-0 flex-1">
                         <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0" />
-                        <span className="text-neutral-300 font-medium truncate">
+                        <span className="text-neutral-300 font-medium max-sm:whitespace-normal break-words sm:truncate">
                           Cidade Alvo: <strong className="text-white">{selectedCity.name}</strong>
                         </span>
                       </div>
@@ -2403,16 +2582,16 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </span>
                     </div>
                   ) : (
-                    <div className="p-2 rounded-xl bg-black border border-rose-500/50 flex items-center justify-between text-[11px]">
-                      <div className="flex items-center gap-2 min-w-0">
+                    <div className="p-2 rounded-xl bg-black border border-rose-500/50 flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 text-[11px]">
+                      <div className="flex items-center gap-2 min-w-0 flex-1">
                         <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping shrink-0" />
-                        <span className="text-rose-300 font-bold font-mono text-[10px] truncate">
+                        <span className="text-rose-300 font-bold font-mono text-[10px] max-sm:whitespace-normal break-words sm:truncate">
                           ALVO: {selectedCity.name.toUpperCase()} — DETONADA
                         </span>
                       </div>
                       <button
                         onClick={handleResetDetonation}
-                        className="px-2 py-0.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-amber-300 hover:text-white border border-white/20 text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer shrink-0"
+                        className="min-h-[36px] sm:min-h-0 px-2.5 sm:px-2 py-1 sm:py-0.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-amber-300 hover:text-white border border-white/20 text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer shrink-0"
                       >
                         <RotateCcw className="w-3 h-3 text-amber-400" />
                         <span>Rearmar</span>
@@ -2422,38 +2601,38 @@ export const NuclearRankingMapTab: React.FC = () => {
 
                   {/* Card de Balanço Geral de Vítimas & Mortes em Tempo Real */}
                   <div className="bg-black p-3.5 rounded-2xl border border-rose-500/40 shadow-lg space-y-2.5">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap sm:flex-nowrap items-start sm:items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 min-w-0 flex-1">
                         <div className="w-7 h-7 rounded-xl bg-rose-500/20 border border-rose-500/50 flex items-center justify-center text-rose-400 shrink-0">
                           <Skull className="w-4 h-4" />
                         </div>
-                        <div>
+                        <div className="min-w-0 flex-1">
                           <span className="text-[10px] uppercase font-mono tracking-wider text-rose-400 font-extrabold block">
                             Balanço Geral de Vítimas
                           </span>
-                          <span className="text-xs font-bold text-white block truncate">
+                          <span className="text-xs font-bold text-white block max-sm:whitespace-normal break-words sm:truncate">
                             {selectedBomb.name} sobre {selectedCity.name}
                           </span>
                         </div>
                       </div>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold">
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold shrink-0 whitespace-nowrap">
                         {isDetonated ? `${casualties.mortalityPercentage.toFixed(1)}% letalidade` : 'Aguardando'}
                       </span>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="p-2.5 rounded-xl bg-neutral-950 border border-rose-500/40">
+                    <div className="grid grid-cols-1 min-[360px]:grid-cols-2 gap-2">
+                      <div className="p-2.5 rounded-xl bg-neutral-950 border border-rose-500/40 min-w-0">
                         <span className="text-[10px] text-rose-300/90 block font-semibold">💀 Mortes Estimadas</span>
-                        <span className="text-base font-black text-rose-200 font-mono tracking-tight block truncate" title={`Faixa de estimativa: ${casualties.deathsRangeDisplay}`}>
+                        <span className="text-sm sm:text-base font-black text-rose-200 font-mono tracking-tight block max-sm:whitespace-normal break-words sm:truncate" title={`Faixa de estimativa: ${casualties.deathsRangeDisplay}`}>
                           {isDetonated ? casualties.deathsRangeDisplay : '—'}
                         </span>
                         <span className="text-[9px] text-neutral-400 block font-mono mt-0.5">
                           {isDetonated ? `Média: ~${formatCasualtyNumber(casualties.totalDeaths)}` : 'Aguardando detonação'}
                         </span>
                       </div>
-                      <div className="p-2.5 rounded-xl bg-neutral-950 border border-amber-500/40">
+                      <div className="p-2.5 rounded-xl bg-neutral-950 border border-amber-500/40 min-w-0">
                         <span className="text-[10px] text-amber-300/90 block font-semibold">🩹 Feridos Graves</span>
-                        <span className="text-base font-black text-amber-200 font-mono tracking-tight block truncate" title={`Faixa de feridos: ${casualties.injuriesRangeDisplay}`}>
+                        <span className="text-sm sm:text-base font-black text-amber-200 font-mono tracking-tight block max-sm:whitespace-normal break-words sm:truncate" title={`Faixa de feridos: ${casualties.injuriesRangeDisplay}`}>
                           {isDetonated ? casualties.injuriesRangeDisplay : '—'}
                         </span>
                         <span className="text-[9px] text-neutral-400 block font-mono mt-0.5">
@@ -2462,7 +2641,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="p-2 rounded-xl bg-neutral-950 border border-white/10 flex items-center justify-between text-[11px] font-mono text-neutral-300">
+                    <div className="p-2 rounded-xl bg-neutral-950 border border-white/10 flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5 text-[11px] font-mono text-neutral-300">
                       <span className="text-neutral-400">População sob Impacto Real:</span>
                       <span className="text-white font-bold">
                         {isDetonated ? `${formatCasualtyNumber(casualties.totalAffectedPop)} pessoas` : '—'}
@@ -2490,24 +2669,24 @@ export const NuclearRankingMapTab: React.FC = () => {
 
                 {/* Seção: Cartões de Métricas Físicas Detalhadas para Todas as 7 Zonas */}
                 <div className="space-y-2.5 pt-1">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-1.5">
-                      <Layers className="w-3.5 h-3.5 text-rose-400" />
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center space-x-1.5 min-w-0">
+                      <Layers className="w-3.5 h-3.5 text-rose-400 shrink-0" />
                       <span className="text-[10px] text-neutral-400 uppercase tracking-wider font-bold block">
                         Métricas e Limiares Físicos das 7 Zonas
                       </span>
                     </div>
-                    <div className="flex items-center space-x-1.5 text-[10px]">
+                    <div className="flex items-center space-x-1.5 text-[10px] shrink-0">
                       <button
                         onClick={() => setAllLayers(true)}
-                        className="px-2 py-0.5 rounded bg-[#222222] hover:bg-[#282828] text-neutral-300 hover:text-white border border-white/15 transition-all font-semibold cursor-pointer"
+                        className="min-h-[36px] sm:min-h-0 px-2.5 sm:px-2 py-1 sm:py-0.5 rounded bg-[#222222] hover:bg-[#282828] text-neutral-300 hover:text-white border border-white/15 transition-all font-semibold cursor-pointer"
                         title="Ativar todas as 7 zonas no mapa"
                       >
                         Ativar Todas
                       </button>
                       <button
                         onClick={() => setAllLayers(false)}
-                        className="px-2 py-0.5 rounded bg-[#222222] hover:bg-[#282828] text-neutral-300 hover:text-white border border-white/15 transition-all font-semibold cursor-pointer"
+                        className="min-h-[36px] sm:min-h-0 px-2.5 sm:px-2 py-1 sm:py-0.5 rounded bg-[#222222] hover:bg-[#282828] text-neutral-300 hover:text-white border border-white/15 transition-all font-semibold cursor-pointer"
                         title="Ocultar todas as 7 zonas no mapa"
                       >
                         Ocultar Todas
@@ -2528,19 +2707,19 @@ export const NuclearRankingMapTab: React.FC = () => {
                         : 'border-white/10 opacity-60 bg-black/60'
                     }`}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <span className={`w-2.5 h-2.5 rounded-full ${visibleLayers.fireball ? 'bg-amber-400 shadow-sm shadow-amber-400/50' : 'bg-neutral-600'}`} />
+                    <div className="flex flex-wrap items-center justify-between gap-1.5">
+                      <div className="flex items-center space-x-2 min-w-0">
+                        <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${visibleLayers.fireball ? 'bg-amber-400 shadow-sm shadow-amber-400/50' : 'bg-neutral-600'}`} />
                         <span className={`text-xs font-bold ${visibleLayers.fireball ? 'text-amber-300' : 'text-neutral-400'}`}>1. Bola de Fogo Nuclear</span>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 shrink-0">
                         <span className="text-[10px] font-mono font-bold text-amber-300">
                           {calculateAreaKm2(effectiveBomb.fireballRadiusM)}
                         </span>
                         <button
                           type="button"
                           onClick={() => toggleLayer('fireball')}
-                          className={`px-2 py-0.5 rounded-lg border text-[10px] font-mono font-bold flex items-center space-x-1 transition-all cursor-pointer ${
+                          className={`min-h-[36px] sm:min-h-0 px-2.5 sm:px-2 py-1 sm:py-0.5 rounded-lg border text-[10px] font-mono font-bold flex items-center space-x-1 transition-all cursor-pointer ${
                             visibleLayers.fireball
                               ? 'bg-amber-500/20 border-amber-500/60 text-amber-300 hover:bg-amber-500/30'
                               : 'bg-neutral-900 border-white/15 text-neutral-500 hover:text-neutral-300'
@@ -2563,13 +2742,13 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                     </div>
                     <div className="text-[11px] text-neutral-200 space-y-1 font-mono">
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                         <span className="text-amber-200/70">Raio / Diâmetro Real:</span>
                         <span className="text-amber-100 font-bold">
                           {formatRadius(effectiveBomb.fireballRadiusM)} / {formatDiameter(effectiveBomb.fireballRadiusM)}
                         </span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                         <span className="text-amber-200/70">Temperatura do Sol:</span>
                         <span className="text-amber-300 font-bold">~ 100.000.000 °C</span>
                       </div>
@@ -2580,18 +2759,18 @@ export const NuclearRankingMapTab: React.FC = () => {
                       <div>Letalidade 100% absoluta (Plasma).</div>
                     </div>
                     <div className="p-2 rounded-lg bg-[#0c0c0c] border border-amber-500/30 space-y-1 font-mono text-[11px]">
-                      <div className="flex justify-between items-center text-amber-200 font-bold">
+                      <div className="flex flex-wrap justify-between items-center gap-x-2 gap-y-0.5 text-amber-200 font-bold">
                         <span className="flex items-center gap-1">
-                          <Skull className="w-3 h-3 text-red-400" />
+                          <Skull className="w-3 h-3 text-red-400 shrink-0" />
                           Mortes Estimadas:
                         </span>
                         <span>{isDetonated ? `${casualties.zoneEstimates.fireball.fatalitiesRangeDisplay} pessoas` : '—'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-neutral-300">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-neutral-300">
                         <span>População residente na faixa:</span>
                         <span className="text-neutral-100">{isDetonated ? `${formatCasualtyNumber(casualties.zoneEstimates.fireball.populationExposed)} hab` : '—'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-neutral-300">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-neutral-300">
                         <span>Letalidade Física da Zona:</span>
                         <span className="text-amber-400 font-bold">100% Instantânea</span>
                       </div>
@@ -2611,19 +2790,19 @@ export const NuclearRankingMapTab: React.FC = () => {
                         : 'border-white/10 opacity-60 bg-black/60'
                     }`}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <span className={`w-2.5 h-2.5 rounded-full ${visibleLayers.vaporization ? 'bg-orange-400 shadow-sm shadow-orange-400/50' : 'bg-neutral-600'}`} />
+                    <div className="flex flex-wrap items-center justify-between gap-1.5">
+                      <div className="flex items-center space-x-2 min-w-0">
+                        <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${visibleLayers.vaporization ? 'bg-orange-400 shadow-sm shadow-orange-400/50' : 'bg-neutral-600'}`} />
                         <span className={`text-xs font-bold ${visibleLayers.vaporization ? 'text-orange-300' : 'text-neutral-400'}`}>2. Vaporização Imediata</span>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 shrink-0">
                         <span className="text-[10px] font-mono font-bold text-orange-300">
                           {calculateAreaKm2(effectiveBomb.vaporizationRadiusM)}
                         </span>
                         <button
                           type="button"
                           onClick={() => toggleLayer('vaporization')}
-                          className={`px-2 py-0.5 rounded-lg border text-[10px] font-mono font-bold flex items-center space-x-1 transition-all cursor-pointer ${
+                          className={`min-h-[36px] sm:min-h-0 px-2.5 sm:px-2 py-1 sm:py-0.5 rounded-lg border text-[10px] font-mono font-bold flex items-center space-x-1 transition-all cursor-pointer ${
                             visibleLayers.vaporization
                               ? 'bg-orange-500/20 border-orange-500/60 text-orange-300 hover:bg-orange-500/30'
                               : 'bg-neutral-900 border-white/15 text-neutral-500 hover:text-neutral-300'
@@ -2646,13 +2825,13 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                     </div>
                     <div className="text-[11px] text-neutral-200 space-y-1 font-mono">
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                         <span className="text-orange-200/70">Raio / Diâmetro Real:</span>
                         <span className="text-orange-100 font-bold">
                           {formatRadius(effectiveBomb.vaporizationRadiusM)} / {formatDiameter(effectiveBomb.vaporizationRadiusM)}
                         </span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                         <span className="text-orange-200/70">Radiação Térmica Extrema:</span>
                         <span className="text-orange-300 font-bold">&gt; 100 cal/cm²</span>
                       </div>
@@ -2663,18 +2842,18 @@ export const NuclearRankingMapTab: React.FC = () => {
                       <div>Letalidade 100% imediata (Vaporização e Fusão Térmica).</div>
                     </div>
                     <div className="p-2 rounded-lg bg-[#0c0c0c] border border-orange-500/30 space-y-1 font-mono text-[11px]">
-                      <div className="flex justify-between items-center text-orange-200 font-bold">
+                      <div className="flex flex-wrap justify-between items-center gap-x-2 gap-y-0.5 text-orange-200 font-bold">
                         <span className="flex items-center gap-1">
-                          <Skull className="w-3 h-3 text-red-400" />
+                          <Skull className="w-3 h-3 text-red-400 shrink-0" />
                           Mortes Estimadas:
                         </span>
                         <span>{isDetonated ? `${casualties.zoneEstimates.vaporization.fatalitiesRangeDisplay} pessoas` : '—'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-neutral-300">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-neutral-300">
                         <span>População residente na faixa:</span>
                         <span className="text-neutral-100">{isDetonated ? `${formatCasualtyNumber(casualties.zoneEstimates.vaporization.populationExposed)} hab` : '—'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-neutral-300">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-neutral-300">
                         <span>Letalidade Física da Zona:</span>
                         <span className="text-orange-400 font-bold">100% Instantânea</span>
                       </div>
@@ -2694,19 +2873,19 @@ export const NuclearRankingMapTab: React.FC = () => {
                         : 'border-white/10 ring-transparent opacity-60 bg-black/60'
                     }`}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <span className={`w-2.5 h-2.5 rounded-full ${visibleLayers.carbonization ? 'bg-red-500 shadow-sm shadow-red-600/50' : 'bg-neutral-600'}`} />
+                    <div className="flex flex-wrap items-center justify-between gap-1.5">
+                      <div className="flex items-center space-x-2 min-w-0">
+                        <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${visibleLayers.carbonization ? 'bg-red-500 shadow-sm shadow-red-600/50' : 'bg-neutral-600'}`} />
                         <span className={`text-xs font-bold ${visibleLayers.carbonization ? 'text-red-300' : 'text-neutral-400'}`}>3. Carbonização Total</span>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 shrink-0">
                         <span className="text-[10px] font-mono font-bold text-red-300">
                           {calculateAreaKm2(effectiveBomb.carbonizationRadiusM)}
                         </span>
                         <button
                           type="button"
                           onClick={() => toggleLayer('carbonization')}
-                          className={`px-2 py-0.5 rounded-lg border text-[10px] font-mono font-bold flex items-center space-x-1 transition-all cursor-pointer ${
+                          className={`min-h-[36px] sm:min-h-0 px-2.5 sm:px-2 py-1 sm:py-0.5 rounded-lg border text-[10px] font-mono font-bold flex items-center space-x-1 transition-all cursor-pointer ${
                             visibleLayers.carbonization
                               ? 'bg-red-500/20 border-red-500/60 text-red-300 hover:bg-red-500/30'
                               : 'bg-neutral-900 border-white/15 text-neutral-500 hover:text-neutral-300'
@@ -2729,13 +2908,13 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                     </div>
                     <div className="text-[11px] text-neutral-200 space-y-1 font-mono">
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                         <span className="text-red-200/70">Raio / Diâmetro Real:</span>
                         <span className="text-red-100 font-bold">
                           {formatRadius(effectiveBomb.carbonizationRadiusM)} / {formatDiameter(effectiveBomb.carbonizationRadiusM)}
                         </span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                         <span className="text-red-200/70">Ignição Instantânea:</span>
                         <span className="text-red-300 font-bold">&gt; 40 cal/cm²</span>
                       </div>
@@ -2746,18 +2925,18 @@ export const NuclearRankingMapTab: React.FC = () => {
                       <div>Letalidade extrema: <span className="text-red-400 font-black">100%</span> (Combustão Humana Instantânea)</div>
                     </div>
                     <div className="p-2 rounded-lg bg-[#0c0c0c] border border-red-500/30 space-y-1 font-mono text-[11px]">
-                      <div className="flex justify-between items-center text-red-200 font-bold">
+                      <div className="flex flex-wrap justify-between items-center gap-x-2 gap-y-0.5 text-red-200 font-bold">
                         <span className="flex items-center gap-1">
-                          <Skull className="w-3 h-3 text-red-400" />
+                          <Skull className="w-3 h-3 text-red-400 shrink-0" />
                           Mortes Estimadas:
                         </span>
                         <span>{isDetonated ? `${casualties.zoneEstimates.carbonization.fatalitiesRangeDisplay} pessoas` : '—'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-neutral-300">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-neutral-300">
                         <span>População residente na faixa:</span>
                         <span className="text-neutral-100">{isDetonated ? `${formatCasualtyNumber(casualties.zoneEstimates.carbonization.populationExposed)} hab` : '—'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-neutral-300">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-neutral-300">
                         <span>Letalidade Física da Zona:</span>
                         <span className="text-red-400 font-bold">100% Instantânea</span>
                       </div>
@@ -2777,19 +2956,19 @@ export const NuclearRankingMapTab: React.FC = () => {
                         : 'border-white/10 opacity-60 bg-black/60'
                     }`}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <span className={`w-2.5 h-2.5 rounded-full ${visibleLayers.heavy ? 'bg-gradient-to-r from-rose-600 to-pink-500 shadow-sm shadow-rose-500/50' : 'bg-neutral-600'}`} />
+                    <div className="flex flex-wrap items-center justify-between gap-1.5">
+                      <div className="flex items-center space-x-2 min-w-0">
+                        <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${visibleLayers.heavy ? 'bg-gradient-to-r from-rose-600 to-pink-500 shadow-sm shadow-rose-500/50' : 'bg-neutral-600'}`} />
                         <span className={`text-xs font-bold ${visibleLayers.heavy ? 'text-rose-300' : 'text-neutral-400'}`}>4. Onda de Choque Pesada (&gt; 20 psi)</span>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 shrink-0">
                         <span className="text-[10px] font-mono font-bold text-rose-300">
                           {calculateAreaKm2(effectiveBomb.heavyBlastRadiusM)}
                         </span>
                         <button
                           type="button"
                           onClick={() => toggleLayer('heavy')}
-                          className={`px-2 py-0.5 rounded-lg border text-[10px] font-mono font-bold flex items-center space-x-1 transition-all cursor-pointer ${
+                          className={`min-h-[36px] sm:min-h-0 px-2.5 sm:px-2 py-1 sm:py-0.5 rounded-lg border text-[10px] font-mono font-bold flex items-center space-x-1 transition-all cursor-pointer ${
                             visibleLayers.heavy
                               ? 'bg-gradient-to-r from-rose-600 to-pink-500 border-pink-400/60 text-white shadow-sm hover:opacity-95'
                               : 'bg-neutral-900 border-white/15 text-neutral-500 hover:text-neutral-300'
@@ -2812,13 +2991,13 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                     </div>
                     <div className="text-[11px] text-neutral-200 space-y-1 font-mono">
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                         <span className="text-rose-200/70">Raio / Diâmetro Real:</span>
                         <span className="text-rose-100 font-bold">
                           {formatRadius(effectiveBomb.heavyBlastRadiusM)} / {formatDiameter(effectiveBomb.heavyBlastRadiusM)}
                         </span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                         <span className="text-rose-200/70">Sobrepressão e Vento:</span>
                         <span className="text-rose-300 font-bold">&gt; 20 psi • &gt; 1.000 km/h</span>
                       </div>
@@ -2829,22 +3008,22 @@ export const NuclearRankingMapTab: React.FC = () => {
                       <div>Letalidade severa: 95% – 100% por colapso estrutural massivo.</div>
                     </div>
                     <div className="p-2 rounded-lg bg-[#0c0c0c] border border-rose-500/40 space-y-1 font-mono text-[11px]">
-                      <div className="flex justify-between items-center text-rose-200 font-bold">
+                      <div className="flex flex-wrap justify-between items-center gap-x-2 gap-y-0.5 text-rose-200 font-bold">
                         <span className="flex items-center gap-1">
-                          <Skull className="w-3 h-3 text-rose-400" />
+                          <Skull className="w-3 h-3 text-rose-400 shrink-0" />
                           Mortes Estimadas:
                         </span>
                         <span>{isDetonated ? `${casualties.zoneEstimates.heavy.fatalitiesRangeDisplay} pessoas` : '—'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-neutral-300">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-neutral-300">
                         <span>População residente na faixa:</span>
                         <span className="text-neutral-100">{isDetonated ? `${formatCasualtyNumber(casualties.zoneEstimates.heavy.populationExposed)} hab` : '—'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-neutral-300">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-neutral-300">
                         <span>Feridos na faixa:</span>
                         <span className="text-amber-300">{isDetonated ? `${casualties.zoneEstimates.heavy.injuriesRangeDisplay}` : '—'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-neutral-300">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-neutral-300">
                         <span>Letalidade Física Calibrada:</span>
                         <span className="text-rose-400 font-bold">~98% (95% – 100%)</span>
                       </div>
@@ -2864,19 +3043,19 @@ export const NuclearRankingMapTab: React.FC = () => {
                         : 'border-white/10 opacity-60 bg-black/60'
                     }`}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <span className={`w-2.5 h-2.5 rounded-full ${visibleLayers.moderate ? 'bg-purple-500 shadow-sm' : 'bg-neutral-600'}`} />
+                    <div className="flex flex-wrap items-center justify-between gap-1.5">
+                      <div className="flex items-center space-x-2 min-w-0">
+                        <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${visibleLayers.moderate ? 'bg-purple-500 shadow-sm' : 'bg-neutral-600'}`} />
                         <span className={`text-xs font-bold ${visibleLayers.moderate ? 'text-purple-300' : 'text-neutral-400'}`}>5. Onda de Choque Moderada (~ 5 psi)</span>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 shrink-0">
                         <span className="text-[10px] font-mono font-bold text-purple-300">
                           {calculateAreaKm2(effectiveBomb.moderateBlastRadiusM)}
                         </span>
                         <button
                           type="button"
                           onClick={() => toggleLayer('moderate')}
-                          className={`px-2 py-0.5 rounded-lg border text-[10px] font-mono font-bold flex items-center space-x-1 transition-all cursor-pointer ${
+                          className={`min-h-[36px] sm:min-h-0 px-2.5 sm:px-2 py-1 sm:py-0.5 rounded-lg border text-[10px] font-mono font-bold flex items-center space-x-1 transition-all cursor-pointer ${
                             visibleLayers.moderate
                               ? 'bg-purple-500/20 border-purple-500/60 text-purple-300 hover:bg-purple-500/30'
                               : 'bg-neutral-900 border-white/15 text-neutral-500 hover:text-neutral-300'
@@ -2899,13 +3078,13 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                     </div>
                     <div className="text-[11px] text-neutral-200 space-y-1 font-mono">
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                         <span className="text-purple-200/70">Raio / Diâmetro Real:</span>
                         <span className="text-purple-100 font-bold">
                           {formatRadius(effectiveBomb.moderateBlastRadiusM)} / {formatDiameter(effectiveBomb.moderateBlastRadiusM)}
                         </span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                         <span className="text-purple-200/70">Sobrepressão Média:</span>
                         <span className="text-purple-300 font-bold">~ 5 psi (0.35 bar)</span>
                       </div>
@@ -2916,22 +3095,22 @@ export const NuclearRankingMapTab: React.FC = () => {
                       <div>Mortalidade moderada: 30% – 55% e alto índice de feridos.</div>
                     </div>
                     <div className="p-2 rounded-lg bg-[#0c0c0c] border border-purple-500/30 space-y-1 font-mono text-[11px]">
-                      <div className="flex justify-between items-center text-purple-200 font-bold">
+                      <div className="flex flex-wrap justify-between items-center gap-x-2 gap-y-0.5 text-purple-200 font-bold">
                         <span className="flex items-center gap-1">
-                          <Skull className="w-3 h-3 text-purple-400" />
+                          <Skull className="w-3 h-3 text-purple-400 shrink-0" />
                           Mortes Estimadas:
                         </span>
                         <span>{isDetonated ? `${casualties.zoneEstimates.moderate.fatalitiesRangeDisplay} pessoas` : '—'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-neutral-300">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-neutral-300">
                         <span>População residente na faixa:</span>
                         <span className="text-neutral-100">{isDetonated ? `${formatCasualtyNumber(casualties.zoneEstimates.moderate.populationExposed)} hab` : '—'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-neutral-300">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-neutral-300">
                         <span>Feridos na faixa:</span>
                         <span className="text-amber-300">{isDetonated ? `${casualties.zoneEstimates.moderate.injuriesRangeDisplay}` : '—'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-neutral-300">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-neutral-300">
                         <span>Letalidade Física Calibrada:</span>
                         <span className="text-purple-400 font-bold">~45% (30% – 55%)</span>
                       </div>
@@ -2951,19 +3130,19 @@ export const NuclearRankingMapTab: React.FC = () => {
                         : 'border-white/10 opacity-60 bg-black/60'
                     }`}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <span className={`w-2.5 h-2.5 rounded-full ${visibleLayers.thermal ? 'bg-orange-500 shadow-sm' : 'bg-neutral-600'}`} />
+                    <div className="flex flex-wrap items-center justify-between gap-1.5">
+                      <div className="flex items-center space-x-2 min-w-0">
+                        <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${visibleLayers.thermal ? 'bg-orange-500 shadow-sm' : 'bg-neutral-600'}`} />
                         <span className={`text-xs font-bold ${visibleLayers.thermal ? 'text-orange-300' : 'text-neutral-400'}`}>6. Raio Térmico (Queimadura de 3º Grau)</span>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 shrink-0">
                         <span className="text-[10px] font-mono font-bold text-orange-300">
                           {calculateAreaKm2(effectiveBomb.thermalRadiusM)}
                         </span>
                         <button
                           type="button"
                           onClick={() => toggleLayer('thermal')}
-                          className={`px-2 py-0.5 rounded-lg border text-[10px] font-mono font-bold flex items-center space-x-1 transition-all cursor-pointer ${
+                          className={`min-h-[36px] sm:min-h-0 px-2.5 sm:px-2 py-1 sm:py-0.5 rounded-lg border text-[10px] font-mono font-bold flex items-center space-x-1 transition-all cursor-pointer ${
                             visibleLayers.thermal
                               ? 'bg-orange-500/20 border-orange-500/60 text-orange-300 hover:bg-orange-500/30'
                               : 'bg-neutral-900 border-white/15 text-neutral-500 hover:text-neutral-300'
@@ -2986,13 +3165,13 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                     </div>
                     <div className="text-[11px] text-neutral-200 space-y-1 font-mono">
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                         <span className="text-orange-200/70">Raio / Diâmetro Real:</span>
                         <span className="text-orange-100 font-bold">
                           {formatRadius(effectiveBomb.thermalRadiusM)} / {formatDiameter(effectiveBomb.thermalRadiusM)}
                         </span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                         <span className="text-orange-200/70">Efeito Biológico:</span>
                         <span className="text-orange-300 font-bold">Queimaduras graves 3º grau</span>
                       </div>
@@ -3003,22 +3182,22 @@ export const NuclearRankingMapTab: React.FC = () => {
                       <div>Letalidade direta: 8% – 22% (mitigada por abrigo).</div>
                     </div>
                     <div className="p-2 rounded-lg bg-[#0c0c0c] border border-orange-500/30 space-y-1 font-mono text-[11px]">
-                      <div className="flex justify-between items-center text-orange-200 font-bold">
+                      <div className="flex flex-wrap justify-between items-center gap-x-2 gap-y-0.5 text-orange-200 font-bold">
                         <span className="flex items-center gap-1">
-                          <Skull className="w-3 h-3 text-red-400" />
+                          <Skull className="w-3 h-3 text-red-400 shrink-0" />
                           Mortes Estimadas:
                         </span>
                         <span>{isDetonated ? `${casualties.zoneEstimates.thermal.fatalitiesRangeDisplay} pessoas` : '—'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-neutral-300">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-neutral-300">
                         <span>População residente na faixa:</span>
                         <span className="text-neutral-100">{isDetonated ? `${formatCasualtyNumber(casualties.zoneEstimates.thermal.populationExposed)} hab` : '—'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-neutral-300">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-neutral-300">
                         <span>Feridos graves (3º grau):</span>
                         <span className="text-amber-300">{isDetonated ? `${casualties.zoneEstimates.thermal.injuriesRangeDisplay}` : '—'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-neutral-300">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-neutral-300">
                         <span>Letalidade Térmica (Visada Direta):</span>
                         <span className="text-orange-400 font-bold">~15% (8% – 22%)</span>
                       </div>
@@ -3038,19 +3217,19 @@ export const NuclearRankingMapTab: React.FC = () => {
                         : 'border-white/10 opacity-60 bg-black/60'
                     }`}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <span className={`w-2.5 h-2.5 rounded-full ${visibleLayers.light ? 'bg-[#737373] shadow-sm' : 'bg-neutral-600'}`} />
+                    <div className="flex flex-wrap items-center justify-between gap-1.5">
+                      <div className="flex items-center space-x-2 min-w-0">
+                        <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${visibleLayers.light ? 'bg-[#737373] shadow-sm' : 'bg-neutral-600'}`} />
                         <span className={`text-xs font-bold ${visibleLayers.light ? 'text-slate-200' : 'text-neutral-400'}`}>7. Onda de Choque Leve (1-2 psi)</span>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 shrink-0">
                         <span className="text-[10px] font-mono font-bold text-slate-300">
                           {calculateAreaKm2(effectiveBomb.lightBlastRadiusM)}
                         </span>
                         <button
                           type="button"
                           onClick={() => toggleLayer('light')}
-                          className={`px-2 py-0.5 rounded-lg border text-[10px] font-mono font-bold flex items-center space-x-1 transition-all cursor-pointer ${
+                          className={`min-h-[36px] sm:min-h-0 px-2.5 sm:px-2 py-1 sm:py-0.5 rounded-lg border text-[10px] font-mono font-bold flex items-center space-x-1 transition-all cursor-pointer ${
                             visibleLayers.light
                               ? 'bg-neutral-500/20 border-neutral-400/60 text-neutral-300 hover:bg-neutral-500/30'
                               : 'bg-neutral-900 border-white/15 text-neutral-500 hover:text-neutral-300'
@@ -3073,13 +3252,13 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </div>
                     </div>
                     <div className="text-[11px] text-neutral-200 space-y-1 font-mono">
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                         <span className="text-slate-300/70">Raio / Diâmetro Real:</span>
                         <span className="text-slate-100 font-bold">
                           {formatRadius(effectiveBomb.lightBlastRadiusM)} / {formatDiameter(effectiveBomb.lightBlastRadiusM)}
                         </span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                         <span className="text-slate-300/70">Sobrepressão Baixa:</span>
                         <span className="text-slate-200 font-bold">~ 1 a 2 psi (0.07 – 0.14 bar)</span>
                       </div>
@@ -3090,22 +3269,22 @@ export const NuclearRankingMapTab: React.FC = () => {
                       <div>Letalidade baixa: 0.5% – 3% e ferimentos por fragmentos.</div>
                     </div>
                     <div className="p-2 rounded-lg bg-[#0c0c0c] border border-white/10 space-y-1 font-mono text-[11px]">
-                      <div className="flex justify-between items-center text-slate-200 font-bold">
+                      <div className="flex flex-wrap justify-between items-center gap-x-2 gap-y-0.5 text-slate-200 font-bold">
                         <span className="flex items-center gap-1">
-                          <Skull className="w-3 h-3 text-red-400" />
+                          <Skull className="w-3 h-3 text-red-400 shrink-0" />
                           Mortes Estimadas:
                         </span>
                         <span>{isDetonated ? `${casualties.zoneEstimates.light.fatalitiesRangeDisplay} pessoas` : '—'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-neutral-300">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-neutral-300">
                         <span>População residente na faixa:</span>
                         <span className="text-neutral-100">{isDetonated ? `${formatCasualtyNumber(casualties.zoneEstimates.light.populationExposed)} hab` : '—'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-neutral-300">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-neutral-300">
                         <span>Feridos na faixa:</span>
                         <span className="text-amber-300">{isDetonated ? `${casualties.zoneEstimates.light.injuriesRangeDisplay}` : '—'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-neutral-300">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-neutral-300">
                         <span>Letalidade por Vidros/Fragmentos:</span>
                         <span className="text-slate-300 font-bold">~1.5% (0.5% – 3%)</span>
                       </div>
@@ -3120,16 +3299,16 @@ export const NuclearRankingMapTab: React.FC = () => {
               <div className="space-y-3 animate-in fade-in duration-150">
                 {/* Interruptor Master de Fallout */}
                 <div className="p-3 rounded-xl bg-black border border-amber-500/50 space-y-2.5 shadow-md">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Radiation className={`w-4 h-4 ${showFallout ? 'text-amber-400 animate-spin-slow' : 'text-neutral-500'}`} />
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center space-x-2 min-w-0">
+                      <Radiation className={`w-4 h-4 shrink-0 ${showFallout ? 'text-amber-400 animate-spin-slow' : 'text-neutral-500'}`} />
                       <span className="text-xs font-bold text-amber-200 uppercase tracking-wider">
                         Precipitação Radioativa (Fallout)
                       </span>
                     </div>
                     <button
                       onClick={() => setShowFallout(!showFallout)}
-                      className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold transition-all border cursor-pointer ${
+                      className={`min-h-[36px] sm:min-h-0 px-3 sm:px-2.5 py-1.5 sm:py-1 rounded-lg text-[10px] font-mono font-bold transition-all border cursor-pointer shrink-0 ${
                         showFallout
                           ? 'bg-amber-400 text-black border-amber-300 shadow-sm'
                           : 'bg-black text-neutral-400 border-white/20 hover:text-white'
@@ -3140,12 +3319,12 @@ export const NuclearRankingMapTab: React.FC = () => {
                   </div>
 
                   {/* Modo de Detonação */}
-                  <div className="pt-2 border-t border-white/15 flex items-center justify-between text-xs">
+                  <div className="pt-2 border-t border-white/15 flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 text-xs">
                     <span className="text-neutral-300 text-[11px]">Tipo de Detonação:</span>
-                    <div className="flex items-center space-x-1">
+                    <div className="flex flex-wrap items-center gap-1">
                       <button
                         onClick={() => setBurstType('surface')}
-                        className={`px-2 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                        className={`min-h-[36px] sm:min-h-0 px-2.5 sm:px-2 py-1 sm:py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
                           burstType === 'surface'
                             ? 'bg-amber-500 text-black shadow-sm font-black'
                             : 'bg-[#111111] text-neutral-300 border border-white/10 hover:text-white'
@@ -3156,7 +3335,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                       </button>
                       <button
                         onClick={() => setBurstType('air')}
-                        className={`px-2 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                        className={`min-h-[36px] sm:min-h-0 px-2.5 sm:px-2 py-1 sm:py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
                           burstType === 'air'
                             ? 'bg-blue-500 text-white shadow-sm font-black'
                             : 'bg-[#111111] text-neutral-300 border border-white/10 hover:text-white'
@@ -3172,9 +3351,9 @@ export const NuclearRankingMapTab: React.FC = () => {
                 {/* Controles Atmosféricos e de Vento */}
                 {showFallout && (
                   <div className="p-3 rounded-xl bg-black border border-white/20 space-y-3 shadow-md">
-                    <div className="flex items-center justify-between text-xs">
+                    <div className="flex flex-wrap items-center justify-between gap-1.5 text-xs">
                       <span className="font-bold text-amber-200 flex items-center gap-1.5">
-                        <Wind className="w-3.5 h-3.5 text-amber-400" />
+                        <Wind className="w-3.5 h-3.5 text-amber-400 shrink-0" />
                         Condições Atmosféricas e Vento
                       </span>
                       <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0a0a0a] text-amber-300 border border-amber-500/30">
@@ -3184,9 +3363,9 @@ export const NuclearRankingMapTab: React.FC = () => {
 
                     {/* Direção do Vento */}
                     <div className="space-y-1.5">
-                      <div className="flex justify-between text-[11px]">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[11px]">
                         <span className="text-neutral-200 flex items-center gap-1">
-                          <Compass className="w-3 h-3 text-purple-400" />
+                          <Compass className="w-3 h-3 text-purple-400 shrink-0" />
                           Rumo do Vento (Sotavento):
                         </span>
                         <span className="font-mono text-purple-200 font-bold">
@@ -3200,14 +3379,14 @@ export const NuclearRankingMapTab: React.FC = () => {
                         step="5"
                         value={windDirectionDeg}
                         onChange={(e) => setWindDirectionDeg(Number(e.target.value))}
-                        className="w-full accent-purple-400 h-1.5 bg-[#1a1a1a] rounded-lg cursor-pointer"
+                        className="w-full accent-purple-400 h-2 sm:h-1.5 bg-[#1a1a1a] rounded-lg cursor-pointer"
                       />
                       <div className="flex flex-wrap gap-1 pt-0.5">
                         {WIND_COMPASS_PRESETS.map((p) => (
                           <button
                             key={p.label}
                             onClick={() => setWindDirectionDeg(p.deg)}
-                            className={`px-1.5 py-0.5 text-[10px] rounded border transition-all cursor-pointer ${
+                            className={`min-h-[36px] sm:min-h-0 px-2.5 sm:px-1.5 py-1 sm:py-0.5 text-[10px] rounded border transition-all cursor-pointer ${
                               Math.abs(windDirectionDeg - p.deg) < 15
                                 ? 'bg-purple-950 border-purple-400 text-purple-200 font-bold shadow-sm'
                                 : 'bg-[#0f0f0f] border-white/15 text-neutral-300 hover:text-white'
@@ -3221,9 +3400,9 @@ export const NuclearRankingMapTab: React.FC = () => {
 
                     {/* Velocidade do Vento */}
                     <div className="space-y-1.5 pt-2 border-t border-white/15">
-                      <div className="flex justify-between text-[11px]">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[11px]">
                         <span className="text-neutral-200 flex items-center gap-1">
-                          <Navigation className="w-3 h-3 text-amber-400" />
+                          <Navigation className="w-3 h-3 text-amber-400 shrink-0" />
                           Velocidade do Vento:
                         </span>
                         <span className="font-mono text-amber-200 font-bold">
@@ -3237,14 +3416,14 @@ export const NuclearRankingMapTab: React.FC = () => {
                         step="5"
                         value={windSpeedKmh}
                         onChange={(e) => setWindSpeedKmh(Number(e.target.value))}
-                        className="w-full accent-amber-400 h-1.5 bg-[#1a1a1a] rounded-lg cursor-pointer"
+                        className="w-full accent-amber-400 h-2 sm:h-1.5 bg-[#1a1a1a] rounded-lg cursor-pointer"
                       />
                       <div className="flex flex-wrap gap-1 pt-0.5">
                         {WIND_SPEED_PRESETS.map((s) => (
                           <button
                             key={s.speed}
                             onClick={() => setWindSpeedKmh(s.speed)}
-                            className={`px-2 py-0.5 text-[10px] rounded border transition-all cursor-pointer ${
+                            className={`min-h-[36px] sm:min-h-0 px-2.5 sm:px-2 py-1 sm:py-0.5 text-[10px] rounded border transition-all cursor-pointer ${
                               windSpeedKmh === s.speed
                                 ? 'bg-amber-950 border-amber-400 text-amber-200 font-bold shadow-sm'
                                 : 'bg-[#0f0f0f] border-white/15 text-neutral-300 hover:text-white'
@@ -3261,7 +3440,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                       <span className="text-[10px] font-bold text-neutral-200 uppercase tracking-wider block">
                         Contornos de Radiação no Mapa:
                       </span>
-                      <div className="grid grid-cols-2 gap-1.5">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                         {FALLOUT_ZONES_CONFIG.map((zone) => {
                           const isVis = visibleFalloutZones[zone.id];
                           const distKm = getCalculatedFalloutLengthKm(
@@ -3286,7 +3465,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                               style={{
                                 '--zone-glow-color': zc.glow
                               } as React.CSSProperties}
-                              className={`p-2 rounded-xl border text-left transition-all flex items-center justify-between cursor-pointer ${
+                              className={`min-h-[44px] sm:min-h-0 p-2 rounded-xl border text-left transition-all flex items-center justify-between gap-2 cursor-pointer ${
                                 isHov
                                   ? 'zone-card-glowing bg-neutral-900 border-white ring-2 ring-white/50 shadow-lg'
                                   : isVis
@@ -3294,13 +3473,13 @@ export const NuclearRankingMapTab: React.FC = () => {
                                   : 'bg-black/60 border-white/10 text-neutral-500 opacity-60 hover:opacity-100'
                               }`}
                             >
-                              <div className="truncate pr-1">
-                                <div className="flex items-center space-x-1.5">
+                              <div className="min-w-0 flex-1 pr-1 sm:truncate">
+                                <div className="flex items-center space-x-1.5 min-w-0">
                                   <span
                                     className="w-2.5 h-2.5 rounded-full shrink-0 shadow-sm"
                                     style={{ backgroundColor: zone.color }}
                                   />
-                                  <span className={`text-[11px] font-bold truncate ${isVis ? zc.text : 'text-neutral-400'}`}>
+                                  <span className={`text-[11px] font-bold max-sm:whitespace-normal break-words sm:truncate ${isVis ? zc.text : 'text-neutral-400'}`}>
                                     {zone.doseDisplay}
                                   </span>
                                 </div>
@@ -3340,21 +3519,21 @@ export const NuclearRankingMapTab: React.FC = () => {
                         : 'bg-black border border-purple-500/60 shadow-md hover:border-purple-400/80'
                     } space-y-2`}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <span className="w-2.5 h-2.5 rounded-full bg-purple-500" />
+                    <div className="flex flex-wrap items-center justify-between gap-1.5">
+                      <div className="flex items-center space-x-2 min-w-0">
+                        <span className="w-2.5 h-2.5 rounded-full bg-purple-500 shrink-0" />
                         <span className="text-xs font-bold text-purple-200">1. Zona Letal Imediata (≥ 1.000 rad)</span>
                       </div>
-                      <span className="text-[10px] font-mono font-bold text-purple-200">
+                      <span className="text-[10px] font-mono font-bold text-purple-200 shrink-0">
                         Pluma: ~{getCalculatedFalloutLengthKm('rad1000')} km
                       </span>
                     </div>
                     <div className="text-[11px] space-y-1 font-mono">
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                         <span className="text-purple-300/80">Dose Acumulada:</span>
                         <span className="text-purple-100 font-bold">&ge; 1.000 rad (10 Gy)</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                         <span className="text-purple-300/80">Quadro Clínico:</span>
                         <span className="text-purple-200 font-bold">Colapso SNC e Cardiovascular</span>
                       </div>
@@ -3365,18 +3544,18 @@ export const NuclearRankingMapTab: React.FC = () => {
                       <div>Morte inevitável em 24 a 72h. <span className="text-purple-300 font-black">Letalidade 100%</span></div>
                     </div>
                     <div className="p-2 rounded-lg bg-[#0c0c0c] border border-purple-500/30 space-y-1 font-mono text-[11px]">
-                      <div className="flex justify-between items-center text-purple-200 font-bold">
+                      <div className="flex flex-wrap justify-between items-center gap-x-2 gap-y-0.5 text-purple-200 font-bold">
                         <span className="flex items-center gap-1">
-                          <Skull className="w-3 h-3 text-red-400" />
+                          <Skull className="w-3 h-3 text-red-400 shrink-0" />
                           Mortes Estimadas:
                         </span>
                         <span className="text-white font-black">{isDetonated ? `~${formatCasualtyNumber(falloutCasualties.zones.rad1000.fatalities)} pessoas` : '— (Aguardando Detonação)'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-purple-200/80">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-purple-200/80">
                         <span>População na Pluma:</span>
                         <span className="text-purple-100">{isDetonated ? `${formatCasualtyNumber(falloutCasualties.zones.rad1000.popExposed)} hab` : '—'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-purple-200/80">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-purple-200/80">
                         <span>Tempo até colapso:</span>
                         <span className="text-purple-100">Poucas horas desabrigado (100% Letal)</span>
                       </div>
@@ -3396,21 +3575,21 @@ export const NuclearRankingMapTab: React.FC = () => {
                         : 'bg-black border border-red-500/60 shadow-md hover:border-red-400/80'
                     } space-y-2`}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
+                    <div className="flex flex-wrap items-center justify-between gap-1.5">
+                      <div className="flex items-center space-x-2 min-w-0">
+                        <span className="w-2.5 h-2.5 rounded-full bg-red-500 shrink-0" />
                         <span className="text-xs font-bold text-red-200">2. Síndrome Aguda da Radiação (300–1.000 rad)</span>
                       </div>
-                      <span className="text-[10px] font-mono font-bold text-red-200">
+                      <span className="text-[10px] font-mono font-bold text-red-200 shrink-0">
                         Pluma: ~{getCalculatedFalloutLengthKm('rad300')} km
                       </span>
                     </div>
                     <div className="text-[11px] space-y-1 font-mono">
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                         <span className="text-red-300/80">Dose Acumulada:</span>
                         <span className="text-red-100 font-bold">300 a 1.000 rad (3–10 Gy)</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                         <span className="text-red-300/80">Quadro Clínico:</span>
                         <span className="text-red-200 font-bold">Falência Gastrointestinal e Medular</span>
                       </div>
@@ -3421,18 +3600,18 @@ export const NuclearRankingMapTab: React.FC = () => {
                       <div>Mortalidade 50% a 90% sem terapia intensiva.</div>
                     </div>
                     <div className="p-2 rounded-lg bg-[#0c0c0c] border border-red-500/30 space-y-1 font-mono text-[11px]">
-                      <div className="flex justify-between items-center text-red-200 font-bold">
+                      <div className="flex flex-wrap justify-between items-center gap-x-2 gap-y-0.5 text-red-200 font-bold">
                         <span className="flex items-center gap-1">
-                          <Skull className="w-3 h-3 text-red-400" />
+                          <Skull className="w-3 h-3 text-red-400 shrink-0" />
                           Mortes Estimadas:
                         </span>
                         <span className="text-white font-black">{isDetonated ? `~${formatCasualtyNumber(falloutCasualties.zones.rad300.fatalities)} pessoas` : '— (Aguardando Detonação)'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-red-200/80">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-red-200/80">
                         <span>População na Pluma:</span>
                         <span className="text-red-100">{isDetonated ? `${formatCasualtyNumber(falloutCasualties.zones.rad300.popExposed)} hab` : '—'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-red-200/80">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-red-200/80">
                         <span>Prognóstico Clínico:</span>
                         <span className="text-red-100">{isDetonated ? '75% Fatal sem terapia intensiva' : '—'}</span>
                       </div>
@@ -3452,21 +3631,21 @@ export const NuclearRankingMapTab: React.FC = () => {
                         : 'bg-black border border-orange-500/60 shadow-md hover:border-orange-400/80'
                     } space-y-2`}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <span className="w-2.5 h-2.5 rounded-full bg-orange-500" />
+                    <div className="flex flex-wrap items-center justify-between gap-1.5">
+                      <div className="flex items-center space-x-2 min-w-0">
+                        <span className="w-2.5 h-2.5 rounded-full bg-orange-500 shrink-0" />
                         <span className="text-xs font-bold text-orange-200">3. Doença da Radiação (100–300 rad)</span>
                       </div>
-                      <span className="text-[10px] font-mono font-bold text-orange-200">
+                      <span className="text-[10px] font-mono font-bold text-orange-200 shrink-0">
                         Pluma: ~{getCalculatedFalloutLengthKm('rad100')} km
                       </span>
                     </div>
                     <div className="text-[11px] space-y-1 font-mono">
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                         <span className="text-orange-300/80">Dose Acumulada:</span>
                         <span className="text-orange-100 font-bold">100 a 300 rad (1–3 Gy)</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                         <span className="text-orange-300/80">Ação Obrigatória:</span>
                         <span className="text-orange-200 font-bold">Evacuação e Abrigo Subterrâneo</span>
                       </div>
@@ -3477,18 +3656,18 @@ export const NuclearRankingMapTab: React.FC = () => {
                       <div>Hospitalização e evacuação civil obrigatória.</div>
                     </div>
                     <div className="p-2 rounded-lg bg-[#0c0c0c] border border-orange-500/30 space-y-1 font-mono text-[11px]">
-                      <div className="flex justify-between items-center text-orange-200 font-bold">
+                      <div className="flex flex-wrap justify-between items-center gap-x-2 gap-y-0.5 text-orange-200 font-bold">
                         <span className="flex items-center gap-1">
-                          <Skull className="w-3 h-3 text-red-400" />
+                          <Skull className="w-3 h-3 text-red-400 shrink-0" />
                           Mortes Estimadas:
                         </span>
                         <span className="text-white font-black">{isDetonated ? `~${formatCasualtyNumber(falloutCasualties.zones.rad100.fatalities)} pessoas` : '— (Aguardando Detonação)'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-orange-200/80">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-orange-200/80">
                         <span>Feridos graves na faixa:</span>
                         <span className="text-amber-300">{isDetonated ? `${formatCasualtyNumber(falloutCasualties.zones.rad100.injuries)} pessoas` : '—'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-orange-200/80">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-orange-200/80">
                         <span>População Atingida:</span>
                         <span className="text-orange-100">{isDetonated ? `${formatCasualtyNumber(falloutCasualties.zones.rad100.popExposed)} hab` : '—'}</span>
                       </div>
@@ -3508,21 +3687,21 @@ export const NuclearRankingMapTab: React.FC = () => {
                         : 'bg-black border border-yellow-500/60 shadow-md hover:border-yellow-400/80'
                     } space-y-2`}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <span className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
+                    <div className="flex flex-wrap items-center justify-between gap-1.5">
+                      <div className="flex items-center space-x-2 min-w-0">
+                        <span className="w-2.5 h-2.5 rounded-full bg-yellow-400 shrink-0" />
                         <span className="text-xs font-bold text-yellow-200">4. Contaminação Prolongada (10–100 rad)</span>
                       </div>
-                      <span className="text-[10px] font-mono font-bold text-yellow-200">
+                      <span className="text-[10px] font-mono font-bold text-yellow-200 shrink-0">
                         Pluma: ~{getCalculatedFalloutLengthKm('rad10')} km
                       </span>
                     </div>
                     <div className="text-[11px] space-y-1 font-mono">
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                         <span className="text-yellow-300/80">Dose Acumulada:</span>
                         <span className="text-yellow-100 font-bold">10 a 100 rad (0.1–1 Gy)</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                         <span className="text-yellow-300/80">Isótopos Críticos:</span>
                         <span className="text-yellow-200 font-bold">Césio-137 e Estrôncio-90</span>
                       </div>
@@ -3533,18 +3712,18 @@ export const NuclearRankingMapTab: React.FC = () => {
                       <div>Isolamento civil e embargo alimentar prolongado.</div>
                     </div>
                     <div className="p-2 rounded-lg bg-[#0c0c0c] border border-yellow-500/30 space-y-1 font-mono text-[11px]">
-                      <div className="flex justify-between items-center text-yellow-200 font-bold">
+                      <div className="flex flex-wrap justify-between items-center gap-x-2 gap-y-0.5 text-yellow-200 font-bold">
                         <span className="flex items-center gap-1">
-                          <Skull className="w-3 h-3 text-red-400" />
+                          <Skull className="w-3 h-3 text-red-400 shrink-0" />
                           Mortes Tardias / Neoplasias:
                         </span>
                         <span className="text-white font-black">{isDetonated ? `~${formatCasualtyNumber(falloutCasualties.zones.rad10.fatalities)} pessoas` : '— (Aguardando Detonação)'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-yellow-200/80">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-yellow-200/80">
                         <span>População Monitorada:</span>
                         <span className="text-yellow-100">{isDetonated ? `${formatCasualtyNumber(falloutCasualties.zones.rad10.popExposed)} hab` : '—'}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] text-yellow-200/80">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-yellow-200/80">
                         <span>Medida Sanitária:</span>
                         <span className="text-yellow-100">Embargo Agrícola e Hídrico</span>
                       </div>
@@ -3559,13 +3738,13 @@ export const NuclearRankingMapTab: React.FC = () => {
               <div className="space-y-3 animate-in fade-in duration-150">
                 {/* Cartão de Contexto Urbano do Alvo Selecionado */}
                 <div className="bg-[#181818]/90 p-3 rounded-2xl border border-white/10 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-rose-400" />
-                      <span className="text-xs font-extrabold text-white truncate">{selectedCity.name}</span>
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center space-x-1.5 min-w-0 flex-1">
+                      <MapPin className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                      <span className="text-xs font-extrabold text-white max-sm:whitespace-normal break-words sm:truncate">{selectedCity.name}</span>
                     </div>
                     {selectedCity.isHighlighted && (
-                      <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/50 flex items-center gap-1">
+                      <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/50 flex items-center gap-1 shrink-0">
                         <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
                         Destaque
                       </span>
@@ -3573,27 +3752,27 @@ export const NuclearRankingMapTab: React.FC = () => {
                   </div>
 
                   <div className="text-[11px] text-neutral-300 space-y-1">
-                    <div className="flex justify-between text-[10px] text-neutral-400 font-mono">
+                    <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-neutral-400 font-mono">
                       <span>País / Região:</span>
                       <span className="text-neutral-100">{selectedCity.country}</span>
                     </div>
-                    <div className="flex justify-between text-[10px] text-neutral-400 font-mono">
+                    <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-neutral-400 font-mono">
                       <span>Coordenadas:</span>
                       <span className="text-rose-300">
                         {selectedCity.lat.toFixed(4)}°, {selectedCity.lng.toFixed(4)}°
                       </span>
                     </div>
-                    <div className="flex justify-between text-[10px] text-neutral-400 font-mono">
+                    <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-neutral-400 font-mono">
                       <span>População Registrada:</span>
                       <span className="text-neutral-100">{selectedCity.populationEstimate}</span>
                     </div>
                     {selectedCity.coreDensityPerKm2 && (
-                      <div className="flex justify-between text-[10px] text-neutral-400 font-mono">
+                      <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-neutral-400 font-mono">
                         <span>Densidade Urbana Central:</span>
                         <span className="text-neutral-100">{formatCasualtyNumber(selectedCity.coreDensityPerKm2)} hab/km²</span>
                       </div>
                     )}
-                    <div className="flex justify-between text-[10px] text-rose-300 font-mono font-bold pt-1 border-t border-white/10">
+                    <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-[10px] text-rose-300 font-mono font-bold pt-1 border-t border-white/10">
                       <span>💀 Mortes Estimadas ({selectedBomb.name}):</span>
                       <span className="text-white font-extrabold" title={`Estimativa central: ~${formatCasualtyNumber(casualties.totalDeaths)} mortos`}>
                         {isDetonated ? casualties.deathsRangeDisplay : 'Aguardando Detonação'}
@@ -3604,7 +3783,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                   {selectedCity.highlightTag && (
                     <div className="p-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[10px] text-amber-300 space-y-0.5">
                       <div className="font-bold flex items-center gap-1">
-                        <ShieldAlert className="w-3 h-3 text-amber-400" />
+                        <ShieldAlert className="w-3 h-3 text-amber-400 shrink-0" />
                         <span>Contexto Estratégico:</span>
                       </div>
                       <p className="text-neutral-200 leading-tight">{selectedCity.highlightTag}</p>
@@ -3617,28 +3796,28 @@ export const NuclearRankingMapTab: React.FC = () => {
 
                 {/* Dimensões do Cogumelo Atômico */}
                 <div className="p-3.5 rounded-xl bg-[#181818]/90 border border-purple-500/30 space-y-2.5">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Cloud className="w-4 h-4 text-purple-400" />
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center space-x-2 min-w-0">
+                      <Cloud className="w-4 h-4 text-purple-400 shrink-0" />
                       <span className="text-xs font-bold text-purple-300 uppercase tracking-wide">
                         Cogumelo Atômico
                       </span>
                     </div>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 font-bold">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 font-bold shrink-0">
                       {selectedBomb.mushroomCloudHeightKm.toFixed(1)} km Altura
                     </span>
                   </div>
 
                   <div className="text-[11px] text-neutral-300 space-y-1 font-mono pt-1">
-                    <div className="flex justify-between">
+                    <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                       <span className="text-neutral-400">Altura do Topo:</span>
                       <span className="text-neutral-100 font-bold">{selectedBomb.mushroomCloudHeightKm.toFixed(1)} km</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                       <span className="text-neutral-400">Diâmetro do Chapéu:</span>
                       <span className="text-purple-300 font-bold">{selectedBomb.mushroomCloudCapDiameterKm.toFixed(1)} km</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5">
                       <span className="text-neutral-400">Raio da Haste (Stem):</span>
                       <span className="text-neutral-200">~{(selectedBomb.mushroomCloudCapDiameterKm * 0.25).toFixed(1)} km</span>
                     </div>
@@ -3767,7 +3946,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
                         <div className="absolute bottom-1.5 left-2 right-2 flex items-center justify-between text-[9px] font-mono text-purple-200">
-                          <span className="bg-black/75 px-1.5 py-0.5 rounded border border-purple-500/30 truncate">
+                          <span className="bg-black/75 px-1.5 py-0.5 rounded border border-purple-500/30 max-sm:whitespace-normal break-words sm:truncate">
                             {cloudInfo.label}
                           </span>
                         </div>
@@ -3778,14 +3957,14 @@ export const NuclearRankingMapTab: React.FC = () => {
 
                 {/* Tabela Comparativa de Todas as 12 Armas Atômicas em ${selectedCity.name} */}
                 <div className="p-3 rounded-xl bg-[#181818]/90 border border-white/10 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5">
-                      <Skull className="w-3.5 h-3.5 text-red-400" />
+                  <div className="flex flex-wrap items-center justify-between gap-1.5">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <Skull className="w-3.5 h-3.5 text-red-400 shrink-0" />
                       <span className="text-xs font-bold text-white uppercase tracking-wide">
                         Simulação de Mortes nas {NUCLEAR_RANKING_BOMBS.length} Armas em {selectedCity.name}
                       </span>
                     </div>
-                    <span className="text-[9px] font-mono text-neutral-400">Clique para testar</span>
+                    <span className="text-[9px] font-mono text-neutral-400 shrink-0">Clique para testar</span>
                   </div>
 
                   <div className="space-y-1.5 max-h-60 overflow-y-auto pr-1">
@@ -3796,18 +3975,18 @@ export const NuclearRankingMapTab: React.FC = () => {
                         <button
                           key={b.id}
                           onClick={() => handleSelectBomb(b)}
-                          className={`w-full p-2 rounded-lg border text-left transition-all flex items-center justify-between ${
+                          className={`w-full p-2.5 sm:p-2 rounded-lg border text-left transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2 ${
                             isCurrent
                               ? 'bg-rose-500/20 border-rose-500/60 text-white shadow-sm ring-1 ring-rose-400/40'
                               : 'bg-[#141414] border-white/10 hover:border-white/20 text-neutral-300 hover:text-white'
                           }`}
                         >
-                          <div className="truncate min-w-0 pr-2">
-                            <div className="flex items-center gap-1.5 truncate">
-                              <span className="font-bold text-xs truncate">{b.name}</span>
+                          <div className="w-full sm:flex-1 sm:truncate min-w-0 sm:pr-2">
+                            <div className="flex flex-wrap sm:flex-nowrap items-center gap-x-1.5 gap-y-0.5 sm:truncate">
+                              <span className="font-bold text-xs max-sm:whitespace-normal break-words sm:truncate">{b.name}</span>
                               <span className="text-[10px] font-mono text-rose-300 font-bold shrink-0">({b.yieldDisplay})</span>
                             </div>
-                            <div className="text-[10px] font-mono text-rose-400 font-bold flex items-center gap-1 mt-0.5">
+                            <div className="text-[10px] font-mono text-rose-400 font-bold flex flex-wrap items-center gap-x-1 gap-y-0.5 mt-0.5">
                               <Skull className="w-2.5 h-2.5 shrink-0" />
                               <span title={`Estimativa central: ~${formatCasualtyNumber(bCas.totalDeaths)} mortos`}>
                                 {bCas.deathsRangeDisplay} mortos
@@ -3818,7 +3997,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                               </span>
                             </div>
                           </div>
-                          <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-black/40 border border-white/10 text-neutral-400 shrink-0">
+                          <span className="self-start sm:self-center text-[9px] font-mono px-1.5 py-0.5 rounded bg-black/40 border border-white/10 text-neutral-400 shrink-0">
                             R: {formatRadius(b.lightBlastRadiusM)}
                           </span>
                         </button>
@@ -3858,24 +4037,25 @@ export const NuclearRankingMapTab: React.FC = () => {
         <div className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
           <div className="bg-[#141414] border border-white/15 rounded-2xl max-w-6xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
             {/* Modal Header */}
-            <div className="bg-[#181818] border-b border-white/10 px-5 py-4 flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 rounded-xl bg-[#222222] border border-white/15 text-red-500 shadow-sm">
+            <div className="bg-[#181818] border-b border-white/10 px-4 sm:px-5 py-3.5 sm:py-4 flex items-start sm:items-center justify-between gap-2">
+              <div className="flex items-center space-x-3 min-w-0 flex-1">
+                <div className="p-2 rounded-xl bg-[#222222] border border-white/15 text-red-500 shadow-sm shrink-0">
                   <Table className="w-5 h-5 text-red-500" />
                 </div>
-                <div>
-                  <h3 className="text-sm sm:text-base font-black text-white uppercase tracking-tight">
+                <div className="min-w-0">
+                  <h3 className="text-xs sm:text-base font-black text-white uppercase tracking-tight break-words">
                     TABELA DE MÉTRICAS FÍSICAS E RELAÇÃO DE ESCALA DE ZONAS DE DESTRUIÇÃO NUCLEARES
                   </h3>
-                  <p className="text-xs text-neutral-300 mt-0.5">
+                  <p className="text-[11px] sm:text-xs text-neutral-300 mt-0.5">
                     Referência de Escala: Castle Bravo com Diâmetro de Bola de Fogo de 7,0 km (Raio 3,50 km) • 12 Armas Calibradas
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setShowBenchmarkModal(false)}
-                className="p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-white/10 transition-colors"
+                className="p-2 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-lg text-neutral-400 hover:text-white hover:bg-white/10 transition-colors shrink-0 cursor-pointer"
                 title="Fechar tabela técnica"
+                aria-label="Fechar tabela técnica"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -3930,18 +4110,21 @@ export const NuclearRankingMapTab: React.FC = () => {
 
               {/* Tabela Completa de Impacto por Potência */}
               <div className="space-y-2">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                    <Flame className="w-3.5 h-3.5 text-red-500" />
+                    <Flame className="w-3.5 h-3.5 text-red-500 shrink-0" />
                     <span>Tabela Completa de Impacto por Potência (7 Zonas Calibradas)</span>
                   </h4>
-                  <span className="text-[10px] font-mono text-neutral-400">
+                  <span className="text-[10px] font-mono text-neutral-400 shrink-0">
                     R = Raio • Ø = Diâmetro
                   </span>
                 </div>
+                <div className="text-[11px] font-mono text-amber-300 sm:hidden">
+                  ↔ Deslize horizontalmente para visualizar todas as 7 zonas
+                </div>
 
                 <div className="border border-white/15 rounded-xl overflow-x-auto shadow-inner bg-[#161616]">
-                  <table className="w-full text-left text-xs font-mono">
+                  <table className="w-full min-w-[780px] text-left text-xs font-mono">
                     <thead className="bg-[#1c1c1c] border-b border-white/15 text-[10px] text-white uppercase font-bold">
                       <tr>
                         <th className="p-3 text-white">Arma / Potência</th>
@@ -4012,7 +4195,7 @@ export const NuclearRankingMapTab: React.FC = () => {
                                   handleSelectBomb(b);
                                   setShowBenchmarkModal(false);
                                 }}
-                                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                                className={`min-h-[38px] sm:min-h-0 px-3 sm:px-2.5 py-1.5 sm:py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                                   isCurrent
                                     ? 'bg-red-600 text-white cursor-default'
                                     : 'bg-[#222222] hover:bg-red-600 text-white border border-white/15'
@@ -4031,14 +4214,14 @@ export const NuclearRankingMapTab: React.FC = () => {
             </div>
 
             {/* Modal Footer */}
-            <div className="bg-[#181818] border-t border-white/10 px-5 py-3 flex items-center justify-between">
+            <div className="bg-[#181818] border-t border-white/10 px-4 sm:px-5 py-3 flex flex-wrap items-center justify-between gap-2">
               <span className="text-xs text-neutral-300">
                 Arma atualmente selecionada:{' '}
                 <strong className="text-white">{selectedBomb.name} ({selectedBomb.yieldDisplay})</strong>
               </span>
               <button
                 onClick={() => setShowBenchmarkModal(false)}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#222222] hover:bg-[#282828] border border-white/15 transition-colors"
+                className="min-h-[42px] sm:min-h-0 px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#222222] hover:bg-[#282828] border border-white/15 transition-colors shrink-0 cursor-pointer"
               >
                 Fechar
               </button>
@@ -4049,16 +4232,20 @@ export const NuclearRankingMapTab: React.FC = () => {
 
       {/* MODAL: INSERIR COORDENADAS MANUAIS DE QUALQUER LUGAR DO MUNDO */}
       {showCoordModal && (
-        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-[#181818]/90 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-[#141414] border border-white/15 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-4 bg-[#181818]/90 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-[#141414] border border-white/15 rounded-3xl p-4 sm:p-6 max-w-md w-full max-h-[90dvh] overflow-y-auto shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center space-x-2 text-white font-bold text-sm">
-                <Navigation className="w-4 h-4 text-emerald-400" />
+                <Navigation className="w-4 h-4 text-emerald-400 shrink-0" />
                 <span>Definir Coordenadas Geográficas</span>
               </div>
               <button
-                onClick={() => setShowCoordModal(false)}
-                className="text-neutral-300 hover:text-white p-1 rounded-lg"
+                onClick={() => {
+                  setCoordError(null);
+                  setShowCoordModal(false);
+                }}
+                className="text-neutral-300 hover:text-white p-1.5 rounded-lg min-w-[40px] min-h-[40px] flex items-center justify-center cursor-pointer"
+                aria-label="Fechar modal de coordenadas"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -4067,6 +4254,16 @@ export const NuclearRankingMapTab: React.FC = () => {
             <p className="text-xs text-neutral-300 leading-relaxed">
               Insira a latitude e longitude de qualquer local ou cidade no mundo para posicionar o Marco Zero com precisão milimétrica.
             </p>
+
+            {coordError && (
+              <div
+                role="alert"
+                className="p-3 rounded-xl bg-rose-950/60 border border-rose-500/50 text-rose-200 text-xs leading-relaxed flex items-start gap-2"
+              >
+                <ShieldAlert className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                <span>{coordError}</span>
+              </div>
+            )}
 
             <div className="space-y-3">
               <div>
@@ -4078,11 +4275,11 @@ export const NuclearRankingMapTab: React.FC = () => {
                   value={coordCityName}
                   onChange={(e) => setCoordCityName(e.target.value)}
                   placeholder="Ex: Minha Cidade, Ilha Remota, Base Naval..."
-                  className="w-full bg-[#0D0D0D] border border-white/15 rounded-xl px-3 py-2 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-red-500"
+                  className="w-full bg-[#0D0D0D] border border-white/15 rounded-xl px-3 py-2.5 sm:py-2 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-red-500"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 min-[380px]:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-[11px] font-semibold text-neutral-200 mb-1">
                     Latitude (-90 a 90)
@@ -4091,9 +4288,12 @@ export const NuclearRankingMapTab: React.FC = () => {
                     type="number"
                     step="any"
                     value={coordLat}
-                    onChange={(e) => setCoordLat(e.target.value)}
+                    onChange={(e) => {
+                      setCoordLat(e.target.value);
+                      if (coordError) setCoordError(null);
+                    }}
                     placeholder="Ex: -23.5505"
-                    className="w-full bg-[#0D0D0D] border border-white/15 rounded-xl px-3 py-2 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-red-500 font-mono"
+                    className="w-full bg-[#0D0D0D] border border-white/15 rounded-xl px-3 py-2.5 sm:py-2 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-red-500 font-mono"
                   />
                 </div>
                 <div>
@@ -4104,9 +4304,12 @@ export const NuclearRankingMapTab: React.FC = () => {
                     type="number"
                     step="any"
                     value={coordLng}
-                    onChange={(e) => setCoordLng(e.target.value)}
+                    onChange={(e) => {
+                      setCoordLng(e.target.value);
+                      if (coordError) setCoordError(null);
+                    }}
                     placeholder="Ex: -46.6333"
-                    className="w-full bg-[#0D0D0D] border border-white/15 rounded-xl px-3 py-2 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-red-500 font-mono"
+                    className="w-full bg-[#0D0D0D] border border-white/15 rounded-xl px-3 py-2.5 sm:py-2 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-red-500 font-mono"
                   />
                 </div>
               </div>
@@ -4114,14 +4317,17 @@ export const NuclearRankingMapTab: React.FC = () => {
 
             <div className="pt-2 flex items-center justify-end space-x-2">
               <button
-                onClick={() => setShowCoordModal(false)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-neutral-300 hover:text-white bg-[#222222] hover:bg-[#333333] transition-colors"
+                onClick={() => {
+                  setCoordError(null);
+                  setShowCoordModal(false);
+                }}
+                className="min-h-[42px] sm:min-h-0 flex-1 sm:flex-initial justify-center px-4 py-2 rounded-xl text-xs font-semibold text-neutral-300 hover:text-white bg-[#222222] hover:bg-[#333333] transition-colors cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleApplyCoordinates}
-                className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-red-600 hover:bg-red-500 shadow-lg shadow-red-600/30 transition-all flex items-center space-x-1.5"
+                className="min-h-[42px] sm:min-h-0 flex-1 sm:flex-initial justify-center px-5 py-2 rounded-xl text-xs font-bold text-white bg-red-600 hover:bg-red-500 shadow-lg shadow-red-600/30 transition-all flex items-center space-x-1.5 cursor-pointer"
               >
                 <Check className="w-3.5 h-3.5" />
                 <span>Aplicar Impacto</span>

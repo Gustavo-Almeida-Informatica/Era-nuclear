@@ -111,17 +111,27 @@ export const AtomSimulator: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let width = (canvas.width = canvas.parentElement?.clientWidth || 500);
-    let height = (canvas.height = 420);
+    let width = 500;
+    let height = 380;
 
-    const handleResize = () => {
+    const updateCanvasSize = () => {
       if (canvas && canvas.parentElement) {
-        width = canvas.width = canvas.parentElement.clientWidth;
-        height = canvas.height = 420;
+        const nextWidth = canvas.parentElement.clientWidth || 500;
+        const nextHeight = canvas.clientHeight || (nextWidth < 640 ? 320 : 380);
+        width = canvas.width = nextWidth;
+        height = canvas.height = nextHeight;
       }
     };
 
-    window.addEventListener('resize', handleResize);
+    updateCanvasSize();
+    const resizeObserver =
+      typeof ResizeObserver !== 'undefined' && canvas.parentElement
+        ? new ResizeObserver(updateCanvasSize)
+        : null;
+    if (resizeObserver && canvas.parentElement) {
+      resizeObserver.observe(canvas.parentElement);
+    }
+    window.addEventListener('resize', updateCanvasSize);
 
     const render = () => {
       ctx.clearRect(0, 0, width, height);
@@ -129,23 +139,26 @@ export const AtomSimulator: React.FC = () => {
       const centerX = width / 2;
       const centerY = height / 2;
 
+      // Dynamic scale for mobile devices (<450px) to prevent electron orbital clipping
+      const scale = Math.min(1, Math.max(0.55, (width - 32) / 440));
+
       // Draw subtle background grid/glow
-      const radialGlow = ctx.createRadialGradient(centerX, centerY, 5, centerX, centerY, 180);
+      const radialGlow = ctx.createRadialGradient(centerX, centerY, 5, centerX, centerY, 180 * scale);
       radialGlow.addColorStop(0, 'rgba(115, 202, 229, 0.08)');
       radialGlow.addColorStop(0.5, 'rgba(143, 131, 255, 0.03)');
       radialGlow.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = radialGlow;
       ctx.beginPath();
-      ctx.arc(centerX, centerY, 200, 0, Math.PI * 2);
+      ctx.arc(centerX, centerY, 200 * scale, 0, Math.PI * 2);
       ctx.fill();
 
-      // Orbital parameters based on selected element
+      // Orbital parameters based on selected element scaled to canvas width
       const orbitalCount = Math.min(Math.max(selectedIsotope.electrons > 2 ? 3 : 2, 2), 4);
       const orbitals = [
-        { rx: 110, ry: 45, tilt: 0.2, speed: 1.2 * speed, color: 'rgba(115, 202, 229, 0.35)' },
-        { rx: 140, ry: 55, tilt: -0.65, speed: -0.9 * speed, color: 'rgba(143, 131, 255, 0.35)' },
-        { rx: 165, ry: 60, tilt: 0.85, speed: 0.7 * speed, color: 'rgba(255, 255, 255, 0.25)' },
-        { rx: 190, ry: 70, tilt: -1.3, speed: -0.5 * speed, color: 'rgba(115, 202, 229, 0.25)' }
+        { rx: 110 * scale, ry: 45 * scale, tilt: 0.2, speed: 1.2 * speed, color: 'rgba(115, 202, 229, 0.35)' },
+        { rx: 140 * scale, ry: 55 * scale, tilt: -0.65, speed: -0.9 * speed, color: 'rgba(143, 131, 255, 0.35)' },
+        { rx: 165 * scale, ry: 60 * scale, tilt: 0.85, speed: 0.7 * speed, color: 'rgba(255, 255, 255, 0.25)' },
+        { rx: 190 * scale, ry: 70 * scale, tilt: -1.3, speed: -0.5 * speed, color: 'rgba(115, 202, 229, 0.25)' }
       ].slice(0, orbitalCount);
 
       // Draw Orbitals & Electrons
@@ -257,7 +270,8 @@ export const AtomSimulator: React.FC = () => {
     render();
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      resizeObserver?.disconnect();
+      window.removeEventListener('resize', updateCanvasSize);
       if (animationFrameId.current) {
         cancelAnimationFrame(animationFrameId.current);
       }
@@ -265,7 +279,7 @@ export const AtomSimulator: React.FC = () => {
   }, [selectedIsotope, isPlaying, speed, viewMode]);
 
   return (
-    <div className="bg-[#121212] border border-white/10 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
+    <div className="bg-[#121212] border border-white/10 rounded-2xl p-4 sm:p-6 shadow-2xl relative overflow-hidden">
       {/* Header bar of simulator */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/5">
         <div>
@@ -284,8 +298,9 @@ export const AtomSimulator: React.FC = () => {
         <div className="flex items-center space-x-2 self-start sm:self-auto">
           <button
             onClick={() => setIsPlaying(!isPlaying)}
-            className="p-2 rounded-lg bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors focus:outline-none"
+            className="min-w-[42px] min-h-[42px] flex items-center justify-center p-2 rounded-lg bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors focus:outline-none cursor-pointer"
             title={isPlaying ? 'Pausar animação' : 'Iniciar animação'}
+            aria-label={isPlaying ? 'Pausar animação' : 'Iniciar animação'}
           >
             {isPlaying ? <Pause className="w-4 h-4 text-[#73CAE5]" /> : <Play className="w-4 h-4 text-[#73CAE5]" />}
           </button>
@@ -294,8 +309,9 @@ export const AtomSimulator: React.FC = () => {
             onClick={() => {
               angleRef.current = 0;
             }}
-            className="p-2 rounded-lg bg-white/5 border border-white/10 text-[#B7B7B7] hover:text-white hover:bg-white/10 transition-colors focus:outline-none"
+            className="min-w-[42px] min-h-[42px] flex items-center justify-center p-2 rounded-lg bg-white/5 border border-white/10 text-[#B7B7B7] hover:text-white hover:bg-white/10 transition-colors focus:outline-none cursor-pointer"
             title="Reiniciar posição orbital"
+            aria-label="Reiniciar posição orbital"
           >
             <RotateCcw className="w-4 h-4" />
           </button>
@@ -303,7 +319,8 @@ export const AtomSimulator: React.FC = () => {
           <select
             value={speed}
             onChange={(e) => setSpeed(Number(e.target.value))}
-            className="px-2.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-[#73CAE5]"
+            className="min-h-[42px] px-2.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-[#73CAE5] cursor-pointer"
+            aria-label="Velocidade da simulação"
           >
             <option value={0.5} className="bg-[#121212]">0.5x</option>
             <option value={1} className="bg-[#121212]">1.0x</option>
@@ -322,7 +339,7 @@ export const AtomSimulator: React.FC = () => {
             <button
               key={iso.name}
               onClick={() => setSelectedIsotope(iso)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap focus:outline-none ${
+              className={`min-h-[40px] px-3 py-1.5 rounded-lg text-xs font-medium transition-all max-sm:whitespace-normal sm:whitespace-nowrap text-left focus:outline-none cursor-pointer flex items-center ${
                 selectedIsotope.name === iso.name
                   ? 'bg-gradient-to-r from-[#73CAE5]/20 to-[#8F83FF]/20 text-white border border-[#73CAE5] shadow-md shadow-[#73CAE5]/10'
                   : 'bg-white/5 text-[#B7B7B7] border border-white/5 hover:border-white/20 hover:text-white'
@@ -336,29 +353,29 @@ export const AtomSimulator: React.FC = () => {
       </div>
 
       {/* Canvas Area */}
-      <div className="relative rounded-xl bg-[#090909] border border-white/5 overflow-hidden flex items-center justify-center min-h-[380px]">
-        <canvas ref={canvasRef} className="w-full h-[380px] block cursor-grab active:cursor-grabbing" />
+      <div className="relative rounded-xl bg-[#090909] border border-white/5 overflow-hidden flex flex-col sm:block">
+        <canvas ref={canvasRef} className="w-full h-[320px] sm:h-[380px] block cursor-grab active:cursor-grabbing" />
 
-        {/* Legend Overlay inside canvas */}
-        <div className="absolute bottom-3 left-3 bg-[#0D0D0D]/90 backdrop-blur-md border border-white/10 rounded-lg p-2.5 text-[11px] space-y-1.5 z-10 shadow-lg">
+        {/* Legend Overlay inside canvas (stacked cleanly below canvas on narrow mobile screens) */}
+        <div className="max-sm:static max-sm:w-full max-sm:max-w-none max-sm:rounded-none max-sm:border-x-0 max-sm:border-b-0 sm:rounded-lg sm:absolute sm:bottom-3 sm:left-3 bg-[#0D0D0D]/90 backdrop-blur-md border border-white/10 p-2.5 text-[11px] space-y-1.5 z-10 shadow-lg">
           <div className="flex items-center space-x-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#8F83FF]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#8F83FF] shrink-0" />
             <span className="text-white">Próton (p⁺, +1e): <strong className="text-[#8F83FF] font-mono">{selectedIsotope.protons}</strong></span>
           </div>
           <div className="flex items-center space-x-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#73CAE5]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#73CAE5] shrink-0" />
             <span className="text-white">Nêutron (n⁰, 0): <strong className="text-[#73CAE5] font-mono">{selectedIsotope.neutrons}</strong></span>
           </div>
           <div className="flex items-center space-x-2">
-            <span className="w-2 h-2 rounded-full bg-white ring-2 ring-[#73CAE5]" />
+            <span className="w-2 h-2 rounded-full bg-white ring-2 ring-[#73CAE5] shrink-0" />
             <span className="text-white">Elétron (e⁻, -1e): <strong className="text-white font-mono">{selectedIsotope.electrons}</strong></span>
           </div>
         </div>
 
         {/* Stability Badge Overlay */}
-        <div className="absolute top-3 right-3 z-10">
+        <div className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 z-10">
           <span
-            className={`px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider border shadow-md ${
+            className={`px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-semibold uppercase tracking-wider border shadow-md ${
               selectedIsotope.stability === 'Estável'
                 ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
                 : selectedIsotope.stability === 'Físsil'

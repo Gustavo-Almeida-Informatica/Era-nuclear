@@ -34,17 +34,17 @@ export const CasesPage: React.FC<CasesPageProps> = ({ onNavigate }) => {
   );
 
   return (
-    <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+    <div className="pt-24 sm:pt-28 pb-16 sm:pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-16">
       {/* Header */}
       <div className="max-w-3xl space-y-4">
         <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#8F83FF]/10 border border-[#8F83FF]/30 text-xs font-semibold text-[#8F83FF]">
-          <ShieldAlert className="w-3.5 h-3.5" />
+          <ShieldAlert className="w-3.5 h-3.5 shrink-0" />
           <span>Memória Histórica & Estudos de Caso</span>
         </div>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-white font-display tracking-tight">
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-white font-display tracking-tight">
           Casos Históricos Marcantes
         </h1>
-        <p className="text-base text-[#B7B7B7] leading-relaxed">
+        <p className="text-sm sm:text-base text-[#B7B7B7] leading-relaxed">
           Examine os acontecimentos mais impactantes da história nuclear: das detonações de 1945 e testes no Pacífico às crises diplomáticas e aos acidentes de Chernobyl, Goiânia e Fukushima, analisando suas lições para a segurança global.
         </p>
       </div>
@@ -55,7 +55,7 @@ export const CasesPage: React.FC<CasesPageProps> = ({ onNavigate }) => {
           <button
             key={cat.id}
             onClick={() => setSelectedCategory(cat.id)}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
+            className={`min-h-[40px] sm:min-h-0 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
               selectedCategory === cat.id
                 ? 'bg-gradient-to-r from-[#73CAE5] to-[#8F83FF] text-[#0D0D0D] font-bold shadow-md shadow-[#73CAE5]/20'
                 : 'bg-[#111111] text-[#B7B7B7] hover:bg-white/10 hover:text-white border border-white/5'
@@ -71,10 +71,10 @@ export const CasesPage: React.FC<CasesPageProps> = ({ onNavigate }) => {
         {filteredCases.map((cs) => (
           <div
             key={cs.id}
-            className="bg-[#111111] border border-white/10 rounded-2xl p-6 hover:border-[#73CAE5]/40 transition-all shadow-xl flex flex-col justify-between group space-y-5"
+            className="bg-[#111111] border border-white/10 rounded-2xl p-4 sm:p-6 hover:border-[#73CAE5]/40 transition-all shadow-xl flex flex-col justify-between group space-y-5 min-w-0"
           >
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
+            <div className="space-y-3 min-w-0">
+              <div className="flex items-center justify-between gap-2 flex-wrap">
                 <span className="text-lg font-mono font-bold text-white">
                   {cs.year}
                 </span>
@@ -97,9 +97,9 @@ export const CasesPage: React.FC<CasesPageProps> = ({ onNavigate }) => {
                 {cs.title}
               </h3>
 
-              <div className="flex items-center space-x-1.5 text-xs text-[#B7B7B7]">
-                <MapPin className="w-3.5 h-3.5 text-[#73CAE5] shrink-0" />
-                <span className="truncate">{cs.location}</span>
+              <div className="flex items-start lg:items-center space-x-1.5 text-xs text-[#B7B7B7] min-w-0">
+                <MapPin className="w-3.5 h-3.5 text-[#73CAE5] shrink-0 mt-0.5 lg:mt-0" />
+                <span className="max-lg:whitespace-normal break-words lg:truncate">{cs.location}</span>
               </div>
 
               <p className="text-xs text-[#B7B7B7] leading-relaxed pt-1">
@@ -110,7 +110,7 @@ export const CasesPage: React.FC<CasesPageProps> = ({ onNavigate }) => {
             <div className="pt-4 border-t border-white/5 flex flex-col gap-2">
               <button
                 onClick={() => setActiveModalCase(cs)}
-                className="w-full py-2.5 rounded-xl bg-white/5 hover:bg-[#73CAE5] hover:text-[#0D0D0D] text-xs font-bold text-white transition-all flex items-center justify-center space-x-2 border border-white/5 hover:border-transparent"
+                className="w-full min-h-[44px] sm:min-h-0 py-2.5 rounded-xl bg-white/5 hover:bg-[#73CAE5] hover:text-[#0D0D0D] text-xs font-bold text-white transition-all flex items-center justify-center space-x-2 border border-white/5 hover:border-transparent cursor-pointer"
               >
                 <span>Ver Análise Completa</span>
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -119,7 +119,7 @@ export const CasesPage: React.FC<CasesPageProps> = ({ onNavigate }) => {
               {cs.id === 'tsar-bomba-1961' && (
                 <button
                   onClick={() => onNavigate('tsar-bomba')}
-                  className="w-full py-2 rounded-xl bg-[#8F83FF]/15 hover:bg-[#8F83FF] hover:text-white text-xs font-bold text-[#8F83FF] transition-all flex items-center justify-center space-x-1.5 border border-[#8F83FF]/30"
+                  className="w-full min-h-[44px] sm:min-h-0 py-2 rounded-xl bg-[#8F83FF]/15 hover:bg-[#8F83FF] hover:text-white text-xs font-bold text-[#8F83FF] transition-all flex items-center justify-center space-x-1.5 border border-[#8F83FF]/30 cursor-pointer"
                 >
                   <span>Abrir Página Especial da Tsar Bomba</span>
                   <ChevronRight className="w-3.5 h-3.5" />
@@ -132,26 +132,32 @@ export const CasesPage: React.FC<CasesPageProps> = ({ onNavigate }) => {
 
       {/* Case Study Modal */}
       {activeModalCase && (
-        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-150">
-          <div className="bg-[#141414] border border-white/15 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl space-y-6 relative animate-in zoom-in-95 duration-150">
+        <div
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-150"
+          onClick={() => setActiveModalCase(null)}
+        >
+          <div
+            className="bg-[#141414] border border-white/15 rounded-2xl max-w-3xl w-full max-h-[90dvh] overflow-y-auto p-4 sm:p-8 shadow-2xl space-y-6 relative animate-in zoom-in-95 duration-150"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button
               onClick={() => setActiveModalCase(null)}
-              className="absolute top-5 right-5 p-2 rounded-full bg-white/5 hover:bg-white/15 text-[#B7B7B7] hover:text-white transition-colors"
+              className="absolute top-3 right-3 sm:top-5 sm:right-5 w-11 h-11 sm:w-9 sm:h-9 rounded-full bg-white/5 hover:bg-white/15 text-[#B7B7B7] hover:text-white transition-colors flex items-center justify-center cursor-pointer"
               aria-label="Fechar modal"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <div className="space-y-1.5">
-              <div className="flex items-center space-x-2 text-xs font-mono">
+            <div className="space-y-1.5 pr-12">
+              <div className="flex items-center space-x-2 text-xs font-mono flex-wrap gap-1">
                 <span className="font-bold text-[#73CAE5] text-lg">{activeModalCase.year}</span>
                 <span className="text-[#8F83FF] uppercase font-bold">• {activeModalCase.categoryLabel}</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-display">
+              <h2 className="text-xl sm:text-3xl font-extrabold text-white font-display">
                 {activeModalCase.title}
               </h2>
-              <div className="flex items-center space-x-1.5 text-xs text-[#B7B7B7]">
-                <MapPin className="w-3.5 h-3.5 text-[#73CAE5]" />
+              <div className="flex items-start sm:items-center space-x-1.5 text-xs text-[#B7B7B7]">
+                <MapPin className="w-3.5 h-3.5 text-[#73CAE5] shrink-0 mt-0.5 sm:mt-0" />
                 <span>{activeModalCase.location}</span>
               </div>
             </div>
@@ -177,27 +183,27 @@ export const CasesPage: React.FC<CasesPageProps> = ({ onNavigate }) => {
                 </h4>
                 <ul className="space-y-1.5">
                   {activeModalCase.consequences.map((c, idx) => (
-                    <li key={idx} className="flex items-start space-x-2 text-xs text-white/90">
-                      <span className="text-rose-400 font-bold">•</span>
-                      <span>{c}</span>
+                    <li key={idx} className="flex items-start space-x-2 text-xs text-white/90 min-w-0">
+                      <span className="text-rose-400 font-bold shrink-0">•</span>
+                      <span className="min-w-0 flex-1 break-words">{c}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="p-4 rounded-xl bg-[#73CAE5]/10 border border-[#73CAE5]/30 space-y-1">
+                <div className="p-4 rounded-xl bg-[#73CAE5]/10 border border-[#73CAE5]/30 space-y-1 min-w-0">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-[#73CAE5]">
                     Importância Histórica
                   </h4>
-                  <p className="text-xs text-white/90">{activeModalCase.historicalSignificance}</p>
+                  <p className="text-xs text-white/90 break-words">{activeModalCase.historicalSignificance}</p>
                 </div>
 
-                <div className="p-4 rounded-xl bg-[#8F83FF]/10 border border-[#8F83FF]/30 space-y-1">
+                <div className="p-4 rounded-xl bg-[#8F83FF]/10 border border-[#8F83FF]/30 space-y-1 min-w-0">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-[#8F83FF]">
                     Lições Aprendidas
                   </h4>
-                  <p className="text-xs text-white/90">{activeModalCase.lessonsLearned}</p>
+                  <p className="text-xs text-white/90 break-words">{activeModalCase.lessonsLearned}</p>
                 </div>
               </div>
             </div>
@@ -205,7 +211,7 @@ export const CasesPage: React.FC<CasesPageProps> = ({ onNavigate }) => {
             <div className="pt-4 border-t border-white/10 flex justify-end">
               <button
                 onClick={() => setActiveModalCase(null)}
-                className="px-5 py-2 rounded-xl bg-white/10 text-white text-xs font-bold hover:bg-white/20 transition-all"
+                className="w-full sm:w-auto min-h-[44px] sm:min-h-0 px-5 py-2.5 sm:py-2 rounded-xl bg-white/10 text-white text-xs font-bold hover:bg-white/20 transition-all cursor-pointer"
               >
                 Fechar Análise
               </button>

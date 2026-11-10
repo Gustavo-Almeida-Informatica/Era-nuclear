@@ -37,7 +37,7 @@ export const FissionFusionAtomsComparison: React.FC = () => {
   };
 
   return (
-    <div className="bg-[#111111] border border-white/10 rounded-2xl p-5 sm:p-8 shadow-2xl space-y-6">
+    <div className="bg-[#111111] border border-white/10 rounded-2xl p-4 sm:p-8 shadow-2xl space-y-6">
       {/* Header bar */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 border-b border-white/10">
         <div className="space-y-1.5">
@@ -55,12 +55,12 @@ export const FissionFusionAtomsComparison: React.FC = () => {
         </div>
 
         {/* Global Controls */}
-        <div className="flex flex-wrap items-center gap-2 self-start lg:self-auto">
+        <div className="flex flex-wrap items-center gap-2 self-start lg:self-auto w-full lg:w-auto">
           {/* Layout switcher */}
-          <div className="flex rounded-lg bg-white/5 p-1 border border-white/10 text-xs font-mono">
+          <div className="flex flex-wrap rounded-lg bg-white/5 p-1 border border-white/10 text-xs font-mono gap-1">
             <button
               onClick={() => setViewLayout('side-by-side')}
-              className={`px-2.5 py-1 rounded-md transition-all flex items-center space-x-1.5 ${
+              className={`min-h-[38px] sm:min-h-0 px-2.5 py-1.5 sm:py-1 rounded-md transition-all flex items-center space-x-1.5 ${
                 viewLayout === 'side-by-side'
                   ? 'bg-gradient-to-r from-[#73CAE5] to-[#8F83FF] text-[#0D0D0D] font-bold shadow-sm'
                   : 'text-[#B7B7B7] hover:text-white'
@@ -71,7 +71,7 @@ export const FissionFusionAtomsComparison: React.FC = () => {
             </button>
             <button
               onClick={() => setViewLayout('all-four')}
-              className={`px-2.5 py-1 rounded-md transition-all flex items-center space-x-1.5 ${
+              className={`min-h-[38px] sm:min-h-0 px-2.5 py-1.5 sm:py-1 rounded-md transition-all flex items-center space-x-1.5 ${
                 viewLayout === 'all-four'
                   ? 'bg-gradient-to-r from-[#73CAE5] to-[#8F83FF] text-[#0D0D0D] font-bold shadow-sm'
                   : 'text-[#B7B7B7] hover:text-white'
@@ -85,7 +85,7 @@ export const FissionFusionAtomsComparison: React.FC = () => {
           {/* Electrons Toggle */}
           <button
             onClick={() => setShowElectrons(!showElectrons)}
-            className={`px-2.5 py-1.5 rounded-lg border text-xs font-mono transition-all flex items-center space-x-1.5 ${
+            className={`min-h-[38px] sm:min-h-0 px-3 sm:px-2.5 py-1.5 rounded-lg border text-xs font-mono transition-all flex items-center space-x-1.5 ${
               showElectrons
                 ? 'bg-white/5 border-white/10 text-white hover:bg-white/10'
                 : 'bg-amber-500/10 border-amber-500/30 text-amber-300'
@@ -100,22 +100,25 @@ export const FissionFusionAtomsComparison: React.FC = () => {
           <div className="flex items-center space-x-1 bg-white/5 p-1 rounded-lg border border-white/10">
             <button
               onClick={() => setIsPlaying(!isPlaying)}
-              className="p-1.5 rounded-md hover:bg-white/10 text-[#73CAE5] transition-colors"
+              className="min-w-[36px] min-h-[36px] sm:min-w-0 sm:min-h-0 flex items-center justify-center p-1.5 rounded-md hover:bg-white/10 text-[#73CAE5] transition-colors"
               title={isPlaying ? 'Pausar animações' : 'Retomar animações'}
+              aria-label={isPlaying ? 'Pausar animações' : 'Retomar animações'}
             >
               {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
             </button>
             <button
               onClick={handleReset}
-              className="p-1.5 rounded-md hover:bg-white/10 text-[#B7B7B7] hover:text-white transition-colors"
+              className="min-w-[36px] min-h-[36px] sm:min-w-0 sm:min-h-0 flex items-center justify-center p-1.5 rounded-md hover:bg-white/10 text-[#B7B7B7] hover:text-white transition-colors"
               title="Reiniciar ângulos orbitais"
+              aria-label="Reiniciar ângulos orbitais"
             >
               <RotateCcw className="w-3.5 h-3.5" />
             </button>
             <select
               value={speed}
               onChange={(e) => setSpeed(Number(e.target.value))}
-              className="bg-transparent text-[11px] font-mono text-white px-1.5 py-0.5 rounded focus:outline-none border-0"
+              className="min-h-[36px] sm:min-h-0 bg-transparent text-[11px] font-mono text-white px-2 sm:px-1.5 py-0.5 rounded focus:outline-none border-0"
+              aria-label="Velocidade dos modelos atômicos"
             >
               <option value={0.5} className="bg-[#121212]">0.5x</option>
               <option value={1} className="bg-[#121212]">1.0x</option>
@@ -129,16 +132,16 @@ export const FissionFusionAtomsComparison: React.FC = () => {
       {viewLayout === 'side-by-side' ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* FISSION PANEL */}
-          <div className="bg-[#0D0D0D] border border-[#73CAE5]/30 rounded-2xl p-5 space-y-4 shadow-xl flex flex-col justify-between">
+          <div className="bg-[#0D0D0D] border border-[#73CAE5]/30 rounded-2xl p-4 sm:p-5 space-y-4 shadow-xl flex flex-col justify-between">
             <div className="space-y-3">
               {/* Header & Isotope Tabs */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-white/5">
                 <div className="flex items-center space-x-2">
-                  <div className="w-7 h-7 rounded-lg bg-[#73CAE5]/15 border border-[#73CAE5]/30 flex items-center justify-center">
+                  <div className="w-7 h-7 rounded-lg bg-[#73CAE5]/15 border border-[#73CAE5]/30 flex items-center justify-center shrink-0">
                     <Zap className="w-3.5 h-3.5 text-[#73CAE5]" />
                   </div>
-                  <div>
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#73CAE5]">
+                  <div className="min-w-0">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#73CAE5] block">
                       Rota da Fissão • Núcleos Pesados Físseis
                     </span>
                     <h4 className="text-base font-bold text-white font-display leading-tight">
@@ -151,7 +154,7 @@ export const FissionFusionAtomsComparison: React.FC = () => {
                 <div className="flex rounded-lg bg-white/5 p-1 border border-white/10 text-xs font-mono self-start sm:self-auto">
                   <button
                     onClick={() => setFissionSelectedId('u235')}
-                    className={`px-2.5 py-1 rounded-md transition-all ${
+                    className={`min-h-[38px] sm:min-h-0 px-3 sm:px-2.5 py-1.5 sm:py-1 rounded-md transition-all ${
                       fissionSelectedId === 'u235'
                         ? 'bg-[#73CAE5] text-[#0D0D0D] font-bold'
                         : 'text-[#B7B7B7] hover:text-white'
@@ -161,7 +164,7 @@ export const FissionFusionAtomsComparison: React.FC = () => {
                   </button>
                   <button
                     onClick={() => setFissionSelectedId('pu239')}
-                    className={`px-2.5 py-1 rounded-md transition-all ${
+                    className={`min-h-[38px] sm:min-h-0 px-3 sm:px-2.5 py-1.5 sm:py-1 rounded-md transition-all ${
                       fissionSelectedId === 'pu239'
                         ? 'bg-[#73CAE5] text-[#0D0D0D] font-bold'
                         : 'text-[#B7B7B7] hover:text-white'
@@ -188,11 +191,11 @@ export const FissionFusionAtomsComparison: React.FC = () => {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
                 <div className="p-2.5 rounded-lg bg-white/[0.03] border border-white/5">
                   <span className="text-[10px] text-[#B7B7B7] block">Número Atômico (Z)</span>
-                  <span className="text-white font-bold text-sm text-[#8F83FF]">{currentFissionAtom.protons} p⁺</span>
+                  <span className="font-bold text-sm text-[#8F83FF]">{currentFissionAtom.protons} p⁺</span>
                 </div>
                 <div className="p-2.5 rounded-lg bg-white/[0.03] border border-white/5">
                   <span className="text-[10px] text-[#B7B7B7] block">Nêutrons (N)</span>
-                  <span className="text-white font-bold text-sm text-[#73CAE5]">{currentFissionAtom.neutrons} n⁰</span>
+                  <span className="font-bold text-sm text-[#73CAE5]">{currentFissionAtom.neutrons} n⁰</span>
                 </div>
                 <div className="p-2.5 rounded-lg bg-white/[0.03] border border-white/5">
                   <span className="text-[10px] text-[#B7B7B7] block">Massa Total (A)</span>
@@ -222,16 +225,16 @@ export const FissionFusionAtomsComparison: React.FC = () => {
           </div>
 
           {/* FUSION PANEL */}
-          <div className="bg-[#0D0D0D] border border-[#8F83FF]/30 rounded-2xl p-5 space-y-4 shadow-xl flex flex-col justify-between">
+          <div className="bg-[#0D0D0D] border border-[#8F83FF]/30 rounded-2xl p-4 sm:p-5 space-y-4 shadow-xl flex flex-col justify-between">
             <div className="space-y-3">
               {/* Header & Isotope Tabs */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-white/5">
                 <div className="flex items-center space-x-2">
-                  <div className="w-7 h-7 rounded-lg bg-[#8F83FF]/15 border border-[#8F83FF]/30 flex items-center justify-center">
+                  <div className="w-7 h-7 rounded-lg bg-[#8F83FF]/15 border border-[#8F83FF]/30 flex items-center justify-center shrink-0">
                     <Flame className="w-3.5 h-3.5 text-[#8F83FF]" />
                   </div>
-                  <div>
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#8F83FF]">
+                  <div className="min-w-0">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#8F83FF] block">
                       Rota da Fusão • Núcleos Ultraleves
                     </span>
                     <h4 className="text-base font-bold text-white font-display leading-tight">
@@ -244,7 +247,7 @@ export const FissionFusionAtomsComparison: React.FC = () => {
                 <div className="flex rounded-lg bg-white/5 p-1 border border-white/10 text-xs font-mono self-start sm:self-auto">
                   <button
                     onClick={() => setFusionSelectedId('deuterium')}
-                    className={`px-2.5 py-1 rounded-md transition-all ${
+                    className={`min-h-[38px] sm:min-h-0 px-3 sm:px-2.5 py-1.5 sm:py-1 rounded-md transition-all ${
                       fusionSelectedId === 'deuterium'
                         ? 'bg-[#8F83FF] text-[#0D0D0D] font-bold'
                         : 'text-[#B7B7B7] hover:text-white'
@@ -254,7 +257,7 @@ export const FissionFusionAtomsComparison: React.FC = () => {
                   </button>
                   <button
                     onClick={() => setFusionSelectedId('tritium')}
-                    className={`px-2.5 py-1 rounded-md transition-all ${
+                    className={`min-h-[38px] sm:min-h-0 px-3 sm:px-2.5 py-1.5 sm:py-1 rounded-md transition-all ${
                       fusionSelectedId === 'tritium'
                         ? 'bg-[#8F83FF] text-[#0D0D0D] font-bold'
                         : 'text-[#B7B7B7] hover:text-white'
@@ -281,11 +284,11 @@ export const FissionFusionAtomsComparison: React.FC = () => {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
                 <div className="p-2.5 rounded-lg bg-white/[0.03] border border-white/5">
                   <span className="text-[10px] text-[#B7B7B7] block">Número Atômico (Z)</span>
-                  <span className="text-white font-bold text-sm text-[#8F83FF]">{currentFusionAtom.protons} p⁺</span>
+                  <span className="font-bold text-sm text-[#8F83FF]">{currentFusionAtom.protons} p⁺</span>
                 </div>
                 <div className="p-2.5 rounded-lg bg-white/[0.03] border border-white/5">
                   <span className="text-[10px] text-[#B7B7B7] block">Nêutrons (N)</span>
-                  <span className="text-white font-bold text-sm text-[#73CAE5]">{currentFusionAtom.neutrons} n⁰</span>
+                  <span className="font-bold text-sm text-[#73CAE5]">{currentFusionAtom.neutrons} n⁰</span>
                 </div>
                 <div className="p-2.5 rounded-lg bg-white/[0.03] border border-white/5">
                   <span className="text-[10px] text-[#B7B7B7] block">Massa Total (A)</span>

@@ -97,28 +97,28 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
   ];
 
   return (
-    <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 lg:space-y-24">
+    <div className="pt-24 sm:pt-28 pb-16 sm:pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-16 lg:space-y-24">
       {/* Hero Header */}
       <div className="space-y-6">
         <div className="flex flex-wrap items-center gap-3">
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#8F83FF]/15 border border-[#8F83FF]/35 text-xs font-bold text-[#8F83FF] uppercase tracking-wider font-mono">
-            <Flame className="w-3.5 h-3.5 text-rose-400" />
-            <span>O Ápice da Megatonelagem Nuclear • 1961</span>
+          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#8F83FF]/15 border border-[#8F83FF]/35 text-xs font-bold text-[#8F83FF] uppercase tracking-wider font-mono max-w-full">
+            <Flame className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+            <span className="max-sm:whitespace-normal break-words">O Ápice da Megatonelagem Nuclear • 1961</span>
           </div>
           <button
             onClick={() => onNavigate('operation-castle')}
-            className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-[#B7B7B7] hover:text-white hover:border-[#73CAE5]/40 transition-colors"
+            className="inline-flex items-center space-x-1.5 px-3 py-1.5 sm:py-1 min-h-[38px] sm:min-h-0 rounded-full bg-white/5 border border-white/10 text-xs text-[#B7B7B7] hover:text-white hover:border-[#73CAE5]/40 transition-colors text-left"
           >
-            <Zap className="w-3 h-3 text-[#73CAE5]" />
+            <Zap className="w-3 h-3 text-[#73CAE5] shrink-0" />
             <span>Ver Testes de Bikini (Operação Castle)</span>
           </button>
         </div>
 
         <div className="space-y-3 max-w-4xl">
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white font-display tracking-tight uppercase leading-none">
+          <h1 className="text-3xl sm:text-5xl lg:text-7xl font-extrabold text-white font-display tracking-tight uppercase leading-none break-words">
             Tsar Bomba <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#8F83FF] via-purple-400 to-rose-400 font-mono">(RDS-220)</span>
           </h1>
-          <p className="text-lg sm:text-2xl text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-[#8F83FF] font-medium font-display leading-snug">
+          <p className="text-base sm:text-2xl text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-[#8F83FF] font-medium font-display leading-snug">
             A maior detonação nuclear e o evento explosivo artificial de maior energia já liberado pela humanidade: 50 Megatons de potência.
           </p>
         </div>
@@ -128,34 +128,34 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
         </p>
 
         {/* Action CTAs */}
-        <div className="flex flex-wrap items-center gap-3 pt-2">
+        <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 pt-2">
           <button
             onClick={() => {
               onNavigate('nuclear-ranking');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="inline-flex items-center space-x-2 px-5 py-3 rounded-xl bg-gradient-to-r from-rose-500 to-purple-600 text-white font-bold text-xs sm:text-sm hover:shadow-xl hover:shadow-rose-500/25 active:scale-95 transition-all"
+            className="w-full sm:w-auto justify-center inline-flex items-center space-x-2 px-5 py-3 min-h-[44px] sm:min-h-0 rounded-xl bg-gradient-to-r from-rose-500 to-purple-600 text-white font-bold text-xs sm:text-sm hover:shadow-xl hover:shadow-rose-500/25 active:scale-95 transition-all"
           >
-            <Target className="w-4 h-4 text-white" />
+            <Target className="w-4 h-4 text-white shrink-0" />
             <span>Simular Tsar Bomba no Mapa Interativo</span>
-            <ChevronRight className="w-4 h-4 text-white/80" />
+            <ChevronRight className="w-4 h-4 text-white/80 shrink-0" />
           </button>
 
           <a
             href="#visual-sequence"
-            className="inline-flex items-center space-x-2 px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white font-semibold text-xs sm:text-sm hover:bg-white/10 hover:border-white/20 transition-colors"
+            className="w-full sm:w-auto justify-center inline-flex items-center space-x-2 px-5 py-3 min-h-[44px] sm:min-h-0 rounded-xl bg-white/5 border border-white/10 text-white font-semibold text-xs sm:text-sm hover:bg-white/10 hover:border-white/20 transition-colors"
           >
-            <Eye className="w-4 h-4 text-[#8F83FF]" />
+            <Eye className="w-4 h-4 text-[#8F83FF] shrink-0" />
             <span>Ver Sequência Visual da Explosão</span>
           </a>
         </div>
       </div>
 
       {/* Main Spec Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5 p-6 rounded-3xl bg-[#111111] border border-white/10 shadow-2xl">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-3.5 p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#111111] border border-white/10 shadow-2xl">
         <div className="space-y-1 p-3 rounded-2xl bg-white/[0.02] border border-white/5">
           <span className="text-[11px] text-[#B7B7B7] uppercase font-mono block">Potência Real</span>
-          <p className="text-xl sm:text-2xl font-bold text-[#8F83FF] font-mono">50 Megatons</p>
+          <p className="text-lg sm:text-2xl font-bold text-[#8F83FF] font-mono">50 Megatons</p>
           <span className="text-[10px] text-slate-400 block font-mono">3.333× Hiroshima</span>
         </div>
         <div className="space-y-1 p-3 rounded-2xl bg-white/[0.02] border border-white/5">
@@ -210,18 +210,18 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
           {/* ================================================================= */}
           {/* 1. O ARTEFATO FÍSICO (O DISPOSITIVO RDS-220)                      */}
           {/* ================================================================= */}
-          <div className="rounded-3xl bg-[#111111] border border-white/10 overflow-hidden shadow-2xl transition-all hover:border-[#8F83FF]/40 group">
-            <div className="p-6 sm:p-8 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-purple-950/30 via-transparent to-transparent">
+          <div className="rounded-2xl sm:rounded-3xl bg-[#111111] border border-white/10 overflow-hidden shadow-2xl transition-all hover:border-[#8F83FF]/40 group">
+            <div className="p-4 sm:p-8 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-purple-950/30 via-transparent to-transparent">
               <div className="space-y-1">
                 <div className="flex items-center space-x-2 text-xs font-mono font-bold text-[#8F83FF] uppercase tracking-wider">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#8F83FF] animate-pulse" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#8F83FF] animate-pulse shrink-0" />
                   <span>1º Elemento • O Artefato Físico</span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-extrabold text-white font-display">
                   A Bomba RDS-220 (Produto 602 / "Kuzkina Mat")
                 </h3>
               </div>
-              <div className="flex items-center gap-3 text-xs font-mono text-[#B7B7B7]">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs font-mono text-[#B7B7B7]">
                 <span className="px-3 py-1 rounded-lg bg-white/5 border border-white/10">8,0 m × 2,1 m</span>
                 <span className="px-3 py-1 rounded-lg bg-[#8F83FF]/20 border border-[#8F83FF]/40 text-purple-200 font-bold">27.000 kg</span>
               </div>
@@ -246,11 +246,11 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
                   className="w-full h-full object-cover object-center group-hover/img:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
-                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs text-white/90">
+                <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 flex flex-wrap items-center justify-between gap-2 text-xs text-white/90">
                   <span className="font-mono bg-black/70 px-2.5 py-1 rounded-md backdrop-blur-md">
                     Fotografia Real • Dispositivo RDS-220 (AN602)
                   </span>
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/80 border border-white/20 text-white backdrop-blur-md">
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/80 border border-white/20 text-white backdrop-blur-md shrink-0">
                     <Maximize2 className="w-3.5 h-3.5" />
                     <span>Ampliar</span>
                   </div>
@@ -258,7 +258,7 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
               </div>
 
               {/* Technical Description Panel */}
-              <div className="lg:col-span-5 p-6 sm:p-8 space-y-4 flex flex-col justify-between text-xs sm:text-sm text-[#B7B7B7] leading-relaxed bg-[#131313]">
+              <div className="lg:col-span-5 p-4 sm:p-8 space-y-4 flex flex-col justify-between text-xs sm:text-sm text-[#B7B7B7] leading-relaxed bg-[#131313]">
                 <div className="space-y-3">
                   <div className="flex items-center space-x-2 text-white font-bold text-sm">
                     <ShieldCheck className="w-4 h-4 text-[#8F83FF]" />
@@ -296,18 +296,18 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
           {/* ================================================================= */}
           {/* 2. EMBAIXO: A BOLA DE FOGO (A DETONAÇÃO DE 50 MT)                  */}
           {/* ================================================================= */}
-          <div className="rounded-3xl bg-[#111111] border border-white/10 overflow-hidden shadow-2xl transition-all hover:border-amber-500/40 group">
-            <div className="p-6 sm:p-8 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-amber-950/30 via-transparent to-transparent">
+          <div className="rounded-2xl sm:rounded-3xl bg-[#111111] border border-white/10 overflow-hidden shadow-2xl transition-all hover:border-amber-500/40 group">
+            <div className="p-4 sm:p-8 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-amber-950/30 via-transparent to-transparent">
               <div className="space-y-1">
                 <div className="flex items-center space-x-2 text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shrink-0" />
                   <span>2º Elemento (Embaixo) • O Clarão & A Esfera Incandescente</span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-extrabold text-white font-display">
                   A Bola de Fogo Termonuclear (8 km de Diâmetro)
                 </h3>
               </div>
-              <div className="flex items-center gap-3 text-xs font-mono text-[#B7B7B7]">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs font-mono text-[#B7B7B7]">
                 <span className="px-3 py-1 rounded-lg bg-white/5 border border-white/10">Altitude: 4.000 m</span>
                 <span className="px-3 py-1 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-200 font-bold">Ø 8.000 metros</span>
               </div>
@@ -332,11 +332,11 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
                   className="w-full h-full object-cover object-center group-hover/img:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
-                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs text-white/90">
+                <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 flex flex-wrap items-center justify-between gap-2 text-xs text-white/90">
                   <span className="font-mono bg-black/70 px-2.5 py-1 rounded-md backdrop-blur-md">
                     Fotografia Real • Esfera de Plasma (8 km Ø)
                   </span>
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/80 border border-white/20 text-white backdrop-blur-md">
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/80 border border-white/20 text-white backdrop-blur-md shrink-0">
                     <Maximize2 className="w-3.5 h-3.5" />
                     <span>Ampliar</span>
                   </div>
@@ -344,7 +344,7 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
               </div>
 
               {/* Technical Description Panel */}
-              <div className="lg:col-span-5 p-6 sm:p-8 space-y-4 flex flex-col justify-between text-xs sm:text-sm text-[#B7B7B7] leading-relaxed bg-[#131313]">
+              <div className="lg:col-span-5 p-4 sm:p-8 space-y-4 flex flex-col justify-between text-xs sm:text-sm text-[#B7B7B7] leading-relaxed bg-[#131313]">
                 <div className="space-y-3">
                   <div className="flex items-center space-x-2 text-white font-bold text-sm">
                     <Flame className="w-4 h-4 text-amber-400" />
@@ -382,18 +382,18 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
           {/* ================================================================= */}
           {/* 3. EMBAIXO: A NUVEM DE COGUMELO (A ASCENSÃO À MESOSFERA)           */}
           {/* ================================================================= */}
-          <div className="rounded-3xl bg-[#111111] border border-white/10 overflow-hidden shadow-2xl transition-all hover:border-[#73CAE5]/40 group">
-            <div className="p-6 sm:p-8 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-sky-950/30 via-transparent to-transparent">
+          <div className="rounded-2xl sm:rounded-3xl bg-[#111111] border border-white/10 overflow-hidden shadow-2xl transition-all hover:border-[#73CAE5]/40 group">
+            <div className="p-4 sm:p-8 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-sky-950/30 via-transparent to-transparent">
               <div className="space-y-1">
                 <div className="flex items-center space-x-2 text-xs font-mono font-bold text-[#73CAE5] uppercase tracking-wider">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#73CAE5] animate-pulse" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#73CAE5] animate-pulse shrink-0" />
                   <span>3º Elemento (Embaixo) • O Cogumelo Atômico Gigantesco</span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-extrabold text-white font-display">
                   A Nuvem em Cogumelo (67 km de Altura • Mesosfera)
                 </h3>
               </div>
-              <div className="flex items-center gap-3 text-xs font-mono text-[#B7B7B7]">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs font-mono text-[#B7B7B7]">
                 <span className="px-3 py-1 rounded-lg bg-white/5 border border-white/10">Base: 40 km largura</span>
                 <span className="px-3 py-1 rounded-lg bg-[#73CAE5]/20 border border-[#73CAE5]/40 text-cyan-200 font-bold">Cúpula: Ø 95 km</span>
               </div>
@@ -418,11 +418,11 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
                   className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
-                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs text-white/90">
+                <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 flex flex-wrap items-center justify-between gap-2 text-xs text-white/90">
                   <span className="font-mono bg-black/70 px-2.5 py-1 rounded-md backdrop-blur-md">
                     Ascensão à Mesosfera • 67.000 metros de altitude
                   </span>
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/80 border border-white/20 text-white backdrop-blur-md">
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/80 border border-white/20 text-white backdrop-blur-md shrink-0">
                     <Maximize2 className="w-3.5 h-3.5" />
                     <span>Ampliar</span>
                   </div>
@@ -430,7 +430,7 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
               </div>
 
               {/* Technical Description Panel */}
-              <div className="lg:col-span-5 p-6 sm:p-8 space-y-4 flex flex-col justify-between text-xs sm:text-sm text-[#B7B7B7] leading-relaxed bg-[#131313]">
+              <div className="lg:col-span-5 p-4 sm:p-8 space-y-4 flex flex-col justify-between text-xs sm:text-sm text-[#B7B7B7] leading-relaxed bg-[#131313]">
                 <div className="space-y-3">
                   <div className="flex items-center space-x-2 text-white font-bold text-sm">
                     <Activity className="w-4 h-4 text-[#73CAE5]" />
@@ -448,15 +448,15 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-cyan-950/20 border border-cyan-500/20 space-y-2 font-mono text-xs">
-                  <div className="text-white font-bold flex items-center justify-between">
+                  <div className="text-white font-bold flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5">
                     <span>Onda Sísmica (Solo):</span>
                     <span className="text-[#73CAE5] font-bold">5,0 a 5,25 Escala Richter</span>
                   </div>
-                  <div className="text-white font-bold flex items-center justify-between">
+                  <div className="text-white font-bold flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5">
                     <span>Onda de Choque Atmosférica:</span>
                     <span className="text-purple-300 font-bold">Circundou a Terra 3 vezes</span>
                   </div>
-                  <div className="text-white font-bold flex items-center justify-between">
+                  <div className="text-white font-bold flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5">
                     <span>Destruição Severny (55 km):</span>
                     <span className="text-rose-400 font-bold">100% de arrasamento físico</span>
                   </div>
@@ -483,9 +483,9 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
           {/* Card 1 */}
-          <div className="p-6 rounded-3xl bg-[#111111] border border-white/10 space-y-3.5">
+          <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#111111] border border-white/10 space-y-3.5">
             <div className="flex items-center space-x-2.5 text-white font-bold">
-              <span className="w-7 h-7 rounded-lg bg-[#8F83FF]/20 border border-[#8F83FF]/40 flex items-center justify-center font-mono text-xs text-[#8F83FF]">
+              <span className="w-7 h-7 rounded-lg bg-[#8F83FF]/20 border border-[#8F83FF]/40 flex items-center justify-center font-mono text-xs text-[#8F83FF] shrink-0">
                 01
               </span>
               <h4 className="text-base font-bold font-display">A Decisão de Nikita Khrushchev</h4>
@@ -499,9 +499,9 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
           </div>
 
           {/* Card 2 */}
-          <div className="p-6 rounded-3xl bg-[#111111] border border-white/10 space-y-3.5">
+          <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#111111] border border-white/10 space-y-3.5">
             <div className="flex items-center space-x-2.5 text-white font-bold">
-              <span className="w-7 h-7 rounded-lg bg-[#73CAE5]/20 border border-[#73CAE5]/40 flex items-center justify-center font-mono text-xs text-[#73CAE5]">
+              <span className="w-7 h-7 rounded-lg bg-[#73CAE5]/20 border border-[#73CAE5]/40 flex items-center justify-center font-mono text-xs text-[#73CAE5] shrink-0">
                 02
               </span>
               <h4 className="text-base font-bold font-display">O Grupo de Físicos de Sarov (Arzamas-16)</h4>
@@ -515,9 +515,9 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
           </div>
 
           {/* Card 3 */}
-          <div className="p-6 rounded-3xl bg-[#111111] border border-white/10 space-y-3.5">
+          <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#111111] border border-white/10 space-y-3.5">
             <div className="flex items-center space-x-2.5 text-white font-bold">
-              <span className="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center font-mono text-xs text-amber-400">
+              <span className="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center font-mono text-xs text-amber-400 shrink-0">
                 03
               </span>
               <h4 className="text-base font-bold font-display">A Missão Extrema do Tu-95V</h4>
@@ -535,10 +535,10 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
       {/* ========================================================================= */}
       {/* SEÇÃO: EFEITOS E PODER DA EXPLOSÃO (ANÁLISE CIENTÍFICA DETALHADA)          */}
       {/* ========================================================================= */}
-      <section className="bg-gradient-to-br from-[#121212] via-[#1a1329] to-[#0D0D0D] border border-white/10 rounded-3xl p-6 sm:p-12 shadow-2xl space-y-10">
+      <section className="bg-gradient-to-br from-[#121212] via-[#1a1329] to-[#0D0D0D] border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-12 shadow-2xl space-y-8 sm:space-y-10">
         <div className="space-y-3 max-w-3xl">
           <div className="inline-flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-[#8F83FF] font-mono">
-            <Flame className="w-4 h-4 text-rose-400" />
+            <Flame className="w-4 h-4 text-rose-400 shrink-0" />
             <span>Fenomenologia Física e Potência Destrutiva</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-white font-display">
@@ -552,7 +552,7 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
         {/* Breakdown Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs leading-relaxed">
           {/* Item 1 */}
-          <div className="p-5 rounded-2xl bg-black/50 border border-white/10 space-y-2.5">
+          <div className="p-4 sm:p-5 rounded-2xl bg-black/50 border border-white/10 space-y-2.5">
             <div className="flex items-center justify-between">
               <span className="font-bold text-rose-400 uppercase font-mono text-[11px]">Pulso Térmico</span>
               <Flame className="w-4 h-4 text-rose-400" />
@@ -601,10 +601,10 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
         </div>
 
         {/* Scientific Comparison Bar */}
-        <div className="p-6 rounded-2xl bg-black/60 border border-white/10 space-y-4">
-          <div className="flex items-center justify-between">
+        <div className="p-4 sm:p-6 rounded-2xl bg-black/60 border border-white/10 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <h4 className="text-sm font-bold text-white uppercase font-mono tracking-wider flex items-center gap-2">
-              <Scale className="w-4 h-4 text-[#8F83FF]" />
+              <Scale className="w-4 h-4 text-[#8F83FF] shrink-0" />
               <span>Comparativo Brutal de Rendimento Energético</span>
             </h4>
             <span className="text-xs text-slate-400 font-mono">Em Megatons de TNT</span>
@@ -613,7 +613,7 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
           <div className="space-y-3 font-mono text-xs">
             {/* Hiroshima */}
             <div className="space-y-1">
-              <div className="flex justify-between text-slate-400">
+              <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-slate-400">
                 <span>Hiroshima "Little Boy" (1945)</span>
                 <span className="text-white font-bold">0,015 Mt (15 kt)</span>
               </div>
@@ -624,7 +624,7 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
 
             {/* Castle Bravo */}
             <div className="space-y-1">
-              <div className="flex justify-between text-slate-400">
+              <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-slate-400">
                 <span>Castle Bravo (1954, Maior Teste dos EUA)</span>
                 <span className="text-[#73CAE5] font-bold">15,0 Mt</span>
               </div>
@@ -635,7 +635,7 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
 
             {/* Tsar Bomba */}
             <div className="space-y-1">
-              <div className="flex justify-between text-slate-300 font-bold">
+              <div className="flex flex-wrap justify-between gap-x-2 gap-y-0.5 text-slate-300 font-bold">
                 <span className="text-purple-300">Tsar Bomba RDS-220 (1961, Maior Teste da História)</span>
                 <span className="text-[#8F83FF] font-extrabold text-sm">50,0 Megatons</span>
               </div>
@@ -650,7 +650,7 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
       {/* ========================================================================= */}
       {/* SEÇÃO: A DECISÃO DO CHUMBO (POR QUE 50 MT EM VEZ DE 100 MT)               */}
       {/* ========================================================================= */}
-      <section className="bg-[#111111] border border-white/10 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-6">
+      <section className="bg-[#111111] border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-10 shadow-2xl space-y-6">
         <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-[#73CAE5] font-mono">
           <Info className="w-4 h-4 text-[#73CAE5]" />
           <span>Física Nuclear Teórica & Responsabilidade Científica</span>
@@ -709,19 +709,19 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
           {tsarPhysicists.map((p, idx) => (
             <div
               key={idx}
-              className={`p-5 rounded-2xl bg-[#111111] border transition-all space-y-3 flex flex-col justify-between ${
+              className={`p-4 sm:p-5 rounded-2xl bg-[#111111] border transition-all space-y-3 flex flex-col justify-between ${
                 p.highlight
                   ? 'border-[#8F83FF]/60 bg-gradient-to-br from-[#8F83FF]/10 via-[#111111] to-[#111111] shadow-xl shadow-[#8F83FF]/10'
                   : 'border-white/10 hover:border-[#8F83FF]/40'
               }`}
             >
               <div className="space-y-2">
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <h3 className="font-bold text-white text-base font-display">{p.name}</h3>
-                    <span className="text-xs text-[#8F83FF] block font-medium mt-0.5 leading-tight">{p.role}</span>
+                <div className="flex flex-wrap items-start justify-between gap-2 min-w-0">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-bold text-white text-base font-display break-words">{p.name}</h3>
+                    <span className="text-xs text-[#8F83FF] block font-medium mt-0.5 leading-tight break-words">{p.role}</span>
                   </div>
-                  <span className="text-[10px] font-mono font-bold text-[#8F83FF] bg-[#8F83FF]/15 border border-[#8F83FF]/30 px-2 py-0.5 rounded-full shrink-0">
+                  <span className="text-[10px] font-mono font-bold text-[#8F83FF] bg-[#8F83FF]/15 border border-[#8F83FF]/30 px-2 py-0.5 rounded-full max-w-full max-sm:whitespace-normal sm:shrink-0">
                     {p.tag}
                   </span>
                 </div>
@@ -735,9 +735,9 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
       {/* ========================================================================= */}
       {/* SEÇÃO: LEGADO HISTÓRICO, SAKHAROV E O TRATADO PTBT                        */}
       {/* ========================================================================= */}
-      <section className="p-6 sm:p-10 rounded-3xl bg-gradient-to-br from-[#121212] via-[#1b1430] to-[#0D0D0D] border border-[#8F83FF]/30 space-y-6 shadow-2xl">
+      <section className="p-4 sm:p-10 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-[#121212] via-[#1b1430] to-[#0D0D0D] border border-[#8F83FF]/30 space-y-6 shadow-2xl">
         <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-[#8F83FF] font-mono">
-          <Award className="w-4 h-4 text-[#8F83FF]" />
+          <Award className="w-4 h-4 text-[#8F83FF] shrink-0" />
           <span>Transformação Geopolítica & Consequências Globais</span>
         </div>
 
@@ -745,22 +745,22 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
           O Ponto de Inflexão da Guerra Fria
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
-          <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2.5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
+          <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2.5">
             <h4 className="text-base font-bold text-white font-display">1. Fim das Bombas Gigantes</h4>
             <p>
               O teste provou de forma categórica que armas nucleares acima de 20–30 Mt eram <strong>militarmente ineficientes</strong>: a maior parte da energia escapava para o vácuo espacial. O peso excessivo impedia o lançamento por mísseis balísticos intercontinentais (ICBMs). As potências voltaram seu foco para a precisão e ogivas menores múltiplas (MIRVs).
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2.5">
+          <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2.5">
             <h4 className="text-base font-bold text-white font-display">2. Tratado PTBT de 1963</h4>
             <p>
               O choque e o pavor causados pela escala da explosão aceleraram diretamente as conversações entre John F. Kennedy e Nikita Khrushchev, resultando na assinatura do <strong>Tratado de Proibição Parcial de Testes (PTBT)</strong> em agosto de 1963, que baniu permanentemente testes na atmosfera, no espaço e debaixo d'água.
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2.5">
+          <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2.5">
             <h4 className="text-base font-bold text-white font-display">3. A Transformação de Sakharov</h4>
             <p>
               O contato direto com a força aterradora da Tsar Bomba foi o estopim moral para <strong>Andrei Sakharov</strong>. O "pai da bomba de hidrogênio soviética" transformou-se no maior dissidente pacífico da URSS, lutando pelo desarmamento nuclear e pelos direitos humanos, o que lhe rendeu o <strong>Prêmio Nobel da Paz em 1975</strong>.
@@ -772,7 +772,7 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
         <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <button
             onClick={() => onNavigate('operation-castle')}
-            className="inline-flex items-center space-x-2 text-xs sm:text-sm text-[#73CAE5] hover:text-white transition-colors font-mono"
+            className="inline-flex items-center justify-center space-x-2 text-xs sm:text-sm text-[#73CAE5] hover:text-white transition-colors font-mono min-h-[40px] sm:min-h-0 text-center sm:text-left"
           >
             <span>← Retornar para Aba da Operação Castle (1954)</span>
           </button>
@@ -782,11 +782,11 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
               onNavigate('nuclear-ranking');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="inline-flex items-center space-x-2 px-6 py-3 rounded-xl bg-gradient-to-r from-rose-500 to-purple-600 text-white font-bold text-xs sm:text-sm hover:shadow-xl hover:shadow-rose-500/25 active:scale-95 transition-all"
+            className="w-full sm:w-auto justify-center inline-flex items-center space-x-2 px-6 py-3 min-h-[44px] sm:min-h-0 rounded-xl bg-gradient-to-r from-rose-500 to-purple-600 text-white font-bold text-xs sm:text-sm hover:shadow-xl hover:shadow-rose-500/25 active:scale-95 transition-all"
           >
-            <Target className="w-4 h-4 text-white" />
+            <Target className="w-4 h-4 text-white shrink-0" />
             <span>Simular Detonação da Tsar Bomba no Mapa</span>
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="w-4 h-4 shrink-0" />
           </button>
         </div>
       </section>
@@ -800,31 +800,31 @@ export const TsarBombaPage: React.FC<TsarBombaPageProps> = ({ onNavigate }) => {
           onClick={() => setLightboxImg(null)}
         >
           <div
-            className="max-w-5xl w-full bg-[#141414] border border-white/20 rounded-3xl overflow-hidden shadow-2xl relative flex flex-col max-h-[92vh]"
+            className="max-w-5xl w-full bg-[#141414] border border-white/20 rounded-2xl sm:rounded-3xl overflow-y-auto shadow-2xl relative flex flex-col max-h-[90dvh]"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-4 border-b border-white/10 flex items-center justify-between bg-black/40">
-              <div className="flex items-center space-x-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#8F83FF]" />
-                <h4 className="text-xs sm:text-sm font-bold text-white font-display">
+            <div className="sticky top-0 z-10 p-3.5 sm:p-4 border-b border-white/10 flex items-center justify-between gap-3 bg-[#141414]/95 backdrop-blur-md">
+              <div className="flex items-center space-x-2 min-w-0">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#8F83FF] shrink-0" />
+                <h4 className="text-xs sm:text-sm font-bold text-white font-display break-words">
                   {lightboxImg.title}
                 </h4>
               </div>
               <button
                 onClick={() => setLightboxImg(null)}
-                className="p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+                className="w-11 h-11 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors shrink-0"
                 aria-label="Fechar modal"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="flex-1 bg-black flex items-center justify-center p-2 sm:p-4 overflow-hidden">
+            <div className="bg-black flex items-center justify-center p-2 sm:p-4 shrink-0">
               <img
                 src={lightboxImg.url}
                 alt={lightboxImg.title}
                 referrerPolicy="no-referrer"
-                className="max-w-full max-h-[65vh] object-contain rounded-xl"
+                className="max-w-full max-h-[55vh] sm:max-h-[65vh] object-contain rounded-xl"
               />
             </div>
 

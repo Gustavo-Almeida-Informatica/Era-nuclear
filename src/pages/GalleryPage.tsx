@@ -38,17 +38,17 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ onNavigate }) => {
   );
 
   return (
-    <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+    <div className="pt-24 sm:pt-28 pb-16 sm:pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-16">
       {/* Header */}
       <div className="max-w-4xl space-y-4">
         <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#73CAE5]/10 border border-[#73CAE5]/30 text-xs font-semibold text-[#73CAE5]">
-          <Camera className="w-3.5 h-3.5" />
+          <Camera className="w-3.5 h-3.5 shrink-0" />
           <span>Acervo Fotográfico e Documental Oficial</span>
         </div>
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display tracking-tight uppercase">
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display tracking-tight uppercase">
           Imagens da Era Nuclear
         </h1>
-        <p className="text-base sm:text-lg text-transparent bg-clip-text bg-gradient-to-r from-white via-[#B7B7B7] to-[#73CAE5] font-medium font-display">
+        <p className="text-sm sm:text-lg text-transparent bg-clip-text bg-gradient-to-r from-white via-[#B7B7B7] to-[#73CAE5] font-medium font-display">
           Fotografias históricas reais de domínio público e arquivos governamentais, museus e instituições científicas internacionais.
         </p>
         <p className="text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
@@ -62,7 +62,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ onNavigate }) => {
           <button
             key={cat.id}
             onClick={() => setSelectedCategory(cat.id)}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all border ${
+            className={`min-h-[40px] sm:min-h-0 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-semibold transition-all border cursor-pointer ${
               selectedCategory === cat.id
                 ? 'bg-gradient-to-r from-[#73CAE5] to-[#8F83FF] text-black font-bold border-transparent shadow-md shadow-[#73CAE5]/20'
                 : 'bg-[#111111] text-[#B7B7B7] hover:bg-white/10 hover:text-white border-white/5'
@@ -106,8 +106,8 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ onNavigate }) => {
             </div>
 
             {/* Content */}
-            <div className="p-6 space-y-3">
-              <div className="flex items-center justify-between text-xs text-[#B7B7B7]">
+            <div className="p-4 sm:p-6 space-y-3 min-w-0">
+              <div className="flex items-center justify-between gap-2 flex-wrap text-xs text-[#B7B7B7]">
                 <span className="font-mono text-[#8F83FF] font-bold">{item.year}</span>
                 <span className="text-[11px] uppercase tracking-wider text-[#73CAE5]">{item.categoryLabel}</span>
               </div>
@@ -116,17 +116,17 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ onNavigate }) => {
                 {item.title}
               </h3>
 
-              <div className="text-xs text-[#8F83FF] flex items-center space-x-1.5 font-mono truncate">
-                <MapPin className="w-3.5 h-3.5 shrink-0" />
-                <span className="truncate">{item.location}</span>
+              <div className="text-xs text-[#8F83FF] flex items-start lg:items-center space-x-1.5 font-mono min-w-0">
+                <MapPin className="w-3.5 h-3.5 shrink-0 mt-0.5 lg:mt-0" />
+                <span className="max-lg:whitespace-normal break-words lg:truncate">{item.location}</span>
               </div>
 
               <p className="text-xs text-[#B7B7B7] line-clamp-3 leading-relaxed">
                 {item.description}
               </p>
 
-              <div className="pt-3 border-t border-white/5 space-y-1 text-[10px] text-[#B7B7B7]/70">
-                <p className="truncate"><strong>Fonte:</strong> {item.source}</p>
+              <div className="pt-3 border-t border-white/5 space-y-1 text-[10px] text-[#B7B7B7]/70 min-w-0">
+                <p className="max-lg:whitespace-normal break-words lg:truncate"><strong>Fonte:</strong> {item.source}</p>
                 <p className="text-emerald-400 font-mono"><strong>Licença:</strong> {item.license}</p>
               </div>
             </div>
@@ -137,23 +137,23 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ onNavigate }) => {
       {/* Lightbox Modal with Full Details */}
       {activeLightboxItem && (
         <div
-          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-lg animate-in fade-in duration-150"
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-2 sm:p-4 bg-black/90 backdrop-blur-lg animate-in fade-in duration-150"
           onClick={() => setActiveLightboxItem(null)}
         >
           <div
-            className="bg-[#141414] border border-white/15 rounded-3xl max-w-4xl w-full max-h-[92vh] overflow-y-auto shadow-2xl overflow-hidden relative animate-in zoom-in-95 duration-150"
+            className="bg-[#141414] border border-white/15 rounded-2xl sm:rounded-3xl max-w-4xl w-full max-h-[90dvh] overflow-y-auto overflow-x-hidden shadow-2xl relative animate-in zoom-in-95 duration-150"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setActiveLightboxItem(null)}
-              className="absolute top-4 right-4 z-10 p-2.5 rounded-full bg-black/70 hover:bg-black text-white transition-colors"
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 w-11 h-11 rounded-full bg-black/80 hover:bg-black text-white transition-colors flex items-center justify-center cursor-pointer border border-white/15 shadow-xl"
               aria-label="Fechar lightbox"
             >
               <X className="w-5 h-5" />
             </button>
 
             {/* Large Image */}
-            <div className="relative aspect-video w-full bg-black flex items-center justify-center">
+            <div className="relative aspect-video w-full bg-black flex items-center justify-center rounded-t-2xl sm:rounded-t-3xl overflow-hidden">
               <img
                 src={activeLightboxItem.imageUrl}
                 alt={activeLightboxItem.title}
@@ -163,20 +163,20 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ onNavigate }) => {
             </div>
 
             {/* Details Below */}
-            <div className="p-6 sm:p-8 space-y-6">
+            <div className="p-4 sm:p-8 space-y-5 sm:space-y-6">
               <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/10">
-                <div className="space-y-1">
-                  <span className="text-xs font-mono font-bold text-[#73CAE5] bg-[#73CAE5]/10 px-3 py-1 rounded-full border border-[#73CAE5]/30 inline-block">
+                <div className="space-y-1 min-w-0">
+                  <span className="text-xs font-mono font-bold text-[#73CAE5] bg-[#73CAE5]/10 px-3 py-1 rounded-full border border-[#73CAE5]/30 inline-block max-w-full">
                     {activeLightboxItem.date} • {activeLightboxItem.categoryLabel}
                   </span>
-                  <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-display mt-2">
+                  <h2 className="text-xl sm:text-3xl font-extrabold text-white font-display mt-2 break-words">
                     {activeLightboxItem.title}
                   </h2>
                 </div>
 
-                <div className="text-xs text-[#8F83FF] flex items-center space-x-1.5 font-mono">
-                  <MapPin className="w-4 h-4" />
-                  <span>{activeLightboxItem.location}</span>
+                <div className="text-xs text-[#8F83FF] flex items-start sm:items-center space-x-1.5 font-mono min-w-0">
+                  <MapPin className="w-4 h-4 shrink-0 mt-0.5 sm:mt-0" />
+                  <span className="break-words">{activeLightboxItem.location}</span>
                 </div>
               </div>
 
@@ -196,13 +196,13 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ onNavigate }) => {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs">
-                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5 min-w-0">
                     <span className="text-[#B7B7B7] block font-mono text-[11px]">FONTE OFICIAL / ACERVO:</span>
-                    <strong className="text-white">{activeLightboxItem.source}</strong>
+                    <strong className="text-white break-words">{activeLightboxItem.source}</strong>
                   </div>
-                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5 min-w-0">
                     <span className="text-[#B7B7B7] block font-mono text-[11px]">CRÉDITO / LICENÇA:</span>
-                    <strong className="text-emerald-400">{activeLightboxItem.license}</strong>
+                    <strong className="text-emerald-400 break-words">{activeLightboxItem.license}</strong>
                   </div>
                 </div>
               </div>

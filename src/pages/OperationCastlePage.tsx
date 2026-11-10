@@ -91,17 +91,17 @@ export const OperationCastlePage: React.FC<OperationCastlePageProps> = ({ onNavi
   ];
 
   return (
-    <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
+    <div className="pt-24 sm:pt-28 pb-16 sm:pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-20">
       {/* Header */}
       <div className="max-w-4xl space-y-4">
         <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#73CAE5]/10 border border-[#73CAE5]/30 text-xs font-semibold text-[#73CAE5]">
-          <Zap className="w-3.5 h-3.5" />
+          <Zap className="w-3.5 h-3.5 shrink-0" />
           <span>Série de Testes no Pacífico (1954)</span>
         </div>
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display tracking-tight uppercase">
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display tracking-tight uppercase break-words">
           Operação Castle
         </h1>
-        <p className="text-lg sm:text-xl text-transparent bg-clip-text bg-gradient-to-r from-white via-[#B7B7B7] to-[#73CAE5] font-medium font-display">
+        <p className="text-base sm:text-xl text-transparent bg-clip-text bg-gradient-to-r from-white via-[#B7B7B7] to-[#73CAE5] font-medium font-display">
           A série de detonações termonucleares de combustível sólido que redefiniu a Guerra Fria e provocou o maior desastre de contaminação por radiação dos testes norte-americanos.
         </p>
         <p className="text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
@@ -110,18 +110,18 @@ export const OperationCastlePage: React.FC<OperationCastlePageProps> = ({ onNavi
       </div>
 
       {/* Quick Numbers Banner */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-6 rounded-2xl bg-[#111111] border border-white/10 shadow-xl">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-[#111111] border border-white/10 shadow-xl">
         <div className="space-y-1">
           <span className="text-xs text-[#B7B7B7] uppercase font-mono">Período</span>
-          <p className="text-xl sm:text-2xl font-bold text-white font-mono">Mar–Mai 1954</p>
+          <p className="text-lg sm:text-2xl font-bold text-white font-mono">Mar–Mai 1954</p>
         </div>
         <div className="space-y-1">
           <span className="text-xs text-[#B7B7B7] uppercase font-mono">Total de Testes</span>
-          <p className="text-xl sm:text-2xl font-bold text-[#73CAE5] font-mono">6 Detonações</p>
+          <p className="text-lg sm:text-2xl font-bold text-[#73CAE5] font-mono">6 Detonações</p>
         </div>
         <div className="space-y-1">
           <span className="text-xs text-[#B7B7B7] uppercase font-mono">Potência Acumulada</span>
-          <p className="text-xl sm:text-2xl font-bold text-[#8F83FF] font-mono">~48,2 Megatons</p>
+          <p className="text-lg sm:text-2xl font-bold text-[#8F83FF] font-mono">~48,2 Megatons</p>
         </div>
         <div className="space-y-1">
           <span className="text-xs text-[#B7B7B7] uppercase font-mono">Inovação Técnica</span>
@@ -141,12 +141,12 @@ export const OperationCastlePage: React.FC<OperationCastlePageProps> = ({ onNavi
         </div>
 
         {/* Test Selector Tabs */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+        <div className="grid grid-cols-1 min-[360px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
           {castleTests.map((t, idx) => (
             <button
               key={t.id}
               onClick={() => setSelectedTest(t)}
-              className={`p-3.5 rounded-xl text-left border transition-all flex flex-col justify-between ${
+              className={`p-3 sm:p-3.5 min-h-[44px] rounded-xl text-left border transition-all flex flex-col justify-between ${
                 selectedTest.id === t.id
                   ? 'bg-gradient-to-br from-[#73CAE5]/20 to-[#8F83FF]/20 border-[#73CAE5] text-white shadow-lg shadow-[#73CAE5]/10'
                   : 'bg-white/[0.03] border-white/10 text-[#B7B7B7] hover:border-white/20 hover:text-white'
@@ -164,29 +164,29 @@ export const OperationCastlePage: React.FC<OperationCastlePageProps> = ({ onNavi
         </div>
 
         {/* Selected Test Detail Card */}
-        <div className="bg-[#111111] border border-white/10 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Left: Info & Details */}
-            <div className="lg:col-span-7 space-y-6">
+        <div className="bg-[#111111] border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-10 shadow-2xl space-y-8">
+          <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 items-start">
+            {/* Left: Info & Details (order-2 on mobile, order-1 on desktop) */}
+            <div className="order-2 lg:order-1 lg:col-span-7 w-full space-y-6">
               <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-white/10">
                 <div>
                   <span className="text-xs font-mono uppercase text-[#73CAE5] font-bold">
                     {selectedTest.deviceType}
                   </span>
-                  <h3 className="text-3xl font-extrabold text-white font-display mt-0.5">
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-white font-display mt-0.5">
                     {selectedTest.name}
                   </h3>
                 </div>
 
-                <div className="text-right">
+                <div className="text-left sm:text-right max-w-full">
                   <span className="text-xs text-[#B7B7B7] block">Rendimento Real:</span>
-                  <span className="text-xl font-bold font-mono text-[#8F83FF] bg-[#8F83FF]/10 px-3 py-1 rounded-full border border-[#8F83FF]/30 inline-block">
+                  <span className="text-base sm:text-xl font-bold font-mono text-[#8F83FF] bg-[#8F83FF]/10 px-3 py-1 rounded-full border border-[#8F83FF]/30 inline-block max-w-full break-words">
                     {selectedTest.yieldReported}
                   </span>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs">
                 <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 space-y-1">
                   <span className="text-[#B7B7B7] flex items-center space-x-1.5 font-semibold">
                     <Calendar className="w-3.5 h-3.5 text-[#73CAE5]" />
@@ -228,8 +228,8 @@ export const OperationCastlePage: React.FC<OperationCastlePageProps> = ({ onNavi
               </div>
             </div>
 
-            {/* Right: Verified Historical Photograph */}
-            <div className="lg:col-span-5 space-y-3">
+            {/* Right: Verified Historical Photograph (order-1 on mobile, order-2 on desktop) */}
+            <div className="order-1 lg:order-2 lg:col-span-5 w-full space-y-3">
               <div
                 onClick={() => setLightboxImg({ url: selectedTest.imageUrl, title: selectedTest.name })}
                 className="relative rounded-2xl overflow-hidden bg-black border border-white/10 group cursor-pointer aspect-4/3 shadow-xl"
@@ -244,7 +244,7 @@ export const OperationCastlePage: React.FC<OperationCastlePageProps> = ({ onNavi
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                 
                 <div className="absolute bottom-3 left-3 right-3 text-xs text-white/90">
-                  <p className="font-medium truncate">{selectedTest.imageCaption}</p>
+                  <p className="font-medium whitespace-normal break-words leading-snug">{selectedTest.imageCaption}</p>
                 </div>
 
                 <div className="absolute top-3 right-3 p-2 rounded-full bg-black/60 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
@@ -262,15 +262,15 @@ export const OperationCastlePage: React.FC<OperationCastlePageProps> = ({ onNavi
       </section>
 
       {/* Specialized Section: Castle Bravo Fallout & The Lucky Dragon Catastrophe */}
-      <section className="bg-gradient-to-br from-[#121212] via-[#1a1424] to-[#0D0D0D] border border-rose-500/20 rounded-3xl p-6 sm:p-12 shadow-2xl space-y-8">
+      <section className="bg-gradient-to-br from-[#121212] via-[#1a1424] to-[#0D0D0D] border border-rose-500/20 rounded-2xl sm:rounded-3xl p-4 sm:p-12 shadow-2xl space-y-6 sm:space-y-8">
         <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-rose-400 font-mono">
-          <AlertTriangle className="w-4 h-4" />
+          <AlertTriangle className="w-4 h-4 shrink-0" />
           <span>Consequências Humanas e Ambientais • Caso Castle Bravo</span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
           <div className="space-y-4">
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-white font-display">
+            <h3 className="text-xl sm:text-3xl font-extrabold text-white font-display">
               A Catástrofe da Precipitação Radioativa (Fallout)
             </h3>
             <p>
@@ -314,19 +314,19 @@ export const OperationCastlePage: React.FC<OperationCastlePageProps> = ({ onNavi
           {castlePhysicists.map((p, idx) => (
             <div
               key={idx}
-              className={`p-5 rounded-2xl bg-[#111111] border transition-all space-y-3 flex flex-col justify-between ${
+              className={`p-4 sm:p-5 rounded-2xl bg-[#111111] border transition-all space-y-3 flex flex-col justify-between ${
                 p.highlight
                   ? 'border-[#73CAE5]/60 bg-gradient-to-br from-[#73CAE5]/10 via-[#111111] to-[#111111] shadow-xl shadow-[#73CAE5]/10'
                   : 'border-white/10 hover:border-[#73CAE5]/40'
               }`}
             >
               <div className="space-y-2">
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <h3 className="font-bold text-white text-base font-display">{p.name}</h3>
-                    <span className="text-xs text-[#73CAE5] block font-medium mt-0.5 leading-tight">{p.role}</span>
+                <div className="flex flex-wrap items-start justify-between gap-2 min-w-0">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-bold text-white text-base font-display break-words">{p.name}</h3>
+                    <span className="text-xs text-[#73CAE5] block font-medium mt-0.5 leading-tight break-words">{p.role}</span>
                   </div>
-                  <span className="text-[10px] font-mono font-bold text-[#73CAE5] bg-[#73CAE5]/15 border border-[#73CAE5]/30 px-2 py-0.5 rounded-full shrink-0">
+                  <span className="text-[10px] font-mono font-bold text-[#73CAE5] bg-[#73CAE5]/15 border border-[#73CAE5]/30 px-2 py-0.5 rounded-full max-w-full max-sm:whitespace-normal sm:shrink-0">
                     {p.tag}
                   </span>
                 </div>
@@ -344,13 +344,13 @@ export const OperationCastlePage: React.FC<OperationCastlePageProps> = ({ onNavi
       />
 
       {/* Navigation Banner: Explore Tsar Bomba (50 Mt) right below Operation Castle */}
-      <section className="p-6 sm:p-10 rounded-3xl bg-gradient-to-br from-[#121212] via-[#1b1430] to-[#0D0D0D] border border-[#8F83FF]/40 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 shadow-2xl">
+      <section className="p-4 sm:p-10 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-[#121212] via-[#1b1430] to-[#0D0D0D] border border-[#8F83FF]/40 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 shadow-2xl">
         <div className="space-y-3 max-w-2xl">
           <div className="inline-flex items-center space-x-2 text-xs font-bold text-[#8F83FF] uppercase font-mono px-3 py-1 rounded-full bg-[#8F83FF]/15 border border-[#8F83FF]/30">
-            <Flame className="w-3.5 h-3.5 text-rose-400" />
+            <Flame className="w-3.5 h-3.5 text-rose-400 shrink-0" />
             <span>Aprofundamento Histórico Sequencial</span>
           </div>
-          <h3 className="text-2xl sm:text-3xl font-extrabold text-white font-display">
+          <h3 className="text-xl sm:text-3xl font-extrabold text-white font-display">
             A Resposta Soviética: Tsar Bomba (1961) — 50 Megatons
           </h3>
           <p className="text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
@@ -362,28 +362,29 @@ export const OperationCastlePage: React.FC<OperationCastlePageProps> = ({ onNavi
             onNavigate('tsar-bomba');
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          className="inline-flex items-center space-x-2.5 px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#8F83FF] to-purple-600 text-white font-bold text-sm hover:shadow-xl hover:shadow-[#8F83FF]/30 hover:scale-[1.02] active:scale-95 transition-all whitespace-nowrap shrink-0 group"
+          className="w-full sm:w-auto justify-center inline-flex items-center space-x-2.5 px-5 sm:px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#8F83FF] to-purple-600 text-white font-bold text-sm hover:shadow-xl hover:shadow-[#8F83FF]/30 hover:scale-[1.02] active:scale-95 transition-all sm:whitespace-nowrap shrink-0 group min-h-[44px]"
         >
-          <Flame className="w-4 h-4 text-white" />
+          <Flame className="w-4 h-4 text-white shrink-0" />
           <span>Acessar Aba Tsar Bomba</span>
-          <ChevronRight className="w-4 h-4 text-white/80 group-hover:translate-x-1 transition-transform" />
+          <ChevronRight className="w-4 h-4 text-white/80 group-hover:translate-x-1 transition-transform shrink-0" />
         </button>
       </section>
 
       {/* Lightbox Modal */}
       {lightboxImg && (
         <div
-          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-150"
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-150"
           onClick={() => setLightboxImg(null)}
         >
-          <div className="max-w-4xl w-full bg-[#141414] border border-white/15 rounded-2xl overflow-hidden shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
+          <div className="max-w-4xl w-full max-h-[90dvh] overflow-y-auto bg-[#141414] border border-white/15 rounded-2xl shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => setLightboxImg(null)}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/70 text-white hover:bg-black transition-colors"
+              aria-label="Fechar imagem"
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 w-11 h-11 flex items-center justify-center rounded-full bg-black/80 text-white hover:bg-black transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
-            <div className="max-h-[65vh] sm:max-h-[72vh] flex items-center justify-center bg-black overflow-hidden">
+            <div className="max-h-[60vh] sm:max-h-[72vh] flex items-center justify-center bg-black overflow-hidden">
               <img src={lightboxImg.url} alt={lightboxImg.title} referrerPolicy="no-referrer" className="max-h-full max-w-full object-contain" />
             </div>
             <div className="p-4 sm:p-5 space-y-1.5 bg-[#111111] border-t border-white/10 text-xs">

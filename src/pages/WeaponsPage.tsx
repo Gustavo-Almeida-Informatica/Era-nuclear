@@ -37,17 +37,17 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
   const activeCategory = weaponCategories.find((w) => w.id === selectedWeaponCat) || weaponCategories[0];
 
   return (
-    <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
+    <div className="pt-24 sm:pt-28 pb-16 sm:pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-20">
       {/* Header */}
       <div className="max-w-4xl space-y-4">
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#8F83FF]/10 border border-[#8F83FF]/30 text-xs font-semibold text-[#8F83FF]">
-          <ShieldAlert className="w-3.5 h-3.5" />
+        <div className="inline-flex flex-wrap items-center gap-x-2 gap-y-0.5 px-3 py-1 rounded-full bg-[#8F83FF]/10 border border-[#8F83FF]/30 text-xs font-semibold text-[#8F83FF] max-w-full">
+          <ShieldAlert className="w-3.5 h-3.5 shrink-0" />
           <span>Física dos Armamentos & Tratados Internacionais</span>
         </div>
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display tracking-tight uppercase">
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white font-display tracking-tight uppercase">
           Armas Nucleares
         </h1>
-        <p className="text-lg sm:text-xl text-transparent bg-clip-text bg-gradient-to-r from-white via-[#B7B7B7] to-[#8F83FF] font-medium font-display">
+        <p className="text-base sm:text-xl text-transparent bg-clip-text bg-gradient-to-r from-white via-[#B7B7B7] to-[#8F83FF] font-medium font-display">
           Como a física atômica e a energia do núcleo foram transformadas nos maiores arsenais da história humana.
         </p>
         <p className="text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
@@ -56,16 +56,16 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
       </div>
 
       {/* Safety & Educational Ethics Notice */}
-      <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/10 flex items-start space-x-3 text-xs text-[#B7B7B7] shadow-xl">
+      <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/10 flex items-start space-x-3 text-xs text-[#B7B7B7] shadow-xl">
         <Info className="w-4 h-4 text-[#73CAE5] mt-0.5 shrink-0" />
-        <p className="leading-relaxed">
+        <p className="leading-relaxed min-w-0">
           <strong className="text-white">Aviso de Responsabilidade e Segurança:</strong> Esta seção tem finalidade exclusivamente didática, histórica e de conscientização sobre o desarmamento. Todos os diagramas são puramente abstratos e conceituais. O site não apresenta projetos técnicos, desenhos construtivos, dimensões internas, proporções, materiais específicos ou procedimentos de montagem de armamentos.
         </p>
       </div>
 
       {/* Quick Navigation Cards to Special Historical Case Pages */}
       <section className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
           <h3 className="text-xs font-bold uppercase tracking-wider text-[#73CAE5] font-mono">
             Aprofundamentos Históricos Especiais
           </h3>
@@ -190,16 +190,16 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* Banner de Acesso à Nova Aba Dedicada do Mapa Nuclear */}
-      <section className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-rose-950/40 via-[#141414] to-[#111111] border border-rose-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-2xl">
-        <div className="flex items-start space-x-4">
-          <div className="w-12 h-12 rounded-2xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center shrink-0">
-            <Target className="w-6 h-6 text-rose-400" />
+      <section className="p-4 sm:p-8 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-rose-950/40 via-[#141414] to-[#111111] border border-rose-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 sm:gap-6 shadow-2xl">
+        <div className="flex items-start space-x-3.5 sm:space-x-4 min-w-0">
+          <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center shrink-0">
+            <Target className="w-5 h-5 sm:w-6 sm:h-6 text-rose-400" />
           </div>
-          <div className="space-y-1">
+          <div className="space-y-1 min-w-0">
             <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-rose-500/10 text-[10px] font-mono font-bold text-rose-400 uppercase">
               <span>Nova Aba Exclusiva</span>
             </div>
-            <h3 className="text-xl font-bold text-white font-display">
+            <h3 className="text-lg sm:text-xl font-bold text-white font-display">
               Mapa Nuclear & Simulador de Detonação
             </h3>
             <p className="text-xs sm:text-sm text-neutral-300 max-w-2xl leading-relaxed">
@@ -209,22 +209,22 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
         </div>
         <button
           onClick={() => onNavigate('map')}
-          className="px-5 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 active:bg-rose-700 text-white text-xs sm:text-sm font-bold transition-all flex items-center space-x-2 shrink-0 shadow-lg shadow-rose-900/30 cursor-pointer"
+          className="w-full md:w-auto justify-center min-h-[44px] sm:min-h-0 px-5 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 active:bg-rose-700 text-white text-xs sm:text-sm font-bold transition-all flex items-center space-x-2 shrink-0 shadow-lg shadow-rose-900/30 cursor-pointer"
         >
-          <Globe className="w-4 h-4" />
+          <Globe className="w-4 h-4 shrink-0" />
           <span>Acessar Aba do Mapa</span>
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRight className="w-4 h-4 shrink-0" />
         </button>
       </section>
 
       {/* SECTION 9: Como Funcionam as Armas Nucleares (Princípios Gerais e Diagramas Conceituais) */}
-      <section className="bg-[#111111] border border-white/10 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-8">
+      <section className="bg-[#111111] border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-10 shadow-2xl space-y-6 sm:space-y-8">
         <div className="space-y-2">
           <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#73CAE5]/10 border border-[#73CAE5]/30 text-xs font-semibold text-[#73CAE5]">
             <Zap className="w-3.5 h-3.5" />
             <span>Física Teórica Fundamental</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-display">
+          <h2 className="text-xl sm:text-3xl font-extrabold text-white font-display">
             Como Funcionam as Armas Nucleares: Os Princípios Científicos
           </h2>
           <p className="text-xs sm:text-sm text-[#B7B7B7] leading-relaxed max-w-3xl">
@@ -233,10 +233,10 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
         </div>
 
         {/* Switch Buttons: Fissão vs Fusão */}
-        <div className="flex space-x-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <button
             onClick={() => setActivePrinciple('fissao')}
-            className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all border ${
+            className={`w-full sm:w-auto px-5 py-3 sm:py-2.5 rounded-xl text-xs font-bold transition-all border text-center min-h-[44px] sm:min-h-0 cursor-pointer ${
               activePrinciple === 'fissao'
                 ? 'bg-[#73CAE5] text-black border-[#73CAE5] shadow-lg shadow-[#73CAE5]/20'
                 : 'bg-white/5 border-white/10 text-[#B7B7B7] hover:text-white'
@@ -246,7 +246,7 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
           </button>
           <button
             onClick={() => setActivePrinciple('fusao')}
-            className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all border ${
+            className={`w-full sm:w-auto px-5 py-3 sm:py-2.5 rounded-xl text-xs font-bold transition-all border text-center min-h-[44px] sm:min-h-0 cursor-pointer ${
               activePrinciple === 'fusao'
                 ? 'bg-[#8F83FF] text-white border-[#8F83FF] shadow-lg shadow-[#8F83FF]/20'
                 : 'bg-white/5 border-white/10 text-[#B7B7B7] hover:text-white'
@@ -258,10 +258,10 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
 
         {/* Principle Display */}
         {activePrinciple === 'fissao' ? (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-black/40 p-6 sm:p-8 rounded-2xl border border-white/5">
-            <div className="lg:col-span-6 space-y-4 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-black/40 p-4 sm:p-8 rounded-2xl border border-white/5">
+            <div className="lg:col-span-6 space-y-4 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed min-w-0">
               <h3 className="text-xl font-bold text-white font-display flex items-center space-x-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#73CAE5]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#73CAE5] shrink-0" />
                 <span>Fissão: Divisão de Núcleos Pesados</span>
               </h3>
               <p>
@@ -272,30 +272,30 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
               </p>
               <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 text-xs text-white">
                 <strong>Equação Conceitual:</strong><br />
-                <span className="font-mono text-[#73CAE5]">¹n + ²³⁵U → [²³⁶U*] → Ba-141 + Kr-92 + 3 ¹n + ~200 MeV</span>
+                <span className="font-mono text-[#73CAE5] break-words">¹n + ²³⁵U → [²³⁶U*] → Ba-141 + Kr-92 + 3 ¹n + ~200 MeV</span>
               </div>
             </div>
 
             {/* Conceptual Animation Block: Núcleo -> Divisão -> Energia */}
-            <div className="lg:col-span-6 flex flex-col items-center justify-center p-6 rounded-xl bg-[#090909] border border-[#73CAE5]/20 space-y-4">
-              <span className="text-[11px] font-mono text-[#73CAE5] uppercase font-bold tracking-wider">
+            <div className="lg:col-span-6 flex flex-col items-center justify-center p-4 sm:p-6 rounded-xl bg-[#090909] border border-[#73CAE5]/20 space-y-4 min-w-0">
+              <span className="text-[11px] font-mono text-[#73CAE5] uppercase font-bold tracking-wider text-center">
                 Fluxo Conceitual da Fissão
               </span>
-              <div className="flex items-center space-x-3 text-xs font-mono text-center">
-                <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-white">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3 text-xs font-mono text-center w-full">
+                <div className="w-full sm:w-auto p-3 rounded-xl bg-white/5 border border-white/10 text-white">
                   <div className="w-8 h-8 rounded-full bg-[#8F83FF] mx-auto mb-1 flex items-center justify-center font-bold">U</div>
                   <span>Núcleo Pesado</span>
                 </div>
-                <ArrowRight className="w-4 h-4 text-[#73CAE5] shrink-0 animate-pulse" />
-                <div className="p-3 rounded-xl bg-[#73CAE5]/10 border border-[#73CAE5]/30 text-[#73CAE5]">
+                <ArrowRight className="w-4 h-4 text-[#73CAE5] shrink-0 animate-pulse rotate-90 sm:rotate-0" />
+                <div className="w-full sm:w-auto p-3 rounded-xl bg-[#73CAE5]/10 border border-[#73CAE5]/30 text-[#73CAE5]">
                   <div className="flex space-x-1 justify-center mb-1">
                     <div className="w-4 h-4 rounded-full bg-[#73CAE5]" />
                     <div className="w-4 h-4 rounded-full bg-[#73CAE5]" />
                   </div>
                   <span>Divisão Nuclear</span>
                 </div>
-                <ArrowRight className="w-4 h-4 text-[#73CAE5] shrink-0 animate-pulse" />
-                <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300">
+                <ArrowRight className="w-4 h-4 text-[#73CAE5] shrink-0 animate-pulse rotate-90 sm:rotate-0" />
+                <div className="w-full sm:w-auto p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300">
                   <Zap className="w-5 h-5 mx-auto mb-1" />
                   <span>Energia (~200 MeV)</span>
                 </div>
@@ -303,10 +303,10 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-black/40 p-6 sm:p-8 rounded-2xl border border-white/5">
-            <div className="lg:col-span-6 space-y-4 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
-              <h3 className="text-xl font-bold text-white font-display flex items-center space-x-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#8F83FF]" />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center bg-black/40 p-4 sm:p-8 rounded-2xl border border-white/5">
+            <div className="lg:col-span-6 space-y-4 text-xs sm:text-sm text-[#B7B7B7] leading-relaxed min-w-0">
+              <h3 className="text-lg sm:text-xl font-bold text-white font-display flex items-center space-x-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#8F83FF] shrink-0" />
                 <span>Fusão: Junção de Núcleos Leves</span>
               </h3>
               <p>
@@ -317,13 +317,13 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
               </p>
               <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 text-xs text-white">
                 <strong>Equação Conceitual:</strong><br />
-                <span className="font-mono text-[#8F83FF]">²H (Deutério) + ³H (Trítio) → ⁴He (3.5 MeV) + ¹n (14.1 MeV) + 17.6 MeV</span>
+                <span className="font-mono text-[#8F83FF] break-words">²H (Deutério) + ³H (Trítio) → ⁴He (3.5 MeV) + ¹n (14.1 MeV) + 17.6 MeV</span>
               </div>
             </div>
 
             {/* Conceptual Animation Block: Núcleos Leves -> Fusão -> Nêutrons 14.1 MeV -> Fissão U-238 */}
-            <div className="lg:col-span-6 flex flex-col items-center justify-center p-6 rounded-xl bg-[#090909] border border-[#8F83FF]/20 space-y-4">
-              <span className="text-[11px] font-mono text-[#8F83FF] uppercase font-bold tracking-wider">
+            <div className="lg:col-span-6 flex flex-col items-center justify-center p-4 sm:p-6 rounded-xl bg-[#090909] border border-[#8F83FF]/20 space-y-4 min-w-0">
+              <span className="text-[11px] font-mono text-[#8F83FF] uppercase font-bold tracking-wider text-center">
                 Fluxo Conceitual: Fissão → Fusão → Fissão de U-238
               </span>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono text-center w-full">
@@ -371,10 +371,10 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
           </div>
 
           {/* Selector buttons */}
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-1 min-[360px]:grid-cols-2 sm:flex sm:flex-wrap gap-2 w-full md:w-auto">
             <button
               onClick={() => setSelectedArch('all')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all border ${
+              className={`min-h-[42px] sm:min-h-0 px-3.5 py-2 sm:py-1.5 rounded-lg text-xs font-bold transition-all border text-center ${
                 selectedArch === 'all'
                   ? 'bg-white text-black border-white'
                   : 'bg-white/5 border-white/10 text-[#B7B7B7] hover:text-white'
@@ -384,7 +384,7 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
             </button>
             <button
               onClick={() => setSelectedArch('gun-type')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all border ${
+              className={`min-h-[42px] sm:min-h-0 px-3.5 py-2 sm:py-1.5 rounded-lg text-xs font-bold transition-all border text-center ${
                 selectedArch === 'gun-type'
                   ? 'bg-[#73CAE5] text-black border-[#73CAE5]'
                   : 'bg-white/5 border-white/10 text-[#B7B7B7] hover:text-white'
@@ -394,7 +394,7 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
             </button>
             <button
               onClick={() => setSelectedArch('implosion')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all border ${
+              className={`min-h-[42px] sm:min-h-0 px-3.5 py-2 sm:py-1.5 rounded-lg text-xs font-bold transition-all border text-center ${
                 selectedArch === 'implosion'
                   ? 'bg-[#8F83FF] text-white border-[#8F83FF]'
                   : 'bg-white/5 border-white/10 text-[#B7B7B7] hover:text-white'
@@ -404,7 +404,7 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
             </button>
             <button
               onClick={() => setSelectedArch('teller-ulam')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all border ${
+              className={`min-h-[42px] sm:min-h-0 px-3.5 py-2 sm:py-1.5 rounded-lg text-xs font-bold transition-all border text-center ${
                 selectedArch === 'teller-ulam'
                   ? 'bg-amber-400 text-black border-amber-400'
                   : 'bg-white/5 border-white/10 text-[#B7B7B7] hover:text-white'
@@ -418,15 +418,15 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
         <div className="space-y-8">
           {/* Card 1: Gun-Type (Little Boy) */}
           {(selectedArch === 'all' || selectedArch === 'gun-type') && (
-            <div className="p-6 sm:p-8 rounded-2xl bg-[#111111] border border-[#73CAE5]/30 hover:border-[#73CAE5] transition-all space-y-6 shadow-2xl">
+            <div className="p-4 sm:p-8 rounded-2xl bg-[#111111] border border-[#73CAE5]/30 hover:border-[#73CAE5] transition-all space-y-6 shadow-2xl min-w-0">
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
-                <div className="space-y-1">
-                  <div className="inline-flex items-center space-x-2 px-2.5 py-0.5 rounded bg-[#73CAE5]/10 text-[#73CAE5] text-[11px] font-mono font-bold">
+                <div className="space-y-1 min-w-0">
+                  <div className="inline-flex flex-wrap items-center gap-x-2 gap-y-0.5 px-2.5 py-0.5 rounded bg-[#73CAE5]/10 text-[#73CAE5] text-[11px] font-mono font-bold max-w-full">
                     <span>MÉTODO 01</span>
                     <span>•</span>
                     <span>DISPARO BALÍSTICO (URÂNIO-235)</span>
                   </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-white font-display">
+                  <h3 className="text-lg sm:text-2xl font-bold text-white font-display">
                     Fissão Tipo Canhão (Gun-Type Nuclear Fission Bomb)
                   </h3>
                 </div>
@@ -435,9 +435,9 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
                 {/* Visual Technical Diagram */}
-                <div className="lg:col-span-6 space-y-3">
+                <div className="lg:col-span-6 space-y-3 min-w-0">
                   <div
                     onClick={() =>
                       setDiagramLightbox({
@@ -458,9 +458,9 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
                     <div className="absolute top-3 right-3 p-2 rounded-full bg-black/70 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
                       <Maximize2 className="w-4 h-4" />
                     </div>
-                    <div className="absolute bottom-2 left-2 right-2 bg-black/80 px-2.5 py-1 rounded text-[11px] text-white/90 flex justify-between items-center backdrop-blur-sm">
-                      <span>Diagrama esquemático em português (Tipo Canhão)</span>
-                      <span className="text-[#73CAE5] font-mono">Clique p/ expandir</span>
+                    <div className="absolute bottom-2 left-2 right-2 bg-black/80 px-2.5 py-1 rounded text-[10px] sm:text-[11px] text-white/90 flex flex-wrap justify-between items-center gap-1 backdrop-blur-sm">
+                      <span className="min-w-0">Diagrama esquemático em português (Tipo Canhão)</span>
+                      <span className="text-[#73CAE5] font-mono shrink-0">Clique p/ expandir</span>
                     </div>
                   </div>
                 </div>
@@ -511,15 +511,15 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
 
           {/* Card 2: Implosion-Type (Plutonium / Fat Man) */}
           {(selectedArch === 'all' || selectedArch === 'implosion') && (
-            <div className="p-6 sm:p-8 rounded-2xl bg-[#111111] border border-[#8F83FF]/30 hover:border-[#8F83FF] transition-all space-y-6 shadow-2xl">
+            <div className="p-4 sm:p-8 rounded-2xl bg-[#111111] border border-[#8F83FF]/30 hover:border-[#8F83FF] transition-all space-y-6 shadow-2xl min-w-0">
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
-                <div className="space-y-1">
-                  <div className="inline-flex items-center space-x-2 px-2.5 py-0.5 rounded bg-[#8F83FF]/10 text-[#8F83FF] text-[11px] font-mono font-bold">
+                <div className="space-y-1 min-w-0">
+                  <div className="inline-flex flex-wrap items-center gap-x-2 gap-y-0.5 px-2.5 py-0.5 rounded bg-[#8F83FF]/10 text-[#8F83FF] text-[11px] font-mono font-bold max-w-full">
                     <span>MÉTODO 02</span>
                     <span>•</span>
                     <span>COMPRESSÃO ESFÉRICA HIDRODINÂMICA (PLUTÔNIO-239)</span>
                   </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-white font-display">
+                  <h3 className="text-lg sm:text-2xl font-bold text-white font-display">
                     Fissão por Implosão (Plutonium Implosion-Type Bomb)
                   </h3>
                 </div>
@@ -528,9 +528,9 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
                 {/* Visual Technical Diagram */}
-                <div className="lg:col-span-6 space-y-3">
+                <div className="lg:col-span-6 space-y-3 min-w-0">
                   <div
                     onClick={() =>
                       setDiagramLightbox({
@@ -551,9 +551,9 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
                     <div className="absolute top-3 right-3 p-2 rounded-full bg-black/70 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
                       <Maximize2 className="w-4 h-4" />
                     </div>
-                    <div className="absolute bottom-2 left-2 right-2 bg-black/80 px-2.5 py-1 rounded text-[11px] text-white/90 flex justify-between items-center backdrop-blur-sm">
-                      <span>Diagrama didático de corte em 3 etapas</span>
-                      <span className="text-[#8F83FF] font-mono">Clique p/ expandir</span>
+                    <div className="absolute bottom-2 left-2 right-2 bg-black/80 px-2.5 py-1 rounded text-[10px] sm:text-[11px] text-white/90 flex flex-wrap justify-between items-center gap-1 backdrop-blur-sm">
+                      <span className="min-w-0">Diagrama didático de corte em 3 etapas</span>
+                      <span className="text-[#8F83FF] font-mono shrink-0">Clique p/ expandir</span>
                     </div>
                   </div>
                 </div>
@@ -602,15 +602,15 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
 
           {/* Card 3: Staged Thermonuclear (Teller-Ulam) */}
           {(selectedArch === 'all' || selectedArch === 'teller-ulam') && (
-            <div className="p-6 sm:p-8 rounded-2xl bg-[#111111] border border-amber-500/30 hover:border-amber-400 transition-all space-y-6 shadow-2xl">
+            <div className="p-4 sm:p-8 rounded-2xl bg-[#111111] border border-amber-500/30 hover:border-amber-400 transition-all space-y-6 shadow-2xl min-w-0">
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-white/10">
-                <div className="space-y-1">
-                  <div className="inline-flex items-center space-x-2 px-2.5 py-0.5 rounded bg-amber-400/10 text-amber-400 text-[11px] font-mono font-bold">
+                <div className="space-y-1 min-w-0">
+                  <div className="inline-flex flex-wrap items-center gap-x-2 gap-y-0.5 px-2.5 py-0.5 rounded bg-amber-400/10 text-amber-400 text-[11px] font-mono font-bold max-w-full">
                     <span>MÉTODO 03</span>
                     <span>•</span>
                     <span>IMPLOSÃO POR RADIAÇÃO EM ESTÁGIOS (TELLER-ULAM)</span>
                   </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-white font-display">
+                  <h3 className="text-lg sm:text-2xl font-bold text-white font-display">
                     Arma Termonuclear em Estágios (Teller-Ulam Design)
                   </h3>
                 </div>
@@ -642,9 +642,10 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
                     <div className="absolute top-3 right-3 p-2 rounded-full bg-black/70 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
                       <Maximize2 className="w-4 h-4" />
                     </div>
-                    <div className="absolute bottom-2 left-2 right-2 bg-black/80 px-2.5 py-1 rounded text-[11px] text-white/90 flex justify-between items-center backdrop-blur-sm">
-                      <span>Diagrama didático com os 6 passos sequenciais da detonação termonuclear (Ciclo Fissão-Fusão-Fissão)</span>
-                      <span className="text-amber-400 font-mono">Clique p/ expandir</span>
+                    <div className="absolute bottom-2 left-2 right-2 bg-black/80 px-2.5 py-1 rounded text-[10px] sm:text-[11px] text-white/90 flex flex-wrap justify-between items-center gap-1 backdrop-blur-sm">
+                      <span className="min-w-0 sm:hidden">Ciclo Fissão-Fusão-Fissão (6 passos)</span>
+                      <span className="hidden sm:inline min-w-0">Diagrama didático com os 6 passos sequenciais da detonação termonuclear (Ciclo Fissão-Fusão-Fissão)</span>
+                      <span className="text-amber-400 font-mono shrink-0">Clique p/ expandir</span>
                     </div>
                   </div>
                 </div>
@@ -734,7 +735,78 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
           </h2>
         </div>
 
-        <div className="overflow-x-auto rounded-2xl border border-white/10 bg-[#111111] shadow-2xl">
+        {/* Opção B Mobile: Cards Comparativos Limpos e 100% Legíveis em Celulares */}
+        <div className="md:hidden space-y-3">
+          {[
+            {
+              concept: 'Fissão',
+              process: 'Divisão de núcleos pesados',
+              history: 'Primeiras armas nucleares',
+              historyColor: 'text-[#73CAE5]'
+            },
+            {
+              concept: 'Fusão',
+              process: 'Combinação de núcleos leves',
+              history: 'Armas termonucleares',
+              historyColor: 'text-[#8F83FF]'
+            },
+            {
+              concept: 'Fissão tipo canhão',
+              process: 'Arquitetura histórica de fissão',
+              history: 'Segunda Guerra Mundial',
+              historyColor: 'text-[#B7B7B7]'
+            },
+            {
+              concept: 'Fissão por implosão',
+              process: 'Arquitetura histórica de fissão',
+              history: 'Projeto Manhattan e desenvolvimento posterior',
+              historyColor: 'text-[#B7B7B7]'
+            },
+            {
+              concept: 'Termonuclear',
+              process: 'Processos de fusão em condições extremas',
+              history: 'Guerra Fria',
+              historyColor: 'text-amber-300'
+            }
+          ].map((row) => (
+            <div
+              key={row.concept}
+              className="rounded-2xl border border-white/10 bg-[#111111] p-4 shadow-xl space-y-3 min-w-0 max-w-full"
+            >
+              <div className="pb-2.5 border-b border-white/10">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-[#73CAE5] block mb-0.5">
+                  Conceito
+                </span>
+                <h3 className="text-base font-bold text-white font-mono break-words">
+                  {row.concept}
+                </h3>
+              </div>
+
+              <div className="grid grid-cols-1 gap-2.5 text-xs">
+                <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 space-y-1 min-w-0">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-white/60 font-bold block">
+                    Processo Físico
+                  </span>
+                  <p className="text-[#B7B7B7] leading-relaxed break-words">
+                    {row.process}
+                  </p>
+                </div>
+
+                <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 space-y-1 min-w-0">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-white/60 font-bold block">
+                    Contexto Histórico
+                  </span>
+                  <p className={`${row.historyColor} font-medium leading-relaxed break-words`}>
+                    {row.history}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Versão Desktop Original Preservada Integralmente */}
+        <div className="hidden md:block overflow-x-auto rounded-2xl border border-white/10 bg-[#111111] shadow-2xl">
           <table className="w-full text-left text-xs sm:text-sm">
             <thead className="bg-white/5 text-[#73CAE5] font-display uppercase tracking-wider text-[11px] border-b border-white/10">
               <tr>
@@ -792,10 +864,10 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
           {nuclearTreaties.map((treaty) => (
             <div
               key={treaty.name}
-              className="bg-[#111111] border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-[#73CAE5]/40 transition-all shadow-xl space-y-4 flex flex-col justify-between"
+              className="bg-[#111111] border border-white/10 rounded-2xl p-4 sm:p-8 hover:border-[#73CAE5]/40 transition-all shadow-xl space-y-4 flex flex-col justify-between min-w-0"
             >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
+              <div className="space-y-3 min-w-0">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   <span className="text-xs font-mono font-bold text-[#73CAE5] bg-[#73CAE5]/10 px-2.5 py-0.5 rounded-full border border-[#73CAE5]/30">
                     {treaty.year}
                   </span>
@@ -811,11 +883,11 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
                 </p>
               </div>
 
-              <div className="pt-3 border-t border-white/5 space-y-1.5 text-xs">
-                <div className="text-white/80 font-mono text-[11px]">
+              <div className="pt-3 border-t border-white/5 space-y-1.5 text-xs min-w-0">
+                <div className="text-white/80 font-mono text-[11px] break-words">
                   <strong>Dispositivo Central:</strong> {treaty.keyArticle}
                 </div>
-                <div className="text-[#8F83FF] text-[11px] font-semibold">
+                <div className="text-[#8F83FF] text-[11px] font-semibold break-words">
                   Status: {treaty.status}
                 </div>
               </div>
@@ -827,33 +899,34 @@ export const WeaponsPage: React.FC<WeaponsPageProps> = ({ onNavigate }) => {
       {/* Lightbox Modal for Architecture Diagrams */}
       {diagramLightbox && (
         <div
-          className="fixed inset-0 z-[99999] bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-fadeIn"
+          className="fixed inset-0 z-[99999] bg-black/90 backdrop-blur-md flex items-center justify-center p-2 sm:p-6 animate-fadeIn"
           onClick={() => setDiagramLightbox(null)}
         >
           <div
-            className="relative max-w-4xl w-full bg-[#111111] border border-white/20 rounded-2xl overflow-hidden shadow-2xl space-y-4 p-4 sm:p-6"
+            className="relative max-w-4xl w-full max-h-[90dvh] overflow-y-auto bg-[#111111] border border-white/20 rounded-2xl shadow-2xl space-y-4 p-4 sm:p-6"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <h4 className="text-base sm:text-lg font-bold text-white font-display">
+            <div className="flex items-start justify-between gap-3 border-b border-white/10 pb-3">
+              <h4 className="text-sm sm:text-lg font-bold text-white font-display leading-snug">
                 {diagramLightbox.title}
               </h4>
               <button
                 onClick={() => setDiagramLightbox(null)}
-                className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
+                className="w-11 h-11 sm:w-9 sm:h-9 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors flex items-center justify-center shrink-0"
                 title="Fechar"
+                aria-label="Fechar"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="max-h-[65vh] overflow-auto flex items-center justify-center bg-black border border-white/10 rounded-xl p-3">
+            <div className="max-h-[55vh] sm:max-h-[65vh] overflow-auto flex items-center justify-center bg-black border border-white/10 rounded-xl p-2 sm:p-3">
               <img
                 src={diagramLightbox.src}
                 alt={diagramLightbox.title}
                 referrerPolicy="no-referrer"
-                className={`max-h-[60vh] w-auto object-contain mx-auto rounded-lg ${
-                  diagramLightbox.src === gunTypeDiagramImg ? 'bg-white p-3' : ''
+                className={`max-h-[50vh] sm:max-h-[60vh] w-auto max-w-full object-contain mx-auto rounded-lg ${
+                  diagramLightbox.src === gunTypeDiagramImg ? 'bg-white p-2 sm:p-3' : ''
                 }`}
               />
             </div>

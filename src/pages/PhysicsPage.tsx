@@ -25,17 +25,17 @@ export const PhysicsPage: React.FC<PhysicsPageProps> = ({ onNavigate }) => {
   const [lightboxImg, setLightboxImg] = useState<{ url: string; title: string; desc: string } | null>(null);
 
   return (
-    <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
+    <div className="pt-24 sm:pt-28 pb-16 sm:pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-20">
       {/* Header */}
       <div className="max-w-3xl space-y-4">
         <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#73CAE5]/10 border border-[#73CAE5]/30 text-xs font-semibold text-[#73CAE5]">
-          <Atom className="w-3.5 h-3.5" />
+          <Atom className="w-3.5 h-3.5 shrink-0" />
           <span>Física Nuclear Fundamental</span>
         </div>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-white font-display tracking-tight">
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-white font-display tracking-tight break-words">
           A Física por Trás do Átomo
         </h1>
-        <p className="text-base text-[#B7B7B7] leading-relaxed">
+        <p className="text-sm sm:text-base text-[#B7B7B7] leading-relaxed">
           Compreenda como as forças mais intensas do cosmos operam na escala subatômica, o mecanismo da instabilidade radioativa e a física que rege a conversão de massa em energia.
         </p>
       </div>
@@ -43,13 +43,13 @@ export const PhysicsPage: React.FC<PhysicsPageProps> = ({ onNavigate }) => {
       {/* Interactive Atom Simulator Section + Visual Structure */}
       <section className="space-y-6">
         <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-[#73CAE5] font-mono">
-          <Sparkles className="w-4 h-4" />
+          <Sparkles className="w-4 h-4 shrink-0" />
           <span>Módulo 01 • Estrutura Atômica Interativa & Esquema Físico</span>
         </div>
         <AtomSimulator />
 
         {/* Diagram Card */}
-        <div className="bg-[#111111] border border-white/10 rounded-2xl p-6 sm:p-8 shadow-xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div className="bg-[#111111] border border-white/10 rounded-2xl p-4 sm:p-8 shadow-xl grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center">
           <div
             onClick={() => setLightboxImg({
               url: atomStructureImg,
@@ -113,7 +113,7 @@ export const PhysicsPage: React.FC<PhysicsPageProps> = ({ onNavigate }) => {
           {physicsTopics.map((topic) => (
             <div
               key={topic.id}
-              className="bg-[#111111] border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-[#73CAE5]/40 transition-all shadow-xl flex flex-col justify-between space-y-6 group"
+              className="bg-[#111111] border border-white/10 rounded-2xl p-4 sm:p-8 hover:border-[#73CAE5]/40 transition-all shadow-xl flex flex-col justify-between space-y-5 sm:space-y-6 group min-w-0"
             >
               <div className="space-y-4">
                 <div>
@@ -147,14 +147,14 @@ export const PhysicsPage: React.FC<PhysicsPageProps> = ({ onNavigate }) => {
 
               {/* Formula box if present */}
               {topic.formula && (
-                <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 space-y-1">
+                <div className="p-3.5 sm:p-4 rounded-xl bg-white/[0.03] border border-white/10 space-y-1 min-w-0 max-w-full overflow-hidden">
                   <div className="text-[10px] font-mono uppercase tracking-wider text-[#8F83FF]">
                     Relação Matemática:
                   </div>
-                  <div className="font-mono text-base font-bold text-white tracking-wide">
+                  <div className="font-mono text-sm sm:text-base font-bold text-white tracking-wide break-words overflow-x-auto">
                     {topic.formula}
                   </div>
-                  <p className="text-[11px] text-[#B7B7B7]">
+                  <p className="text-[11px] text-[#B7B7B7] break-words">
                     {topic.formulaExplanation}
                   </p>
                 </div>
@@ -176,17 +176,18 @@ export const PhysicsPage: React.FC<PhysicsPageProps> = ({ onNavigate }) => {
       {/* Lightbox Modal */}
       {lightboxImg && (
         <div
-          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-150"
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-150"
           onClick={() => setLightboxImg(null)}
         >
-          <div className="max-w-4xl w-full bg-[#141414] border border-white/15 rounded-2xl overflow-hidden shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
+          <div className="max-w-4xl w-full max-h-[90dvh] overflow-y-auto bg-[#141414] border border-white/15 rounded-2xl shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => setLightboxImg(null)}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/70 text-white hover:bg-black"
+              aria-label="Fechar imagem"
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 w-11 h-11 flex items-center justify-center rounded-full bg-black/80 text-white hover:bg-black"
             >
               <X className="w-5 h-5" />
             </button>
-            <img src={lightboxImg.url} alt={lightboxImg.title} referrerPolicy="no-referrer" className="w-full max-h-[80vh] object-contain bg-black" />
+            <img src={lightboxImg.url} alt={lightboxImg.title} referrerPolicy="no-referrer" className="w-full max-h-[65vh] sm:max-h-[80vh] object-contain bg-black" />
             <div className="p-4 space-y-1">
               <h4 className="text-sm font-bold text-white font-display">
                 {lightboxImg.title}

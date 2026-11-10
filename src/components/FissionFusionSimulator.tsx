@@ -289,7 +289,20 @@ export const FissionFusionSimulator: React.FC = () => {
     if (!ctx) return;
 
     let width = (canvas.width = canvas.parentElement?.clientWidth || 600);
-    let height = (canvas.height = 360);
+    let height = (canvas.height = width < 500 ? 310 : 360);
+
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.width = canvas.parentElement?.clientWidth || 600;
+      height = canvas.height = width < 500 ? 310 : 360;
+    };
+    window.addEventListener('resize', handleResize);
+    const ro = typeof ResizeObserver !== 'undefined' && canvas.parentElement
+      ? new ResizeObserver(handleResize)
+      : null;
+    if (ro && canvas.parentElement) {
+      ro.observe(canvas.parentElement);
+    }
 
     const render = () => {
       ctx.clearRect(0, 0, width, height);
@@ -298,21 +311,27 @@ export const FissionFusionSimulator: React.FC = () => {
       angleRef.current += 0.02 * speed;
       const t = angleRef.current;
 
+      // Scale factor for mobile devices (<550px) to prevent elements clipping while preserving 100% desktop geometry
+      const scale = Math.min(1, Math.max(0.55, width / 550));
+      const isMobile = width < 480;
+      const maxTextFull = isMobile ? width - 16 : undefined;
+      const maxTextHalf = isMobile ? Math.max(115, Math.floor(width * 0.44)) : undefined;
+
       // Subtle background radial glow matching AtomSimulator
-      const radialGlow = ctx.createRadialGradient(cx, cy, 5, cx, cy, 190);
+      const radialGlow = ctx.createRadialGradient(cx, cy, 5, cx, cy, 190 * scale);
       radialGlow.addColorStop(0, mode === 'fission' ? 'rgba(115, 202, 229, 0.08)' : 'rgba(143, 131, 255, 0.08)');
       radialGlow.addColorStop(0.5, 'rgba(143, 131, 255, 0.03)');
       radialGlow.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = radialGlow;
       ctx.beginPath();
-      ctx.arc(cx, cy, 210, 0, Math.PI * 2);
+      ctx.arc(cx, cy, 210 * scale, 0, Math.PI * 2);
       ctx.fill();
 
       // =======================================================================
       // MODE 1: FISSÃO NUCLEAR (Urânio-235 ou Plutônio-239)
       // =======================================================================
       if (mode === 'fission') {
-        const nucleonRadius = 4.2;
+        const nucleonRadius = 4.2 * Math.min(1, Math.max(0.85, scale));
         const isPu = fissionFuel === 'pu239';
         const activeNucleons = isPu ? STATIC_PU239_NUCLEONS : STATIC_U235_NUCLEONS;
         const parentSymbol = isPu ? '²³⁹Pu' : '²³⁵U';
@@ -330,12 +349,12 @@ export const FissionFusionSimulator: React.FC = () => {
         const frag2N = isPu ? 64 : 56;
         const frag2A = isPu ? '104' : '92';
         const freeCount = isPu ? 2 : 3;
-        const energyText = isPu ? '⚡ Liberação de ~207 MeV (Cinética + Raios γ)' : '⚡ Liberação de ~200 MeV (Cinética + Raios γ)';
+        const energyText = isPu ? '⚡ Liberação de ~207 MeV' : '⚡ Liberação de ~200 MeV';
 
         if (stage === 0) {
           // --- STAGE 0: Initial atom and incoming thermal neutron ---
-          const uCenter = { x: cx + 45, y: cy };
-          const nIncoming = { x: cx - 165 + (Math.sin(t * 1.2) * 8), y: cy };
+          const uCenter = { x: cx + Math.round(35 * scale), y: cy };
+          const nIncoming = { x: cx - Math.round(135 * scale) + (Math.sin(t * 1.2) * 6), y: cy };
 
           // Trajectory dashed guide
           ctx.save();
@@ -344,25 +363,25 @@ export const FissionFusionSimulator: React.FC = () => {
           ctx.setLineDash([4, 4]);
           ctx.beginPath();
           ctx.moveTo(nIncoming.x + 12, cy);
-          ctx.lineTo(uCenter.x - 55, cy);
+          ctx.lineTo(uCenter.x - 50 * scale, cy);
           ctx.stroke();
           ctx.restore();
 
           // Nucleus containment glow matching AtomSimulator
-          drawNucleusContainmentGlow(ctx, uCenter.x, uCenter.y, 46);
+          drawNucleusContainmentGlow(ctx, uCenter.x, uCenter.y, 46 * scale);
 
           // Incoming thermal neutron
-          drawNucleon(ctx, nIncoming.x, nIncoming.y, 7.5, 'neutron', 'n');
+          drawNucleon(ctx, nIncoming.x, nIncoming.y, 7 * scale, 'neutron', 'n');
           ctx.fillStyle = '#73CAE5';
-          ctx.font = 'bold 11px JetBrains Mono, monospace';
+          ctx.font = `bold ${isMobile ? '10px' : '11px'} JetBrains Mono, monospace`;
           ctx.textAlign = 'center';
-          ctx.fillText('n⁰ (Térmico ~0,025 eV)', nIncoming.x, nIncoming.y - 16);
+          ctx.fillText('n⁰ (Térmico)', nIncoming.x, nIncoming.y - 14);
 
           // Draw the nucleons of the target atom
           for (let i = freeCount; i < activeNucleons.length; i++) {
             const n = activeNucleons[i];
-            const px = uCenter.x + n.x;
-            const py = uCenter.y + n.y;
+            const px = uCenter.x + n.x * scale;
+            const py = uCenter.y + n.y * scale;
             drawNucleon(ctx, px, py, nucleonRadius, n.type);
           }
 
@@ -370,43 +389,44 @@ export const FissionFusionSimulator: React.FC = () => {
           ctx.save();
           ctx.fillStyle = 'rgba(13, 13, 13, 0.88)';
           ctx.beginPath();
-          ctx.arc(uCenter.x, uCenter.y, 16, 0, Math.PI * 2);
+          ctx.arc(uCenter.x, uCenter.y, 16 * scale, 0, Math.PI * 2);
           ctx.fill();
           ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
           ctx.lineWidth = 1;
           ctx.stroke();
           ctx.fillStyle = '#FFFFFF';
-          ctx.font = 'bold 10.5px JetBrains Mono, monospace';
+          ctx.font = `bold ${isMobile ? '9.5px' : '10.5px'} JetBrains Mono, monospace`;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillText(isPu ? '239' : '235', uCenter.x, uCenter.y);
           ctx.restore();
 
           // Labels
+          const labelX = isMobile ? cx : uCenter.x;
           ctx.fillStyle = '#FFFFFF';
-          ctx.font = 'bold 13px Space Grotesk, sans-serif';
+          ctx.font = `bold ${isMobile ? '11px' : '13px'} Space Grotesk, sans-serif`;
           ctx.textAlign = 'center';
-          ctx.fillText(`Núcleo de ${parentName} (${parentSymbol})`, uCenter.x, uCenter.y + 70);
-          ctx.font = '10px JetBrains Mono, monospace';
+          ctx.fillText(`Núcleo de ${parentName} (${parentSymbol})`, labelX, uCenter.y + Math.round(65 * scale), maxTextFull);
+          ctx.font = `${isMobile ? '9px' : '10px'} JetBrains Mono, monospace`;
           ctx.fillStyle = '#B7B7B7';
-          ctx.fillText(`${parentZ} Prótons (#8F83FF) • ${parentN} Nêutrons (#73CAE5) = ${parentZ + parentN} Núcleons`, uCenter.x, uCenter.y + 86);
+          ctx.fillText(`${parentZ} Prótons (#8F83FF) • ${parentN} Nêutrons (#73CAE5)`, labelX, uCenter.y + Math.round(80 * scale), maxTextFull);
 
         } else if (stage === 1) {
           // --- STAGE 1: Excited Compound Nucleus oscillating ---
           const uCenter = { x: cx, y: cy };
           const wobble = Math.sin(t * 5) * 4;
 
-          drawNucleusContainmentGlow(ctx, uCenter.x, uCenter.y, 48 + wobble, 'gold');
+          drawNucleusContainmentGlow(ctx, uCenter.x, uCenter.y, (48 + wobble) * scale, 'gold');
 
           for (let i = 0; i < activeNucleons.length; i++) {
             const n = activeNucleons[i];
-            const vibX = Math.sin(t * 7 + n.id) * 2.2;
-            const vibY = Math.cos(t * 7 + n.id * 1.3) * 2.2;
+            const vibX = Math.sin(t * 7 + n.id) * 2.2 * scale;
+            const vibY = Math.cos(t * 7 + n.id * 1.3) * 2.2 * scale;
             const scaleX = 1 + (wobble * 0.05);
             const scaleY = 1 - (wobble * 0.05);
 
-            const px = uCenter.x + (n.x * scaleX) + vibX;
-            const py = uCenter.y + (n.y * scaleY) + vibY;
+            const px = uCenter.x + (n.x * scale * scaleX) + vibX;
+            const py = uCenter.y + (n.y * scale * scaleY) + vibY;
             drawNucleon(ctx, px, py, nucleonRadius, n.type);
           }
 
@@ -414,49 +434,49 @@ export const FissionFusionSimulator: React.FC = () => {
           ctx.save();
           ctx.fillStyle = 'rgba(13, 13, 13, 0.9)';
           ctx.beginPath();
-          ctx.arc(uCenter.x, uCenter.y, 16, 0, Math.PI * 2);
+          ctx.arc(uCenter.x, uCenter.y, 16 * scale, 0, Math.PI * 2);
           ctx.fill();
           ctx.strokeStyle = '#FFE600';
           ctx.lineWidth = 1.5;
           ctx.stroke();
           ctx.fillStyle = '#FFE600';
-          ctx.font = 'bold 10px JetBrains Mono, monospace';
+          ctx.font = `bold ${isMobile ? '9px' : '10px'} JetBrains Mono, monospace`;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillText(compoundA, uCenter.x, uCenter.y);
           ctx.restore();
 
           ctx.fillStyle = '#FFE600';
-          ctx.font = 'bold 14px Space Grotesk, sans-serif';
+          ctx.font = `bold ${isMobile ? '11.5px' : '14px'} Space Grotesk, sans-serif`;
           ctx.textAlign = 'center';
-          ctx.fillText(`Núcleo Composto Altamente Excitado ${compoundSymbol}`, cx, cy - 65);
-          ctx.font = '10px JetBrains Mono, monospace';
+          ctx.fillText(`Núcleo Composto Altamente Excitado ${compoundSymbol}`, cx, cy - Math.round(65 * scale), maxTextFull);
+          ctx.font = `${isMobile ? '9px' : '10px'} JetBrains Mono, monospace`;
           ctx.fillStyle = '#FFFFFF';
-          ctx.fillText(`${parentZ} Prótons 🟣 + ${parentN + 1} Nêutrons 🔵 = ${isPu ? 240 : 236} Núcleons em Vibração Ressonante`, cx, cy + 70);
+          ctx.fillText(`${parentZ} Prótons 🟣 + ${parentN + 1} Nêutrons 🔵 = ${isPu ? 240 : 236} Núcleons em Vibração Ressonante`, cx, cy + Math.round(70 * scale), maxTextFull);
 
         } else if (stage === 2) {
           // --- STAGE 2: Dumbbell elongation (Neck constriction) ---
-          const neckDist = 48;
+          const neckDist = Math.round(48 * scale);
           const baCenter = { x: cx - neckDist, y: cy };
           const krCenter = { x: cx + neckDist, y: cy };
 
-          drawNucleusContainmentGlow(ctx, baCenter.x, baCenter.y, 34);
-          drawNucleusContainmentGlow(ctx, krCenter.x, krCenter.y, 29);
+          drawNucleusContainmentGlow(ctx, baCenter.x, baCenter.y, 34 * scale);
+          drawNucleusContainmentGlow(ctx, krCenter.x, krCenter.y, 29 * scale);
 
           for (let i = 0; i < activeNucleons.length; i++) {
             const n = activeNucleons[i];
             let px = cx, py = cy;
 
             if (n.cluster === 'ba') {
-              px = baCenter.x + n.fx * 1.1 + Math.sin(t * 6 + n.id) * 1.2;
-              py = baCenter.y + n.fy * 0.95 + Math.cos(t * 6 + n.id) * 1.2;
+              px = baCenter.x + n.fx * 1.1 * scale + Math.sin(t * 6 + n.id) * 1.2 * scale;
+              py = baCenter.y + n.fy * 0.95 * scale + Math.cos(t * 6 + n.id) * 1.2 * scale;
             } else if (n.cluster === 'kr') {
-              px = krCenter.x + n.fx * 1.1 + Math.sin(t * 6 + n.id) * 1.2;
-              py = krCenter.y + n.fy * 0.95 + Math.cos(t * 6 + n.id) * 1.2;
+              px = krCenter.x + n.fx * 1.1 * scale + Math.sin(t * 6 + n.id) * 1.2 * scale;
+              py = krCenter.y + n.fy * 0.95 * scale + Math.cos(t * 6 + n.id) * 1.2 * scale;
             } else {
-              const neckOffset = (n.id - 1) * 14;
-              px = cx + (Math.sin(t * 7 + n.id) * 6);
-              py = cy + neckOffset + (Math.cos(t * 7 + n.id) * 4);
+              const neckOffset = (n.id - 1) * 14 * scale;
+              px = cx + (Math.sin(t * 7 + n.id) * 6 * scale);
+              py = cy + neckOffset + (Math.cos(t * 7 + n.id) * 4 * scale);
             }
 
             drawNucleon(ctx, px, py, nucleonRadius, n.type);
@@ -467,52 +487,52 @@ export const FissionFusionSimulator: React.FC = () => {
           ctx.strokeStyle = 'rgba(143, 131, 255, 0.5)';
           ctx.lineWidth = 1.5;
           ctx.beginPath();
-          ctx.moveTo(cx - 22, cy - 35);
-          ctx.lineTo(cx + 22, cy - 35);
-          ctx.moveTo(cx - 22, cy + 35);
-          ctx.lineTo(cx + 22, cy + 35);
+          ctx.moveTo(cx - 22 * scale, cy - 35 * scale);
+          ctx.lineTo(cx + 22 * scale, cy - 35 * scale);
+          ctx.moveTo(cx - 22 * scale, cy + 35 * scale);
+          ctx.lineTo(cx + 22 * scale, cy + 35 * scale);
           ctx.stroke();
           ctx.restore();
 
           ctx.fillStyle = '#8F83FF';
-          ctx.font = 'bold 12px Space Grotesk, sans-serif';
+          ctx.font = `bold ${isMobile ? '10.5px' : '12px'} Space Grotesk, sans-serif`;
           ctx.textAlign = 'center';
-          ctx.fillText('Estrangulamento da Gota Líquida (Haltere Nuclear)', cx, cy - 65);
-          ctx.font = '10px JetBrains Mono, monospace';
+          ctx.fillText('Estrangulamento da Gota Líquida (Haltere Nuclear)', cx, cy - Math.round(65 * scale), maxTextFull);
+          ctx.font = `${isMobile ? '9px' : '10px'} JetBrains Mono, monospace`;
           ctx.fillStyle = '#B7B7B7';
-          ctx.fillText('Repulsão Eletrostática Coulombiana supera a Força Nuclear Forte', cx, cy + 70);
+          ctx.fillText('Repulsão Eletrostática Coulombiana supera a Força Nuclear Forte', cx, cy + Math.round(70 * scale), maxTextFull);
 
         } else if (stage === 3) {
           // --- STAGE 3: Full Fission (Two daughter nuclei + free neutrons) ---
-          const separation = 118;
-          const baCenter = { x: cx - separation, y: cy - 22 };
-          const krCenter = { x: cx + separation, y: cy + 22 };
+          const separation = Math.round(108 * scale);
+          const baCenter = { x: cx - separation, y: cy - Math.round(20 * scale) };
+          const krCenter = { x: cx + separation, y: cy + Math.round(20 * scale) };
 
           // Center explosion flash
           ctx.save();
-          const flashGrad = ctx.createRadialGradient(cx, cy, 5, cx, cy, 65);
+          const flashGrad = ctx.createRadialGradient(cx, cy, 5, cx, cy, 60 * scale);
           flashGrad.addColorStop(0, 'rgba(255, 255, 255, 0.85)');
           flashGrad.addColorStop(0.3, 'rgba(115, 202, 229, 0.4)');
           flashGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
           ctx.fillStyle = flashGrad;
           ctx.beginPath();
-          ctx.arc(cx, cy, 65, 0, Math.PI * 2);
+          ctx.arc(cx, cy, 60 * scale, 0, Math.PI * 2);
           ctx.fill();
           ctx.restore();
 
-          drawNucleusContainmentGlow(ctx, baCenter.x, baCenter.y, 34);
-          drawNucleusContainmentGlow(ctx, krCenter.x, krCenter.y, 28);
+          drawNucleusContainmentGlow(ctx, baCenter.x, baCenter.y, 32 * scale);
+          drawNucleusContainmentGlow(ctx, krCenter.x, krCenter.y, 26 * scale);
 
           // Render nucleons in Daughter 1 and Daughter 2
           for (let i = 0; i < activeNucleons.length; i++) {
             const n = activeNucleons[i];
             if (n.cluster === 'ba') {
-              const px = baCenter.x + n.fx;
-              const py = baCenter.y + n.fy;
+              const px = baCenter.x + n.fx * scale;
+              const py = baCenter.y + n.fy * scale;
               drawNucleon(ctx, px, py, nucleonRadius, n.type);
             } else if (n.cluster === 'kr') {
-              const px = krCenter.x + n.fx;
-              const py = krCenter.y + n.fy;
+              const px = krCenter.x + n.fx * scale;
+              const py = krCenter.y + n.fy * scale;
               drawNucleon(ctx, px, py, nucleonRadius, n.type);
             }
           }
@@ -521,19 +541,19 @@ export const FissionFusionSimulator: React.FC = () => {
           ctx.save();
           ctx.fillStyle = 'rgba(13, 13, 13, 0.88)';
           ctx.beginPath();
-          ctx.arc(baCenter.x, baCenter.y, 14, 0, Math.PI * 2);
+          ctx.arc(baCenter.x, baCenter.y, 14 * scale, 0, Math.PI * 2);
           ctx.fill();
           ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
           ctx.lineWidth = 1;
           ctx.stroke();
           ctx.fillStyle = '#FFFFFF';
-          ctx.font = 'bold 9.5px JetBrains Mono, monospace';
+          ctx.font = `bold ${isMobile ? '8.5px' : '9.5px'} JetBrains Mono, monospace`;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillText(frag1A, baCenter.x, baCenter.y);
 
           ctx.beginPath();
-          ctx.arc(krCenter.x, krCenter.y, 13, 0, Math.PI * 2);
+          ctx.arc(krCenter.x, krCenter.y, 13 * scale, 0, Math.PI * 2);
           ctx.fill();
           ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
           ctx.lineWidth = 1;
@@ -544,12 +564,12 @@ export const FissionFusionSimulator: React.FC = () => {
 
           // Free high-energy neutrons flying outwards
           const freeNeutrons = isPu ? [
-            { x: cx - 25, y: cy - 80 },
-            { x: cx + 35, y: cy + 75 }
+            { x: cx - Math.round(25 * scale), y: cy - Math.round(80 * scale) },
+            { x: cx + Math.round(35 * scale), y: cy + Math.round(75 * scale) }
           ] : [
-            { x: cx - 15, y: cy - 85 },
-            { x: cx - 40, y: cy + 75 },
-            { x: cx + 45, y: cy + 70 }
+            { x: cx - Math.round(15 * scale), y: cy - Math.round(85 * scale) },
+            { x: cx - Math.round(40 * scale), y: cy + Math.round(75 * scale) },
+            { x: cx + Math.round(45 * scale), y: cy + Math.round(70 * scale) }
           ];
 
           freeNeutrons.forEach((fn, idx) => {
@@ -562,51 +582,54 @@ export const FissionFusionSimulator: React.FC = () => {
             ctx.stroke();
             ctx.restore();
 
-            drawNucleon(ctx, fn.x, fn.y, 6.5, 'neutron', 'n');
+            drawNucleon(ctx, fn.x, fn.y, 6.5 * Math.max(0.8, scale), 'neutron', 'n');
             ctx.fillStyle = '#73CAE5';
-            ctx.font = 'bold 9.5px JetBrains Mono, monospace';
+            ctx.font = `bold ${isMobile ? '8.5px' : '9.5px'} JetBrains Mono, monospace`;
             ctx.textAlign = 'center';
-            ctx.fillText(`n⁰ livre #${idx + 1}`, fn.x, fn.y - 11);
+            ctx.fillText(`n⁰ livre #${idx + 1}`, fn.x, fn.y - Math.round(11 * scale));
           });
 
           // Fragment Labels
-          ctx.fillStyle = '#FFFFFF';
-          ctx.font = 'bold 12px Space Grotesk, sans-serif';
-          ctx.textAlign = 'center';
-          ctx.fillText(`Núcleo Filho: ${frag1Name}`, baCenter.x, baCenter.y - 44);
-          ctx.font = '9.5px JetBrains Mono, monospace';
-          ctx.fillStyle = '#73CAE5';
-          ctx.fillText(`${frag1Z}p⁺ 🟣 + ${frag1N}n⁰ 🔵`, baCenter.x, baCenter.y + 44);
+          const baLabelX = isMobile ? Math.max(width * 0.25, baCenter.x) : baCenter.x;
+          const krLabelX = isMobile ? Math.min(width * 0.75, krCenter.x) : krCenter.x;
 
           ctx.fillStyle = '#FFFFFF';
-          ctx.font = 'bold 12px Space Grotesk, sans-serif';
-          ctx.fillText(`Núcleo Filho: ${frag2Name}`, krCenter.x, krCenter.y - 38);
-          ctx.font = '9.5px JetBrains Mono, monospace';
+          ctx.font = `bold ${isMobile ? '10.5px' : '12px'} Space Grotesk, sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.fillText(`Núcleo Filho: ${frag1Name}`, baLabelX, baCenter.y - Math.round(44 * scale), maxTextHalf);
+          ctx.font = `${isMobile ? '8.5px' : '9.5px'} JetBrains Mono, monospace`;
+          ctx.fillStyle = '#73CAE5';
+          ctx.fillText(`${frag1Z}p⁺ 🟣 + ${frag1N}n⁰ 🔵`, baLabelX, baCenter.y + Math.round(44 * scale), maxTextHalf);
+
+          ctx.fillStyle = '#FFFFFF';
+          ctx.font = `bold ${isMobile ? '10.5px' : '12px'} Space Grotesk, sans-serif`;
+          ctx.fillText(`Núcleo Filho: ${frag2Name}`, krLabelX, krCenter.y - Math.round(38 * scale), maxTextHalf);
+          ctx.font = `${isMobile ? '8.5px' : '9.5px'} JetBrains Mono, monospace`;
           ctx.fillStyle = '#8F83FF';
-          ctx.fillText(`${frag2Z}p⁺ 🟣 + ${frag2N}n⁰ 🔵`, krCenter.x, krCenter.y + 38);
+          ctx.fillText(`${frag2Z}p⁺ 🟣 + ${frag2N}n⁰ 🔵`, krLabelX, krCenter.y + Math.round(38 * scale), maxTextHalf);
 
           ctx.fillStyle = '#FFE600';
-          ctx.font = 'bold 13px JetBrains Mono, monospace';
-          ctx.fillText(energyText, cx, cy + 120);
+          ctx.font = `bold ${isMobile ? '11px' : '13px'} JetBrains Mono, monospace`;
+          ctx.fillText(energyText, cx, cy + Math.round(120 * scale), maxTextFull);
         }
 
       // =======================================================================
       // MODE 2: FUSÃO NUCLEAR (Deutério com Trítio ou D-D)
       // =======================================================================
       } else {
-        const nucleonR = 12;
+        const nucleonR = 12 * Math.min(1, Math.max(0.8, scale));
         const isDD = fusionReaction === 'dd';
 
         if (stage === 0) {
           // --- STAGE 0: Deuterium & Tritium / Deuterium nuclei ---
-          const dCenter = { x: cx - 125, y: cy };
-          const tCenter = { x: cx + 125, y: cy };
+          const dCenter = { x: cx - Math.round(110 * scale), y: cy };
+          const tCenter = { x: cx + Math.round(110 * scale), y: cy };
 
-          drawNucleusContainmentGlow(ctx, dCenter.x, dCenter.y, 18);
+          drawNucleusContainmentGlow(ctx, dCenter.x, dCenter.y, 18 * scale);
 
           const rotD = t * 1.2;
-          const dP = { x: dCenter.x + Math.cos(rotD) * 10, y: dCenter.y + Math.sin(rotD) * 10 };
-          const dN = { x: dCenter.x - Math.cos(rotD) * 10, y: dCenter.y - Math.sin(rotD) * 10 };
+          const dP = { x: dCenter.x + Math.cos(rotD) * 10 * scale, y: dCenter.y + Math.sin(rotD) * 10 * scale };
+          const dN = { x: dCenter.x - Math.cos(rotD) * 10 * scale, y: dCenter.y - Math.sin(rotD) * 10 * scale };
 
           ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
           ctx.lineWidth = 2.5;
@@ -620,11 +643,11 @@ export const FissionFusionSimulator: React.FC = () => {
 
           // Partner nucleus: Tritium (³H) or 2nd Deuterium
           if (isDD) {
-            drawNucleusContainmentGlow(ctx, tCenter.x, tCenter.y, 18);
+            drawNucleusContainmentGlow(ctx, tCenter.x, tCenter.y, 18 * scale);
 
             const rotT = -t * 1.2;
-            const tP = { x: tCenter.x + Math.cos(rotT) * 10, y: tCenter.y + Math.sin(rotT) * 10 };
-            const tN = { x: tCenter.x - Math.cos(rotT) * 10, y: tCenter.y - Math.sin(rotT) * 10 };
+            const tP = { x: tCenter.x + Math.cos(rotT) * 10 * scale, y: tCenter.y + Math.sin(rotT) * 10 * scale };
+            const tN = { x: tCenter.x - Math.cos(rotT) * 10 * scale, y: tCenter.y - Math.sin(rotT) * 10 * scale };
 
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
             ctx.lineWidth = 2.5;
@@ -636,12 +659,12 @@ export const FissionFusionSimulator: React.FC = () => {
             drawNucleon(ctx, tP.x, tP.y, nucleonR, 'proton', '+');
             drawNucleon(ctx, tN.x, tN.y, nucleonR, 'neutron', 'n');
           } else {
-            drawNucleusContainmentGlow(ctx, tCenter.x, tCenter.y, 20);
+            drawNucleusContainmentGlow(ctx, tCenter.x, tCenter.y, 20 * scale);
 
             const rotT = t * 1.1;
-            const tP = { x: tCenter.x + Math.cos(rotT) * 12, y: tCenter.y + Math.sin(rotT) * 12 };
-            const tN1 = { x: tCenter.x + Math.cos(rotT + 2.1) * 12, y: tCenter.y + Math.sin(rotT + 2.1) * 12 };
-            const tN2 = { x: tCenter.x + Math.cos(rotT + 4.2) * 12, y: tCenter.y + Math.sin(rotT + 4.2) * 12 };
+            const tP = { x: tCenter.x + Math.cos(rotT) * 12 * scale, y: tCenter.y + Math.sin(rotT) * 12 * scale };
+            const tN1 = { x: tCenter.x + Math.cos(rotT + 2.1) * 12 * scale, y: tCenter.y + Math.sin(rotT + 2.1) * 12 * scale };
+            const tN2 = { x: tCenter.x + Math.cos(rotT + 4.2) * 12 * scale, y: tCenter.y + Math.sin(rotT + 4.2) * 12 * scale };
 
             ctx.beginPath();
             ctx.moveTo(tP.x, tP.y);
@@ -660,81 +683,84 @@ export const FissionFusionSimulator: React.FC = () => {
           ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
           ctx.setLineDash([4, 4]);
           ctx.beginPath();
-          ctx.moveTo(dCenter.x + 35, cy);
-          ctx.lineTo(cx - 25, cy);
-          ctx.moveTo(tCenter.x - 35, cy);
-          ctx.lineTo(cx + 25, cy);
+          ctx.moveTo(dCenter.x + 35 * scale, cy);
+          ctx.lineTo(cx - 25 * scale, cy);
+          ctx.moveTo(tCenter.x - 35 * scale, cy);
+          ctx.lineTo(cx + 25 * scale, cy);
           ctx.stroke();
           ctx.restore();
 
           // Labels
+          const dLabelX = isMobile ? Math.max(width * 0.25, dCenter.x) : dCenter.x;
+          const tLabelX = isMobile ? Math.min(width * 0.75, tCenter.x) : tCenter.x;
+
           ctx.fillStyle = '#FFFFFF';
-          ctx.font = 'bold 13px Space Grotesk, sans-serif';
+          ctx.font = `bold ${isMobile ? '10.5px' : '13px'} Space Grotesk, sans-serif`;
           ctx.textAlign = 'center';
-          ctx.fillText('Núcleo de Deutério (²H / D)', dCenter.x, dCenter.y + 48);
-          ctx.font = '10px JetBrains Mono, monospace';
+          ctx.fillText('Núcleo de Deutério (²H / D)', dLabelX, dCenter.y + Math.round(48 * scale), maxTextHalf);
+          ctx.font = `${isMobile ? '8.5px' : '10px'} JetBrains Mono, monospace`;
           ctx.fillStyle = '#73CAE5';
-          ctx.fillText('1 Próton 🟣 + 1 Nêutron 🔵', dCenter.x, dCenter.y + 64);
+          ctx.fillText('1 Próton 🟣 + 1 Nêutron 🔵', dLabelX, dCenter.y + Math.round(64 * scale), maxTextHalf);
 
           ctx.fillStyle = '#FFFFFF';
-          ctx.font = 'bold 13px Space Grotesk, sans-serif';
-          ctx.fillText(isDD ? 'Núcleo de Deutério (²H / D)' : 'Núcleo de Trítio (³H / T)', tCenter.x, tCenter.y + 48);
-          ctx.font = '10px JetBrains Mono, monospace';
+          ctx.font = `bold ${isMobile ? '10.5px' : '13px'} Space Grotesk, sans-serif`;
+          ctx.fillText(isDD ? 'Núcleo de Deutério (²H / D)' : 'Núcleo de Trítio (³H / T)', tLabelX, tCenter.y + Math.round(48 * scale), maxTextHalf);
+          ctx.font = `${isMobile ? '8.5px' : '10px'} JetBrains Mono, monospace`;
           ctx.fillStyle = '#8F83FF';
-          ctx.fillText(isDD ? '1 Próton 🟣 + 1 Nêutron 🔵' : '1 Próton 🟣 + 2 Nêutrons 🔵', tCenter.x, tCenter.y + 64);
+          ctx.fillText(isDD ? '1 Próton 🟣 + 1 Nêutron 🔵' : '1 Próton 🟣 + 2 Nêutrons 🔵', tLabelX, tCenter.y + Math.round(64 * scale), maxTextHalf);
 
           ctx.fillStyle = '#73CAE5';
-          ctx.font = 'bold 11px JetBrains Mono, monospace';
-          ctx.fillText('Núcleos Térmicos em Rota de Colisão (T > 100.000.000 °C)', cx, cy - 65);
+          ctx.font = `bold ${isMobile ? '9.5px' : '11px'} JetBrains Mono, monospace`;
+          ctx.fillText('Núcleos Térmicos em Rota de Colisão (T > 100.000.000 °C)', cx, cy - Math.round(65 * scale), maxTextFull);
 
         } else if (stage === 1) {
           // --- STAGE 1: Coulomb Barrier & Approaching Protons ---
-          const dCenter = { x: cx - 35, y: cy };
-          const tCenter = { x: cx + 35, y: cy };
+          const dCenter = { x: cx - Math.round(35 * scale), y: cy };
+          const tCenter = { x: cx + Math.round(35 * scale), y: cy };
 
-          const barrierPulse = Math.sin(t * 8) * 4;
+          const barrierPulse = Math.sin(t * 8) * 4 * scale;
           ctx.save();
           ctx.strokeStyle = 'rgba(143, 131, 255, 0.8)';
           ctx.lineWidth = 2;
           ctx.setLineDash([4, 4]);
           ctx.beginPath();
-          ctx.arc(cx, cy, 38 + barrierPulse, 0, Math.PI * 2);
+          ctx.arc(cx, cy, 38 * scale + barrierPulse, 0, Math.PI * 2);
           ctx.stroke();
           ctx.restore();
 
-          drawNucleon(ctx, dCenter.x - 6, cy - 8, nucleonR, 'proton', '+');
-          drawNucleon(ctx, dCenter.x - 6, cy + 12, nucleonR, 'neutron', 'n');
+          drawNucleon(ctx, dCenter.x - 6 * scale, cy - 8 * scale, nucleonR, 'proton', '+');
+          drawNucleon(ctx, dCenter.x - 6 * scale, cy + 12 * scale, nucleonR, 'neutron', 'n');
 
-          drawNucleon(ctx, tCenter.x + 6, cy - 8, nucleonR, 'proton', '+');
-          drawNucleon(ctx, tCenter.x + 12, cy + 12, nucleonR, 'neutron', 'n');
+          drawNucleon(ctx, tCenter.x + 6 * scale, cy - 8 * scale, nucleonR, 'proton', '+');
+          drawNucleon(ctx, tCenter.x + 12 * scale, cy + 12 * scale, nucleonR, 'neutron', 'n');
           if (!isDD) {
-            drawNucleon(ctx, tCenter.x - 4, cy + 14, nucleonR, 'neutron', 'n');
+            drawNucleon(ctx, tCenter.x - 4 * scale, cy + 14 * scale, nucleonR, 'neutron', 'n');
           }
 
           ctx.fillStyle = '#8F83FF';
-          ctx.font = 'bold 13px Space Grotesk, sans-serif';
+          ctx.font = `bold ${isMobile ? '11px' : '13px'} Space Grotesk, sans-serif`;
           ctx.textAlign = 'center';
-          ctx.fillText('Barreira Coulombiana: Repulsão entre Prótons (+ / +)', cx, cy - 58);
-          ctx.font = '10.5px JetBrains Mono, monospace';
+          ctx.fillText('Barreira Coulombiana: Repulsão entre Prótons (+ / +)', cx, cy - Math.round(58 * scale), maxTextFull);
+          ctx.font = `${isMobile ? '9px' : '10.5px'} JetBrains Mono, monospace`;
           ctx.fillStyle = '#FFE600';
-          ctx.fillText('Tunelamento Quântico supera a repulsão eletrostática a distâncias < 1 fm', cx, cy + 62);
+          ctx.fillText('Tunelamento Quântico supera a repulsão eletrostática a distâncias < 1 fm', cx, cy + Math.round(62 * scale), maxTextFull);
 
         } else if (stage === 2) {
           // --- STAGE 2: Quantum Coalescence [5He]* or [4He]* ---
-          const jitter = Math.sin(t * 12) * 2;
-          drawNucleusContainmentGlow(ctx, cx, cy, 35, 'gold');
+          const jitter = Math.sin(t * 12) * 2 * scale;
+          drawNucleusContainmentGlow(ctx, cx, cy, 35 * scale, 'gold');
 
           const pos = isDD ? [
-            { x: cx - 11 + jitter, y: cy - 9, type: 'proton' as const, sym: '+' },
-            { x: cx + 11 - jitter, y: cy - 9, type: 'proton' as const, sym: '+' },
-            { x: cx - 12, y: cy + 11 + jitter, type: 'neutron' as const, sym: 'n' },
-            { x: cx + 12, y: cy + 11 - jitter, type: 'neutron' as const, sym: 'n' }
+            { x: cx - 11 * scale + jitter, y: cy - 9 * scale, type: 'proton' as const, sym: '+' },
+            { x: cx + 11 * scale - jitter, y: cy - 9 * scale, type: 'proton' as const, sym: '+' },
+            { x: cx - 12 * scale, y: cy + 11 * scale + jitter, type: 'neutron' as const, sym: 'n' },
+            { x: cx + 12 * scale, y: cy + 11 * scale - jitter, type: 'neutron' as const, sym: 'n' }
           ] : [
-            { x: cx - 11 + jitter, y: cy - 10, type: 'proton' as const, sym: '+' },
-            { x: cx + 11 - jitter, y: cy - 10, type: 'proton' as const, sym: '+' },
-            { x: cx - 14, y: cy + 12 + jitter, type: 'neutron' as const, sym: 'n' },
-            { x: cx + 14, y: cy + 12 - jitter, type: 'neutron' as const, sym: 'n' },
-            { x: cx, y: cy + 2 + jitter, type: 'neutron' as const, sym: 'n' }
+            { x: cx - 11 * scale + jitter, y: cy - 10 * scale, type: 'proton' as const, sym: '+' },
+            { x: cx + 11 * scale - jitter, y: cy - 10 * scale, type: 'proton' as const, sym: '+' },
+            { x: cx - 14 * scale, y: cy + 12 * scale + jitter, type: 'neutron' as const, sym: 'n' },
+            { x: cx + 14 * scale, y: cy + 12 * scale - jitter, type: 'neutron' as const, sym: 'n' },
+            { x: cx, y: cy + 2 * scale + jitter, type: 'neutron' as const, sym: 'n' }
           ];
 
           ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
@@ -751,36 +777,36 @@ export const FissionFusionSimulator: React.FC = () => {
           pos.forEach((p) => drawNucleon(ctx, p.x, p.y, nucleonR, p.type, p.sym));
 
           ctx.fillStyle = '#FFE600';
-          ctx.font = 'bold 13px Space Grotesk, sans-serif';
+          ctx.font = `bold ${isMobile ? '11px' : '13px'} Space Grotesk, sans-serif`;
           ctx.textAlign = 'center';
-          ctx.fillText(isDD ? 'Núcleo Composto Efêmero [⁴He]*' : 'Núcleo Composto Efêmero [⁵He]*', cx, cy - 58);
-          ctx.font = '10px JetBrains Mono, monospace';
+          ctx.fillText(isDD ? 'Núcleo Composto Efêmero [⁴He]*' : 'Núcleo Composto Efêmero [⁵He]*', cx, cy - Math.round(58 * scale), maxTextFull);
+          ctx.font = `${isMobile ? '9px' : '10px'} JetBrains Mono, monospace`;
           ctx.fillStyle = '#FFFFFF';
-          ctx.fillText(isDD ? 'Força Nuclear Forte funde os 4 núcleons (2p + 2n)' : 'Força Nuclear Forte funde os 5 núcleons (2p + 3n)', cx, cy + 62);
+          ctx.fillText(isDD ? 'Força Nuclear Forte funde os 4 núcleons (2p + 2n)' : 'Força Nuclear Forte funde os 5 núcleons (2p + 3n)', cx, cy + Math.round(62 * scale), maxTextFull);
 
         } else if (stage === 3) {
           // --- STAGE 3: Helium Nucleus + Ejected Particle ---
-          const alphaCenter = { x: cx - 90, y: cy };
-          const freeNeutron = { x: cx + 115, y: cy };
+          const alphaCenter = { x: cx - Math.round(90 * scale), y: cy };
+          const freeNeutron = { x: cx + Math.round(115 * scale), y: cy };
 
           // Center flash
           ctx.save();
-          const flashGrad = ctx.createRadialGradient(cx, cy, 5, cx, cy, 50);
+          const flashGrad = ctx.createRadialGradient(cx, cy, 5, cx, cy, 50 * scale);
           flashGrad.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
           flashGrad.addColorStop(0.4, 'rgba(115, 202, 229, 0.4)');
           flashGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
           ctx.fillStyle = flashGrad;
           ctx.beginPath();
-          ctx.arc(cx, cy, 50, 0, Math.PI * 2);
+          ctx.arc(cx, cy, 50 * scale, 0, Math.PI * 2);
           ctx.fill();
           ctx.restore();
 
-          drawNucleusContainmentGlow(ctx, alphaCenter.x, alphaCenter.y, 22);
+          drawNucleusContainmentGlow(ctx, alphaCenter.x, alphaCenter.y, 22 * scale);
 
-          const aP1 = { x: alphaCenter.x - 9, y: alphaCenter.y - 9 };
-          const aP2 = { x: alphaCenter.x + 9, y: alphaCenter.y + 9 };
-          const aN1 = { x: alphaCenter.x + 9, y: alphaCenter.y - 9 };
-          const aN2 = { x: alphaCenter.x - 9, y: alphaCenter.y + 9 };
+          const aP1 = { x: alphaCenter.x - 9 * scale, y: alphaCenter.y - 9 * scale };
+          const aP2 = { x: alphaCenter.x + 9 * scale, y: alphaCenter.y + 9 * scale };
+          const aN1 = { x: alphaCenter.x + 9 * scale, y: alphaCenter.y - 9 * scale };
+          const aN2 = { x: alphaCenter.x - 9 * scale, y: alphaCenter.y + 9 * scale };
 
           drawNucleon(ctx, aP1.x, aP1.y, nucleonR, 'proton', '+');
           drawNucleon(ctx, aP2.x, aP2.y, nucleonR, 'proton', '+');
@@ -805,24 +831,27 @@ export const FissionFusionSimulator: React.FC = () => {
           drawNucleon(ctx, freeNeutron.x, freeNeutron.y, nucleonR + 1, 'neutron', 'n');
 
           // Labels
-          ctx.fillStyle = '#FFFFFF';
-          ctx.font = 'bold 13px Space Grotesk, sans-serif';
-          ctx.textAlign = 'center';
-          ctx.fillText(isDD ? 'Núcleo Formado: Hélio-3 (³He)' : 'Núcleo Estável: Hélio-4 (⁴He)', alphaCenter.x, alphaCenter.y - 44);
-          ctx.font = '10px JetBrains Mono, monospace';
-          ctx.fillStyle = '#8F83FF';
-          ctx.fillText('2 Prótons 🟣 + 2 Nêutrons 🔵 (Partícula Alfa)', alphaCenter.x, alphaCenter.y + 44);
+          const aLabelX = isMobile ? Math.max(width * 0.25, alphaCenter.x) : alphaCenter.x;
+          const nLabelX = isMobile ? Math.min(width * 0.75, freeNeutron.x) : freeNeutron.x;
 
           ctx.fillStyle = '#FFFFFF';
-          ctx.font = 'bold 13px Space Grotesk, sans-serif';
-          ctx.fillText('Nêutron Rápido Livre', freeNeutron.x, freeNeutron.y - 36);
-          ctx.font = '10px JetBrains Mono, monospace';
+          ctx.font = `bold ${isMobile ? '10.5px' : '13px'} Space Grotesk, sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.fillText(isDD ? 'Núcleo Formado: Hélio-3 (³He)' : 'Núcleo Estável: Hélio-4 (⁴He)', aLabelX, alphaCenter.y - Math.round(44 * scale), maxTextHalf);
+          ctx.font = `${isMobile ? '8.5px' : '10px'} JetBrains Mono, monospace`;
+          ctx.fillStyle = '#8F83FF';
+          ctx.fillText('2 Prótons 🟣 + 2 Nêutrons 🔵 (Partícula Alfa)', aLabelX, alphaCenter.y + Math.round(44 * scale), maxTextHalf);
+
+          ctx.fillStyle = '#FFFFFF';
+          ctx.font = `bold ${isMobile ? '10.5px' : '13px'} Space Grotesk, sans-serif`;
+          ctx.fillText('Nêutron Rápido Livre', nLabelX, freeNeutron.y - Math.round(36 * scale), maxTextHalf);
+          ctx.font = `${isMobile ? '8.5px' : '10px'} JetBrains Mono, monospace`;
           ctx.fillStyle = '#73CAE5';
-          ctx.fillText('1 Nêutron 🔵 (+14,1 MeV)', freeNeutron.x, freeNeutron.y + 36);
+          ctx.fillText('1 Nêutron 🔵 (+14,1 MeV)', nLabelX, freeNeutron.y + Math.round(36 * scale), maxTextHalf);
 
           ctx.fillStyle = '#FFE600';
-          ctx.font = 'bold 13px JetBrains Mono, monospace';
-          ctx.fillText(isDD ? '⚡ Energia Liberada: 3,27 MeV' : '⚡ Energia Total Liberada: 17,6 MeV (Livre de Carbono)', cx, cy + 115);
+          ctx.font = `bold ${isMobile ? '10.5px' : '13px'} JetBrains Mono, monospace`;
+          ctx.fillText(isDD ? '⚡ Energia Liberada: 3,27 MeV' : '⚡ Energia Total Liberada: 17,6 MeV (Livre de Carbono)', cx, cy + Math.round(115 * scale), maxTextFull);
         }
       }
 
@@ -832,20 +861,22 @@ export const FissionFusionSimulator: React.FC = () => {
     render();
 
     return () => {
+      window.removeEventListener('resize', handleResize);
+      ro?.disconnect();
       if (animFrameId.current) cancelAnimationFrame(animFrameId.current);
     };
   }, [mode, stage, fissionFuel, fusionReaction, speed]);
 
   return (
-    <div className="bg-[#111111] border border-white/10 rounded-2xl p-5 sm:p-6 shadow-2xl space-y-6">
+    <div className="bg-[#111111] border border-white/10 rounded-2xl p-4 sm:p-6 shadow-2xl space-y-6">
       {/* Mode Switch Tabs and Particle Controls */}
       <div className="flex flex-col gap-4 pb-4 border-b border-white/10">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           {/* Main Fission / Fusion Mode Tabs */}
-          <div className="flex bg-[#0A0A0A] p-1 rounded-xl border border-white/10">
+          <div className="flex w-full sm:w-auto bg-[#0A0A0A] p-1 rounded-xl border border-white/10">
             <button
               onClick={() => setMode('fission')}
-              className={`px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center space-x-2 ${
+              className={`flex-1 sm:flex-none min-h-[40px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center justify-center space-x-2 cursor-pointer ${
                 mode === 'fission'
                   ? 'bg-[#73CAE5] text-[#0D0D0D] shadow-md shadow-[#73CAE5]/20 font-bold'
                   : 'text-[#B7B7B7] hover:text-white'
@@ -856,7 +887,7 @@ export const FissionFusionSimulator: React.FC = () => {
             </button>
             <button
               onClick={() => setMode('fusion')}
-              className={`px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center space-x-2 ${
+              className={`flex-1 sm:flex-none min-h-[40px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center justify-center space-x-2 cursor-pointer ${
                 mode === 'fusion'
                   ? 'bg-[#8F83FF] text-[#0D0D0D] shadow-md shadow-[#8F83FF]/20 font-bold'
                   : 'text-[#B7B7B7] hover:text-white'
@@ -868,12 +899,12 @@ export const FissionFusionSimulator: React.FC = () => {
           </div>
 
           {/* Secondary Isotope / Reaction Selector */}
-          <div className="flex bg-[#0A0A0A] p-1 rounded-xl border border-white/10 text-xs">
+          <div className="flex w-full sm:w-auto bg-[#0A0A0A] p-1 rounded-xl border border-white/10 text-xs">
             {mode === 'fission' ? (
               <>
                 <button
                   onClick={() => setFissionFuel('u235')}
-                  className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
+                  className={`flex-1 sm:flex-none min-h-[38px] px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer text-center ${
                     fissionFuel === 'u235'
                       ? 'bg-white/20 text-white font-bold'
                       : 'text-[#B7B7B7] hover:text-white'
@@ -883,7 +914,7 @@ export const FissionFusionSimulator: React.FC = () => {
                 </button>
                 <button
                   onClick={() => setFissionFuel('pu239')}
-                  className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
+                  className={`flex-1 sm:flex-none min-h-[38px] px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer text-center ${
                     fissionFuel === 'pu239'
                       ? 'bg-white/20 text-white font-bold'
                       : 'text-[#B7B7B7] hover:text-white'
@@ -896,7 +927,7 @@ export const FissionFusionSimulator: React.FC = () => {
               <>
                 <button
                   onClick={() => setFusionReaction('dt')}
-                  className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
+                  className={`flex-1 sm:flex-none min-h-[38px] px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer text-center ${
                     fusionReaction === 'dt'
                       ? 'bg-white/20 text-white font-bold'
                       : 'text-[#B7B7B7] hover:text-white'
@@ -906,7 +937,7 @@ export const FissionFusionSimulator: React.FC = () => {
                 </button>
                 <button
                   onClick={() => setFusionReaction('dd')}
-                  className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
+                  className={`flex-1 sm:flex-none min-h-[38px] px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer text-center ${
                     fusionReaction === 'dd'
                       ? 'bg-white/20 text-white font-bold'
                       : 'text-[#B7B7B7] hover:text-white'
@@ -934,14 +965,14 @@ export const FissionFusionSimulator: React.FC = () => {
           </div>
 
           {/* Stepper / Speed / Play Controls */}
-          <div className="flex items-center space-x-2">
+          <div className="flex flex-wrap items-center gap-2 max-sm:w-full">
             {/* Speed Selector */}
             <div className="flex bg-[#0A0A0A] p-0.5 rounded-lg border border-white/10 text-[11px] font-mono">
               {[0.5, 1, 2].map((s) => (
                 <button
                   key={s}
                   onClick={() => setSpeed(s)}
-                  className={`px-2 py-1 rounded transition-colors ${
+                  className={`px-2.5 py-1.5 sm:px-2 sm:py-1 rounded transition-colors min-w-[36px] min-h-[38px] sm:min-w-0 sm:min-h-0 flex items-center justify-center ${
                     speed === s ? 'bg-white/20 text-white font-bold' : 'text-[#B7B7B7] hover:text-white'
                   }`}
                 >
@@ -952,7 +983,7 @@ export const FissionFusionSimulator: React.FC = () => {
 
             <button
               onClick={() => setAutoPlaying(!autoPlaying)}
-              className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-white hover:bg-white/10 flex items-center space-x-1.5 focus:outline-none transition-colors"
+              className="flex-1 sm:flex-none justify-center min-h-[38px] sm:min-h-0 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-white hover:bg-white/10 flex items-center space-x-1.5 focus:outline-none transition-colors"
             >
               {autoPlaying ? (
                 <>
@@ -972,8 +1003,9 @@ export const FissionFusionSimulator: React.FC = () => {
                 setStage(0);
                 setAutoPlaying(false);
               }}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 text-[#B7B7B7] hover:text-white transition-colors"
+              className="p-2 rounded-lg bg-white/5 border border-white/10 text-[#B7B7B7] hover:text-white transition-colors min-w-[38px] min-h-[38px] sm:min-w-0 sm:min-h-0 flex items-center justify-center"
               title="Reiniciar etapas"
+              aria-label="Reiniciar etapas"
             >
               <RotateCcw className="w-3.5 h-3.5" />
             </button>
@@ -983,11 +1015,11 @@ export const FissionFusionSimulator: React.FC = () => {
 
       {/* Canvas Viewport with Legend Overlay matching AtomSimulator */}
       <div className="relative rounded-2xl bg-[#090909] border border-white/10 overflow-hidden flex flex-col items-center justify-center p-2 shadow-inner">
-        <canvas ref={canvasRef} className="w-full h-[370px] block" />
+        <canvas ref={canvasRef} className="w-full h-[310px] sm:h-[370px] block" />
 
         {/* Top-Right Badge: Active Nuclear Model */}
-        <div className="absolute top-3 right-3 bg-[#0D0D0D]/90 backdrop-blur-md border border-white/10 rounded-lg px-2.5 py-1 text-[10px] font-mono text-white/80 flex items-center space-x-1.5 shadow-md">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+        <div className="max-sm:order-first max-sm:static max-sm:w-full max-sm:mb-1.5 max-sm:justify-center sm:absolute sm:top-3 sm:right-3 bg-[#0D0D0D]/90 backdrop-blur-md border border-white/10 rounded-lg px-2.5 py-1 text-[10px] font-mono text-white/80 flex items-center space-x-1.5 shadow-md">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
           <span>
             {mode === 'fission'
               ? fissionFuel === 'u235'
@@ -999,8 +1031,8 @@ export const FissionFusionSimulator: React.FC = () => {
           </span>
         </div>
 
-        {/* Legend Overlay inside canvas matching AtomSimulator */}
-        <div className="absolute bottom-3 left-3 bg-[#0D0D0D]/90 backdrop-blur-md border border-white/10 rounded-lg p-2.5 text-[11px] space-y-1.5 z-10 shadow-lg font-mono">
+        {/* Legend Overlay inside canvas matching AtomSimulator (stacked below canvas on small phones so canvas artwork never overlaps) */}
+        <div className="max-sm:static max-sm:w-full max-sm:mt-2 sm:absolute sm:bottom-3 sm:left-3 bg-[#0D0D0D]/90 backdrop-blur-md border border-white/10 rounded-lg p-2.5 text-[11px] space-y-1.5 z-10 shadow-lg font-mono">
           <div className="flex items-center space-x-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#8F83FF]" />
             <span className="text-white">
@@ -1052,7 +1084,7 @@ export const FissionFusionSimulator: React.FC = () => {
 
       {/* Step Indicators & Current Step Explanation */}
       <div className="space-y-3">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <div className="grid grid-cols-1 min-[360px]:grid-cols-2 sm:grid-cols-4 gap-2">
           {currentSteps.map((step, idx) => (
             <button
               key={step.title}
@@ -1060,7 +1092,7 @@ export const FissionFusionSimulator: React.FC = () => {
                 setStage(idx);
                 setAutoPlaying(false);
               }}
-              className={`p-2.5 rounded-lg text-left transition-all border text-xs ${
+              className={`min-h-[44px] p-2.5 rounded-lg text-left transition-all border text-xs ${
                 stage === idx
                   ? mode === 'fission'
                     ? 'bg-[#73CAE5]/15 border-[#73CAE5] text-white shadow-md'
@@ -1074,7 +1106,7 @@ export const FissionFusionSimulator: React.FC = () => {
                 <span className="font-mono font-bold text-[10px] text-white/70">PASSO 0{idx + 1}</span>
                 {stage > idx && <CheckCircle2 className="w-3 h-3 text-emerald-400" />}
               </div>
-              <p className="font-medium truncate">{step.title.split('. ')[1]}</p>
+              <p className="font-medium max-lg:whitespace-normal break-words lg:truncate leading-snug">{step.title.split('. ')[1]}</p>
             </button>
           ))}
         </div>

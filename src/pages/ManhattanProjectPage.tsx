@@ -86,27 +86,27 @@ export const ManhattanProjectPage: React.FC<ManhattanProjectPageProps> = ({ onNa
   ];
 
   return (
-    <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 lg:space-y-20">
+    <div className="pt-24 sm:pt-28 pb-16 sm:pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-16 lg:space-y-20">
       {/* Hero Header */}
       <div className="space-y-4 max-w-4xl">
         <div className="flex flex-wrap items-center gap-3">
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#8F83FF]/15 border border-[#8F83FF]/35 text-xs font-bold text-[#8F83FF] uppercase tracking-wider font-mono">
-            <Atom className="w-3.5 h-3.5" />
-            <span>O Maior Empreendimento Científico-Militar da História • 1942–1945</span>
+          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#8F83FF]/15 border border-[#8F83FF]/35 text-xs font-bold text-[#8F83FF] uppercase tracking-wider font-mono max-w-full">
+            <Atom className="w-3.5 h-3.5 shrink-0" />
+            <span className="max-sm:whitespace-normal break-words">O Maior Empreendimento Científico-Militar da História • 1942–1945</span>
           </div>
           <button
             onClick={() => onNavigate('ivy-mike')}
-            className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-[#B7B7B7] hover:text-white hover:border-[#73CAE5]/40 transition-colors"
+            className="inline-flex items-center space-x-1.5 px-3 py-1.5 sm:py-1 min-h-[38px] sm:min-h-0 rounded-full bg-white/5 border border-white/10 text-xs text-[#B7B7B7] hover:text-white hover:border-[#73CAE5]/40 transition-colors text-left"
           >
-            <Zap className="w-3 h-3 text-[#73CAE5]" />
+            <Zap className="w-3 h-3 text-[#73CAE5] shrink-0" />
             <span>Ver Evolução: Teste Ivy Mike (1952)</span>
           </button>
         </div>
 
-        <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white font-display tracking-tight uppercase leading-none">
+        <h1 className="text-3xl sm:text-5xl lg:text-7xl font-extrabold text-white font-display tracking-tight uppercase leading-none break-words">
           Projeto Manhattan <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#8F83FF] via-purple-300 to-rose-400 font-mono">(1942–1945)</span>
         </h1>
-        <p className="text-lg sm:text-xl text-transparent bg-clip-text bg-gradient-to-r from-white via-[#B7B7B7] to-[#8F83FF] font-medium font-display">
+        <p className="text-base sm:text-xl text-transparent bg-clip-text bg-gradient-to-r from-white via-[#B7B7B7] to-[#8F83FF] font-medium font-display">
           A mobilização de 130 mil pessoas e dos maiores físicos do planeta para desvendar o poder do núcleo atômico, culminando no Teste Trinity e no desfecho da Segunda Guerra Mundial.
         </p>
         <p className="text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
@@ -115,27 +115,27 @@ export const ManhattanProjectPage: React.FC<ManhattanProjectPageProps> = ({ onNa
       </div>
 
       {/* Quick Numbers Banner */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-6 rounded-2xl bg-[#111111] border border-white/10 shadow-xl">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-[#111111] border border-white/10 shadow-xl">
         <div className="space-y-1">
           <span className="text-xs text-[#B7B7B7] uppercase font-mono">Período Operacional</span>
-          <p className="text-xl sm:text-2xl font-bold text-white font-mono">1942 – 1946</p>
+          <p className="text-lg sm:text-2xl font-bold text-white font-mono">1942 – 1946</p>
         </div>
         <div className="space-y-1">
           <span className="text-xs text-[#B7B7B7] uppercase font-mono">1º Teste Atômico</span>
-          <p className="text-xl sm:text-2xl font-bold text-[#8F83FF] font-mono">Trinity • 21 kt</p>
+          <p className="text-lg sm:text-2xl font-bold text-[#8F83FF] font-mono">Trinity • 21 kt</p>
         </div>
         <div className="space-y-1">
           <span className="text-xs text-[#B7B7B7] uppercase font-mono">Efetivo de Pessoas</span>
-          <p className="text-xl sm:text-2xl font-bold text-white font-mono">~130.000</p>
+          <p className="text-lg sm:text-2xl font-bold text-white font-mono">~130.000</p>
         </div>
         <div className="space-y-1">
           <span className="text-xs text-[#B7B7B7] uppercase font-mono">Investimento (1945)</span>
-          <p className="text-xl sm:text-2xl font-bold text-emerald-400 font-mono">~US$ 2 Bilhões</p>
+          <p className="text-lg sm:text-2xl font-bold text-emerald-400 font-mono">~US$ 2 Bilhões</p>
         </div>
       </div>
 
       {/* Primary Section: Trinity Test with Explosion Image */}
-      <section className="bg-[#111111] border border-white/10 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-8">
+      <section className="bg-[#111111] border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-10 shadow-2xl space-y-6 sm:space-y-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <div className="lg:col-span-7 space-y-4">
             <div className="inline-flex items-center space-x-2 text-xs font-mono font-bold text-[#8F83FF] uppercase tracking-wider bg-[#8F83FF]/10 px-3 py-1 rounded-full border border-[#8F83FF]/30">
@@ -177,7 +177,7 @@ export const ManhattanProjectPage: React.FC<ManhattanProjectPageProps> = ({ onNa
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
               <div className="absolute bottom-3 left-3 right-3 text-xs text-white">
-                <p className="font-semibold truncate">Bola de Fogo de Trinity aos 0,016s (~21 kt)</p>
+                <p className="font-semibold whitespace-normal break-words leading-snug">Bola de Fogo de Trinity aos 0,016s (~21 kt)</p>
               </div>
               <div className="absolute top-3 right-3 p-2 rounded-full bg-black/70 text-white opacity-90 group-hover:opacity-100 transition-opacity">
                 <Maximize2 className="w-4 h-4 text-[#8F83FF]" />
@@ -212,9 +212,9 @@ export const ManhattanProjectPage: React.FC<ManhattanProjectPageProps> = ({ onNa
               className="p-4 rounded-2xl bg-[#111111] border border-white/10 hover:border-[#8F83FF]/50 transition-all space-y-2 flex flex-col justify-between"
             >
               <div className="space-y-1.5">
-                <div className="flex items-center justify-between gap-1">
-                  <h4 className="font-bold text-white text-sm">{p.name}</h4>
-                  <span className="text-[9px] font-mono font-bold text-[#8F83FF] bg-[#8F83FF]/15 px-1.5 py-0.5 rounded shrink-0">
+                <div className="flex flex-wrap items-start justify-between gap-1.5 min-w-0">
+                  <h4 className="font-bold text-white text-sm break-words">{p.name}</h4>
+                  <span className="text-[9px] font-mono font-bold text-[#8F83FF] bg-[#8F83FF]/15 px-1.5 py-0.5 rounded max-sm:whitespace-normal sm:shrink-0">
                     {p.tag}
                   </span>
                 </div>
@@ -227,7 +227,7 @@ export const ManhattanProjectPage: React.FC<ManhattanProjectPageProps> = ({ onNa
       </section>
 
       {/* Chicago Pile-1 Feature */}
-      <section className="p-6 sm:p-8 rounded-3xl bg-[#111111] border border-white/10 flex flex-col md:flex-row items-center gap-6 shadow-xl">
+      <section className="p-4 sm:p-8 rounded-2xl sm:rounded-3xl bg-[#111111] border border-white/10 flex flex-col md:flex-row items-center gap-6 shadow-xl">
         <div
           onClick={() =>
             setLightboxImg({
@@ -277,15 +277,15 @@ export const ManhattanProjectPage: React.FC<ManhattanProjectPageProps> = ({ onNa
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
           {/* Hiroshima */}
-          <div className="p-6 rounded-3xl bg-[#111111] border border-amber-500/30 space-y-4 shadow-xl">
-            <div className="flex items-center justify-between">
+          <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#111111] border border-amber-500/30 space-y-4 shadow-xl">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <span className="text-[10px] font-mono text-amber-400 uppercase font-bold">6 de Agosto de 1945 • 08:15</span>
                 <h3 className="text-xl sm:text-2xl font-bold text-white font-display">Hiroshima — "Little Boy"</h3>
               </div>
-              <span className="text-xs font-mono font-bold text-amber-300 bg-amber-950/40 px-3 py-1 rounded-full border border-amber-500/30">
+              <span className="text-xs font-mono font-bold text-amber-300 bg-amber-950/40 px-3 py-1 rounded-full border border-amber-500/30 shrink-0">
                 ~15 quilotons
               </span>
             </div>
@@ -324,7 +324,7 @@ export const ManhattanProjectPage: React.FC<ManhattanProjectPageProps> = ({ onNa
               </p>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/10 flex items-center justify-between gap-3 text-xs">
+            <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 sm:gap-3 text-xs">
               <span className="text-[#B7B7B7]">Monumento Memorial Genbaku Dome (Cúpula da Paz)</span>
               <button
                 onClick={() =>
@@ -335,22 +335,22 @@ export const ManhattanProjectPage: React.FC<ManhattanProjectPageProps> = ({ onNa
                     details: 'Patrimônio Mundial da UNESCO preservado como lembrança perene contra o uso de armas atômicas.'
                   })
                 }
-                className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold transition-colors"
+                className="w-full sm:w-auto justify-center inline-flex items-center space-x-1.5 px-3 py-2 sm:py-1 min-h-[40px] sm:min-h-0 rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold transition-colors shrink-0"
               >
-                <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
+                <Maximize2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
                 <span>Ver Cúpula</span>
               </button>
             </div>
           </div>
 
           {/* Nagasaki */}
-          <div className="p-6 rounded-3xl bg-[#111111] border border-rose-500/30 space-y-4 shadow-xl">
-            <div className="flex items-center justify-between">
+          <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#111111] border border-rose-500/30 space-y-4 shadow-xl">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <span className="text-[10px] font-mono text-rose-400 uppercase font-bold">9 de Agosto de 1945 • 11:02</span>
                 <h3 className="text-xl sm:text-2xl font-bold text-white font-display">Nagasaki — "Fat Man"</h3>
               </div>
-              <span className="text-xs font-mono font-bold text-rose-300 bg-rose-950/40 px-3 py-1 rounded-full border border-rose-500/30">
+              <span className="text-xs font-mono font-bold text-rose-300 bg-rose-950/40 px-3 py-1 rounded-full border border-rose-500/30 shrink-0">
                 ~21 quilotons
               </span>
             </div>
@@ -389,7 +389,7 @@ export const ManhattanProjectPage: React.FC<ManhattanProjectPageProps> = ({ onNa
               </p>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/10 flex items-center justify-between gap-3 text-xs">
+            <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 sm:gap-3 text-xs">
               <span className="text-[#B7B7B7]">Estátua da Paz e Parque do Hipocentro de Nagasaki</span>
               <button
                 onClick={() =>
@@ -400,9 +400,9 @@ export const ManhattanProjectPage: React.FC<ManhattanProjectPageProps> = ({ onNa
                     details: 'Parque da Paz de Nagasaki, Urakami, Japão.'
                   })
                 }
-                className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold transition-colors"
+                className="w-full sm:w-auto justify-center inline-flex items-center space-x-1.5 px-3 py-2 sm:py-1 min-h-[40px] sm:min-h-0 rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold transition-colors shrink-0"
               >
-                <Maximize2 className="w-3.5 h-3.5 text-rose-400" />
+                <Maximize2 className="w-3.5 h-3.5 text-rose-400 shrink-0" />
                 <span>Ver Memorial</span>
               </button>
             </div>
@@ -411,7 +411,7 @@ export const ManhattanProjectPage: React.FC<ManhattanProjectPageProps> = ({ onNa
       </section>
 
       {/* SEÇÃO HISTÓRICA: O "DEMON CORE" (1945–1946) */}
-      <section className="bg-[#111111] border border-amber-500/30 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-8 relative overflow-hidden">
+      <section className="bg-[#111111] border border-amber-500/30 rounded-2xl sm:rounded-3xl p-4 sm:p-10 shadow-2xl space-y-8 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
         <div className="space-y-3">
@@ -491,8 +491,8 @@ export const ManhattanProjectPage: React.FC<ManhattanProjectPageProps> = ({ onNa
         {/* Os Dois Acidentes Lado a Lado */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-white/10">
           {/* Acidente 1: Harry Daghlian */}
-          <div className="p-6 rounded-2xl bg-[#0F0F0F] border border-white/10 space-y-4 hover:border-amber-500/40 transition-colors">
-            <div className="flex items-center justify-between">
+          <div className="p-4 sm:p-6 rounded-2xl bg-[#0F0F0F] border border-white/10 space-y-4 hover:border-amber-500/40 transition-colors">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-md border border-amber-500/20">
                 1º Incidente • 21 de Agosto de 1945
               </span>
@@ -511,8 +511,8 @@ export const ManhattanProjectPage: React.FC<ManhattanProjectPageProps> = ({ onNa
           </div>
 
           {/* Acidente 2: Louis Slotin */}
-          <div className="p-6 rounded-2xl bg-[#0F0F0F] border border-white/10 space-y-4 hover:border-rose-500/40 transition-colors">
-            <div className="flex items-center justify-between">
+          <div className="p-4 sm:p-6 rounded-2xl bg-[#0F0F0F] border border-white/10 space-y-4 hover:border-rose-500/40 transition-colors">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <span className="text-xs font-mono font-bold text-rose-400 bg-rose-500/10 px-2.5 py-1 rounded-md border border-rose-500/20">
                 2º Incidente • 21 de Maio de 1946
               </span>
@@ -532,10 +532,10 @@ export const ManhattanProjectPage: React.FC<ManhattanProjectPageProps> = ({ onNa
         </div>
 
         {/* Lições e Legado */}
-        <div className="p-5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-white/[0.02] to-transparent border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-white/[0.02] to-transparent border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="space-y-1 max-w-3xl">
             <h4 className="text-sm font-bold text-white flex items-center space-x-2">
-              <Radio className="w-4 h-4 text-amber-400" />
+              <Radio className="w-4 h-4 text-amber-400 shrink-0" />
               <span>O Fim dos Testes Manuais e o Nascimento da Radioproteção Moderna</span>
             </h4>
             <p className="text-xs text-[#B7B7B7] leading-relaxed">
@@ -544,42 +544,42 @@ export const ManhattanProjectPage: React.FC<ManhattanProjectPageProps> = ({ onNa
           </div>
           <button
             onClick={() => onNavigate('cases')}
-            className="shrink-0 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs border border-white/10 transition-colors flex items-center space-x-1.5"
+            className="w-full sm:w-auto justify-center shrink-0 px-4 py-2.5 sm:py-2 min-h-[42px] sm:min-h-0 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs border border-white/10 transition-colors flex items-center space-x-1.5"
           >
             <span>Ver em Casos Históricos</span>
-            <ChevronRight className="w-3.5 h-3.5 text-[#73CAE5]" />
+            <ChevronRight className="w-3.5 h-3.5 text-[#73CAE5] shrink-0" />
           </button>
         </div>
       </section>
 
       {/* Cross Navigation Banner */}
-      <section className="p-6 sm:p-10 rounded-3xl bg-gradient-to-br from-[#121212] via-[#161224] to-[#0D0D0D] border border-[#8F83FF]/30 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 shadow-2xl">
+      <section className="p-4 sm:p-10 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-[#121212] via-[#161224] to-[#0D0D0D] border border-[#8F83FF]/30 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 shadow-2xl">
         <div className="space-y-2 max-w-2xl">
           <div className="inline-flex items-center space-x-2 text-xs font-bold text-[#8F83FF] uppercase font-mono px-3 py-1 rounded-full bg-[#8F83FF]/15 border border-[#8F83FF]/30">
-            <Zap className="w-3.5 h-3.5 text-[#73CAE5]" />
+            <Zap className="w-3.5 h-3.5 text-[#73CAE5] shrink-0" />
             <span>Passo Seguinte na História Nuclear</span>
           </div>
-          <h3 className="text-2xl sm:text-3xl font-extrabold text-white font-display">
+          <h3 className="text-xl sm:text-3xl font-extrabold text-white font-display">
             Da Fissão à Fusão Termonuclear (Ivy Mike & Operação Castle)
           </h3>
           <p className="text-xs sm:text-sm text-[#B7B7B7] leading-relaxed">
             Sete anos após os bombardeios no Japão, a corrida armamentista contra a União Soviética levou os físicos do Projeto Manhattan a criarem o teste termonuclear Ivy Mike (10,4 Mt) e os testes da Operação Castle (15 Mt).
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-3 shrink-0">
+        <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 w-full lg:w-auto shrink-0">
           <button
             onClick={() => onNavigate('ivy-mike')}
-            className="inline-flex items-center space-x-2 px-5 py-3 rounded-xl bg-gradient-to-r from-[#73CAE5] to-teal-500 text-black font-bold text-xs hover:shadow-lg hover:shadow-[#73CAE5]/20 active:scale-95 transition-all"
+            className="w-full sm:w-auto justify-center inline-flex items-center space-x-2 px-5 py-3 min-h-[44px] sm:min-h-0 rounded-xl bg-gradient-to-r from-[#73CAE5] to-teal-500 text-black font-bold text-xs hover:shadow-lg hover:shadow-[#73CAE5]/20 active:scale-95 transition-all"
           >
-            <Zap className="w-4 h-4 text-black" />
+            <Zap className="w-4 h-4 text-black shrink-0" />
             <span>Ver Teste Ivy Mike (10,4 Mt)</span>
-            <ChevronRight className="w-4 h-4 text-black/80" />
+            <ChevronRight className="w-4 h-4 text-black/80 shrink-0" />
           </button>
           <button
             onClick={() => onNavigate('operation-castle')}
-            className="inline-flex items-center space-x-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs transition-colors"
+            className="w-full sm:w-auto justify-center inline-flex items-center space-x-2 px-5 py-3 min-h-[44px] sm:min-h-0 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs transition-colors"
           >
-            <Zap className="w-4 h-4 text-[#73CAE5]" />
+            <Zap className="w-4 h-4 text-[#73CAE5] shrink-0" />
             <span>Operação Castle (1954)</span>
           </button>
         </div>
@@ -588,21 +588,22 @@ export const ManhattanProjectPage: React.FC<ManhattanProjectPageProps> = ({ onNa
       {/* Lightbox Modal */}
       {lightboxImg && (
         <div
-          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-150"
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-150"
           onClick={() => setLightboxImg(null)}
         >
-          <div className="max-w-4xl w-full bg-[#141414] border border-white/15 rounded-2xl overflow-hidden shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
+          <div className="max-w-4xl w-full max-h-[90dvh] overflow-y-auto bg-[#141414] border border-white/15 rounded-2xl shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => setLightboxImg(null)}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/70 text-white hover:bg-black transition-colors"
+              aria-label="Fechar imagem"
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 w-11 h-11 flex items-center justify-center rounded-full bg-black/80 text-white hover:bg-black transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
-            <div className="max-h-[68vh] flex items-center justify-center bg-black overflow-hidden">
+            <div className="max-h-[60vh] sm:max-h-[68vh] flex items-center justify-center bg-black overflow-hidden">
               <img src={lightboxImg.url} alt={lightboxImg.title} referrerPolicy="no-referrer" className="max-h-full max-w-full object-contain" />
             </div>
             <div className="p-4 sm:p-5 space-y-1 bg-[#111111] border-t border-white/10 text-xs">
-              <h4 className="font-bold text-white font-display text-base">{lightboxImg.title}</h4>
+              <h4 className="font-bold text-white font-display text-sm sm:text-base">{lightboxImg.title}</h4>
               {lightboxImg.caption && <p className="text-[#B7B7B7] leading-relaxed">{lightboxImg.caption}</p>}
               {lightboxImg.details && <p className="text-white/80 font-mono text-[11px] pt-1">{lightboxImg.details}</p>}
             </div>

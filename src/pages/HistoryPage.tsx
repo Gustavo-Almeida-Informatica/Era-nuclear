@@ -63,14 +63,14 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
   });
 
   return (
-    <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+    <div className="pt-24 sm:pt-28 pb-16 sm:pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-16">
       {/* Page Header */}
       <div className="max-w-4xl space-y-4">
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#8F83FF]/10 border border-[#8F83FF]/30 text-xs font-semibold text-[#8F83FF]">
-          <Clock className="w-3.5 h-3.5" />
-          <span>Cronologia Documental (1896 – Atualidade)</span>
+        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#8F83FF]/10 border border-[#8F83FF]/30 text-xs font-semibold text-[#8F83FF] max-w-full">
+          <Clock className="w-3.5 h-3.5 shrink-0" />
+          <span className="max-sm:whitespace-normal break-words">Cronologia Documental (1896 – Atualidade)</span>
         </div>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-white font-display tracking-tight uppercase">
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-white font-display tracking-tight uppercase break-words">
           A História da Era Nuclear
         </h1>
         <p className="text-base sm:text-lg text-transparent bg-clip-text bg-gradient-to-r from-white via-[#B7B7B7] to-[#73CAE5] font-medium font-display">
@@ -82,7 +82,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="bg-[#111111] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+      <div className="bg-[#111111] border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-2xl space-y-6">
         <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
           {/* Search Box */}
           <div className="relative w-full sm:w-80">
@@ -92,12 +92,13 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
               placeholder="Buscar por ano, evento, cientista..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs sm:text-sm text-white placeholder-[#B7B7B7]/50 focus:outline-none focus:border-[#73CAE5] transition-colors"
+              className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs sm:text-sm text-white placeholder-[#B7B7B7]/50 focus:outline-none focus:border-[#73CAE5] transition-colors"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#B7B7B7] hover:text-white"
+                aria-label="Limpar busca"
+                className="absolute right-1.5 top-1/2 -translate-y-1/2 min-w-[36px] min-h-[36px] flex items-center justify-center text-[#B7B7B7] hover:text-white"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -119,7 +120,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
               <button
                 key={dec.id}
                 onClick={() => setSelectedDecade(dec.id)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all border whitespace-nowrap ${
+                className={`px-3.5 py-2 sm:py-1.5 rounded-xl text-xs font-semibold transition-all border max-sm:whitespace-normal sm:whitespace-nowrap text-left min-h-[38px] sm:min-h-0 ${
                   selectedDecade === dec.id
                     ? 'bg-gradient-to-r from-[#73CAE5] to-[#8F83FF] text-black border-transparent shadow-md shadow-[#73CAE5]/20 font-bold'
                     : 'bg-white/5 text-[#B7B7B7] hover:bg-white/10 hover:text-white border-white/5'
@@ -145,7 +146,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`px-3 py-1 rounded-lg text-xs font-medium transition-all flex items-center space-x-1.5 ${
+                  className={`px-3 py-1.5 sm:py-1 rounded-lg text-xs font-medium transition-all flex items-center space-x-1.5 min-h-[38px] sm:min-h-0 ${
                     selectedCategory === cat.id
                       ? cat.id === 'acidente'
                         ? 'bg-rose-500/25 text-rose-300 border border-rose-500 shadow-md shadow-rose-500/20'
@@ -165,8 +166,8 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
 
         {/* Quick jump highlights for major historical cases requested by user */}
         <div className="pt-2 border-t border-white/5 flex flex-wrap items-center gap-2 text-xs">
-          <span className="text-[11px] font-mono text-[#B7B7B7]/70 uppercase font-semibold flex items-center space-x-1">
-            <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
+          <span className="text-[11px] font-mono text-[#B7B7B7]/70 uppercase font-semibold flex items-center space-x-1 w-full sm:w-auto">
+            <AlertTriangle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
             <span>Destaques de Acidentes:</span>
           </span>
           <button
@@ -175,7 +176,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
               setSelectedCategory('acidente');
               setSearchQuery('Demon Core');
             }}
-            className="px-2.5 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs border border-amber-500/30 transition-colors font-mono font-bold"
+            className="px-2.5 py-1.5 sm:py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs border border-amber-500/30 transition-colors font-mono font-bold min-h-[38px] sm:min-h-0 text-left"
           >
             ☢️ Demon Core (1945–1946)
           </button>
@@ -185,7 +186,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
               setSelectedCategory('acidente');
               setSearchQuery('Goiânia');
             }}
-            className="px-2.5 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-xs border border-rose-500/30 transition-colors font-mono"
+            className="px-2.5 py-1.5 sm:py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-xs border border-rose-500/30 transition-colors font-mono min-h-[38px] sm:min-h-0 text-left"
           >
             🇧🇷 Césio-137 em Goiânia (1987)
           </button>
@@ -195,7 +196,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
               setSelectedCategory('acidente');
               setSearchQuery('Fukushima');
             }}
-            className="px-2.5 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-xs border border-rose-500/30 transition-colors font-mono"
+            className="px-2.5 py-1.5 sm:py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-xs border border-rose-500/30 transition-colors font-mono min-h-[38px] sm:min-h-0 text-left"
           >
             🇯🇵 Fukushima Daiichi (2011)
           </button>
@@ -205,7 +206,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
               setSelectedCategory('acidente');
               setSearchQuery('Chernobyl');
             }}
-            className="px-2.5 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-xs border border-rose-500/30 transition-colors font-mono"
+            className="px-2.5 py-1.5 sm:py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-xs border border-rose-500/30 transition-colors font-mono min-h-[38px] sm:min-h-0 text-left"
           >
             🇺🇦 Chernobyl (1986)
           </button>
@@ -213,9 +214,9 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
       </div>
 
       {/* Interactive Timeline Spine & Events (Data -> Acontecimento -> Imagem -> Descrição -> Importância -> Fonte) */}
-      <div className="relative border-l-2 border-white/10 ml-4 sm:ml-8 pl-6 sm:pl-10 space-y-12">
+      <div className="relative border-l-2 border-white/10 ml-2 sm:ml-8 pl-3.5 sm:pl-10 space-y-8 sm:space-y-12">
         {filteredEvents.length === 0 ? (
-          <div className="p-8 text-center bg-[#111111] rounded-2xl border border-white/10 text-[#B7B7B7]">
+          <div className="p-6 sm:p-8 text-center bg-[#111111] rounded-2xl border border-white/10 text-[#B7B7B7]">
             <p className="text-sm">Nenhum evento histórico encontrado para a combinação de filtros.</p>
             <button
               onClick={() => {
@@ -235,7 +236,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
               <div key={evt.id} className="relative group">
                 {/* Node point on timeline */}
                 <div
-                  className={`absolute -left-[31px] sm:-left-[47px] top-6 w-4 h-4 rounded-full border-2 transition-transform group-hover:scale-125 ${
+                  className={`absolute -left-[23px] sm:-left-[49px] top-6 w-3.5 sm:w-4 h-3.5 sm:h-4 rounded-full border-2 transition-transform group-hover:scale-125 ${
                     isBlue
                       ? 'bg-[#0D0D0D] border-[#73CAE5] ring-4 ring-[#73CAE5]/20'
                       : 'bg-[#0D0D0D] border-[#8F83FF] ring-4 ring-[#8F83FF]/20'
@@ -243,10 +244,10 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
                 />
 
                 {/* Event Card (Structured according to strict prompt specs) */}
-                <div className="bg-[#111111] border border-white/10 rounded-3xl p-6 sm:p-8 hover:border-white/20 transition-all duration-200 shadow-xl group-hover:shadow-2xl space-y-6">
+                <div className="bg-[#111111] border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-8 hover:border-white/20 transition-all duration-200 shadow-xl group-hover:shadow-2xl space-y-5 sm:space-y-6">
                   {/* Row 1: DATA */}
                   <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/5">
-                    <div className="flex items-center space-x-3">
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                       <span className="text-2xl sm:text-3xl font-extrabold font-mono text-white tracking-tight">
                         {evt.year}
                       </span>
@@ -275,12 +276,12 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
 
                   {/* Row 2: ACONTECIMENTO */}
                   <div>
-                    <h3 className="text-2xl font-bold text-white font-display group-hover:text-[#73CAE5] transition-colors">
+                    <h3 className="text-xl sm:text-2xl font-bold text-white font-display group-hover:text-[#73CAE5] transition-colors break-words">
                       {evt.title}
                     </h3>
                     {evt.location && (
                       <p className="text-xs text-[#8F83FF] flex items-center space-x-1.5 mt-1 font-mono">
-                        <MapPin className="w-3.5 h-3.5" />
+                        <MapPin className="w-3.5 h-3.5 shrink-0" />
                         <span>{evt.location}</span>
                       </p>
                     )}
@@ -288,7 +289,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
 
                   {/* Row 3: IMAGENS (se disponíveis) */}
                   {evt.imageUrl && evt.secondaryImageUrl ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-black/40 p-4 rounded-2xl border border-white/5">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-black/40 p-3 sm:p-4 rounded-2xl border border-white/5">
                       {/* Imagem 1: Explosão Atômica */}
                       <div className="space-y-2">
                         <div
@@ -344,7 +345,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
                       </div>
                     </div>
                   ) : evt.imageUrl ? (
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center bg-black/40 p-4 rounded-2xl border border-white/5">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 items-center bg-black/40 p-3 sm:p-4 rounded-2xl border border-white/5">
                       <div
                         onClick={() => setLightboxImg({ url: evt.imageUrl!, title: evt.title })}
                         className="md:col-span-4 relative rounded-xl overflow-hidden cursor-pointer group/img aspect-16/10 bg-black"
@@ -391,8 +392,8 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
                     )}
 
                     {evt.keyFigures && (
-                      <div className="flex items-center space-x-1.5 text-[#B7B7B7] text-[11px]">
-                        <User className="w-3.5 h-3.5 text-[#8F83FF]" />
+                      <div className="flex items-start sm:items-center space-x-1.5 text-[#B7B7B7] text-[11px]">
+                        <User className="w-3.5 h-3.5 text-[#8F83FF] shrink-0 mt-0.5 sm:mt-0" />
                         <span>Figuras: <strong className="text-white">{evt.keyFigures.join(', ')}</strong></span>
                       </div>
                     )}
@@ -407,17 +408,18 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onNavigate }) => {
       {/* Lightbox Modal */}
       {lightboxImg && (
         <div
-          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-150"
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-150"
           onClick={() => setLightboxImg(null)}
         >
-          <div className="max-w-4xl w-full bg-[#141414] border border-white/15 rounded-2xl overflow-hidden shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
+          <div className="max-w-4xl w-full max-h-[90dvh] overflow-y-auto bg-[#141414] border border-white/15 rounded-2xl shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => setLightboxImg(null)}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/70 text-white hover:bg-black"
+              aria-label="Fechar imagem"
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 w-11 h-11 flex items-center justify-center rounded-full bg-black/80 text-white hover:bg-black"
             >
               <X className="w-5 h-5" />
             </button>
-            <img src={lightboxImg.url} alt={lightboxImg.title} referrerPolicy="no-referrer" className="w-full max-h-[80vh] object-contain bg-black" />
+            <img src={lightboxImg.url} alt={lightboxImg.title} referrerPolicy="no-referrer" className="w-full max-h-[65vh] sm:max-h-[80vh] object-contain bg-black" />
             <div className="p-4 text-xs font-bold text-white font-display">
               {lightboxImg.title} — Arquivo Histórico Oficial
             </div>
